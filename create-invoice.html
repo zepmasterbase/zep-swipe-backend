@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Zep Swipe | Create Payment Request</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --primary:#5b6cff;
+      --bg:#0b1020;
+      --card:#121a35;
+      --text:#eaf0ff;
+      --muted:#9aa4d6;
+      --success:#2dd4bf;
+      --danger:#f87171;
+      --radius:16px;
+    }
+
+    * { box-sizing:border-box; font-family: Inter, system-ui, sans-serif; }
+
+    body {
+      margin:0;
+      background:linear-gradient(135deg,#070b1a,#0f1633);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    header {
+      background:#0d1430;
+      padding:16px 24px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+
+    header h1 {
+      font-size:18px;
+      margin:0;
+      font-weight:600;
+    }
+
+    .container {
+      max-width:1100px;
+      margin:24px auto;
+      padding:0 16px;
+    }
+
+    .card {
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:0 20px 60px rgba(0,0,0,.4);
+      margin-bottom:20px;
+    }
+
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:16px;
+    }
+
+    label {
+      font-size:12px;
+      color:var(--muted);
+      display:block;
+      margin-bottom:6px;
+    }
+
+    input, select, textarea {
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:none;
+      background:#0a1230;
+      color:var(--text);
+      outline:none;
+    }
+
+    textarea { min-height:100px; resize:vertical; }
+
+    .readonly {
+      background:#060c20;
+      opacity:.8;
+    }
+
+    .verified-badge {
+      display:inline-block;
+      background:var(--success);
+      color:#022c22;
+      font-size:11px;
+      padding:4px 8px;
+      border-radius:20px;
+      margin-left:6px;
+      font-weight:700;
+    }
+
+    .breakdown {
+      background:#0a1230;
+      border-radius:12px;
+      padding:14px;
+      margin-top:10px;
+      font-size:14px;
+    }
+
+    .breakdown div {
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:6px;
+    }
+
+    .primary-btn {
+      background:linear-gradient(135deg,#5b6cff,#7c8cff);
+      border:none;
+      color:white;
+      padding:14px;
+      width:100%;
+      border-radius:14px;
+      font-size:15px;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:0 10px 30px rgba(91,108,255,.4);
+    }
+
+    .primary-btn:hover { opacity:.9; }
+
+    /* LOCKED OVERLAY */
+    .locked {
+      position:fixed;
+      inset:0;
+      background:rgba(5,8,20,.95);
+      z-index:99;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:20px;
+    }
+
+    .locked .box {
+      background:var(--card);
+      padding:30px;
+      border-radius:20px;
+      max-width:420px;
+    }
+
+    /* MODAL */
+    .modal {
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.7);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:100;
+    }
+
+    .modal-content {
+      background:var(--card);
+      border-radius:20px;
+      padding:26px;
+      width:100%;
+      max-width:520px;
+      text-align:center;
+      box-shadow:0 30px 80px rgba(0,0,0,.6);
+    }
+
+    .invoice-link {
+      background:#060c20;
+      padding:12px;
+      border-radius:10px;
+      word-break:break-all;
+      font-size:13px;
+      margin:14px 0;
+    }
+
+    .modal-actions button {
+      margin:6px;
+      padding:10px 16px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+    }
+
+    .copy-btn { background:#1f2a60; color:white; }
+    .open-btn { background:var(--success); color:#022c22; }
+
+    @media(max-width:600px){
+      header h1 { font-size:16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Zep Swipe • Create Payment Request</h1>
+  <a href="wallet.html" style="color:#9aa4d6;text-decoration:none;">← Wallet</a>
+</header>
+
+<div class="container">
+
+  <!-- STUDENT INFO -->
+  <div class="card">
+    <h3>Student Profile</h3>
+    <div class="grid">
+      <div>
+        <label>Full Name</label>
+        <input id="studentName" class="readonly" readonly>
+      </div>
+      <div>
+        <label>University</label>
+        <input id="studentUniversity" class="readonly" readonly>
+      </div>
+      <div>
+        <label>Username / ID</label>
+        <input id="studentId" class="readonly" readonly>
+      </div>
+      <div>
+        <label>Status</label>
+        <input id="studentStatus" class="readonly" readonly>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENT INFO -->
+  <div class="card">
+    <h3>Client Information</h3>
+    <div class="grid">
+      <div>
+        <label>Client Full Name</label>
+        <input id="clientName" placeholder="Client name">
+      </div>
+      <div>
+        <label>Client Country</label>
+        <select id="clientCountry">
+          <option value="">Select country</option>
+          <option>United States</option>
+          <option>United Kingdom</option>
+          <option>Canada</option>
+          <option>Nigeria</option>
+          <option>Ghana</option>
+          <option>South Africa</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICE -->
+  <div class="card">
+    <h3>Service Details</h3>
+    <div class="grid">
+      <div>
+        <label>Service Title</label>
+        <input id="serviceTitle" placeholder="e.g. Website Design">
+      </div>
+      <div>
+        <label>Category</label>
+        <select id="serviceCategory">
+          <option>Virtual Assistant</option>
+          <option>Content Creation</option>
+          <option>Writing</option>
+          <option>Design</option>
+          <option>Data Entry</option>
+          <option>Tutoring</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label>Expected Delivery Date</label>
+        <input type="date" id="deliveryDate">
+      </div>
+    </div>
+    <div style="margin-top:12px;">
+      <label>Description</label>
+      <textarea id="serviceDescription"></textarea>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <div class="card">
+    <h3>Pricing (USD Only)</h3>
+    <div class="grid">
+      <div>
+        <label>Amount (USD)</label>
+        <input type="number" id="amountUSD" placeholder="100">
+      </div>
+    </div>
+
+    <div class="breakdown">
+      <div><span>Client Pays</span><span id="clientPays">$0.00</span></div>
+      <div><span>Zep Swipe Fee (5%)</span><span id="platformFee">$0.00</span></div>
+      <div><strong>Student Receives</strong><strong id="studentReceives">$0.00</strong></div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <label>
+        <input type="checkbox" id="escrowAgree">
+        I understand funds will be held in escrow until work is submitted and approved.
+      </label>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <button class="primary-btn" onclick="generateInvoice()">
+    Generate Secure Invoice
+  </button>
+
+</div>
+
+<!-- LOCKED -->
+<div class="locked" id="lockedOverlay">
+  <div class="box">
+    <h2>🔒 Verification Required</h2>
+    <p>Verify your account to request payments and unlock global earning.</p>
+    <button class="primary-btn" onclick="location.href='learn-earn.html'">
+      Complete Verification
+    </button>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal" id="successModal">
+  <div class="modal-content">
+    <h2>✅ Invoice Created</h2>
+    <p>Share this secure link with your client to get paid.</p>
+    <div class="invoice-link" id="invoiceLinkBox"></div>
+
+    <div class="modal-actions">
+      <button class="copy-btn" onclick="copyLink()">Copy Link</button>
+      <button class="open-btn" onclick="openInvoice()">Open Invoice</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const PLATFORM_FEE_RATE = 0.05;
+
+  const user = JSON.parse(localStorage.getItem('zepUser')) || {};
+  const verified = user.verified === true || user.isVerified === true;
+
+  if(!verified){
+    document.getElementById('lockedOverlay').style.display='flex';
+  }
+
+  // Autofill student
+  document.getElementById('studentName').value = user.fullName || '';
+  document.getElementById('studentUniversity').value = user.university || '';
+  document.getElementById('studentId').value = user.username || user.id || '';
+  document.getElementById('studentStatus').value = verified ? 'Verified' : 'Unverified';
+
+  document.getElementById('amountUSD').addEventListener('input', updateBreakdown);
+
+  function updateBreakdown(){
+    const amount = parseFloat(amountUSD.value) || 0;
+    const fee = amount * PLATFORM_FEE_RATE;
+    const receive = amount - fee;
+
+    clientPays.textContent = `$${amount.toFixed(2)}`;
+    platformFee.textContent = `$${fee.toFixed(2)}`;
+    studentReceives.textContent = `$${receive.toFixed(2)}`;
+  }
+
+  function generateInvoice(){
+    if(!escrowAgree.checked){
+      alert('Please agree to escrow terms.');
+      return;
+    }
+
+    const amount = parseFloat(amountUSD.value);
+    if(!amount || amount <= 0){
+      alert('Enter a valid amount.');
+      return;
+    }
+
+    const invoiceId = 'INV-' + Date.now();
+
+    const invoice = {
+      id: invoiceId,
+      studentId: user.id || user.username,
+      studentName: user.fullName,
+      clientName: clientName.value,
+      clientCountry: clientCountry.value,
+      serviceTitle: serviceTitle.value,
+      serviceCategory: serviceCategory.value,
+      description: serviceDescription.value,
+      deliveryDate: deliveryDate.value,
+      amountUSD: amount,
+      feeUSD: amount * PLATFORM_FEE_RATE,
+      payoutUSD: amount * (1 - PLATFORM_FEE_RATE),
+      status: 'pending_payment',
+      escrowStatus: 'unpaid',
+      createdAt: new Date().toISOString()
+    };
+
+    localStorage.setItem('invoice_' + invoiceId, JSON.stringify(invoice));
+
+    const link = `${location.origin}/invoice.html?invoice_id=${invoiceId}`;
+    invoiceLinkBox.textContent = link;
+
+    document.getElementById('successModal').style.display='flex';
+  }
+
+  function copyLink(){
+    navigator.clipboard.writeText(invoiceLinkBox.textContent);
+    alert('Invoice link copied!');
+  }
+
+  function openInvoice(){
+    window.open(invoiceLinkBox.textContent, '_blank');
+  }
+</script>
+
+</body>
+</html>
