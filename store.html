@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zep Swipe — Campus Store Details</title>
+
+<style>
+  :root{
+    --zep-blue:#00f0ff;
+    --zep-violet:#9c4dff;
+    --bg:radial-gradient(circle at 25% 10%, #050018 0%, #00000c 100%);
+    --glass:rgba(255,255,255,0.08);
+  }
+
+  body{
+    margin:0;
+    font-family: Poppins,sans-serif;
+    background: var(--bg);
+    color:#fff;
+    min-height:100vh;
+    padding:20px;
+  }
+
+  .container{
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--glass);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:18px;
+    padding: 24px;
+    backdrop-filter: blur(12px);
+    box-shadow:0 0 40px rgba(0,240,255,.25);
+  }
+
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+  }
+
+  header h1{
+    font-family:Orbitron;
+    font-size:1.6rem;
+    background: linear-gradient(90deg, var(--zep-blue), var(--zep-violet));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+
+  .home-btn{
+    background:linear-gradient(90deg, var(--zep-blue), var(--zep-violet));
+    color:#050015;
+    padding:8px 16px;
+    border:none;
+    border-radius:999px;
+    cursor:pointer;
+    font-family:Orbitron;
+    font-weight:700;
+  }
+
+  .store-logo{
+    width:100%;
+    max-height:200px;
+    object-fit:contain;
+    border-radius:12px;
+    margin-bottom:16px;
+  }
+
+  .deals-list{
+    list-style:none;
+    padding-left:0;
+    margin-bottom:16px;
+  }
+
+  .deals-list li{
+    margin-bottom:8px;
+    padding:10px;
+    border-radius:12px;
+    background:rgba(0,0,0,0.25);
+  }
+
+  .info{
+    margin-bottom:12px;
+    font-size:14px;
+  }
+
+  .distance{
+    font-weight:700;
+    color: var(--zep-blue);
+  }
+
+  .back-btn{
+    display:inline-block;
+    padding:12px 28px;
+    border-radius:999px;
+    font-family:Orbitron;
+    font-weight:700;
+    text-decoration:none;
+    background: linear-gradient(90deg, var(--zep-blue), var(--zep-violet));
+    color:#050015;
+    box-shadow:0 0 28px rgba(0,240,255,.35);
+    margin-top:16px;
+  }
+
+  @media(max-width:480px){
+    header h1{ font-size:1.2rem; }
+    .back-btn{ padding:10px 20px; }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <header>
+    <h1 id="storeName">Store Name</h1>
+    <button class="home-btn" onclick="location.href='deals.html'">Home</button>
+  </header>
+
+  <img id="storeLogo" src="" alt="Store Logo" class="store-logo"/>
+
+  <div class="info" id="storeAddress"></div>
+  <div class="info" id="storeHours"></div>
+  <div class="info" id="storeContact"></div>
+  <div class="info" id="studentInstructions">Show your student ID at checkout</div>
+  <div class="info distance" id="distanceDisplay">Distance: calculating...</div>
+
+  <h3>Available Deals</h3>
+  <ul class="deals-list" id="dealsList"></ul>
+
+  <a href="deals.html" class="back-btn">Back to Deals</a>
+</div>
+
+<script>
+  // -----------------------------
+  // Example store data for localStorage
+  // -----------------------------
+  // You can set this from deals.html before redirecting to store.html
+  /*
+  localStorage.setItem("currentStore", JSON.stringify({
+    name: "Campus Cafe",
+    logo: "https://example.com/logo.png",
+    address: "123 Campus Road, Cape Town",
+    lat: -33.9571,
+    lng: 18.4603,
+    hours: "Mon-Fri 08:00-18:00",
+    contact: "Phone: 0123456789 | Email: info@campuscafe.com",
+    deals: ["20% off coffee", "Buy 2 get 1 free pastries"]
+  }));
+  */
+
+  const store = JSON.parse(localStorage.getItem("currentStore"));
+
+  if(store){
+    document.getElementById("storeName").textContent = store.name;
+    document.getElementById("storeLogo").src = store.logo || "";
+    document.getElementById("storeAddress").innerHTML = `Address: <a href="https://www.google.com/maps/search/?api=1&query=${store.lat},${store.lng}" target="_blank">${store.address}</a>`;
+    document.getElementById("storeHours").textContent = `Opening Hours: ${store.hours}`;
+    document.getElementById("storeContact").textContent = store.contact || "";
+
+    const dealsUl = document.getElementById("dealsList");
+    store.deals.forEach(deal=>{
+      const li = document.createElement("li");
+      li.textContent = deal;
+      dealsUl.appendChild(li);
+    });
+
+    // Geolocation for distance
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(pos=>{
+        const lat1 = pos.coords.latitude;
+        const lon1 = pos.coords.longitude;
+        const lat2 = store.lat;
+        const lon2 = store.lng;
+
+        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2){
+          const R = 6371;
+          const dLat = (lat2-lat1)*Math.PI/180;
+          const dLon = (lon2-lon1)*Math.PI/180;
+          const a = Math.sin(dLat/2)*Math.sin(dLat/2)+
+                    Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
+                    Math.sin(dLon/2)*Math.sin(dLon/2);
+          const c = 2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+          return R*c;
+        }
+
+        const distance = getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2).toFixed(2);
+        document.getElementById("distanceDisplay").textContent = `Distance: ${distance} km`;
+      }, err=>{
+        document.getElementById("distanceDisplay").textContent = `Distance: location unavailable`;
+      });
+    } else {
+      document.getElementById("distanceDisplay").textContent = `Distance: geolocation not supported`;
+    }
+  } else {
+    document.querySelector(".container").innerHTML = "<p>No store data found. Go back to deals.</p>";
+  }
+</script>
+
+</body>
+</html>
