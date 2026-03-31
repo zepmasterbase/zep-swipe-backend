@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe — Student Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --zep-blue:#00f0ff;
+  --zep-violet:#9c4dff;
+  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
+  --glass:rgba(255,255,255,.08);
+  --glass-strong:rgba(255,255,255,.12);
+  --text-light:rgba(255,255,255,.85);
+  --verified-green:#39ff14;
+  --wallet-glow:#00ff94;
+  --card-hover-shadow:0 0 20px var(--zep-blue),0 0 30px var(--zep-violet);
+}
+
+/* RESET */
+*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif;}
+body{background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column;}
+
+/* HEADER */
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 24px;
+  border-radius:16px;
+  background:linear-gradient(90deg,rgba(0,240,255,.15),rgba(156,77,255,.15));
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.08);
+}
+.brand{
+  display:flex;align-items:center;gap:12px;cursor:pointer;
+}
+.brand img{
+  width:48px;height:48px;object-fit:contain;
+}
+.brand span{
+  font-family:Orbitron;
+  font-size:1.6rem;
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.logout-btn{
+  background:rgba(255,255,255,.1);
+  border:none;border-radius:50%;
+  width:40px;height:40px;color:#fff;cursor:pointer;
+  transition:.3s;
+}
+.logout-btn:hover{
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  box-shadow:0 0 14px var(--zep-blue),0 0 28px var(--zep-violet);
+}
+
+/* DASHBOARD LAYOUT */
+.dashboard{
+  padding:20px;display:flex;flex-direction:column;gap:24px;max-width:1200px;margin:auto;
+}
+.section{
+  background:var(--glass);
+  border-radius:18px;
+  padding:20px;
+  border:1px solid var(--glass-strong);
+  transition:.3s;
+}
+.section h3{
+  font-family:Orbitron;margin-bottom:14px;
+  font-size:1.3rem;
+}
+
+/* PROFILE SUMMARY */
+.profile-summary{
+  display:flex;align-items:center;gap:18px;
+  background:linear-gradient(90deg,rgba(0,240,255,.1),rgba(156,77,255,.1));
+  padding:18px;border-radius:18px;
+}
+.profile-summary img{
+  width:88px;height:88px;border-radius:50%;border:2px solid rgba(255,255,255,.3);object-fit:cover;
+}
+.profile-info h3{margin:0;display:flex;align-items:center;gap:8px;font-size:1.25rem;}
+.profile-info span{font-size:.88rem;color:var(--text-light);}
+.verified-badge{
+  width:18px;height:18px;
+  background:var(--verified-green);
+  border-radius:50%;
+  display:inline-block;
+  box-shadow:0 0 8px var(--verified-green);
+}
+/* FREELANCER READINESS */
+.readiness-meter{
+  margin-top:8px;height:14px;width:100%;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;
+}
+.readiness-fill{
+  height:100%;border-radius:999px;background:var(--wallet-glow);width:0%;transition:.6s;
+}
+
+/* COURSES GRID */
+.horizontal-cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+}
+.card{
+  background:linear-gradient(135deg, rgba(0,240,255,0.15), rgba(156,77,255,0.15));
+  border-radius:18px;border:1px solid rgba(255,255,255,.12);
+  padding:16px;
+  transition:transform .3s, box-shadow .3s;
+}
+.card:hover{transform:translateY(-4px);box-shadow:var(--card-hover-shadow);}
+.card h4{margin-bottom:6px;font-family:Orbitron;font-size:1.1rem;}
+.card p{font-size:.85rem;color:var(--text-light);line-height:1.4;}
+
+/* WEEKLY GRAPH */
+.graph-box{
+  position:relative;height:180px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(0,240,255,.08),rgba(156,77,255,.08));
+  overflow:hidden;display:flex;align-items:flex-end;gap:8px;padding:16px;cursor:pointer;
+}
+.graph-bar{
+  flex:1;margin:0 5px;background:linear-gradient(180deg,var(--zep-blue),var(--zep-violet));
+  border-radius:8px 8px 0 0;position:relative;animation:pulseBar 2s infinite;cursor:pointer;transition:.3s;
+}
+.graph-bar:hover{transform:scaleY(1.1);}
+.graph-bar span{
+  position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+  font-size:.75rem;color:var(--text-light);
+  display:none;white-space:nowrap;background:rgba(0,0,0,.6);padding:2px 6px;border-radius:6px;
+}
+.graph-bar:hover span{display:block;}
+@keyframes pulseBar{0%,100%{opacity:.7;}50%{opacity:1;}}
+
+/* QUICK ACTION BUTTONS */
+.actions{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-top:4px;
+}
+.actions button{
+  border:none;border-radius:18px;padding:18px;font-family:Orbitron;
+  background:linear-gradient(135deg,var(--zep-blue),var(--zep-violet));
+  cursor:pointer;color:#050015;font-weight:600;font-size:.95rem;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:.3s;box-shadow:0 0 12px var(--zep-blue),0 0 24px var(--zep-violet);
+}
+.actions button:hover{
+  transform:translateY(-4px);
+  box-shadow:0 0 22px var(--zep-blue),0 0 38px var(--zep-violet);
+}
+.actions button span{font-size:1.8rem;margin-bottom:6px;}
+
+/* FLOATING ZEP AI BUTTON */
+#zepAIButton{
+  position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,var(--zep-blue),var(--zep-violet));
+  border:none;border-radius:50%;width:60px;height:60px;
+  cursor:pointer;font-size:24px;display:flex;justify-content:center;align-items:center;color:#050015;
+  box-shadow:0 0 20px var(--zep-blue),0 0 40px var(--zep-violet);
+  animation:orbPulse 2s infinite;z-index:1000;
+}
+@keyframes orbPulse{0%{transform:scale(1);}50%{transform:scale(1.1);}100%{transform:scale(1);}}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .profile-summary{flex-direction:column;align-items:center;text-align:center;}
+  .horizontal-cards{grid-template-columns:1fr;}
+  .actions{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand" onclick="location.href='student-dashboard.html'">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png" alt="Zep Swipe Logo">
+    <span>Zep Swipe</span>
+  </div>
+  <button class="logout-btn" onclick="logout()">⎋</button>
+</header>
+
+<div class="dashboard">
+
+  <!-- PROFILE SUMMARY -->
+  <div class="section profile-summary">
+    <img id="profileImg" src="https://via.placeholder.com/80">
+    <div class="profile-info">
+      <h3 id="studentName">Student Name <span id="verifiedBadge" class="verified-badge" style="display:none;"></span></h3>
+      <span id="studentLevel">Beginner Freelancer</span><br>
+      <span id="completionText">Profile Completion: 0%</span>
+      <div class="readiness-meter"><div id="readinessFill" class="readiness-fill"></div></div>
+      <span id="walletBalance">Wallet: 0 ZAC (~$0)</span>
+    </div>
+  </div>
+
+  <!-- COURSES GRID -->
+  <div class="section">
+    <h3>Courses & Progress</h3>
+    <div class="horizontal-cards" id="horizontalCards"></div>
+  </div>
+
+  <!-- WEEKLY EARNINGS GRAPH -->
+  <div class="section">
+    <h3>Weekly Earnings</h3>
+    <div class="graph-box" id="weeklyGraph"></div>
+  </div>
+
+  <!-- QUICK ACTION BUTTONS -->
+  <div class="section actions">
+    <button onclick="location.href='learn-earn.html'"><span>📚</span>Learn, Earn & Verify</button>
+    <button onclick="location.href='wallet.html'"><span>💰</span>Student Wallet</button>
+    <button onclick="location.href='swipe-merchants.html'"><span>💼</span> Student Jobs</button>
+    <button onclick="location.href='profile.html'"><span>👤</span>Profile</button>
+    <button onclick="location.href='deals.html'"><span>🛍️</span>Deals Day</button>
+  </div>
+
+</div>
+
+<button id="zepAIButton" title="Zep AI Mentor" onclick="location.href='zep-ai.html'">🤖</button>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// =======================
+// USER SESSION
+// =======================
+let users=JSON.parse(localStorage.getItem("users"))||{};
+let currentUserId=localStorage.getItem("currentUserId");
+if(!currentUserId||!users[currentUserId]) location.href="login.html";
+let user=users[currentUserId];
+user.walletBalance=user.walletBalance||0;
+user.zacBalance=user.zacBalance||0;
+user.learnEarn=user.learnEarn||{course:null,completed:[],zac:0,verifiedCourses:[],progress:{}};
+users[currentUserId]=user;
+localStorage.setItem("users",JSON.stringify(users));
+
+// ELEMENTS
+const profileImg=document.getElementById("profileImg");
+const studentName=document.getElementById("studentName");
+const studentLevel=document.getElementById("studentLevel");
+const completionText=document.getElementById("completionText");
+const walletBalance=document.getElementById("walletBalance");
+const verifiedBadge=document.getElementById("verifiedBadge");
+const readinessFill=document.getElementById("readinessFill");
+const horizontalCards=document.getElementById("horizontalCards");
+const weeklyGraph=document.getElementById("weeklyGraph");
+
+// PROFILE
+profileImg.src=user.profileImage||"https://via.placeholder.com/80";
+studentName.innerText=user.name||"Student Name";
+studentLevel.innerText=user.level||"Beginner Freelancer";
+completionText.innerText=`Profile Completion: ${user.profileCompletion||0}%`;
+readinessFill.style.width=`${user.freelancerReadiness||0}%`;
+walletBalance.innerText=`Wallet: ${user.zacBalance||0} ZAC (~$${(user.walletBalance*0.014).toFixed(2)})`;
+if(user.verified) verifiedBadge.style.display="inline-block";
+
+// COURSES GRID
+let courses = Object.keys(user.learnEarn.progress||{
+  "Virtual Assistant":0,"Data Entry":0,"Graphic Design Foundation":0,"Web & No-Code Development":0,"AI & Prompt Engineering":0,
+  "Digital Marketing & Ads":0,"Remote Customer Support":0,"Student Travel Agent 🌍":0
+});
+
+horizontalCards.innerHTML="";
+courses.forEach(course=>{
+  const card=document.createElement("div");
+  card.className="card";
+  const progress=user.learnEarn.progress?.[course]||0;
+  card.innerHTML=`<h4>${course}</h4><p>Progress: ${progress}%</p><p>ZAC Earned: ${user.learnEarn.zac||0}</p>`;
+  horizontalCards.appendChild(card);
+});
+
+// WEEKLY GRAPH
+let earnings=user.earningsHistory||[0,10,5,15,8,12,20];
+weeklyGraph.innerHTML="";
+earnings.forEach(val=>{
+  const bar=document.createElement("div");
+  bar.className="graph-bar";
+  bar.style.height=`${val*5}px`;
+  bar.innerHTML=`<span>${val} ZAC</span>`;
+  weeklyGraph.appendChild(bar);
+});
+
+// WALLET UPDATE & GLOW
+function updateWallet(zacChange){
+  if(zacChange){
+    walletBalance.style.transition="all 0.6s ease";
+    walletBalance.style.textShadow=`0 0 12px var(--wallet-glow),0 0 24px var(--wallet-glow)`;
+    setTimeout(()=>walletBalance.style.textShadow="none",800);
+  }
+  walletBalance.innerText=`Wallet: ${user.zacBalance||0} ZAC (~$${(user.walletBalance*0.014).toFixed(2)})`;
+}
+updateWallet();
+
+// LOGOUT
+function logout(){
+  localStorage.removeItem("currentUserId");
+  location.href="login.html";
+}
+</script>
+</body>
+</html>
