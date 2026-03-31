@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe — Wallet</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --zep-blue:#00f0ff;
+  --zep-violet:#9c4dff;
+  --bg:#050018;
+  --glass:rgba(255,255,255,.08);
+  --green:#00ff94;
+  --purple:#9c4dff;
+  --yellow:#ffcc00;
+  --text-light:rgba(255,255,255,.85);
+}
+
+/* RESET */
+*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif;}
+body{background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column;}
+
+/* HEADER */
+header{
+  display:flex;justify-content:space-between;align-items:center;padding:16px 20px;
+  backdrop-filter:blur(12px);
+  background:linear-gradient(90deg,#050018,#1a0033);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.brand{
+  display:flex;align-items:center;gap:10px;cursor:pointer;
+}
+.brand img{
+  width:44px;height:44px;object-fit:contain;
+}
+.brand span{
+  font-family:Orbitron;
+  font-size:1.4rem;
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.home-btn{
+  width:50px;height:50px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;cursor:pointer;color:#050015;
+  background:linear-gradient(135deg,var(--zep-blue),var(--zep-violet));
+  border:none;transition:.3s;
+}
+.home-btn:hover{transform:scale(1.1);box-shadow:0 0 15px var(--zep-blue),0 0 25px var(--zep-violet);}
+
+/* CONTAINER */
+.container{
+  max-width:1000px;margin:20px auto;padding:16px;display:flex;flex-direction:column;gap:20px;
+}
+
+/* BALANCE CARDS */
+.balance-card{
+  background:var(--glass);padding:20px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;
+  gap:20px;
+}
+.balance-card h3{font-family:Orbitron;}
+.balance-amount{font-family:Orbitron;font-size:1.6rem;}
+
+/* BUTTONS */
+button{
+  padding:12px 20px;border:none;border-radius:999px;font-family:Orbitron;
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  color:#050015;cursor:pointer;transition:.3s;
+}
+button:hover{
+  transform:translateY(-2px);box-shadow:0 0 15px var(--zep-blue),0 0 30px var(--zep-violet);
+}
+.create-invoice-btn{align-self:flex-start;margin-top:10px;}
+
+/* ZAC CHART */
+#zacChartContainer{background:var(--glass);padding:20px;border-radius:18px;border:1px solid rgba(255,255,255,.12);overflow-x:auto;}
+
+/* NOTIFICATIONS */
+.notification-center{background:var(--glass);padding:16px;border-radius:18px;border:1px solid rgba(255,255,255,.12);max-height:300px;overflow-y:auto;}
+.notification{padding:10px;border-radius:12px;margin-bottom:8px;cursor:pointer;transition:.2s;display:flex;justify-content:space-between;align-items:center;}
+.notification:hover{background:rgba(255,255,255,.1);}
+.notification.pending{border-left:4px solid var(--yellow);}
+.notification.escrow{border-left:4px solid var(--zep-blue);}
+.notification.submitted{border-left:4px solid var(--purple);}
+.notification.released{border-left:4px solid var(--green);}
+
+/* MODAL */
+.modal-bg{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,.85);
+  display:none;align-items:center;justify-content:center;
+  z-index:999;
+}
+.modal{
+  background:var(--glass);padding:24px;border-radius:16px;max-width:400px;width:90%;position:relative;
+}
+.modal input, .modal select{
+  width:100%;padding:10px;border-radius:10px;border:none;margin-bottom:12px;font-family:Poppins;
+}
+.modal button{
+  padding:10px 16px;border:none;border-radius:999px;background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));color:#050015;font-family:Orbitron;width:100%;
+}
+.modal .close-btn{
+  position:absolute;top:10px;right:14px;cursor:pointer;font-size:18px;font-weight:700;color:#fff;
+}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .balance-card{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand" onclick="location.href='student-dashboard.html'">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png" alt="Zep Swipe Logo">
+    <span>Zep Swipe</span>
+  </div>
+  <button class="home-btn" onclick="location.href='student-dashboard.html'">🏠</button>
+</header>
+
+<div class="container">
+
+  <!-- BALANCES -->
+  <div class="balance-card">
+    <div>
+      <h3>USD Wallet</h3>
+      <p class="balance-amount" id="usdBalance">$0.00</p>
+    </div>
+    <div>
+      <h3>ZAC Wallet</h3>
+      <p class="balance-amount" id="zacBalance">0 ZAC</p>
+    </div>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <button onclick="goToLearnEarn()">Complete Daily Task</button>
+  <button class="create-invoice-btn" onclick="location.href='create-invoice.html'">Create Invoice</button>
+  <button onclick="openWithdrawModal()">Withdraw Funds</button>
+
+  <!-- ZAC CHART -->
+  <div id="zacChartContainer">
+    <canvas id="zacChart"></canvas>
+  </div>
+
+  <!-- NOTIFICATION CENTER -->
+  <div class="notification-center">
+    <h3>Notifications</h3>
+    <div id="notificationsList"></div>
+  </div>
+
+</div>
+
+<!-- WITHDRAW MODAL -->
+<div class="modal-bg" id="withdrawModal">
+  <div class="modal">
+    <span class="close-btn" onclick="closeWithdrawModal()">×</span>
+    <h3>Withdraw Funds</h3>
+    <p id="withdrawInfo"></p>
+    <input type="number" id="withdrawAmount" placeholder="Enter amount in USD" min="100">
+    <select id="withdrawMethod">
+      <option value="">Select withdrawal method</option>
+    </select>
+    <button onclick="confirmWithdraw()">Confirm Withdrawal</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// USER SESSION
+let users = JSON.parse(localStorage.getItem("users")) || {};
+let currentUserId = localStorage.getItem("currentUserId");
+if(!currentUserId || !users[currentUserId]) location.href="login.html";
+let currentUser = users[currentUserId];
+
+// INIT BALANCES
+if(currentUser.walletBalance===undefined) currentUser.walletBalance=0;
+if(currentUser.zacBalance===undefined) currentUser.zacBalance=0;
+
+// ELEMENTS
+const usdBalanceEl = document.getElementById("usdBalance");
+const zacBalanceEl = document.getElementById("zacBalance");
+const notificationsList = document.getElementById("notificationsList");
+
+function renderWallet(){
+  usdBalanceEl.innerText = `$${currentUser.walletBalance.toFixed(2)}`;
+  zacBalanceEl.innerText = `${currentUser.zacBalance} ZAC`;
+}
+renderWallet();
+
+function goToLearnEarn(){ window.location.href = "learn-earn.html"; }
+
+// ZAC CHART
+const ctx = document.getElementById('zacChart').getContext('2d');
+if(!currentUser.zacHistory) currentUser.zacHistory=[];
+let zacChart = new Chart(ctx,{
+  type:'line',
+  data:{
+    labels:currentUser.zacHistory.map(e=>e.day),
+    datasets:[{
+      label:'Daily ZAC',
+      data:currentUser.zacHistory.map(e=>e.zac),
+      backgroundColor:'rgba(0,255,148,0.2)',
+      borderColor:'#00ff94',
+      borderWidth:2,
+      tension:0.3
+    }]
+  },
+  options:{scales:{y:{beginAtZero:true}},responsive:true,maintainAspectRatio:false}
+});
+function updateChart(){
+  zacChart.data.labels = currentUser.zacHistory.map(e=>e.day);
+  zacChart.data.datasets[0].data = currentUser.zacHistory.map(e=>e.zac);
+  zacChart.update();
+}
+updateChart();
+
+// NOTIFICATIONS
+let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
+function renderNotifications(){
+  notificationsList.innerHTML="";
+  notifications.forEach(n=>{
+    const div = document.createElement("div");
+    div.className=`notification ${n.type}`;
+    div.innerHTML=`<span>${n.text}</span>`;
+    if(n.invoiceId) div.onclick=()=>{window.location.href=`invoice.html?invoice_id=${n.invoiceId}`;};
+    notificationsList.appendChild(div);
+  });
+}
+function addNotification(n){
+  notifications.push(n);
+  localStorage.setItem("notifications",JSON.stringify(notifications));
+  renderNotifications();
+}
+renderNotifications();
+
+// STORAGE LISTENER FOR INVOICES
+window.addEventListener("storage",e=>{
+  if(e.key && e.key.startsWith("invoice_")){
+    const inv = JSON.parse(e.newValue);
+    if(inv.status==="Released" && inv.studentId===currentUserId){
+      currentUser.walletBalance += inv.total||0;
+      users[currentUserId]=currentUser;
+      localStorage.setItem("users",JSON.stringify(users));
+      addNotification({type:"released",text:`Invoice ${inv.id} funds released!`,invoiceId:inv.id});
+      renderWallet();
+    }
+  }
+});
+
+// WITHDRAW LOGIC
+const withdrawModal = document.getElementById("withdrawModal");
+const withdrawInfo = document.getElementById("withdrawInfo");
+const withdrawAmount = document.getElementById("withdrawAmount");
+const withdrawMethod = document.getElementById("withdrawMethod");
+
+function openWithdrawModal(){
+  withdrawModal.style.display="flex";
+  withdrawInfo.innerText = `Your USD balance: $${currentUser.walletBalance.toFixed(2)} | Minimum withdrawal: $100`;
+
+  // Clear previous options
+  withdrawMethod.innerHTML = '<option value="">Select withdrawal method</option>';
+
+  const momoCountries = ["Ghana","Zambia","Namibia","Malawi"];
+  if(momoCountries.includes(currentUser.country)){
+    withdrawMethod.innerHTML += '<option value="momo">Mobile Money (Momo)</option>';
+  }
+  withdrawMethod.innerHTML += '<option value="bank">Bank Transfer</option>';
+}
+
+function closeWithdrawModal(){
+  withdrawModal.style.display="none";
+  withdrawAmount.value="";
+  withdrawMethod.value="";
+}
+
+function confirmWithdraw(){
+  const amt = parseFloat(withdrawAmount.value);
+  const method = withdrawMethod.value;
+  if(isNaN(amt) || amt < 100){alert("Minimum withdrawal is $100."); return;}
+  if(!method){alert("Please select a withdrawal method."); return;}
+  if(amt > currentUser.walletBalance){alert("Insufficient balance."); return;}
+
+  // Deduct balance
+  currentUser.walletBalance -= amt;
+  users[currentUserId] = currentUser;
+  localStorage.setItem("users",JSON.stringify(users));
+  renderWallet();
+
+  addNotification({type:"pending",text:`Withdrawal of $${amt} via ${method.toUpperCase()} requested.`});
+  closeWithdrawModal();
+  alert("Withdrawal request submitted. It will be processed shortly.");
+}
+</script>
+</body>
+</html>
