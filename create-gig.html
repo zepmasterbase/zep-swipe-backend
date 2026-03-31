@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe — Create Gig</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --zep-blue:#00f0ff;
+  --zep-violet:#9c4dff;
+  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
+  --glass:rgba(255,255,255,0.08);
+  --text-light:rgba(255,255,255,0.85);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif}
+
+body{
+  background:var(--bg);
+  color:#fff;
+  min-height:100vh;
+}
+
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px;
+  margin:16px;
+  border-radius:16px;
+  background:radial-gradient(circle at center, rgba(0,240,255,.2), rgba(156,77,255,.2));
+  backdrop-filter:blur(14px);
+}
+.brand{
+  font-family:Orbitron;
+  font-size:1.5rem;
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.logout-btn{
+  background:rgba(255,255,255,.1);
+  border:none;
+  border-radius:50%;
+  width:38px;
+  height:38px;
+  cursor:pointer;
+  color:#fff;
+  font-size:16px;
+  transition:.3s;
+}
+.logout-btn:hover{
+  background:rgba(255,0,80,.25);
+}
+
+/* FORM CONTAINER */
+.container{
+  max-width:600px;
+  margin:30px auto;
+  background:var(--glass);
+  border-radius:16px;
+  padding:20px;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 0 36px rgba(156,77,255,.2);
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+/* INPUTS */
+.container input[type="text"],
+.container input[type="number"],
+.container textarea{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+  background:rgba(255,255,255,.05);
+  color:#fff;
+}
+.container textarea{
+  resize:none;
+  height:100px;
+}
+
+/* BUTTON */
+.container button{
+  padding:14px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  color:#050015;
+  font-family:Orbitron;
+  cursor:pointer;
+  font-size:1rem;
+  transition:.3s;
+}
+.container button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 36px rgba(156,77,255,.45);
+}
+
+/* TOTAL AMOUNT CARD */
+.total-card{
+  background:rgba(255,255,255,.05);
+  padding:12px 16px;
+  border-radius:12px;
+  display:flex;
+  justify-content:space-between;
+  font-weight:500;
+}
+
+label{
+  font-size:0.85rem;
+  color:var(--text-light);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Zep Swipe</div>
+  <button class="logout-btn" onclick="logout()">⎋</button>
+</header>
+
+<div class="container">
+  <h2>Create a New Gig</h2>
+  <label for="title">Job Title</label>
+  <input type="text" id="title" placeholder="E.g., Social Media Manager">
+
+  <label for="desc">Job Description</label>
+  <textarea id="desc" placeholder="Describe the job in detail..."></textarea>
+
+  <label for="rate">Rate per Hour (USD)</label>
+  <input type="number" id="rate" placeholder="E.g., 25" min="1">
+
+  <label for="duration">Duration (Hours)</label>
+  <input type="number" id="duration" placeholder="E.g., 5" min="1">
+
+  <div class="total-card">
+    <span>Total Job Amount + $25 Listing Fee:</span>
+    <span id="totalAmount">$0</span>
+  </div>
+
+  <button onclick="createGig()">Create Gig & Pay $25</button>
+</div>
+
+<script>
+/* SESSION CHECK */
+const employer = JSON.parse(localStorage.getItem("currentEmployer"));
+if(!employer){
+  alert("Please login to create a gig.");
+  location.href = "employer-auth.html";
+}
+
+/* CALCULATE TOTAL AMOUNT */
+const rateInput = document.getElementById("rate");
+const durationInput = document.getElementById("duration");
+const totalEl = document.getElementById("totalAmount");
+
+function updateTotal(){
+  const rate = parseFloat(rateInput.value) || 0;
+  const duration = parseFloat(durationInput.value) || 0;
+  const total = rate * duration + 25;
+  totalEl.innerText = `$${total.toFixed(2)}`;
+}
+
+rateInput.addEventListener("input", updateTotal);
+durationInput.addEventListener("input", updateTotal);
+
+/* CREATE GIG FUNCTION */
+function createGig(){
+  const title = document.getElementById("title").value.trim();
+  const desc = document.getElementById("desc").value.trim();
+  const rate = parseFloat(rateInput.value);
+  const duration = parseFloat(durationInput.value);
+
+  if(!title || !desc || !rate || !duration){
+    alert("Please fill all fields correctly.");
+    return;
+  }
+
+  const gig = {
+    id: Date.now(),
+    employerId: employer.id,
+    title,
+    desc,
+    rate,
+    duration,
+    totalAmount: rate*duration + 25,
+    listingFee:25,
+    escrow:{
+      paid:true,
+      released:false
+    },
+    applicants:[],
+    createdAt: new Date().toISOString()
+  };
+
+  const gigs = JSON.parse(localStorage.getItem("gigs")) || [];
+  gigs.push(gig);
+  localStorage.setItem("gigs", JSON.stringify(gigs));
+
+  alert(`Gig created! Total $${gig.totalAmount} is in escrow.`);
+  location.href = "employer-dashboard.html";
+}
+
+/* LOGOUT */
+function logout(){
+  localStorage.removeItem("currentEmployer");
+  location.href = "index.html";
+}
+</script>
+</body>
+</html>
