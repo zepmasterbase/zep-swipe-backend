@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe — Student Jobs Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --zep-blue:#00f0ff;
+  --zep-violet:#9c4dff;
+  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
+  --glass:rgba(255,255,255,0.08);
+  --text-light:rgba(255,255,255,.85);
+  --green:#00ff94;
+}
+
+/* RESET */
+*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif;}
+body{background:var(--bg);color:#fff;min-height:100vh;}
+
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 20px;
+  background:rgba(0,0,0,0.35);
+  backdrop-filter:blur(10px);
+  box-shadow:0 0 20px rgba(0,240,255,.2);
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  font-family:Orbitron;font-size:1.4rem;
+}
+.brand span{
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.home-btn{
+  padding:10px 16px;border-radius:999px;
+  border:none;cursor:pointer;
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  color:#050015;
+}
+
+/* CONTAINER */
+.container{max-width:1200px;margin:auto;padding:20px;}
+h2{font-family:Orbitron;margin-bottom:6px;}
+.subtitle{color:var(--text-light);margin-bottom:20px;}
+
+/* JOB GRID */
+.jobs-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;
+}
+@media(min-width:700px){
+  .jobs-grid{grid-template-columns:1fr 1fr;}
+}
+@media(min-width:1000px){
+  .jobs-grid{grid-template-columns:1fr 1fr 1fr;}
+}
+
+.job-card{
+  background:var(--glass);
+  border-radius:18px;
+  padding:16px;
+  border:1px solid rgba(255,255,255,.12);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  transition:.3s;
+}
+.job-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 0 20px rgba(156,77,255,.25);
+}
+.job-card h3{font-size:1.05rem;}
+.job-card p{font-size:.9rem;color:var(--text-light);}
+.job-meta{
+  display:flex;
+  justify-content:space-between;
+  font-size:.8rem;
+  margin-top:6px;
+  color:var(--text-light);
+}
+.apply-btn{
+  margin-top:8px;
+  padding:10px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  color:#050015;
+}
+
+/* LOCK MODAL */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.modal{
+  background:var(--glass);
+  padding:24px;
+  border-radius:20px;
+  max-width:420px;
+  width:90%;
+  text-align:center;
+  box-shadow:0 0 30px var(--zep-blue),0 0 60px var(--zep-violet);
+}
+.modal h3{font-family:Orbitron;margin-bottom:10px;}
+.modal p{font-size:.95rem;color:var(--text-light);}
+.modal button{
+  margin-top:14px;
+  padding:12px 18px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--green),var(--zep-blue));
+  color:#050015;
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:24px;
+  font-size:.85rem;
+  color:var(--text-light);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span>Zep Swipe</span>
+  </div>
+  <button class="home-btn" onclick="location.href='student-dashboard.html'">Dashboard</button>
+</header>
+
+<div class="container">
+  <h2>Global Student Jobs</h2>
+  <div class="subtitle">Apply to verified freelance opportunities worldwide</div>
+
+  <div id="jobsGrid" class="jobs-grid"></div>
+</div>
+
+<footer>
+  © 2026 Zep Swipe • Secure student freelance marketplace
+</footer>
+
+<!-- LOCK MODAL -->
+<div class="modal-overlay" id="lockModal">
+  <div class="modal">
+    <h3>Unlock Jobs Marketplace</h3>
+    <p>
+      Complete Learn & Earn or verify your account to access global freelance jobs and start earning USD securely.
+    </p>
+    <button onclick="location.href='learn-earn.html'">
+      Go to Learn & Earn
+    </button>
+  </div>
+</div>
+
+<script>
+// =======================
+// USER & VERIFICATION LOGIC (SAFE FOR LIVE)
+// =======================
+const users = JSON.parse(localStorage.getItem("users")) || {};
+const currentUserId = localStorage.getItem("currentUserId");
+const currentUser = users[currentUserId];
+
+// Universal verification logic
+const isVerified =
+  currentUser &&
+  (
+    currentUser.verified === true ||
+    (currentUser.tasksCompleted && currentUser.tasksCompleted >= 5) ||
+    currentUser.learnEarnCompleted === true
+  );
+
+// If not verified → show modal instead of redirect
+if(!isVerified){
+  document.getElementById("lockModal").style.display = "flex";
+}
+
+// =======================
+// GLOBAL JOBS (SIMULATED FOR PILOT)
+// =======================
+const jobs = [
+  {title:"UI/UX Designer", desc:"Design mobile & web app interfaces", pay:"$120", country:"Remote"},
+  {title:"Virtual Assistant", desc:"Email & calendar management", pay:"$80", country:"Remote"},
+  {title:"Online Tutor", desc:"Math & science tutoring", pay:"$100", country:"USA"},
+  {title:"Content Creator", desc:"Short-form social media videos", pay:"$90", country:"UK"},
+  {title:"Blog Writer", desc:"SEO blog writing", pay:"$70", country:"Canada"},
+  {title:"Voice Over Artist", desc:"Commercial voice recording", pay:"$110", country:"Remote"},
+  {title:"Data Entry Specialist", desc:"Spreadsheet & CRM updates", pay:"$60", country:"Remote"},
+  {title:"Graphic Designer", desc:"Brand assets & social graphics", pay:"$95", country:"Germany"},
+  {title:"Web Developer", desc:"Landing page development", pay:"$150", country:"Remote"},
+  {title:"Customer Support Rep", desc:"Live chat & email support", pay:"$75", country:"Remote"},
+  {title:"Social Media Manager", desc:"Manage IG & TikTok pages", pay:"$85", country:"Remote"},
+  {title:"Video Editor", desc:"Short-form & YouTube edits", pay:"$130", country:"Remote"},
+  {title:"Copywriter", desc:"Sales & marketing copy", pay:"$100", country:"USA"},
+  {title:"Research Assistant", desc:"Online research tasks", pay:"$65", country:"Remote"},
+  {title:"Presentation Designer", desc:"Pitch deck design", pay:"$90", country:"Remote"},
+  {title:"Email Marketing VA", desc:"Campaign setup & automation", pay:"$85", country:"Remote"},
+  {title:"Product Listing VA", desc:"E-commerce uploads", pay:"$70", country:"Remote"},
+  {title:"Community Manager", desc:"Discord & Telegram moderation", pay:"$80", country:"Remote"},
+  {title:"Transcriptionist", desc:"Audio to text transcription", pay:"$60", country:"Remote"},
+  {title:"UX Research Assistant", desc:"User testing & surveys", pay:"$95", country:"Remote"}
+];
+
+// Render jobs ONLY if verified
+const jobsGrid = document.getElementById("jobsGrid");
+
+if(isVerified){
+  jobs.forEach(job=>{
+    const card = document.createElement("div");
+    card.className = "job-card";
+    card.innerHTML = `
+      <h3>${job.title}</h3>
+      <p>${job.desc}</p>
+      <div class="job-meta">
+        <span>${job.country}</span>
+        <strong>${job.pay}</strong>
+      </div>
+      <button class="apply-btn" onclick="applyForJob('${job.title}')">Apply Now</button>
+    `;
+    jobsGrid.appendChild(card);
+  });
+}
+
+// Apply flow (pilot simulation)
+function applyForJob(jobTitle){
+  localStorage.setItem("lastAppliedJob", jobTitle);
+  alert("Application sent for: " + jobTitle + "\nClient will contact you via Zep Swipe invoice system.");
+}
+</script>
+
+</body>
+</html>
