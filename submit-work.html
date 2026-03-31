@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe — Submit Work</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --zep-blue:#00f0ff;
+  --zep-violet:#9c4dff;
+  --bg:#050018;
+  --glass:rgba(255,255,255,.08);
+  --text-light:rgba(255,255,255,.85);
+  --green:#00ff94;
+}
+
+/* RESET */
+*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif;}
+body{background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column;}
+
+/* HEADER */
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px;
+  background:radial-gradient(circle at center, rgba(0,240,255,.1), rgba(156,77,255,.1));
+  backdrop-filter:blur(14px);
+  box-shadow:0 0 20px var(--zep-blue),0 0 40px var(--zep-violet);
+}
+.brand{display:flex;align-items:center;gap:12px;cursor:pointer;}
+.brand img{width:50px;height:50px;}
+.brand span{font-family:Orbitron;font-size:1.5rem;background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.header-title{font-family:Orbitron;font-size:1.2rem;color:var(--text-light);}
+
+/* CONTAINER */
+.container{max-width:900px;margin:24px auto;padding:16px;display:flex;flex-direction:column;gap:20px;}
+h2{font-family:Orbitron;text-align:center;margin-bottom:12px;}
+
+/* CARD */
+.card{background:var(--glass);padding:20px;border-radius:18px;border:1px solid rgba(255,255,255,.12);box-shadow:0 0 20px rgba(0,240,255,.1),0 0 30px rgba(156,77,255,.1);}
+.card h3{font-family:Orbitron;margin-bottom:12px;}
+.card p{color:var(--text-light);}
+
+/* DETAILS */
+.details{display:flex;flex-wrap:wrap;gap:16px;}
+.details div{flex:1 1 200px;}
+.details img{width:80px;height:80px;border-radius:50%;border:2px solid rgba(255,255,255,.3);}
+
+/* STATUS BADGE */
+.status-badge{padding:6px 12px;border-radius:12px;font-family:Orbitron;font-size:0.85rem;display:inline-block;}
+.pending{background:rgba(255,165,0,.8);color:#050015;}
+.escrow{background:rgba(0,240,255,.8);color:#050015;}
+.submitted{background:rgba(156,77,255,.8);color:#050015;}
+.released{background:var(--green);color:#050015;}
+
+/* BUTTONS */
+button{padding:12px 20px;border:none;border-radius:999px;font-family:Orbitron;background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));color:#050015;cursor:pointer;transition:.3s;margin-top:10px;}
+button:hover{transform:translateY(-2px);box-shadow:0 0 15px var(--zep-blue),0 0 30px var(--zep-violet);}
+button.secondary{background:rgba(255,255,255,0.1);color:#fff;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1000;}
+.modal{background:var(--glass);padding:20px;border-radius:18px;max-width:400px;width:90%;text-align:center;box-shadow:0 0 20px var(--zep-blue),0 0 40px var(--zep-violet);}
+.modal button{margin-top:12px;}
+
+/* RESPONSIVE */
+@media(max-width:600px){.details{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand" onclick="location.href='student-dashboard.html'">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jfnua21qtu1vi2pfom33p641h.png" alt="Logo">
+    <span>Zep Swipe</span>
+  </div>
+  <div class="header-title">Submit Your Completed Work</div>
+</header>
+
+<div class="container">
+  <h2>Active Invoices</h2>
+  <div id="invoicesContainer"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <p id="modalText">Processing...</p>
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+// Load users and current user
+let users = JSON.parse(localStorage.getItem("users")) || {};
+let currentUserId = localStorage.getItem("currentUserId");
+if(!currentUserId || !users[currentUserId]){
+  alert("No student logged in! Redirecting...");
+  location.href="login.html";
+}
+let currentUser = users[currentUserId];
+
+// Fetch all invoices for student
+function getStudentInvoices(){
+  let invoices = [];
+  for(let key in localStorage){
+    if(key.startsWith("invoice_")){
+      let inv = JSON.parse(localStorage.getItem(key));
+      if(inv.studentId === currentUserId){
+        invoices.push(inv);
+      }
+    }
+  }
+  return invoices;
+}
+
+// Render invoices dynamically
+function renderInvoices(){
+  const container = document.getElementById("invoicesContainer");
+  container.innerHTML = "";
+  const invoices = getStudentInvoices();
+  if(invoices.length === 0){
+    container.innerHTML = "<p style='text-align:center;color:var(--text-light)'>No active invoices yet. Go create one!</p>";
+    return;
+  }
+  invoices.forEach(inv=>{
+    const card = document.createElement("div");
+    card.className="card";
+    card.innerHTML = `
+      <h3>${inv.serviceTitle} - $${inv.payoutUSD}</h3>
+      <div class="details">
+        <div>
+          <img src="${currentUser.profileImage || 'https://via.placeholder.com/80'}" alt="Profile">
+          <p><strong>${currentUser.name}</strong></p>
+          <p>${currentUser.university || 'University XYZ'}</p>
+        </div>
+        <div>
+          <p>Client: ${inv.clientName}</p>
+          <p>Status: <strong class="status-badge ${inv.status.toLowerCase()}">${inv.status}</strong></p>
+          <p>Delivery Date: ${inv.deliveryDate}</p>
+        </div>
+      </div>
+      <button ${inv.status!=="Escrow"?"disabled":""} onclick="submitWork('${inv.id}')">Submit Work</button>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Modal functions
+const modalOverlay = document.getElementById("modalOverlay");
+const modalText = document.getElementById("modalText");
+function showModal(text){modalText.innerText=text; modalOverlay.style.display="flex";}
+function closeModal(){modalOverlay.style.display="none";}
+
+// Submit work function
+function submitWork(invoiceId){
+  showModal("Submitting work...");
+  setTimeout(()=>{
+    let invoice = JSON.parse(localStorage.getItem("invoice_" + invoiceId));
+    if(!invoice) return alert("Invoice not found!");
+
+    // Update invoice
+    invoice.status="Submitted";
+    invoice.escrowStatus="ready_to_release";
+    localStorage.setItem("invoice_" + invoiceId, JSON.stringify(invoice));
+
+    // Auto release funds to wallet
+    currentUser.walletBalance = (currentUser.walletBalance || 0) + invoice.payoutUSD;
+    users[currentUserId] = currentUser;
+    localStorage.setItem("users",JSON.stringify(users));
+
+    showModal(`Work submitted! $${invoice.payoutUSD} released to your wallet.`);
+    renderInvoices();
+  },1200);
+}
+
+// Initial render
+renderInvoices();
+</script>
+
+</body>
+</html>
