@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zep Swipe — Create Gig</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500,600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root{
   --zep-blue:#00f0ff;
@@ -33,6 +37,7 @@ header{
   background:radial-gradient(circle at center, rgba(0,240,255,.2), rgba(156,77,255,.2));
   backdrop-filter:blur(14px);
 }
+
 .brand{
   font-family:Orbitron;
   font-size:1.5rem;
@@ -40,6 +45,7 @@ header{
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
+
 .logout-btn{
   background:rgba(255,255,255,.1);
   border:none;
@@ -48,14 +54,9 @@ header{
   height:38px;
   cursor:pointer;
   color:#fff;
-  font-size:16px;
-  transition:.3s;
-}
-.logout-btn:hover{
-  background:rgba(255,0,80,.25);
 }
 
-/* FORM CONTAINER */
+/* FORM */
 .container{
   max-width:600px;
   margin:30px auto;
@@ -63,16 +64,12 @@ header{
   border-radius:16px;
   padding:20px;
   border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 0 36px rgba(156,77,255,.2);
   display:flex;
   flex-direction:column;
-  gap:16px;
+  gap:14px;
 }
 
-/* INPUTS */
-.container input[type="text"],
-.container input[type="number"],
-.container textarea{
+input, textarea{
   width:100%;
   padding:12px;
   border-radius:12px;
@@ -81,13 +78,10 @@ header{
   background:rgba(255,255,255,.05);
   color:#fff;
 }
-.container textarea{
-  resize:none;
-  height:100px;
-}
 
-/* BUTTON */
-.container button{
+textarea{height:100px; resize:none;}
+
+button{
   padding:14px;
   border:none;
   border-radius:999px;
@@ -95,30 +89,18 @@ header{
   color:#050015;
   font-family:Orbitron;
   cursor:pointer;
-  font-size:1rem;
-  transition:.3s;
-}
-.container button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 0 36px rgba(156,77,255,.45);
 }
 
-/* TOTAL AMOUNT CARD */
 .total-card{
   background:rgba(255,255,255,.05);
-  padding:12px 16px;
+  padding:12px;
   border-radius:12px;
   display:flex;
   justify-content:space-between;
-  font-weight:500;
-}
-
-label{
-  font-size:0.85rem;
-  color:var(--text-light);
 }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -128,20 +110,15 @@ label{
 
 <div class="container">
   <h2>Create a New Gig</h2>
-  <label for="title">Job Title</label>
-  <input type="text" id="title" placeholder="E.g., Social Media Manager">
 
-  <label for="desc">Job Description</label>
-  <textarea id="desc" placeholder="Describe the job in detail..."></textarea>
+  <input type="text" id="title" placeholder="Job Title">
+  <textarea id="desc" placeholder="Job Description"></textarea>
 
-  <label for="rate">Rate per Hour (USD)</label>
-  <input type="number" id="rate" placeholder="E.g., 25" min="1">
-
-  <label for="duration">Duration (Hours)</label>
-  <input type="number" id="duration" placeholder="E.g., 5" min="1">
+  <input type="number" id="rate" placeholder="Rate per Hour (USD)">
+  <input type="number" id="duration" placeholder="Duration (Hours)">
 
   <div class="total-card">
-    <span>Total Job Amount + $25 Listing Fee:</span>
+    <span>Total + $25 fee:</span>
     <span id="totalAmount">$0</span>
   </div>
 
@@ -149,14 +126,34 @@ label{
 </div>
 
 <script>
-/* SESSION CHECK */
-const employer = JSON.parse(localStorage.getItem("currentEmployer"));
-if(!employer){
-  alert("Please login to create a gig.");
-  location.href = "employer-auth.html";
+/* =========================
+   SUPABASE INIT
+========================= */
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* =========================
+   AUTH CHECK (SUPABASE)
+========================= */
+let user = null;
+
+async function loadUser(){
+  const { data } = await supabaseClient.auth.getUser();
+  user = data?.user;
+
+  if(!user){
+    alert("Please login to create a gig.");
+    window.location.href = "employer-auth.html";
+  }
 }
 
-/* CALCULATE TOTAL AMOUNT */
+loadUser();
+
+/* =========================
+   TOTAL CALCULATION
+========================= */
 const rateInput = document.getElementById("rate");
 const durationInput = document.getElementById("duration");
 const totalEl = document.getElementById("totalAmount");
@@ -164,55 +161,65 @@ const totalEl = document.getElementById("totalAmount");
 function updateTotal(){
   const rate = parseFloat(rateInput.value) || 0;
   const duration = parseFloat(durationInput.value) || 0;
-  const total = rate * duration + 25;
-  totalEl.innerText = `$${total.toFixed(2)}`;
+  totalEl.innerText = `$${(rate * duration + 25).toFixed(2)}`;
 }
 
 rateInput.addEventListener("input", updateTotal);
 durationInput.addEventListener("input", updateTotal);
 
-/* CREATE GIG FUNCTION */
-function createGig(){
+/* =========================
+   CREATE GIG (SUPABASE)
+========================= */
+async function createGig(){
+
   const title = document.getElementById("title").value.trim();
   const desc = document.getElementById("desc").value.trim();
   const rate = parseFloat(rateInput.value);
   const duration = parseFloat(durationInput.value);
 
   if(!title || !desc || !rate || !duration){
-    alert("Please fill all fields correctly.");
+    alert("Fill all fields properly");
     return;
   }
 
-  const gig = {
-    id: Date.now(),
-    employerId: employer.id,
-    title,
-    desc,
-    rate,
-    duration,
-    totalAmount: rate*duration + 25,
-    listingFee:25,
-    escrow:{
-      paid:true,
-      released:false
-    },
-    applicants:[],
-    createdAt: new Date().toISOString()
-  };
+  const totalAmount = rate * duration + 25;
 
-  const gigs = JSON.parse(localStorage.getItem("gigs")) || [];
-  gigs.push(gig);
-  localStorage.setItem("gigs", JSON.stringify(gigs));
+  const { data, error } = await supabaseClient
+    .from("gigs")
+    .insert([
+      {
+        employer_id: user.id,
+        title,
+        description: desc,
+        rate,
+        duration,
+        total_amount: totalAmount,
+        listing_fee: 25,
+        escrow_paid: true,
+        escrow_released: false,
+        applicants: []
+      }
+    ])
+    .select();
 
-  alert(`Gig created! Total $${gig.totalAmount} is in escrow.`);
-  location.href = "employer-dashboard.html";
+  if(error){
+    console.error(error);
+    alert("Error creating gig");
+    return;
+  }
+
+  alert("Gig created successfully! $25 escrow recorded.");
+  window.location.href = "employer-dashboard.html";
 }
 
-/* LOGOUT */
-function logout(){
-  localStorage.removeItem("currentEmployer");
-  location.href = "index.html";
+/* =========================
+   LOGOUT
+========================= */
+async function logout(){
+  await supabaseClient.auth.signOut();
+  window.location.href = "index.html";
 }
 </script>
+
 </body>
 </html>
