@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Zep Swipe · Order Chat</title>
+<title>Zep Swipe · Order Chat AI</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -15,20 +15,52 @@ body{margin:0;font-family:Poppins;background:#050018;color:#fff}
 
 .card{background:rgba(255,255,255,0.06);padding:16px;border-radius:16px;margin-top:16px}
 
-.chat{height:300px;overflow-y:auto;padding:10px;background:rgba(0,0,0,0.3);border-radius:12px}
+.chat{
+  height:320px;
+  overflow-y:auto;
+  padding:10px;
+  background:rgba(0,0,0,0.35);
+  border-radius:12px;
+}
+
 .msg{margin:6px 0;font-size:14px}
 .you{color:#9ff;text-align:right}
 .them{color:#fff}
+.system{color:#00ff9d;text-align:center;font-size:13px}
 
 input{
-width:80%;padding:10px;border-radius:10px;border:none;background:#111;color:#fff
+width:78%;
+padding:10px;
+border-radius:10px;
+border:none;
+background:#111;
+color:#fff;
 }
+
 button{
-padding:10px 14px;border:none;border-radius:10px;
+padding:10px 14px;
+border:none;
+border-radius:10px;
 background:linear-gradient(90deg,#00f0ff,#9c4dff);
-cursor:pointer;font-weight:bold
+cursor:pointer;
+font-weight:bold;
 }
+
 .header{display:flex;justify-content:space-between;align-items:center}
+
+.ai-box{
+  margin-top:10px;
+  padding:10px;
+  border-radius:12px;
+  background:rgba(0,240,255,0.08);
+  border:1px solid rgba(0,240,255,0.2);
+  font-size:13px;
+}
+
+.disabled{
+  opacity:0.5;
+  pointer-events:none;
+}
 </style>
 </head>
 
@@ -37,45 +69,58 @@ cursor:pointer;font-weight:bold
 <div class="container">
 
   <div class="header">
-    <h2>Order Chat</h2>
+    <h2>🧾 Order Chat AI</h2>
     <button onclick="logout()">Logout</button>
   </div>
 
+  <!-- 🤖 ZEP AI PANEL -->
+  <div class="ai-box">
+    🤖 <span id="aiStatus">Analyzing order...</span>
+  </div>
+
   <div class="card">
+
     <div id="chatBox" class="chat"></div>
 
-    <div style="margin-top:10px">
+    <div style="margin-top:10px" id="inputBox">
       <input id="msgInput" placeholder="Type message..."/>
       <button onclick="sendMessage()">Send</button>
     </div>
+
   </div>
 
 </div>
 
 <script>
+
 /* =======================
    SUPABASE INIT
 ======================= */
 const supabaseUrl = "https://wucferiudoekefgaciua.supabase.co";
-const supabaseKey = "YOUR_ANON_KEY_HERE"; // 🔴 replace locally
+const supabaseKey = "YOUR_ANON_KEY_HERE";
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =======================
-   SESSION USER
+   STATE
 ======================= */
 let currentUser = null;
-let orderId = "order_123"; // replace dynamically from URL later
+let orderId = "order_123"; // replace dynamically later
+let orderClosed = false;
 
+/* =======================
+   LOAD USER
+======================= */
 async function loadUser(){
   const { data } = await supabase.auth.getUser();
   currentUser = data.user;
 
   if(!currentUser){
-    alert("Not logged in");
     window.location.href = "login.html";
+    return;
   }
 
   loadMessages();
+  watchOrderStatus();
 }
 loadUser();
 
@@ -83,24 +128,31 @@ loadUser();
    LOAD MESSAGES
 ======================= */
 async function loadMessages(){
-  const { data, error } = await supabase
+
+  const { data } = await supabase
     .from("messages")
     .select("*")
     .eq("order_id", orderId)
     .order("created_at", { ascending: true });
 
-  if(error) return console.log(error);
-
-  renderMessages(data);
+  renderMessages(data || []);
 }
 
 function renderMessages(messages){
+
   const box = document.getElementById("chatBox");
   box.innerHTML = "";
 
   messages.forEach(m=>{
+
     const div = document.createElement("div");
-    div.className = "msg " + (m.sender_id === currentUser.id ? "you" : "them");
+
+    if(m.sender_id === "system"){
+      div.className = "msg system";
+    } else {
+      div.className = "msg " + (m.sender_id === currentUser.id ? "you" : "them");
+    }
+
     div.textContent = m.message;
     box.appendChild(div);
   });
@@ -112,17 +164,20 @@ function renderMessages(messages){
    SEND MESSAGE
 ======================= */
 async function sendMessage(){
+
+  if(orderClosed){
+    alert("Order is completed. Chat is locked.");
+    return;
+  }
+
   const input = document.getElementById("msgInput");
   if(!input.value) return;
 
-  const { error } = await supabase
-    .from("messages")
-    .insert({
-      order_id: orderId,
-      sender_id: currentUser.id,
-      receiver_id: "receiver-placeholder",
-      message: input.value
-    });
+  await supabase.from("messages").insert({
+    order_id: orderId,
+    sender_id: currentUser.id,
+    message: input.value
+  });
 
   input.value = "";
   loadMessages();
@@ -132,15 +187,79 @@ async function sendMessage(){
    REALTIME CHAT
 ======================= */
 supabase
-  .channel("messages-channel")
-  .on(
-    "postgres_changes",
+  .channel("chat-channel")
+  .on("postgres_changes",
     { event: "INSERT", schema: "public", table: "messages" },
-    (payload) => {
-      loadMessages();
-    }
+    () => loadMessages()
   )
   .subscribe();
+
+/* =======================
+   WATCH ESCROW / ORDER STATUS
+======================= */
+async function watchOrderStatus(){
+
+  const { data: escrow } = await supabase
+    .from("escrow")
+    .select("*")
+    .eq("id", orderId)
+    .single();
+
+  if(!escrow) return;
+
+  if(escrow.status === "released" || escrow.status === "paid"){
+    closeChat();
+  }
+
+  runZepAI(escrow);
+}
+
+/* =======================
+   🤖 ZEP AI ENGINE
+======================= */
+function runZepAI(escrow){
+
+  let statusText = "";
+
+  if(!escrow){
+    statusText = "Waiting for order confirmation...";
+  }
+
+  else if(escrow.status === "locked"){
+    statusText = "Order active. Funds secured in escrow. Work in progress.";
+  }
+
+  else if(escrow.status === "pending"){
+    statusText = "Payment pending approval. Stay active in chat.";
+  }
+
+  else if(escrow.status === "released"){
+    statusText = "Payment released. Order completed successfully.";
+  }
+
+  document.getElementById("aiStatus").innerText = statusText;
+}
+
+/* =======================
+   CLOSE CHAT AFTER PAYMENT
+======================= */
+function closeChat(){
+
+  orderClosed = true;
+
+  document.getElementById("inputBox").classList.add("disabled");
+
+  const box = document.getElementById("chatBox");
+
+  const sys = document.createElement("div");
+  sys.className = "msg system";
+  sys.textContent = "🔒 This order is completed. Chat has been locked by Zep AI.";
+
+  box.appendChild(sys);
+
+  document.getElementById("aiStatus").innerText =
+    "Order completed. Chat locked automatically by Zep AI.";
+}
 
 /* =======================
    LOGOUT
@@ -149,6 +268,7 @@ async function logout(){
   await supabase.auth.signOut();
   window.location.href = "login.html";
 }
+
 </script>
 
 </body>
