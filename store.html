@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Zep Swipe — Campus Store Details</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
   :root{
     --zep-blue:#00f0ff;
@@ -15,21 +17,21 @@
 
   body{
     margin:0;
-    font-family: Poppins,sans-serif;
-    background: var(--bg);
+    font-family:Poppins,sans-serif;
+    background:var(--bg);
     color:#fff;
     min-height:100vh;
     padding:20px;
   }
 
   .container{
-    max-width: 700px;
-    margin: 0 auto;
-    background: var(--glass);
+    max-width:700px;
+    margin:0 auto;
+    background:var(--glass);
     border:1px solid rgba(255,255,255,.12);
     border-radius:18px;
-    padding: 24px;
-    backdrop-filter: blur(12px);
+    padding:24px;
+    backdrop-filter:blur(12px);
     box-shadow:0 0 40px rgba(0,240,255,.25);
   }
 
@@ -43,13 +45,13 @@
   header h1{
     font-family:Orbitron;
     font-size:1.6rem;
-    background: linear-gradient(90deg, var(--zep-blue), var(--zep-violet));
+    background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
   }
 
   .home-btn{
-    background:linear-gradient(90deg, var(--zep-blue), var(--zep-violet));
+    background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
     color:#050015;
     padding:8px 16px;
     border:none;
@@ -67,12 +69,6 @@
     margin-bottom:16px;
   }
 
-  .deals-list{
-    list-style:none;
-    padding-left:0;
-    margin-bottom:16px;
-  }
-
   .deals-list li{
     margin-bottom:8px;
     padding:10px;
@@ -87,7 +83,7 @@
 
   .distance{
     font-weight:700;
-    color: var(--zep-blue);
+    color:var(--zep-blue);
   }
 
   .back-btn{
@@ -97,15 +93,10 @@
     font-family:Orbitron;
     font-weight:700;
     text-decoration:none;
-    background: linear-gradient(90deg, var(--zep-blue), var(--zep-violet));
+    background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
     color:#050015;
     box-shadow:0 0 28px rgba(0,240,255,.35);
     margin-top:16px;
-  }
-
-  @media(max-width:480px){
-    header h1{ font-size:1.2rem; }
-    .back-btn{ padding:10px 20px; }
   }
 </style>
 </head>
@@ -114,11 +105,11 @@
 
 <div class="container">
   <header>
-    <h1 id="storeName">Store Name</h1>
+    <h1 id="storeName">Loading...</h1>
     <button class="home-btn" onclick="location.href='deals.html'">Home</button>
   </header>
 
-  <img id="storeLogo" src="" alt="Store Logo" class="store-logo"/>
+  <img id="storeLogo" class="store-logo" />
 
   <div class="info" id="storeAddress"></div>
   <div class="info" id="storeHours"></div>
@@ -133,69 +124,102 @@
 </div>
 
 <script>
-  // -----------------------------
-  // Example store data for localStorage
-  // -----------------------------
-  // You can set this from deals.html before redirecting to store.html
-  /*
-  localStorage.setItem("currentStore", JSON.stringify({
-    name: "Campus Cafe",
-    logo: "https://example.com/logo.png",
-    address: "123 Campus Road, Cape Town",
-    lat: -33.9571,
-    lng: 18.4603,
-    hours: "Mon-Fri 08:00-18:00",
-    contact: "Phone: 0123456789 | Email: info@campuscafe.com",
-    deals: ["20% off coffee", "Buy 2 get 1 free pastries"]
-  }));
-  */
+/* ================= SUPABASE INIT ================= */
+const supabase = window.supabase.createClient(
+  "YOUR_SUPABASE_URL",
+  "YOUR_SUPABASE_ANON_KEY"
+);
 
-  const store = JSON.parse(localStorage.getItem("currentStore"));
+/* ================= GET STORE ID FROM URL ================= */
+const urlParams = new URLSearchParams(window.location.search);
+const storeId = urlParams.get("id");
 
-  if(store){
-    document.getElementById("storeName").textContent = store.name;
-    document.getElementById("storeLogo").src = store.logo || "";
-    document.getElementById("storeAddress").innerHTML = `Address: <a href="https://www.google.com/maps/search/?api=1&query=${store.lat},${store.lng}" target="_blank">${store.address}</a>`;
-    document.getElementById("storeHours").textContent = `Opening Hours: ${store.hours}`;
-    document.getElementById("storeContact").textContent = store.contact || "";
+/* ================= LOAD STORE ================= */
+async function loadStore(){
 
-    const dealsUl = document.getElementById("dealsList");
-    store.deals.forEach(deal=>{
-      const li = document.createElement("li");
-      li.textContent = deal;
-      dealsUl.appendChild(li);
-    });
-
-    // Geolocation for distance
-    if(navigator.geolocation){
-      navigator.geolocation.getCurrentPosition(pos=>{
-        const lat1 = pos.coords.latitude;
-        const lon1 = pos.coords.longitude;
-        const lat2 = store.lat;
-        const lon2 = store.lng;
-
-        function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2){
-          const R = 6371;
-          const dLat = (lat2-lat1)*Math.PI/180;
-          const dLon = (lon2-lon1)*Math.PI/180;
-          const a = Math.sin(dLat/2)*Math.sin(dLat/2)+
-                    Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*
-                    Math.sin(dLon/2)*Math.sin(dLon/2);
-          const c = 2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-          return R*c;
-        }
-
-        const distance = getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2).toFixed(2);
-        document.getElementById("distanceDisplay").textContent = `Distance: ${distance} km`;
-      }, err=>{
-        document.getElementById("distanceDisplay").textContent = `Distance: location unavailable`;
-      });
-    } else {
-      document.getElementById("distanceDisplay").textContent = `Distance: geolocation not supported`;
-    }
-  } else {
-    document.querySelector(".container").innerHTML = "<p>No store data found. Go back to deals.</p>";
+  if(!storeId){
+    document.querySelector(".container").innerHTML =
+      "<p>No store ID provided</p>";
+    return;
   }
+
+  const { data: store, error } = await supabase
+    .from("stores")
+    .select("*")
+    .eq("id", storeId)
+    .single();
+
+  if(error || !store){
+    document.querySelector(".container").innerHTML =
+      "<p>Store not found</p>";
+    return;
+  }
+
+  // UI populate
+  document.getElementById("storeName").textContent = store.name;
+  document.getElementById("storeLogo").src = store.logo || "";
+
+  document.getElementById("storeAddress").innerHTML =
+    `Address: <a target="_blank"
+     href="https://www.google.com/maps/search/?api=1&query=${store.lat},${store.lng}">
+     ${store.address}</a>`;
+
+  document.getElementById("storeHours").textContent =
+    `Opening Hours: ${store.hours}`;
+
+  document.getElementById("storeContact").textContent =
+    store.contact || "";
+
+  const dealsUl = document.getElementById("dealsList");
+  dealsUl.innerHTML = "";
+
+  (store.deals || []).forEach(deal=>{
+    const li = document.createElement("li");
+    li.textContent = deal;
+    dealsUl.appendChild(li);
+  });
+
+  loadDistance(store.lat, store.lng);
+}
+
+/* ================= DISTANCE CALC ================= */
+function loadDistance(lat2, lon2){
+
+  if(!navigator.geolocation){
+    document.getElementById("distanceDisplay").textContent =
+      "Distance: not supported";
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const lat1 = pos.coords.latitude;
+    const lon1 = pos.coords.longitude;
+
+    function calc(lat1,lon1,lat2,lon2){
+      const R=6371;
+      const dLat=(lat2-lat1)*Math.PI/180;
+      const dLon=(lon2-lon1)*Math.PI/180;
+      const a=
+        Math.sin(dLat/2)**2 +
+        Math.cos(lat1*Math.PI/180)*
+        Math.cos(lat2*Math.PI/180)*
+        Math.sin(dLon/2)**2;
+
+      return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+    }
+
+    const d = calc(lat1,lon1,lat2,lon2).toFixed(2);
+
+    document.getElementById("distanceDisplay").textContent =
+      `Distance: ${d} km`;
+
+  },()=>{
+    document.getElementById("distanceDisplay").textContent =
+      "Distance unavailable";
+  });
+}
+
+loadStore();
 </script>
 
 </body>
