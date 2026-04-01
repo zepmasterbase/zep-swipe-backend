@@ -7,6 +7,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root{
   --zep-blue:#00f0ff;
@@ -14,7 +16,6 @@
   --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
 }
 
-/* RESET */
 *{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
 
 body{
@@ -26,7 +27,6 @@ body{
   min-height:100vh;
 }
 
-/* CONTAINER */
 .container{
   width:100%;
   max-width:400px;
@@ -37,7 +37,6 @@ body{
   border:1px solid rgba(255,255,255,.1);
 }
 
-/* HEADER */
 .brand{
   text-align:center;
   margin-bottom:20px;
@@ -48,7 +47,6 @@ body{
   -webkit-text-fill-color:transparent;
 }
 
-/* INPUTS */
 input{
   width:100%;
   padding:12px;
@@ -59,9 +57,6 @@ input{
   color:#fff;
 }
 
-input::placeholder{color:rgba(255,255,255,.6);}
-
-/* BUTTON */
 button{
   width:100%;
   padding:14px;
@@ -78,7 +73,6 @@ button:hover{
   box-shadow:0 0 20px var(--zep-blue),0 0 40px var(--zep-violet);
 }
 
-/* TOGGLE */
 .toggle{
   text-align:center;
   margin-top:12px;
@@ -96,11 +90,11 @@ button:hover{
 
   <div class="brand">Zep Swipe</div>
 
-  <input type="text" id="name" placeholder="Full Name (Signup only)">
+  <input type="text" id="name" placeholder="Full Name (Signup only)" style="display:none;">
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="password" placeholder="Password">
 
-  <button onclick="handleAuth()">Login</button>
+  <button id="authBtn" onclick="handleAuth()">Login</button>
 
   <div class="toggle" onclick="toggleMode()" id="toggleText">
     Don't have an account? Sign up
@@ -109,114 +103,140 @@ button:hover{
 </div>
 
 <script>
+// 🔐 SUPABASE INIT (ADD YOUR KEYS LOCALLY)
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 let isSignup = false;
 
-// LOAD USERS SAFELY (NO DATA LOSS)
-let users = JSON.parse(localStorage.getItem("users")) || {};
-
-// TOGGLE LOGIN / SIGNUP
+// TOGGLE UI
 function toggleMode(){
   isSignup = !isSignup;
-  document.querySelector("button").innerText = isSignup ? "Sign Up" : "Login";
+
   document.getElementById("name").style.display = isSignup ? "block" : "none";
+  document.getElementById("authBtn").innerText = isSignup ? "Sign Up" : "Login";
+
   document.getElementById("toggleText").innerText = isSignup
     ? "Already have an account? Login"
     : "Don't have an account? Sign up";
 }
 
-// AUTH FUNCTION
-function handleAuth(){
+// SIGNUP + LOGIN HANDLER
+async function handleAuth(){
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim().toLowerCase();
   const password = document.getElementById("password").value.trim();
 
   if(!email || !password){
-    alert("Please fill all required fields");
+    alert("Please fill required fields");
     return;
   }
 
-  // SIGNUP
+  // ===================== SIGNUP =====================
   if(isSignup){
+
     if(!name){
-      alert("Enter your name");
+      alert("Enter your full name");
       return;
     }
 
-    // CHECK EXISTING USER
-    for(let id in users){
-      if(users[id].email === email){
-        alert("User already exists. Please login.");
-        return;
-      }
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password
+    });
+
+    if(error){
+      alert(error.message);
+      return;
     }
 
-    // CREATE USER ID
-    const userId = "user_" + Date.now();
+    const user = data.user;
 
-    users[userId] = {
-      id: userId,
-      name,
-      email,
-      password,
-      verified:false,
-      walletBalance:0,
-      zacBalance:0,
-      tasksCompleted:0,
-      profileCompletion:0,
-      freelancerReadiness:0,
-      profileImage:"",
-      university:"",
-      country:"",
-      learnEarn:{
-        progress:{},
-        completed:[],
-        zac:0
-      }
-    };
+    // insert into users table
+    const { error: dbError } = await supabase
+      .from("users")
+      .insert({
+        auth_id: user.id,
+        name: name,
+        email: email,
+        role: "student",
+        zac_balance: 0,
+        wallet_balance: 0
+      });
 
-    localStorage.setItem("users", JSON.stringify(users));
-    localStorage.setItem("currentUserId", userId);
+    if(dbError){
+      alert(dbError.message);
+      return;
+    }
 
     alert("Signup successful!");
-
-    // ✅ REDIRECT
     window.location.href = "student-dashboard.html";
   }
 
-  // LOGIN
+  // ===================== LOGIN =====================
   else{
-    let foundUserId = null;
 
-    for(let id in users){
-      if(users[id].email === email && users[id].password === password){
-        foundUserId = id;
-        break;
-      }
-    }
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
 
-    if(!foundUserId){
-      alert("Invalid login details");
+    if(error){
+      alert(error.message);
       return;
     }
 
-    // ✅ SAVE SESSION CORRECTLY
-    localStorage.setItem("currentUserId", foundUserId);
+    const user = data.user;
+
+    // fetch profile from DB
+    const { data: profile, error: profileError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("auth_id", user.id)
+      .single();
+
+    if(profileError){
+      alert(profileError.message);
+      return;
+    }
 
     alert("Login successful!");
 
-    // ✅ FORCE REDIRECT
-    window.location.href = "student-dashboard.html";
+    // redirect based on role
+    if(profile.role === "employer"){
+      window.location.href = "employer-dashboard.html";
+    } else {
+      window.location.href = "student-dashboard.html";
+    }
   }
 }
 
-// AUTO REDIRECT IF ALREADY LOGGED IN
-let currentUserId = localStorage.getItem("currentUserId");
-if(currentUserId && users[currentUserId]){
-  window.location.href = "student-dashboard.html";
+// AUTO SESSION CHECK (NO LOCALSTORAGE)
+async function checkSession(){
+  const { data } = await supabase.auth.getUser();
+
+  if(data?.user){
+    const { data: profile } = await supabase
+      .from("users")
+      .select("*")
+      .eq("auth_id", data.user.id)
+      .single();
+
+    if(profile){
+      if(profile.role === "employer"){
+        window.location.href = "employer-dashboard.html";
+      } else {
+        window.location.href = "student-dashboard.html";
+      }
+    }
+  }
 }
 
-// INIT
+checkSession();
 toggleMode();
+
 </script>
 
 </body>
