@@ -1,26 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Create Invoice</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<title>Zep AI Invoice System</title>
 
-  <style>
-    body { font-family: Arial; background:#0f172a; color:white; padding:20px; }
-    input, button { width:100%; padding:10px; margin:5px 0; }
-    button { background:#22c55e; border:none; color:white; }
-  </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body{
+  font-family:Arial;
+  background:#070018;
+  color:white;
+  padding:20px;
+}
+
+.box{
+  background:#111827;
+  padding:15px;
+  border-radius:12px;
+  margin-top:10px;
+}
+
+input,button{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  border:none;
+  border-radius:8px;
+}
+
+button{
+  background:linear-gradient(90deg,#22c55e,#00d4ff);
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.ai{
+  background:#0ea5e9;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:10px;
+  font-size:13px;
+}
+
+.warn{color:orange;}
+.good{color:#00ff9d;}
+.bad{color:#ff4d4d;}
+</style>
 </head>
 
 <body>
 
-<h2>🧾 Create Invoice → Escrow</h2>
+<h2>🧾 Zep AI Invoice → Escrow System</h2>
 
-<input id="desc" placeholder="Job description" />
-<input id="buyer" placeholder="Buyer (auth_id)" />
-<input id="seller" placeholder="Seller (auth_id)" />
-<input id="amount" type="number" placeholder="Amount (ZAC)" />
+<!-- 🤖 AI INSIGHT -->
+<div class="ai">
+  🤖 <span id="aiStatus">AI ready to analyze invoice data...</span>
+</div>
 
-<button onclick="createInvoice()">Create Invoice</button>
+<div class="box">
+
+  <input id="desc" placeholder="Job description" />
+  <input id="buyer" placeholder="Buyer (auth_id)" />
+  <input id="seller" placeholder="Seller (auth_id)" />
+  <input id="amount" type="number" placeholder="Amount (ZAC)" />
+
+  <button onclick="createInvoice()">Create Invoice → Escrow</button>
+</div>
 
 <script>
 
@@ -29,41 +75,95 @@ const supabaseKey = "YOUR_ANON_KEY";
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =========================
-   CREATE INVOICE + ESCROW
+   ZEP AI ANALYSIS ENGINE
 ========================= */
-async function createInvoice() {
+function analyzeInvoice(desc, amount){
+
+  let risk = 0;
+  let notes = [];
+
+  if(!desc || desc.length < 5){
+    risk += 40;
+    notes.push("Weak description");
+  }
+
+  if(amount <= 0){
+    risk += 50;
+    notes.push("Invalid amount");
+  }
+
+  if(amount > 100000){
+    risk += 20;
+    notes.push("High-value transaction");
+  }
+
+  // suspicious keywords
+  const badWords = ["cash", "urgent scam", "gift", "refund me", "hack"];
+  badWords.forEach(w => {
+    if(desc.toLowerCase().includes(w)){
+      risk += 30;
+      notes.push("Suspicious keyword detected");
+    }
+  });
+
+  let status = "safe";
+
+  if(risk >= 70) status = "high-risk";
+  else if(risk >= 40) status = "medium-risk";
+
+  return { risk, status, notes };
+}
+
+/* =========================
+   CREATE INVOICE → ESCROW
+========================= */
+async function createInvoice(){
 
   const description = document.getElementById("desc").value;
   const buyer_id = document.getElementById("buyer").value;
   const seller_id = document.getElementById("seller").value;
-  const amount = document.getElementById("amount").value;
+  const amount = Number(document.getElementById("amount").value);
 
-  // Generate invoice ID
+  if(!description || !buyer_id || !seller_id || !amount){
+    alert("Please fill all fields");
+    return;
+  }
+
+  // 🔥 AI ANALYSIS
+  const ai = analyzeInvoice(description, amount);
+
+  document.getElementById("aiStatus").innerHTML =
+    `Risk: ${ai.status.toUpperCase()} | Score: ${ai.risk} | Notes: ${ai.notes.join(", ")}`;
+
   const invoice_id = "INV-" + Date.now();
 
-  /* 1. CREATE ESCROW DIRECTLY FROM INVOICE */
-  const { data, error } = await supabase
+  // 💼 CREATE ESCROW FROM INVOICE
+  const { error } = await supabase
     .from("escrow")
-    .insert([
-      {
-        invoice_id,
-        description,
-        buyer_id,
-        seller_id,
-        amount,
-        status: "pending"
-      }
-    ]);
+    .insert([{
+      invoice_id,
+      description,
+      buyer_id,
+      seller_id,
+      amount,
+      status: "locked",
+      ai_risk: ai.status,
+      ai_score: ai.risk
+    }]);
 
-  if (error) {
-    alert("Error creating invoice escrow");
+  if(error){
+    alert("Failed to create invoice escrow");
     console.log(error);
     return;
   }
 
-  alert("Invoice created + Escrow locked 🔒");
+  alert("Invoice created → Escrow locked 🔒");
 
-  console.log("Created:", data);
+  // reset
+  document.getElementById("desc").value = "";
+  document.getElementById("buyer").value = "";
+  document.getElementById("seller").value = "";
+  document.getElementById("amount").value = "";
 }
 
 </script>
