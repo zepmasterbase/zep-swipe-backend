@@ -1,228 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — Escrow Payment</title>
+  <meta charset="UTF-8" />
+  <title>Zep Escrow</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
-<style>
-:root{
-  --zep-blue:#00f0ff;
-  --zep-violet:#9c4dff;
-  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
-  --glass:rgba(255,255,255,0.08);
-}
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Poppins,sans-serif;
-}
-
-body{
-  background:var(--bg);
-  color:#fff;
-  min-height:100vh;
-}
-
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:18px;
-  margin:16px;
-  border-radius:16px;
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(14px);
-}
-
-.brand{
-  font-family:Orbitron;
-  font-size:1.4rem;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-.logout-btn{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  border:none;
-  cursor:pointer;
-  background:rgba(255,255,255,0.1);
-  color:#fff;
-  font-size:16px;
-}
-
-.container{
-  max-width:600px;
-  margin:40px auto;
-  padding:20px;
-  background:var(--glass);
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,0.1);
-}
-
-h2{
-  text-align:center;
-  font-family:Orbitron;
-  margin-bottom:20px;
-}
-
-input, button{
-  width:100%;
-  padding:12px;
-  margin-bottom:14px;
-  border-radius:12px;
-  border:none;
-  outline:none;
-}
-
-button{
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
-  color:#050015;
-  font-family:Orbitron;
-  cursor:pointer;
-  transition:.3s;
-}
-
-button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 0 25px rgba(156,77,255,0.4);
-}
-
-.success{
-  background:rgba(0,255,150,0.15);
-  color:#00ff9d;
-  padding:12px;
-  border-radius:12px;
-  text-align:center;
-  display:none;
-  margin-top:10px;
-}
-</style>
+  <style>
+    body { font-family: Arial; background:#0f172a; color:white; padding:20px; }
+    .box { background:#1e293b; padding:15px; margin:10px 0; border-radius:10px; }
+    input, button { padding:10px; margin:5px; width:100%; border-radius:6px; border:none; }
+    button { cursor:pointer; background:#22c55e; color:white; }
+    .danger { background:#ef4444; }
+    .pending { color:yellow; }
+    .released { color:lime; }
+  </style>
 </head>
 
 <body>
 
-<header>
-  <div class="brand">Zep Swipe</div>
-  <button class="logout-btn" onclick="logout()">⎋</button>
-</header>
+<h2>💼 Zep Escrow System</h2>
 
-<div class="container">
-  <h2>Escrow Payment</h2>
+<!-- CREATE ESCROW -->
+<div class="box">
+  <h3>Create Escrow</h3>
 
-  <form id="escrowForm">
-    <input type="text" id="jobTitle" placeholder="Job Title" required>
-    <input type="number" id="amountUSD" placeholder="Amount (USD)" required min="1">
-    <input type="text" id="employerName" placeholder="Employer Name" required>
-    <input type="text" id="studentName" placeholder="Student Name" required>
+  <input id="buyer" placeholder="Buyer ID (auth_id)" />
+  <input id="seller" placeholder="Seller ID (auth_id)" />
+  <input id="amount" placeholder="Amount (ZAC)" type="number" />
 
-    <button type="submit">Deposit & Create Escrow</button>
-  </form>
+  <button onclick="createEscrow()">Create Escrow</button>
+</div>
 
-  <div class="success" id="successMsg"></div>
+<!-- ESCROW LIST -->
+<div class="box">
+  <h3>My Escrow Transactions</h3>
+  <div id="escrowList"></div>
 </div>
 
 <script>
-/* =========================
-   SUPABASE INIT
-========================= */
-const supabaseUrl = "https://YOUR_PROJECT.supabase.co";
+const supabaseUrl = "YOUR_SUPABASE_URL";
 const supabaseKey = "YOUR_ANON_KEY";
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-/* =========================
-   AUTH CHECK
-========================= */
-let currentUser = null;
+// GET CURRENT USER
+async function getUser() {
+  const { data } = await supabase.auth.getUser();
+  return data.user;
+}
 
-async function loadUser(){
-  const { data, error } = await supabase.auth.getUser();
+// CREATE ESCROW
+async function createEscrow() {
+  const buyer_id = document.getElementById("buyer").value;
+  const seller_id = document.getElementById("seller").value;
+  const amount = document.getElementById("amount").value;
 
-  if(error || !data.user){
-    alert("Login required");
-    window.location.href = "auth.html";
+  const { error } = await supabase.from("escrow").insert([
+    {
+      buyer_id,
+      seller_id,
+      amount,
+      status: "pending"
+    }
+  ]);
+
+  if (error) {
+    alert("Error creating escrow");
+    console.log(error);
     return;
   }
 
-  currentUser = data.user;
-}
-loadUser();
-
-/* =========================
-   LOGOUT
-========================= */
-async function logout(){
-  await supabase.auth.signOut();
-  window.location.href = "auth.html";
+  alert("Escrow created");
+  loadEscrow();
 }
 
-/* =========================
-   FORM SUBMIT
-========================= */
-const form = document.getElementById("escrowForm");
-const successMsg = document.getElementById("successMsg");
+// LOAD ESCROW
+async function loadEscrow() {
+  const user = await getUser();
+  if (!user) return;
 
-form.addEventListener("submit", async (e)=>{
-  e.preventDefault();
+  const { data, error } = await supabase
+    .from("escrow")
+    .select("*")
+    .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`)
+    .order("created_at", { ascending: false });
 
-  const jobTitle = document.getElementById("jobTitle").value;
-  const amountUSD = parseFloat(document.getElementById("amountUSD").value);
-  const employerName = document.getElementById("employerName").value;
-  const studentName = document.getElementById("studentName").value;
-
-  if(!jobTitle || !amountUSD || !employerName || !studentName){
-    alert("Fill all fields");
+  if (error) {
+    console.log(error);
     return;
   }
 
-  /* =========================
-     INSERT ESCROW JOB
-  ========================= */
+  render(data);
+}
+
+// RENDER ESCROW
+function render(data) {
+  const box = document.getElementById("escrowList");
+  box.innerHTML = "";
+
+  data.forEach(item => {
+    box.innerHTML += `
+      <div class="box">
+        <p><b>Amount:</b> ${item.amount} ZAC</p>
+        <p><b>Status:</b> <span class="${item.status}">${item.status}</span></p>
+
+        ${item.status === "pending" ? `
+          <button onclick="release('${item.id}')">Release</button>
+          <button class="danger" onclick="dispute('${item.id}')">Dispute</button>
+        ` : ""}
+      </div>
+    `;
+  });
+}
+
+// RELEASE FUNDS
+async function release(id) {
   const { error } = await supabase
-    .from("escrow_jobs")
-    .insert([{
-      job_title: jobTitle,
-      amount_usd: amountUSD,
-      employer_name: employerName,
-      student_name: studentName,
-      status: "pending",
-      created_by: currentUser.id
-    }]);
+    .from("escrow")
+    .update({ status: "released" })
+    .eq("id", id);
 
-  if(error){
-    console.error(error);
-    alert("Failed to create escrow job");
+  if (error) {
+    alert("Failed to release");
     return;
   }
 
-  /* =========================
-     REWARD SYSTEM (ZAC)
-  ========================= */
-  await supabase
-    .from("profiles")
-    .update({ zac: supabase.rpc('increment_zac', { amount: 25 }) })
-    .eq("id", currentUser.id);
+  loadEscrow();
+}
 
-  /* =========================
-     SUCCESS UI
-  ========================= */
-  successMsg.style.display = "block";
-  successMsg.innerHTML = `
-    Escrow created successfully!<br>
-    +25 ZAC rewarded 🎉
-  `;
+// DISPUTE
+async function dispute(id) {
+  const { error } = await supabase
+    .from("escrow")
+    .update({ status: "disputed" })
+    .eq("id", id);
 
-  form.reset();
-});
+  if (error) {
+    alert("Failed to dispute");
+    return;
+  }
+
+  loadEscrow();
+}
+
+// INIT
+loadEscrow();
+
 </script>
 
 </body>
