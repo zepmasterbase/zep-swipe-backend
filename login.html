@@ -3,46 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — Login / Signup</title>
+<title>Zep Swipe — Student Login</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-:root{
-  --zep-blue:#00f0ff;
-  --zep-violet:#9c4dff;
-  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
-}
-
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
-
 body{
-  background:var(--bg);
-  color:#fff;
+  margin:0;
+  font-family:Poppins,sans-serif;
+  background:radial-gradient(circle at 30% 10%, #050018, #000);
+  color:white;
   display:flex;
   justify-content:center;
   align-items:center;
-  min-height:100vh;
+  height:100vh;
 }
 
 .container{
-  width:100%;
-  max-width:400px;
-  background:rgba(255,255,255,0.05);
+  width:360px;
   padding:24px;
-  border-radius:20px;
-  backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.1);
+  border-radius:18px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:0 0 25px rgba(0,240,255,0.15);
 }
 
-.brand{
+h1{
+  font-family:Orbitron;
   text-align:center;
   margin-bottom:20px;
-  font-family:Orbitron;
-  font-size:1.6rem;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  background:linear-gradient(90deg,#00f0ff,#9c4dff);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
@@ -50,193 +43,171 @@ body{
 input{
   width:100%;
   padding:12px;
-  margin-bottom:12px;
+  margin:8px 0;
+  border-radius:10px;
   border:none;
-  border-radius:12px;
-  background:rgba(255,255,255,0.08);
-  color:#fff;
+  outline:none;
+  background:rgba(255,255,255,0.1);
+  color:white;
 }
 
 button{
   width:100%;
-  padding:14px;
-  border:none;
-  border-radius:999px;
-  font-family:Orbitron;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
-  color:#050015;
-  cursor:pointer;
+  padding:12px;
   margin-top:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  font-family:Orbitron;
+  background:linear-gradient(90deg,#00f0ff,#9c4dff);
+  color:#000;
 }
 
 button:hover{
-  box-shadow:0 0 20px var(--zep-blue),0 0 40px var(--zep-violet);
+  opacity:0.9;
 }
 
 .toggle{
   text-align:center;
   margin-top:12px;
   cursor:pointer;
-  font-size:.85rem;
+  font-size:0.9rem;
   color:#aaa;
 }
-.toggle:hover{color:#fff;}
+
+.error{
+  color:#ff4d4d;
+  font-size:0.85rem;
+  text-align:center;
+  margin-top:8px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="container">
+  <h1>Student Access</h1>
 
-  <div class="brand">Zep Swipe</div>
-
-  <input type="text" id="name" placeholder="Full Name (Signup only)" style="display:none;">
-  <input type="email" id="email" placeholder="Email">
+  <input type="email" id="email" placeholder="Student Email">
   <input type="password" id="password" placeholder="Password">
 
-  <button id="authBtn" onclick="handleAuth()">Login</button>
+  <button onclick="handleAuth()">Login / Signup</button>
 
-  <div class="toggle" onclick="toggleMode()" id="toggleText">
+  <div class="error" id="error"></div>
+
+  <div class="toggle" onclick="toggleMode()">
     Don't have an account? Sign up
   </div>
-
 </div>
 
 <script>
-// 🔐 SUPABASE INIT (ADD YOUR KEYS LOCALLY)
 const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let isSignup = false;
+let isLogin = true;
 
-// TOGGLE UI
 function toggleMode(){
-  isSignup = !isSignup;
-
-  document.getElementById("name").style.display = isSignup ? "block" : "none";
-  document.getElementById("authBtn").innerText = isSignup ? "Sign Up" : "Login";
-
-  document.getElementById("toggleText").innerText = isSignup
-    ? "Already have an account? Login"
-    : "Don't have an account? Sign up";
+  isLogin = !isLogin;
+  document.querySelector("h1").innerText = isLogin
+    ? "Student Access"
+    : "Student Sign Up";
 }
 
-// SIGNUP + LOGIN HANDLER
 async function handleAuth(){
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim().toLowerCase();
-  const password = document.getElementById("password").value.trim();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const errorBox = document.getElementById("error");
+
+  errorBox.innerText = "";
 
   if(!email || !password){
-    alert("Please fill required fields");
+    errorBox.innerText = "Please fill all fields";
     return;
   }
 
-  // ===================== SIGNUP =====================
-  if(isSignup){
+  try {
 
-    if(!name){
-      alert("Enter your full name");
-      return;
-    }
+    if(isLogin){
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password
-    });
-
-    if(error){
-      alert(error.message);
-      return;
-    }
-
-    const user = data.user;
-
-    // insert into users table
-    const { error: dbError } = await supabase
-      .from("users")
-      .insert({
-        auth_id: user.id,
-        name: name,
-        email: email,
-        role: "student",
-        zac_balance: 0,
-        wallet_balance: 0
+      // LOGIN
+      const { data, error } = await sb.auth.signInWithPassword({
+        email,
+        password
       });
 
-    if(dbError){
-      alert(dbError.message);
-      return;
-    }
+      if(error) throw error;
 
-    alert("Signup successful!");
-    window.location.href = "student-dashboard.html";
-  }
+      await checkStudentRole(data.user.id);
 
-  // ===================== LOGIN =====================
-  else{
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if(error){
-      alert(error.message);
-      return;
-    }
-
-    const user = data.user;
-
-    // fetch profile from DB
-    const { data: profile, error: profileError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("auth_id", user.id)
-      .single();
-
-    if(profileError){
-      alert(profileError.message);
-      return;
-    }
-
-    alert("Login successful!");
-
-    // redirect based on role
-    if(profile.role === "employer"){
-      window.location.href = "employer-dashboard.html";
     } else {
-      window.location.href = "student-dashboard.html";
+
+      // SIGNUP
+      const { data, error } = await sb.auth.signUp({
+        email,
+        password
+      });
+
+      if(error) throw error;
+
+      // create student profile
+      await sb.from("profiles").insert({
+        id: data.user.id,
+        name: email.split("@")[0],
+        role: "student",
+        profile_image: "",
+        level: "Beginner Freelancer",
+        profile_completion: 0,
+        freelancer_readiness: 0,
+        verified: false,
+        zac_balance: 0,
+        wallet_balance: 0,
+        learn_earn_progress: {},
+        earnings_history: [0,0,0,0,0,0,0]
+      });
+
+      alert("Account created! Please login.");
+      isLogin = true;
+      toggleMode();
     }
+
+  } catch(err){
+    errorBox.innerText = err.message;
   }
 }
 
-// AUTO SESSION CHECK (NO LOCALSTORAGE)
-async function checkSession(){
-  const { data } = await supabase.auth.getUser();
+async function checkStudentRole(userId){
+  const { data, error } = await sb
+    .from("profiles")
+    .select("role")
+    .eq("id", userId)
+    .single();
 
-  if(data?.user){
-    const { data: profile } = await supabase
-      .from("users")
-      .select("*")
-      .eq("auth_id", data.user.id)
-      .single();
-
-    if(profile){
-      if(profile.role === "employer"){
-        window.location.href = "employer-dashboard.html";
-      } else {
-        window.location.href = "student-dashboard.html";
-      }
-    }
+  if(error){
+    document.getElementById("error").innerText = "Profile not found";
+    return;
   }
+
+  if(data.role !== "student"){
+    document.getElementById("error").innerText =
+      "Access denied: Not a student account";
+    await sb.auth.signOut();
+    return;
+  }
+
+  location.href = "student-dashboard.html";
 }
 
-checkSession();
-toggleMode();
-
+// auto redirect if already logged in
+(async () => {
+  const { data: { user } } = await sb.auth.getUser();
+  if(user){
+    checkStudentRole(user.id);
+  }
+})();
 </script>
 
 </body>
