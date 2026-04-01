@@ -1,31 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Zep Wallet</title>
+  <meta charset="UTF-8" />
+  <title>Zep Wallet Dashboard</title>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    body { font-family: Arial; background:#0f172a; color:white; padding:20px; }
-    .card { background:#1e293b; padding:15px; margin:10px 0; border-radius:10px; }
-    .balance { font-size:30px; font-weight:bold; color:#22c55e; }
-    .tx { border-bottom:1px solid #334155; padding:10px 0; }
-    .credit { color:lime; }
-    .debit { color:red; }
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 15px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .box {
+      background: #111827;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .big {
+      font-size: 22px;
+      font-weight: bold;
+      color: #22c55e;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #3b82f6;
+      color: white;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .tx {
+      background: #111827;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .pending { color: yellow; }
+    .released { color: #22c55e; }
+    .disputed { color: #ef4444; }
   </style>
 </head>
 
 <body>
 
-<h2>💳 My Wallet</h2>
+<div class="container">
 
-<div class="card">
-  <p>Available Balance</p>
-  <div class="balance" id="balance">0 ZAC</div>
-</div>
+  <div class="header">
+    <h2>💳 Zep Wallet</h2>
+    <button onclick="loadWallet()">Refresh</button>
+  </div>
 
-<div class="card">
-  <h3>📜 Transaction Ledger</h3>
-  <div id="ledger"></div>
+  <!-- BALANCE CARDS -->
+  <div class="card">
+    <div class="grid">
+
+      <div class="box">
+        <p>ZAC Balance</p>
+        <div class="big" id="zacBalance">0</div>
+      </div>
+
+      <div class="box">
+        <p>Cash Balance</p>
+        <div class="big" id="cashBalance">0</div>
+      </div>
+
+      <div class="box">
+        <p>Pending Escrow</p>
+        <div class="big" id="pendingEscrow">0</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TRANSACTIONS -->
+  <div class="card">
+    <h3>📜 Recent Transactions</h3>
+    <div id="transactions"></div>
+  </div>
+
 </div>
 
 <script>
@@ -34,90 +122,77 @@ const supabaseUrl = "YOUR_SUPABASE_URL";
 const supabaseKey = "YOUR_ANON_KEY";
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// GET USER
+let user = null;
+
+/* =========================
+   GET USER
+========================= */
 async function getUser() {
   const { data } = await supabase.auth.getUser();
   return data.user;
 }
 
-// LOAD WALLET BALANCE
+/* =========================
+   LOAD WALLET DATA
+========================= */
 async function loadWallet() {
-  const user = await getUser();
-  if (!user) return;
 
-  const { data } = await supabase
+  user = await getUser();
+  if (!user) {
+    window.location.href = "/login-signup.html";
+    return;
+  }
+
+  // GET USER WALLET
+  const { data: userData } = await supabase
     .from("users")
-    .select("zac_balance")
+    .select("*")
     .eq("auth_id", user.id)
     .single();
 
-  if (data) {
-    document.getElementById("balance").innerText = data.zac_balance + " ZAC";
+  if (userData) {
+    document.getElementById("zacBalance").innerText = userData.zac_balance || 0;
+    document.getElementById("cashBalance").innerText = userData.wallet_balance || 0;
   }
-}
 
-// LOAD TRANSACTIONS (ESCROW + ACTIVITY)
-async function loadLedger() {
-  const user = await getUser();
-  if (!user) return;
-
-  const { data } = await supabase
+  // GET ESCROW DATA
+  const { data: escrow } = await supabase
     .from("escrow")
     .select("*")
-    .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`)
-    .order("created_at", { ascending: false });
+    .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`);
 
-  const ledger = document.getElementById("ledger");
-  ledger.innerHTML = "";
+  let pending = 0;
+
+  escrow.forEach(e => {
+    if (e.status === "pending") {
+      pending += Number(e.amount);
+    }
+  });
+
+  document.getElementById("pendingEscrow").innerText = pending;
+
+  renderTransactions(escrow);
+}
+
+/* =========================
+   TRANSACTION UI
+========================= */
+function renderTransactions(data) {
+  const box = document.getElementById("transactions");
+  box.innerHTML = "";
 
   data.forEach(tx => {
-
-    let type = "debit";
-
-    if (tx.status === "released" && tx.seller_id === user.id) {
-      type = "credit";
-    }
-
-    if (tx.status === "released" && tx.buyer_id === user.id) {
-      type = "debit";
-    }
-
-    ledger.innerHTML += `
+    box.innerHTML += `
       <div class="tx">
         <p><b>Amount:</b> ${tx.amount} ZAC</p>
-        <p><b>Status:</b> ${tx.status}</p>
-        <p class="${type}">
-          ${type === "credit" ? "+" : "-"} ${tx.amount} ZAC
-        </p>
+        <p><b>Status:</b> <span class="${tx.status}">${tx.status}</span></p>
       </div>
     `;
   });
 }
 
-// REAL-TIME ESCROW UPDATE → WALLET AUTO REFRESH
-function listenEscrowUpdates() {
-  supabase
-    .channel('escrow-channel')
-    .on(
-      'postgres_changes',
-      { event: 'UPDATE', schema: 'public', table: 'escrow' },
-      payload => {
-        console.log("Escrow updated:", payload);
-        loadWallet();
-        loadLedger();
-      }
-    )
-    .subscribe();
-}
-
-// INIT
-async function init() {
-  await loadWallet();
-  await loadLedger();
-  listenEscrowUpdates();
-}
-
-init();
+/* INIT */
+loadWallet();
 
 </script>
 
