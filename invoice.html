@@ -4,7 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zep Swipe — Invoice</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root{
   --zep-blue:#00f0ff;
@@ -12,284 +16,243 @@
   --bg:#050018;
   --glass:rgba(255,255,255,0.08);
   --green:#00ff94;
-  --red:#ff4d4d;
-  --white:#ffffff;
-  --text-light:rgba(255,255,255,.85);
   --yellow:#ffc107;
-  --purple:#9c4dff;
 }
 
-/* RESET */
 *{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif;}
-body{background:var(--bg);color:var(--white);min-height:100vh;display:flex;flex-direction:column;}
+body{background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column;}
 
-/* HEADER */
 header{
-  display:flex;justify-content:space-between;align-items:center;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   padding:16px;
-  background:radial-gradient(circle at center, rgba(0,240,255,.1), rgba(156,77,255,.1));
-  backdrop-filter:blur(14px);
-  box-shadow:0 0 20px var(--zep-blue),0 0 40px var(--zep-violet);
+  background:rgba(255,255,255,0.05);
 }
-.brand{display:flex;align-items:center;gap:12px;}
-.brand img{width:50px;height:50px;}
-.brand span{font-family:Orbitron;font-size:1.5rem;background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.trust-badge{background:var(--green);color:#050015;padding:6px 12px;border-radius:12px;font-size:0.8rem;font-family:Orbitron;}
 
-/* CONTAINER */
-.container{max-width:900px;margin:24px auto;padding:16px;display:flex;flex-direction:column;gap:20px;}
+.container{max-width:900px;margin:20px auto;padding:16px;display:flex;flex-direction:column;gap:20px;}
 
-/* CARD */
-.card{background:var(--glass);padding:20px;border-radius:18px;border:1px solid rgba(255,255,255,.12);box-shadow:0 0 20px rgba(0,240,255,.1),0 0 30px rgba(156,77,255,.1);}
-.card h3{font-family:Orbitron;margin-bottom:12px;}
+.card{
+  background:var(--glass);
+  padding:18px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+}
 
-/* PROFILE & CLIENT DETAILS */
-.details{display:flex;flex-wrap:wrap;gap:16px;}
-.details div{flex:1 1 200px;}
-.details img{width:80px;height:80px;border-radius:50%;border:2px solid rgba(255,255,255,.3);}
-.verified-badge{background:var(--green);color:#050015;padding:4px 10px;border-radius:12px;font-size:0.8rem;display:inline-block;margin-top:6px;}
+.status-badge{
+  padding:6px 12px;
+  border-radius:12px;
+  margin-left:10px;
+}
 
-/* STATUS BADGE */
-.status-badge{padding:6px 12px;border-radius:12px;font-family:Orbitron;font-size:0.85rem;display:inline-block;margin-left:8px;}
-.pending{background:var(--yellow);color:#050015;}
-.escrow{background:var(--zep-blue);color:#050015;}
-.submitted{background:var(--purple);color:#050015;}
-.released{background:var(--green);color:#050015;}
+.pending{background:var(--yellow);color:#000;}
+.escrow{background:var(--zep-blue);color:#000;}
+.released{background:var(--green);color:#000;}
 
-/* SERVICE DETAILS */
-.service{margin-top:12px;}
-.service textarea{width:100%;padding:12px;border-radius:12px;border:none;background:rgba(255,255,255,0.05);color:#fff;resize:none;}
+button{
+  padding:12px 20px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+}
 
-/* AMOUNT BREAKDOWN */
-.amounts{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
-.amounts div{display:flex;justify-content:space-between;padding:8px;background:rgba(255,255,255,0.05);border-radius:12px;}
-
-/* ESCROW INFO */
-.escrow-box{margin-top:12px;padding:12px;background:rgba(0,0,0,.4);border-radius:12px;font-size:0.85rem;}
-
-/* BUTTONS */
-button{padding:12px 20px;border:none;border-radius:999px;font-family:Orbitron;background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));color:#050015;cursor:pointer;transition:.3s;margin-top:10px;}
-button:hover{transform:translateY(-2px);box-shadow:0 0 15px var(--zep-blue),0 0 30px var(--zep-violet);}
 button.secondary{background:rgba(255,255,255,0.1);color:#fff;}
 
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:1000;}
-.modal{background:var(--glass);padding:20px;border-radius:18px;max-width:400px;width:90%;text-align:center;box-shadow:0 0 20px var(--zep-blue),0 0 40px var(--zep-violet);}
-.modal button{margin-top:12px;width:fit-content;}
-
-/* STATUS TIMELINE */
-.timeline{display:flex;justify-content:space-between;margin-top:16px;}
-.timeline-step{flex:1;text-align:center;font-size:0.85rem;}
-.timeline-step .circle{width:20px;height:20px;border-radius:50%;display:inline-block;margin-bottom:6px;}
-.timeline-step.pending .circle{background:var(--yellow);}
-.timeline-step.escrow .circle{background:var(--zep-blue);}
-.timeline-step.submitted .circle{background:var(--purple);}
-.timeline-step.released .circle{background:var(--green);}
-.timeline-step span{display:block;}
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.7);
+}
+.modal-box{
+  background:var(--glass);
+  padding:20px;
+  border-radius:16px;
+}
 </style>
 </head>
+
 <body>
 
 <header>
-  <div class="brand">
-    <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jfnua21qtu1vi2pfom33p641h.png" alt="Logo">
-    <span>Zep Swipe</span>
-  </div>
-  <div class="trust-badge">Verified Student • Escrow Protected</div>
+  <h2>Zep Swipe Invoice</h2>
 </header>
 
 <div class="container">
 
-  <!-- INVOICE SUMMARY -->
   <div class="card">
-    <h3>Invoice #<span id="invoiceId">INV-12345</span>
+    <h3>
+      Invoice #<span id="invoiceId"></span>
       <span id="statusBadge" class="status-badge pending">Pending</span>
     </h3>
-    <div>Issue Date: <span id="issueDate">2026-01-29</span> | Due Date: <span id="dueDate">2026-02-05</span></div>
   </div>
 
-  <!-- STUDENT DETAILS -->
   <div class="card">
-    <h3>Student Freelancer</h3>
-    <div class="details">
-      <div><img id="studentImg" src="https://via.placeholder.com/80" alt="Profile"><br>
-      <strong id="studentName">Siyanda</strong><br>
-      <span id="studentUniversity">University XYZ</span><br>
-      <span class="verified-badge" id="verifiedBadge">✔ Verified</span><br>
-      Wallet ID: <span id="walletId">ZEP-001</span>
-      </div>
-      <div>
-        <h4>Client Details</h4>
-        <span id="clientName">John Doe</span><br>
-        <span id="clientCountry">USA</span>
-      </div>
-    </div>
+    <h3>Student</h3>
+    <div id="studentName"></div>
   </div>
 
-  <!-- SERVICE DETAILS -->
-  <div class="card service">
-    <h3>Service Details</h3>
-    <div>Title: <span id="serviceTitle">Website Design</span></div>
-    <textarea id="serviceDesc" rows="4" readonly>Design a modern landing page for a fintech platform.</textarea>
-    <div>Delivery Date: <span id="deliveryDate">2026-02-03</span></div>
+  <div class="card">
+    <h3>Client</h3>
+    <div id="clientName"></div>
+    <div id="clientCountry"></div>
   </div>
 
-  <!-- AMOUNT BREAKDOWN -->
-  <div class="card amounts">
-    <h3>Amount Breakdown (USD)</h3>
-    <div><span>Subtotal:</span><span id="subtotal">$500</span></div>
-    <div><span>Platform Fee (5%):</span><span id="fee">$25</span></div>
-    <div><strong>Total Due:</strong><strong id="total">$525</strong></div>
+  <div class="card">
+    <h3>Service</h3>
+    <div id="serviceTitle"></div>
+    <p id="serviceDesc"></p>
   </div>
 
-  <!-- ESCROW INFO -->
-  <div class="card escrow-box">
-    Funds are held securely in escrow. Payment is only released after work is submitted and approved.
+  <div class="card">
+    <h3>Payment</h3>
+    <div>Subtotal: $<span id="subtotal"></span></div>
+    <div>Fee: $<span id="fee"></span></div>
+    <div>Total: $<span id="total"></span></div>
   </div>
 
-  <!-- STATUS TIMELINE -->
-  <div class="timeline">
-    <div class="timeline-step pending"><div class="circle"></div><span>Awaiting Payment</span></div>
-    <div class="timeline-step escrow"><div class="circle"></div><span>In Escrow</span></div>
-    <div class="timeline-step submitted"><div class="circle"></div><span>Work Submitted</span></div>
-    <div class="timeline-step released"><div class="circle"></div><span>Funds Released</span></div>
-  </div>
-
-  <!-- ACTION BUTTONS -->
-  <button id="payBtn">Pay Securely</button>
-  <button id="releaseBtn" class="secondary" style="display:none;">Approve & Release Funds</button>
+  <button id="payBtn">Pay into Escrow</button>
+  <button id="releaseBtn" class="secondary" style="display:none;">Release Funds</button>
 
 </div>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modalContent">
-    <p id="modalText">Processing...</p>
-    <button onclick="closeModal()">Close</button>
-  </div>
+<div class="modal" id="modal">
+  <div class="modal-box" id="modalText">Loading...</div>
 </div>
 
 <script>
-// ===== USERS & INVOICES =====
-let users = JSON.parse(localStorage.getItem("users")) || {};
-let currentUserId = localStorage.getItem("currentUserId");
-let currentUser = users[currentUserId] || {name:"Siyanda", walletBalance:0, profileImage:"https://via.placeholder.com/80"};
+/* =========================
+   SUPABASE INIT
+========================= */
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-// ===== LOAD INVOICE FROM URL PARAM or LAST NOTIFICATION CLICK =====
-let invoices = JSON.parse(localStorage.getItem("invoices")) || [];
-const urlParams = new URLSearchParams(window.location.search);
-let invoiceIdParam = urlParams.get('invoiceId'); // invoiceId passed from notification click
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let invoice = invoices.find(inv => inv.id===invoiceIdParam) || invoices[0] || {
-  id: "INV-"+Math.floor(Math.random()*90000+10000),
-  status: "Pending",
-  subtotal:500,
-  fee:25,
-  total:525,
-  studentId: currentUserId,
-  clientName:"John Doe",
-  clientCountry:"USA",
-  serviceTitle:"Website Design",
-  serviceDesc:"Design a modern landing page for a fintech platform.",
-  deliveryDate:"2026-02-03",
-  issueDate:"2026-01-29",
-  dueDate:"2026-02-05"
+/* =========================
+   STATE
+========================= */
+let invoice = null;
+
+/* =========================
+   GET INVOICE ID FROM URL
+========================= */
+const params = new URLSearchParams(window.location.search);
+const invoiceId = params.get("invoiceId");
+
+/* =========================
+   LOAD INVOICE
+========================= */
+async function loadInvoice(){
+
+  const { data, error } = await sb
+    .from("invoices")
+    .select("*")
+    .eq("id", invoiceId)
+    .single();
+
+  if(error || !data){
+    document.body.innerHTML = "<h3 style='color:white;text-align:center'>Invoice not found</h3>";
+    return;
+  }
+
+  invoice = data;
+  render();
+}
+
+loadInvoice();
+
+/* =========================
+   RENDER
+========================= */
+function render(){
+
+  document.getElementById("invoiceId").innerText = invoice.id;
+
+  const badge = document.getElementById("statusBadge");
+  badge.innerText = invoice.status;
+  badge.className = "status-badge " + invoice.status.toLowerCase();
+
+  document.getElementById("studentName").innerText = invoice.student_id || "Student";
+  document.getElementById("clientName").innerText = invoice.client_name;
+  document.getElementById("clientCountry").innerText = invoice.client_country;
+
+  document.getElementById("serviceTitle").innerText = invoice.service_title;
+  document.getElementById("serviceDesc").innerText = invoice.service_desc;
+
+  document.getElementById("subtotal").innerText = invoice.subtotal;
+  document.getElementById("fee").innerText = invoice.fee;
+  document.getElementById("total").innerText = invoice.total;
+
+  if(invoice.status === "Pending"){
+    payBtn.style.display = "inline-block";
+    releaseBtn.style.display = "none";
+  } else if(invoice.status === "Escrow"){
+    payBtn.style.display = "none";
+    releaseBtn.style.display = "inline-block";
+  } else {
+    payBtn.style.display = "none";
+    releaseBtn.style.display = "none";
+  }
+}
+
+/* =========================
+   MODAL
+========================= */
+function show(msg){
+  modal.style.display = "flex";
+  modalText.innerText = msg;
+}
+
+modal.onclick = ()=> modal.style.display="none";
+
+/* =========================
+   PAY TO ESCROW
+========================= */
+payBtn.onclick = async ()=>{
+
+  show("Sending payment to escrow...");
+
+  const { error } = await sb
+    .from("invoices")
+    .update({ status: "Escrow" })
+    .eq("id", invoice.id);
+
+  if(error){
+    show("Payment failed");
+    return;
+  }
+
+  invoice.status = "Escrow";
+  render();
+  show("Payment sent to escrow!");
 };
 
-// ===== DOM Elements =====
-const invoiceIdEl = document.getElementById("invoiceId");
-const statusBadge = document.getElementById("statusBadge");
-const studentName = document.getElementById("studentName");
-const studentImg = document.getElementById("studentImg");
-const studentUniversity = document.getElementById("studentUniversity");
-const verifiedBadge = document.getElementById("verifiedBadge");
-const walletId = document.getElementById("walletId");
-const clientName = document.getElementById("clientName");
-const clientCountry = document.getElementById("clientCountry");
-const serviceTitle = document.getElementById("serviceTitle");
-const serviceDesc = document.getElementById("serviceDesc");
-const deliveryDate = document.getElementById("deliveryDate");
-const subtotal = document.getElementById("subtotal");
-const fee = document.getElementById("fee");
-const total = document.getElementById("total");
-const payBtn = document.getElementById("payBtn");
-const releaseBtn = document.getElementById("releaseBtn");
-const modalOverlay = document.getElementById("modalOverlay");
-const modalText = document.getElementById("modalText");
+/* =========================
+   RELEASE FUNDS
+========================= */
+releaseBtn.onclick = async ()=>{
 
-// ===== RENDER INVOICE =====
-function renderInvoice(){
-  invoiceIdEl.innerText = invoice.id;
-  statusBadge.innerText = invoice.status;
-  statusBadge.className = "status-badge "+invoice.status.toLowerCase();
-  studentName.innerText = currentUser.name;
-  studentImg.src = currentUser.profileImage;
-  studentUniversity.innerText = currentUser.university || "University XYZ";
-  verifiedBadge.style.display = currentUser.verified ? "inline-block" : "none";
-  walletId.innerText = "ZEP-"+currentUserId;
-  clientName.innerText = invoice.clientName;
-  clientCountry.innerText = invoice.clientCountry;
-  serviceTitle.innerText = invoice.serviceTitle;
-  serviceDesc.value = invoice.serviceDesc;
-  deliveryDate.innerText = invoice.deliveryDate;
-  subtotal.innerText = "$"+invoice.subtotal;
-  fee.innerText = "$"+invoice.fee;
-  total.innerText = "$"+invoice.total;
+  show("Releasing funds...");
 
-  if(invoice.status==="Pending"){ payBtn.style.display="inline-block"; releaseBtn.style.display="none"; }
-  else if(invoice.status==="Escrow"){ payBtn.style.display="none"; releaseBtn.style.display="inline-block"; }
-  else{ payBtn.style.display="none"; releaseBtn.style.display="none"; }
+  const { error } = await sb
+    .from("invoices")
+    .update({ status: "Released" })
+    .eq("id", invoice.id);
 
-  updateTimeline();
-}
-renderInvoice();
+  if(error){
+    show("Release failed");
+    return;
+  }
 
-// ===== MODAL =====
-function showModal(text){ modalText.innerText=text; modalOverlay.style.display="flex"; }
-function closeModal(){ modalOverlay.style.display="none"; }
-
-// ===== STATUS TIMELINE UPDATE =====
-function updateTimeline(){
-  const steps=["pending","escrow","submitted","released"];
-  steps.forEach(step=>{
-    const el=document.querySelector(".timeline-step."+step);
-    if(!el) return;
-    if(steps.indexOf(invoice.status)>=steps.indexOf(step)) el.querySelector(".circle").style.opacity=1;
-    else el.querySelector(".circle").style.opacity=0.3;
-  });
-}
-
-// ===== PAYMENT FLOW =====
-payBtn.addEventListener("click",()=>{
-  showModal("Processing Payment...");
-  setTimeout(()=>{
-    invoice.status="Escrow";
-    saveInvoice();
-    renderInvoice();
-    showModal("Payment successfully sent to escrow!");
-  },1500);
-});
-
-releaseBtn.addEventListener("click",()=>{
-  showModal("Releasing funds to student wallet...");
-  setTimeout(()=>{
-    invoice.status="Released";
-    currentUser.walletBalance += invoice.total;
-    users[currentUserId] = currentUser;
-    localStorage.setItem("users",JSON.stringify(users));
-    saveInvoice();
-    renderInvoice();
-    showModal("Funds released! Wallet updated.");
-  },1500);
-});
-
-// ===== SAVE INVOICE =====
-function saveInvoice(){
-  let idx = invoices.findIndex(inv=>inv.id===invoice.id);
-  if(idx>=0) invoices[idx]=invoice;
-  else invoices.push(invoice);
-  localStorage.setItem("invoices",JSON.stringify(invoices));
-}
+  invoice.status = "Released";
+  render();
+  show("Funds released successfully!");
+};
 </script>
 
 </body>
