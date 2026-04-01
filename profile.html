@@ -3,317 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Zep Swipe — Student Profile</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --zep-blue:#00f0ff;
-  --zep-violet:#9c4dff;
-  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
-  --glass:rgba(255,255,255,.08);
-  --text-light:rgba(255,255,255,.85);
-  --green:#00ff94;
-  --card-radius:20px;
-}
-
-/* RESET */
-*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif;}
-body{background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0;}
-
-/* HEADER */
-header{
-  width:100%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:16px 24px;
-  background:rgba(0,0,0,0.3);
-  border-bottom:1px solid rgba(255,255,255,.1);
-  box-shadow:0 0 12px rgba(0,255,255,.2);
-}
-.brand{
-  display:flex;align-items:center;gap:12px;font-family:Orbitron;font-size:1.5rem;
-}
-.brand img{width:50px;height:50px;}
-.home-btn{
-  background:linear-gradient(135deg,var(--zep-blue),var(--zep-violet));
-  border:none;border-radius:50%;
-  width:50px;height:50px;cursor:pointer;
-  font-size:20px;color:#050015;
-  display:flex;align-items:center;justify-content:center;
-  transition:.3s;
-}
-.home-btn:hover{transform:scale(1.05);}
-
-/* PROFILE CONTAINER */
-.profile-container{
-  width:90%;
-  max-width:700px;
-  background:var(--glass);
-  border-radius:var(--card-radius);
-  padding:25px;
-  margin:20px auto;
-  border:1px solid rgba(255,255,255,.12);
-  display:flex;flex-direction:column;gap:18px;
-}
-
-/* TOP STUDENT INFO */
-.student-info{
-  display:flex;gap:16px;align-items:center;
-  padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.1);
-}
-.profile-image{
-  width:120px;height:120px;border-radius:50%;
-  border:3px solid rgba(255,255,255,.3);
-  object-fit:cover;cursor:pointer;
-  transition:.3s;
-}
-.profile-image:hover{transform:scale(1.05);}
-.student-details h3{margin-bottom:4px;}
-.student-details span{display:block;font-size:.85rem;color:var(--text-light);}
-.verified-badge{display:flex;align-items:center;gap:8px;font-family:Orbitron;font-size:14px;background:linear-gradient(90deg,var(--green),var(--zep-blue));padding:6px 12px;border-radius:12px;color:#050015;margin-top:6px;}
-
-/* TASKS TRACKER */
-.tasks-container{
-  display:grid;grid-template-columns:repeat(7,1fr);
-  gap:8px;margin:12px 0;
-}
-.task-day{
-  height:40px;display:flex;align-items:center;justify-content:center;
-  border-radius:12px;background:rgba(255,255,255,.05);
-  color:var(--text-light);cursor:pointer;transition:.3s;
-}
-.task-day.completed{
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
-}
-.task-day:hover{transform:scale(1.05);}
-
-/* PROFILE FORM */
-.profile-form input[type="text"]{
-  width:100%;padding:12px;border-radius:12px;border:none;
-  outline:none;margin-bottom:12px;background:rgba(255,255,255,0.05);color:#fff;
-}
-.profile-form input::placeholder{color:rgba(255,255,255,0.6);}
-.profile-form button{
-  width:100%;padding:14px;border:none;border-radius:999px;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
-  color:#050015;font-family:Orbitron;cursor:pointer;transition:.3s;margin-top:6px;
-}
-.profile-form button:hover{transform:translateY(-2px);box-shadow:0 0 36px rgba(156,77,255,.45);}
-
-/* VERIFY BUTTON */
-#verifyBtn{display:none;margin-top:12px;background:linear-gradient(90deg,var(--green),var(--zep-blue));}
-
-/* PROGRESS BAR */
-.progress-container{width:100%;height:14px;background:rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin-bottom:10px;}
-.progress-bar{height:100%;background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));width:0%;transition:width .4s ease;border-radius:12px;}
-
-/* RESPONSIVE */
-@media(max-width:480px){
-  .profile-container{padding:18px;width:95%;}
-  .tasks-container{grid-template-columns:repeat(3,1fr);}
-  .student-info{flex-direction:column;align-items:center;text-align:center;}
-}
+body{background:#050018;color:white;font-family:Poppins;display:flex;justify-content:center;padding:20px;}
+.container{width:100%;max-width:700px;background:rgba(255,255,255,0.05);padding:20px;border-radius:20px;}
+input,button{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:none;}
+button{background:linear-gradient(90deg,#00f0ff,#9c4dff);cursor:pointer;}
+img{width:120px;height:120px;border-radius:50%;cursor:pointer;}
+.task{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:10px;}
+.task div{background:rgba(255,255,255,0.1);padding:10px;text-align:center;border-radius:8px;}
+.completed{background:#00f0ff;}
 </style>
+
 </head>
+
 <body>
 
-<header>
-  <div class="brand">
-    <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jfnua21qtu1vi2pfom33p641h.png" alt="Zep Swipe Logo">
-    Zep Swipe
-  </div>
-  <button class="home-btn" title="Home" onclick="location.href='student-dashboard.html'">🏠</button>
-</header>
+<div class="container">
 
-<div class="profile-container">
-  <!-- Top student info -->
-  <div class="student-info">
-    <img src="https://via.placeholder.com/120" alt="Profile Image" class="profile-image" id="profileImg">
-    <div class="student-details">
-      <h3 id="studentName"></h3>
-      <span id="studentUniversity"></span>
-      <span id="studentCountry"></span>
-      <div id="verifiedBadge" class="verified-badge" style="display:none;">✔ Verified Freelancer</div>
-    </div>
-  </div>
+<h2>👤 Student Profile</h2>
 
-  <!-- 21-day Learn & Earn tasks tracker -->
-  <div>
-    <h4 style="text-align:center;margin-bottom:8px;">21-Day Learn & Earn Progress</h4>
-    <div class="tasks-container" id="tasksContainer"></div>
-    <span id="tasksCompletedText" style="text-align:center;display:block;margin-top:6px;"></span>
-  </div>
+<img id="profileImg" src="https://via.placeholder.com/120">
 
-  <!-- Profile form -->
-  <div class="profile-form">
-    <input type="text" id="name" placeholder="Full Name">
-    <input type="text" id="university" placeholder="University">
-    <input type="text" id="country" placeholder="Country">
-    <input type="text" id="city" placeholder="City">
-    <input type="text" id="level" placeholder="Level (e.g., Beginner Freelancer)">
+<input id="name" placeholder="Full Name">
+<input id="university" placeholder="University">
+<input id="country" placeholder="Country">
+<input id="city" placeholder="City">
+<input id="level" placeholder="Level">
 
-    <div class="progress-container">
-      <div class="progress-bar" id="profileProgress"></div>
-    </div>
-    <span id="completionText" style="text-align:center;display:block;">Profile Completion: 0%</span>
+<button onclick="saveProfile()">Save Profile</button>
 
-    <button id="verifyBtn" onclick="payForVerification()">Pay <span id="verifyAmount">$15</span> for Freelancer Verification</button>
-    <button onclick="saveProfile()">Save Profile</button>
-  </div>
+<h3>📊 21-Day Progress</h3>
+<div class="task" id="tasks"></div>
+
+<button id="verifyBtn" onclick="verifyUser()">Verify Freelancer ($15)</button>
+
 </div>
 
 <script>
-// ======== USERS & SESSION =========
-let users = JSON.parse(localStorage.getItem("users")) || {};
-let currentUserId = localStorage.getItem("currentUserId");
-if(!currentUserId || !users[currentUserId]) location.href="login.html";
-let currentUser = users[currentUserId];
 
-// DOM Elements
-const profileImg = document.getElementById("profileImg");
-const nameInput = document.getElementById("name");
-const universityInput = document.getElementById("university");
-const countryInput = document.getElementById("country");
-const cityInput = document.getElementById("city");
-const levelInput = document.getElementById("level");
-const profileProgress = document.getElementById("profileProgress");
-const completionText = document.getElementById("completionText");
-const verifiedBadge = document.getElementById("verifiedBadge");
-const verifyBtn = document.getElementById("verifyBtn");
-const studentName = document.getElementById("studentName");
-const studentUniversity = document.getElementById("studentUniversity");
-const studentCountry = document.getElementById("studentCountry");
-const tasksContainer = document.getElementById("tasksContainer");
-const tasksCompletedText = document.getElementById("tasksCompletedText");
-const verifyAmount = document.getElementById("verifyAmount");
+const supabaseUrl = "https://wucferiudoekefgaciua.supabase.co";
+const supabaseKey = "YOUR_ANON_KEY";
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-// ======== CURRENCY CONVERSION =========
-const conversionRates = {
-  "South Africa": 18,
-  "Ghana": 15,
-  "Nigeria": 1020,
-  "default": 1
-};
-function getLocalAmount(usdAmount){
-  let rate = conversionRates[currentUser.country] || conversionRates.default;
-  if(rate === 1) return `$${usdAmount}`;
-  return `${(usdAmount*rate).toFixed(2)} ${currentUser.country}`;
-}
+let user = null;
 
-// ======== LOAD USER =========
-function loadUser(){
-  profileImg.src = currentUser.profileImage || "https://via.placeholder.com/120";
-  nameInput.value = currentUser.name || "";
-  universityInput.value = currentUser.university || "";
-  countryInput.value = currentUser.country || "";
-  cityInput.value = currentUser.city || "";
-  levelInput.value = currentUser.level || "Beginner Freelancer";
-  studentName.innerText = currentUser.name || "";
-  studentUniversity.innerText = currentUser.university || "";
-  studentCountry.innerText = currentUser.country || "";
-  updateTasks();
-  updateCompletion();
-  updateVerifiedBadge();
-}
-loadUser();
+/* ======================
+   GET AUTH USER
+====================== */
+async function getUser(){
+  const { data } = await supabase.auth.getUser();
+  user = data.user;
 
-// ======== IMAGE UPLOAD =========
-profileImg.addEventListener('click',()=>imgUpload.click());
-const imgUpload = document.createElement("input");
-imgUpload.type="file"; imgUpload.accept="image/*"; imgUpload.style.display="none";
-document.body.appendChild(imgUpload);
-imgUpload.addEventListener('change', (e)=>{
-  const file = e.target.files[0];
-  if(file){
-    const reader = new FileReader();
-    reader.onload = function(ev){
-      profileImg.src = ev.target.result;
-      currentUser.profileImage = ev.target.result;
-      saveUser();
-    }
-    reader.readAsDataURL(file);
+  if(!user){
+    window.location.href = "login-signup.html";
   }
-});
-
-// ======== SAVE PROFILE =========
-function saveProfile(){
-  currentUser.name = nameInput.value.trim() || currentUser.name;
-  currentUser.university = universityInput.value.trim() || currentUser.university;
-  currentUser.country = countryInput.value.trim() || currentUser.country;
-  currentUser.city = cityInput.value.trim() || currentUser.city;
-  currentUser.level = levelInput.value.trim() || currentUser.level;
-  saveUser();
-  alert("Profile saved successfully!");
-  loadUser();
 }
 
-// ======== PROFILE COMPLETION =========
-function updateCompletion(){
-  let filled = 0;
-  [nameInput,universityInput,countryInput,cityInput,levelInput].forEach(i=>{if(i.value.trim()!=="") filled++;});
-  let percent = Math.round((filled/5)*100);
-  profileProgress.style.width = percent+"%";
-  completionText.innerText = `Profile Completion: ${percent}%`;
+/* ======================
+   LOAD PROFILE
+====================== */
+async function loadProfile(){
+
+  await getUser();
+
+  const { data } = await supabase
+    .from("users")
+    .select("*")
+    .eq("auth_id", user.id)
+    .single();
+
+  if(data){
+    document.getElementById("name").value = data.name || "";
+    document.getElementById("university").value = data.university || "";
+    document.getElementById("country").value = data.country || "";
+    document.getElementById("city").value = data.city || "";
+    document.getElementById("level").value = data.level || "";
+    document.getElementById("profileImg").src = data.profile_image || "https://via.placeholder.com/120";
+
+    renderTasks(data.tasks_completed || 0);
+  }
 }
 
-// ======== TASKS TRACKER =========
-function updateTasks(){
-  tasksContainer.innerHTML = "";
-  if(!currentUser.tasksCompleted) currentUser.tasksCompleted = 0;
+/* ======================
+   SAVE PROFILE
+====================== */
+async function saveProfile(){
+
+  const updates = {
+    auth_id: user.id,
+    name: name.value,
+    university: university.value,
+    country: country.value,
+    city: city.value,
+    level: level.value
+  };
+
+  const { error } = await supabase
+    .from("users")
+    .upsert(updates, { onConflict: "auth_id" });
+
+  if(error){
+    alert("Error saving profile");
+    console.log(error);
+    return;
+  }
+
+  alert("Profile saved");
+}
+
+/* ======================
+   TASKS
+====================== */
+function renderTasks(completed){
+  const container = document.getElementById("tasks");
+  container.innerHTML = "";
+
   for(let i=1;i<=21;i++){
-    let day = document.createElement("div");
-    day.className = "task-day";
-    if(i<=currentUser.tasksCompleted) day.classList.add("completed");
-    day.innerText = i;
-    day.addEventListener("click",()=>alert(`Day ${i} task: placeholder details`));
-    tasksContainer.appendChild(day);
-  }
-  tasksCompletedText.innerText = `Tasks Completed: ${currentUser.tasksCompleted}/21`;
-}
+    const div = document.createElement("div");
+    div.innerText = i;
 
-// ======== VERIFIED =========
-function updateVerifiedBadge(){
-  if(currentUser.verified){
-    verifiedBadge.style.display = "flex";
-    verifyBtn.style.display = "none";
-  } else {
-    verifiedBadge.style.display = "none";
-    if(currentUser.tasksCompleted>=21){
-      verifyBtn.style.display = "block";
-      verifyBtn.disabled = false;
-      verifyAmount.innerText = getLocalAmount(15);
-    } else {
-      verifyBtn.style.display = "block";
-      verifyBtn.disabled = true;
-      verifyBtn.innerText = "Complete 21-day Learn & Earn tasks first";
+    if(i <= completed){
+      div.classList.add("completed");
     }
+
+    container.appendChild(div);
   }
 }
 
-// ======== MOCK PAYMENT =========
-function payForVerification(){
-  if(currentUser.tasksCompleted<21){alert("Complete all 21 Learn & Earn tasks first."); return;}
-  let confirmPayment = confirm(`Pay ${getLocalAmount(15)} to become verified?`);
-  if(confirmPayment){
-    currentUser.verified = true;
-    saveUser();
-    alert("Payment successful! You are now verified.");
-    updateVerifiedBadge();
-  }
+/* ======================
+   VERIFY (placeholder)
+====================== */
+function verifyUser(){
+  alert("Connect payment gateway later (Paystack/Momo)");
 }
 
-// ======== SAVE USER =========
-function saveUser(){
-  users[currentUserId] = currentUser;
-  localStorage.setItem("users",JSON.stringify(users));
-}
+/* INIT */
+loadProfile();
 
-// Update completion on input
-[nameInput,universityInput,countryInput,cityInput,levelInput].forEach(i=>{
-  i.addEventListener('input',updateCompletion);
-});
 </script>
 
 </body>
