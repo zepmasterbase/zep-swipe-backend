@@ -1,107 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Zep Wallet Dashboard</title>
+<meta charset="UTF-8" />
+<title>Zep Wallet AI Dashboard</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-    }
+<style>
+body{
+  margin:0;
+  font-family:Poppins, sans-serif;
+  background:#050012;
+  color:white;
+}
 
-    .container {
-      padding: 20px;
-      max-width: 900px;
-      margin: auto;
-    }
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:20px;
+}
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
 
-    .card {
-      background: #1e293b;
-      padding: 20px;
-      border-radius: 12px;
-      margin-top: 15px;
-    }
+button{
+  padding:10px 14px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  background:linear-gradient(90deg,#00f0ff,#9b5cff);
+  color:#000;
+  font-weight:bold;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-    }
+/* CARDS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:15px;
+}
 
-    .box {
-      background: #111827;
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-    }
+.card{
+  background:rgba(255,255,255,0.06);
+  padding:16px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.1);
+}
 
-    .big {
-      font-size: 22px;
-      font-weight: bold;
-      color: #22c55e;
-    }
+.big{
+  font-size:22px;
+  font-weight:bold;
+  color:#00ff9d;
+}
 
-    button {
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background: #3b82f6;
-      color: white;
-      margin-top: 10px;
-      width: 100%;
-    }
+/* AI BOX */
+.ai-box{
+  margin-top:15px;
+  padding:16px;
+  border-radius:14px;
+  background:rgba(0,240,255,0.08);
+  border:1px solid rgba(0,240,255,0.3);
+}
 
-    .tx {
-      background: #111827;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 8px;
-      font-size: 14px;
-    }
+/* TRANSACTIONS */
+.tx{
+  background:rgba(255,255,255,0.05);
+  padding:10px;
+  margin-top:10px;
+  border-radius:10px;
+  font-size:14px;
+}
 
-    .pending { color: yellow; }
-    .released { color: #22c55e; }
-    .disputed { color: #ef4444; }
-  </style>
+.pending{color:yellow;}
+.released{color:#00ff9d;}
+.disputed{color:#ff4d4d;}
+
+h2,h3{margin:0;}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
+  <!-- HEADER -->
   <div class="header">
-    <h2>💳 Zep Wallet</h2>
+    <h2>💳 Zep Wallet AI</h2>
     <button onclick="loadWallet()">Refresh</button>
   </div>
 
-  <!-- BALANCE CARDS -->
+  <!-- AI INSIGHT PANEL -->
+  <div class="ai-box">
+    <h3>🤖 Zep AI Financial Agent</h3>
+    <p id="aiInsight">Analyzing your wallet activity...</p>
+  </div>
+
+  <!-- BALANCE -->
   <div class="card">
     <div class="grid">
 
-      <div class="box">
+      <div class="card">
         <p>ZAC Balance</p>
         <div class="big" id="zacBalance">0</div>
       </div>
 
-      <div class="box">
+      <div class="card">
         <p>Cash Balance</p>
         <div class="big" id="cashBalance">0</div>
       </div>
 
-      <div class="box">
-        <p>Pending Escrow</p>
+      <div class="card">
+        <p>Escrow Locked</p>
         <div class="big" id="pendingEscrow">0</div>
       </div>
 
@@ -110,7 +123,7 @@
 
   <!-- TRANSACTIONS -->
   <div class="card">
-    <h3>📜 Recent Transactions</h3>
+    <h3>📜 Transactions</h3>
     <div id="transactions"></div>
   </div>
 
@@ -118,44 +131,50 @@
 
 <script>
 
+/* =========================
+   SUPABASE SETUP
+========================= */
 const supabaseUrl = "YOUR_SUPABASE_URL";
 const supabaseKey = "YOUR_ANON_KEY";
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
+/* =========================
+   USER
+========================= */
 let user = null;
 
 /* =========================
-   GET USER
+   LOAD WALLET
 ========================= */
-async function getUser() {
+async function loadWallet(){
+
   const { data } = await supabase.auth.getUser();
-  return data.user;
-}
+  user = data.user;
 
-/* =========================
-   LOAD WALLET DATA
-========================= */
-async function loadWallet() {
-
-  user = await getUser();
-  if (!user) {
-    window.location.href = "/login-signup.html";
+  if(!user){
+    window.location.href = "login-signup.html";
     return;
   }
 
-  // GET USER WALLET
+  /* USER WALLET */
   const { data: userData } = await supabase
     .from("users")
     .select("*")
     .eq("auth_id", user.id)
     .single();
 
-  if (userData) {
-    document.getElementById("zacBalance").innerText = userData.zac_balance || 0;
-    document.getElementById("cashBalance").innerText = userData.wallet_balance || 0;
+  let zac = 0;
+  let cash = 0;
+
+  if(userData){
+    zac = userData.zac_balance || 0;
+    cash = userData.wallet_balance || 0;
+
+    document.getElementById("zacBalance").innerText = zac;
+    document.getElementById("cashBalance").innerText = cash;
   }
 
-  // GET ESCROW DATA
+  /* ESCROW */
   const { data: escrow } = await supabase
     .from("escrow")
     .select("*")
@@ -164,31 +183,60 @@ async function loadWallet() {
   let pending = 0;
 
   escrow.forEach(e => {
-    if (e.status === "pending") {
-      pending += Number(e.amount);
+    if(e.status === "locked" || e.status === "pending"){
+      pending += Number(e.amount || 0);
     }
   });
 
   document.getElementById("pendingEscrow").innerText = pending;
 
   renderTransactions(escrow);
+  runZepAI(zac, cash, pending);
 }
 
 /* =========================
-   TRANSACTION UI
+   TRANSACTIONS UI
 ========================= */
-function renderTransactions(data) {
+function renderTransactions(data){
   const box = document.getElementById("transactions");
   box.innerHTML = "";
 
   data.forEach(tx => {
     box.innerHTML += `
       <div class="tx">
-        <p><b>Amount:</b> ${tx.amount} ZAC</p>
+        <p><b>Amount:</b> ${tx.amount || 0}</p>
         <p><b>Status:</b> <span class="${tx.status}">${tx.status}</span></p>
       </div>
     `;
   });
+}
+
+/* =========================
+   🤖 ZEP AI WALLET ENGINE
+========================= */
+function runZepAI(zac, cash, escrow){
+
+  let insight = "";
+
+  const total = Number(cash) + Number(zac);
+
+  if(total === 0){
+    insight = "No activity yet. Start applying for gigs to activate your wallet system.";
+  }
+
+  else if(escrow > cash){
+    insight = "⚠️ High escrow lock detected. Focus on completing active jobs to unlock funds faster.";
+  }
+
+  else if(cash > 100){
+    insight = "🔥 Strong cash flow detected. You are scaling well in the freelance marketplace.";
+  }
+
+  else {
+    insight = "Your wallet is active. Keep applying for gigs to increase earnings consistency.";
+  }
+
+  document.getElementById("aiInsight").innerText = insight;
 }
 
 /* INIT */
