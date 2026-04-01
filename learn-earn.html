@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — Learn & Earn</title>
+<title>Zep AI Learn & Earn</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
 
@@ -17,6 +17,7 @@
   --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
   --glass:rgba(255,255,255,.08);
 }
+
 *{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
 body{background:var(--bg);color:#fff;min-height:100vh;}
 
@@ -25,12 +26,14 @@ header{
   padding:16px;margin:16px;border-radius:16px;
   background:rgba(255,255,255,.05);
 }
+
 .brand{
   font-family:Orbitron;
   background:linear-gradient(90deg,var(--blue),var(--violet));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
+
 .home-btn{
   width:46px;height:46px;border-radius:50%;
   background:linear-gradient(135deg,var(--blue),var(--violet));
@@ -39,16 +42,47 @@ header{
 
 .container{max-width:1200px;margin:auto;padding:16px;}
 
-.profile{display:flex;gap:14px;align-items:center;background:var(--glass);padding:14px;border-radius:14px;}
+.profile{
+  display:flex;gap:14px;align-items:center;
+  background:var(--glass);padding:14px;border-radius:14px;
+}
+
 .profile img{width:70px;height:70px;border-radius:50%;}
 
-.courses{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:16px;}
-.course{background:rgba(255,255,255,.06);padding:16px;border-radius:14px;cursor:pointer;}
+.courses{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;margin-top:16px;
+}
+
+.course{
+  background:rgba(255,255,255,.06);
+  padding:16px;border-radius:14px;cursor:pointer;
+}
+
 .course.selected{border:2px solid var(--green);}
 
-.tasks{margin-top:20px;background:var(--glass);padding:16px;border-radius:16px;}
-.task{background:rgba(255,255,255,.05);padding:14px;margin-bottom:10px;border-radius:12px;}
+.tasks{
+  margin-top:20px;
+  background:var(--glass);
+  padding:16px;border-radius:16px;
+}
+
+.task{
+  background:rgba(255,255,255,.05);
+  padding:14px;margin-bottom:10px;border-radius:12px;
+}
+
 .task.completed{opacity:.5;}
+
+.ai-box{
+  background:rgba(0,255,255,.08);
+  border:1px solid rgba(0,255,255,.3);
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:10px;
+  font-size:13px;
+}
 
 button{
   border:none;border-radius:999px;padding:10px 14px;
@@ -56,19 +90,27 @@ button{
   color:#000;font-family:Orbitron;cursor:pointer;
 }
 
+/* MODAL */
 .modal-bg{
   position:fixed;inset:0;background:rgba(0,0,0,.7);
   display:none;align-items:center;justify-content:center;
 }
-.modal{background:var(--glass);padding:20px;border-radius:14px;width:90%;max-width:400px;}
-.modal input{width:100%;padding:10px;border-radius:10px;border:none;margin-bottom:10px;}
+
+.modal{
+  background:var(--glass);
+  padding:20px;border-radius:14px;width:90%;max-width:400px;
+}
+
+.modal input{
+  width:100%;padding:10px;border-radius:10px;border:none;margin-bottom:10px;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="brand">Zep Swipe Learn & Earn</div>
+  <div class="brand">Zep AI Learn & Earn</div>
   <button class="home-btn" onclick="location.href='student-dashboard.html'">🏠</button>
 </header>
 
@@ -80,6 +122,11 @@ button{
       <h3 id="studentName"></h3>
       <span id="studentEmail"></span>
     </div>
+  </div>
+
+  <!-- 🤖 AI INSIGHT PANEL -->
+  <div class="ai-box">
+    🤖 <span id="aiInsight">Zep AI analyzing learning performance...</span>
   </div>
 
   <div class="courses" id="courseList"></div>
@@ -95,25 +142,25 @@ button{
 <!-- MODAL -->
 <div class="modal-bg" id="modalBg">
   <div class="modal">
-    <h3>Submit Link</h3>
-    <input id="linkInput" placeholder="Paste Zora link">
+    <h3>Submit Task Link</h3>
+    <input id="linkInput" placeholder="Paste submission link">
     <button onclick="submitTask()">Submit</button>
   </div>
 </div>
 
 <script>
-// ================= SUPABASE =================
+
+/* ================= SUPABASE ================= */
 const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ================= STATE =================
+/* ================= STATE ================= */
 let user = null;
 let currentCourse = null;
 let selectedDay = null;
 
-// ================= COURSES =================
+/* ================= COURSES ================= */
 const coursesData = {
   "Virtual Assistant":[
     "Intro video task",
@@ -129,9 +176,9 @@ const coursesData = {
   ]
 };
 
-// ================= AUTH =================
+/* ================= AUTH ================= */
 async function loadUser(){
-  const { data: { user: authUser } } = await supabase.auth.getUser();
+  const { data:{ user:authUser } } = await supabase.auth.getUser();
 
   if(!authUser){
     location.href="login.html";
@@ -145,11 +192,11 @@ async function loadUser(){
 
   loadProgress();
 }
-
 loadUser();
 
-// ================= LOAD PROGRESS =================
+/* ================= LOAD PROGRESS ================= */
 async function loadProgress(){
+
   const { data } = await supabase
     .from("learn_earn_progress")
     .select("*")
@@ -157,29 +204,34 @@ async function loadProgress(){
 
   renderCourses();
   renderTasks(data || []);
+  runZepAI(data || []);
 }
 
-// ================= COURSES =================
+/* ================= COURSES ================= */
 function renderCourses(){
+
   const container = document.getElementById("courseList");
   container.innerHTML="";
 
   Object.keys(coursesData).forEach(course=>{
+
     const div=document.createElement("div");
     div.className="course";
     div.innerHTML=`<h4>${course}</h4>`;
     div.onclick=()=>selectCourse(course);
+
     container.appendChild(div);
   });
 }
 
 function selectCourse(course){
   currentCourse = course;
-  renderTasks([]);
+  loadProgress();
 }
 
-// ================= TASKS =================
+/* ================= TASKS ================= */
 function renderTasks(progress){
+
   if(!currentCourse) return;
 
   document.getElementById("taskSection").style.display="block";
@@ -188,20 +240,21 @@ function renderTasks(progress){
   const container = document.getElementById("tasksContainer");
   container.innerHTML="";
 
-  const completedDays = progress
+  const completed = progress
     .filter(p=>p.course===currentCourse)
     .map(p=>p.day);
 
   coursesData[currentCourse].forEach((task,idx)=>{
+
     const day = idx+1;
 
     const div = document.createElement("div");
-    div.className = "task" + (completedDays.includes(day) ? " completed":"");
+    div.className = "task" + (completed.includes(day) ? " completed":"");
 
     div.innerHTML=`
       <b>Day ${day}</b>
       <p>${task}</p>
-      ${completedDays.includes(day)
+      ${completed.includes(day)
         ? "<span>✔ Completed</span>"
         : `<button onclick="openModal(${day})">Submit</button>`}
     `;
@@ -210,13 +263,44 @@ function renderTasks(progress){
   });
 }
 
-// ================= MODAL =================
+/* ================= AI ENGINE ================= */
+function runZepAI(progress){
+
+  let completed = progress.length;
+  let quality = "learning";
+
+  if(completed >= 8) quality = "advanced learner";
+  else if(completed >= 4) quality = "intermediate learner";
+  else if(completed > 0) quality = "beginner learner";
+
+  let msg = "";
+
+  if(completed === 0){
+    msg = "🚀 Start your first task to begin earning ZAC.";
+  }
+  else if(completed < 3){
+    msg = "📘 Keep going! You're building momentum.";
+  }
+  else if(completed < 7){
+    msg = "🔥 Good progress! You're becoming consistent.";
+  }
+  else{
+    msg = "🏆 Excellent performance! Eligible for bonus recommendations.";
+  }
+
+  document.getElementById("aiInsight").innerText =
+    `Status: ${quality} | ${msg}`;
+}
+
+/* ================= MODAL ================= */
 function openModal(day){
   selectedDay = day;
   document.getElementById("modalBg").style.display="flex";
 }
 
+/* ================= SUBMIT TASK ================= */
 async function submitTask(){
+
   const link = document.getElementById("linkInput").value;
 
   if(!link){
@@ -230,7 +314,7 @@ async function submitTask(){
       user_id: user.id,
       course: currentCourse,
       day: selectedDay,
-      link: link
+      link
     }]);
 
   if(error){
@@ -241,6 +325,7 @@ async function submitTask(){
   document.getElementById("modalBg").style.display="none";
   loadProgress();
 }
+
 </script>
 
 </body>
