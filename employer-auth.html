@@ -3,8 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — Employer Sign In</title>
+<title>Zep Swipe — Employer Auth</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500,600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root{
   --zep-blue:#00f0ff;
@@ -13,7 +17,9 @@
   --glass:rgba(255,255,255,.08);
   --text-light:rgba(255,255,255,.85);
 }
+
 *{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif;}
+
 body{
   background:var(--bg);
   color:#fff;
@@ -22,6 +28,7 @@ body{
   justify-content:center;
   align-items:center;
 }
+
 .auth-container{
   background:var(--glass);
   padding:30px;
@@ -32,10 +39,12 @@ body{
   border:1px solid rgba(255,255,255,.12);
   box-shadow:0 0 36px rgba(156,77,255,.2);
 }
+
 .auth-container h2{
   font-family:Orbitron;
   margin-bottom:20px;
 }
+
 .auth-container input{
   width:100%;
   padding:12px;
@@ -44,6 +53,7 @@ body{
   border:none;
   outline:none;
 }
+
 .auth-container button{
   width:100%;
   padding:12px;
@@ -53,89 +63,150 @@ body{
   color:#050015;
   font-family:Orbitron;
   cursor:pointer;
-  transition:.3s;
 }
-.auth-container button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 0 36px rgba(156,77,255,.45);
-}
+
 .toggle-link{
   margin-top:12px;
   font-size:0.85rem;
   color:var(--text-light);
   cursor:pointer;
-  display:block;
 }
 </style>
 </head>
+
 <body>
 
 <div class="auth-container">
   <h2 id="formTitle">Employer Sign In</h2>
-  <input type="text" id="employerName" placeholder="Full Name" style="display:none;">
-  <input type="email" id="employerEmail" placeholder="Email">
-  <input type="password" id="employerPassword" placeholder="Password">
+
+  <input type="text" id="name" placeholder="Full Name" style="display:none;">
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+
   <button id="authBtn">Sign In</button>
   <span class="toggle-link" id="toggleLink">Don't have an account? Sign Up</span>
 </div>
 
 <script>
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 let isSignUp = false;
+
 const formTitle = document.getElementById("formTitle");
-const nameInput = document.getElementById("employerName");
-const emailInput = document.getElementById("employerEmail");
-const passwordInput = document.getElementById("employerPassword");
+const nameInput = document.getElementById("name");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
 const authBtn = document.getElementById("authBtn");
 const toggleLink = document.getElementById("toggleLink");
 
-// Toggle Sign In / Sign Up
 toggleLink.addEventListener("click", () => {
   isSignUp = !isSignUp;
+
   formTitle.innerText = isSignUp ? "Employer Sign Up" : "Employer Sign In";
   nameInput.style.display = isSignUp ? "block" : "none";
   authBtn.innerText = isSignUp ? "Sign Up" : "Sign In";
-  toggleLink.innerText = isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up";
+  toggleLink.innerText = isSignUp
+    ? "Already have an account? Sign In"
+    : "Don't have an account? Sign Up";
 });
 
-// Authenticate
-authBtn.addEventListener("click", () => {
+// MAIN AUTH
+authBtn.addEventListener("click", async () => {
+
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
+  const name = nameInput.value.trim();
 
   if(!email || !password){
-    alert("Please fill in all required fields");
+    alert("Please fill all required fields");
     return;
   }
 
-  let employers = JSON.parse(localStorage.getItem("employers")) || [];
+  try {
 
-  if(isSignUp){
-    const name = nameInput.value.trim();
-    if(!name){
-      alert("Please enter your full name");
-      return;
-    }
-    // Check if email exists
-    if(employers.find(e => e.email===email)){
-      alert("Email already exists, please sign in");
-      return;
-    }
-    const newEmployer = {name,email,password};
-    employers.push(newEmployer);
-    localStorage.setItem("employers", JSON.stringify(employers));
-    localStorage.setItem("currentEmployer", JSON.stringify(newEmployer));
-    alert("Sign Up successful!");
-    window.location.href = "employer-dashboard.html";
-  } else {
-    const user = employers.find(e => e.email===email && e.password===password);
-    if(user){
-      localStorage.setItem("currentEmployer", JSON.stringify(user));
-      window.location.href = "employer-dashboard.html";
+    if(isSignUp){
+
+      if(!name){
+        alert("Please enter full name");
+        return;
+      }
+
+      // CREATE AUTH USER
+      const { data, error } = await sb.auth.signUp({
+        email,
+        password
+      });
+
+      if(error) throw error;
+
+      // CREATE PROFILE
+      const { error: profileError } = await sb.from("profiles").insert({
+        id: data.user.id,
+        name,
+        role: "employer",
+        profile_image: "",
+        company: "",
+        verified: false
+      });
+
+      if(profileError) throw profileError;
+
+      alert("Employer account created! Please sign in.");
+      isSignUp = false;
+      toggleLink.click();
+
     } else {
-      alert("Invalid email or password");
+
+      // LOGIN
+      const { data, error } = await sb.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if(error) throw error;
+
+      // CHECK ROLE
+      const { data: profile, error: profileError } = await sb
+        .from("profiles")
+        .select("role")
+        .eq("id", data.user.id)
+        .single();
+
+      if(profileError) throw profileError;
+
+      if(profile.role !== "employer"){
+        alert("Access denied: Not an employer account");
+        await sb.auth.signOut();
+        return;
+      }
+
+      window.location.href = "employer-dashboard.html";
     }
+
+  } catch(err){
+    alert(err.message);
   }
 });
+
+// AUTO LOGIN CHECK
+(async () => {
+  const { data: { user } } = await sb.auth.getUser();
+
+  if(user){
+    const { data } = await sb
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if(data?.role === "employer"){
+      window.location.href = "employer-dashboard.html";
+    }
+  }
+})();
 </script>
 
 </body>
