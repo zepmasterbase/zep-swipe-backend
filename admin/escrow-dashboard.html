@@ -1,107 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Escrow Admin Dashboard — Zep Swipe</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Admin Escrow Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }
 
-<style>
-body {
-  margin:0;
-  font-family:Poppins;
-  background:#050018;
-  color:#fff;
-}
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+    }
 
-header {
-  padding:16px;
-  text-align:center;
-  font-family:Orbitron;
-  background:linear-gradient(90deg,#00f0ff,#9c4dff);
-  color:#000;
-}
+    button {
+      padding: 10px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+    }
 
-.container {
-  max-width:1100px;
-  margin:auto;
-  padding:20px;
-}
-
-.grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:16px;
-}
-
-.card {
-  background:rgba(255,255,255,0.06);
-  padding:16px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,0.1);
-}
-
-button {
-  padding:10px 14px;
-  border:none;
-  border-radius:999px;
-  margin-top:8px;
-  cursor:pointer;
-  font-family:Orbitron;
-}
-
-.approve { background:#00ff94; }
-.reject { background:#ff4d4d; }
-.view { background:#00f0ff; }
-
-.status {
-  font-size:12px;
-  padding:4px 8px;
-  border-radius:8px;
-  display:inline-block;
-  margin-top:6px;
-}
-
-.pending { background:#ffcc00; color:#000; }
-.escrowed { background:#00f0ff; color:#000; }
-.released { background:#00ff94; color:#000; }
-.cancelled { background:#ff4d4d; }
-</style>
+    .release { background: #22c55e; }
+    .dispute { background: #ef4444; }
+    .refresh { background: #3b82f6; }
+  </style>
 </head>
 
 <body>
 
-<header>
-ESCROW ADMIN DASHBOARD
-</header>
+<h2>👑 Admin Escrow Dashboard</h2>
 
-<div class="container">
+<button class="refresh" onclick="loadEscrow()">Refresh</button>
 
-<h3>All Invoices</h3>
-<div id="invoiceList" class="grid"></div>
-
-</div>
+<div id="escrowContainer"></div>
 
 <script>
+const supabaseUrl = "YOUR_SUPABASE_URL";
+const supabaseKey = "YOUR_ANON_KEY";
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-/* ================= SUPABASE INIT ================= */
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+let currentUser = null;
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* =========================
+   ADMIN AUTH CHECK
+========================= */
+async function checkAdmin() {
+  const { data: { user } } = await supabase.auth.getUser();
 
-/* ================= LOAD INVOICES ================= */
-async function loadInvoices(){
+  if (!user) {
+    window.location.href = "/login-signup.html";
+    return;
+  }
+
+  currentUser = user;
 
   const { data, error } = await supabase
-    .from("invoices")
-    .select("*")
-    .order("created_at",{ascending:false});
+    .from("users")
+    .select("role")
+    .eq("auth_id", user.id)
+    .single();
 
-  if(error){
+  if (error || data.role !== "admin") {
+    alert("Access denied: Admins only");
+    window.location.href = "/login-signup.html";
+  }
+}
+
+/* =========================
+   LOAD ALL ESCROW (ADMIN)
+========================= */
+async function loadEscrow() {
+  const { data, error } = await supabase
+    .from("escrow")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
     console.log(error);
     return;
   }
@@ -109,95 +93,72 @@ async function loadInvoices(){
   render(data);
 }
 
-function render(invoices){
+/* =========================
+   RENDER DASHBOARD
+========================= */
+function render(data) {
+  const container = document.getElementById("escrowContainer");
+  container.innerHTML = "";
 
-  const box = document.getElementById("invoiceList");
-  box.innerHTML = "";
+  data.forEach(item => {
+    container.innerHTML += `
+      <div class="card">
+        <p><b>ID:</b> ${item.id}</p>
+        <p><b>Buyer:</b> ${item.buyer_id}</p>
+        <p><b>Seller:</b> ${item.seller_id}</p>
+        <p><b>Amount:</b> ${item.amount} ZAC</p>
+        <p><b>Status:</b> ${item.status}</p>
 
-  invoices.forEach(inv=>{
-
-    const div = document.createElement("div");
-    div.className = "card";
-
-    div.innerHTML = `
-      <h3>Invoice: ${inv.id}</h3>
-      <p>Amount: $${inv.amount}</p>
-      <p>User: ${inv.student_id}</p>
-
-      <span class="status ${inv.status}">
-        ${inv.status.toUpperCase()}
-      </span>
-
-      <br>
-
-      ${inv.status === "escrowed" ? `
-        <button class="approve" onclick="release('${inv.id}','${inv.student_id}',${inv.amount})">
+        <button class="release" onclick="releaseFunds('${item.id}')">
           Release Funds
         </button>
-      ` : ""}
 
-      ${inv.status !== "released" ? `
-        <button class="reject" onclick="cancelInvoice('${inv.id}')">
-          Cancel
+        <button class="dispute" onclick="markDispute('${item.id}')">
+          Mark Dispute
         </button>
-      ` : ""}
+      </div>
     `;
-
-    box.appendChild(div);
   });
 }
 
-/* ================= RELEASE FUNDS ================= */
-async function release(invoiceId, userId, amount){
-
-  // 1. update invoice
-  await supabase
-    .from("invoices")
-    .update({ status:"released" })
-    .eq("id", invoiceId);
-
-  // 2. credit wallet safely via RPC
-  await supabase.rpc("add_balance", {
-    uid: userId,
-    amt: amount
-  });
-
-  // 3. notification
-  await supabase.from("notifications").insert({
-    user_id:userId,
-    type:"released",
-    text:`Invoice ${invoiceId} released: $${amount}`
-  });
-
-  alert("Funds released");
-  loadInvoices();
-}
-
-/* ================= CANCEL INVOICE ================= */
-async function cancelInvoice(id){
-
-  await supabase
-    .from("invoices")
-    .update({ status:"cancelled" })
+/* =========================
+   RELEASE FUNDS
+========================= */
+async function releaseFunds(id) {
+  const { error } = await supabase
+    .from("escrow")
+    .update({ status: "released" })
     .eq("id", id);
 
-  alert("Invoice cancelled");
-  loadInvoices();
+  if (error) {
+    alert("Error releasing funds");
+    return;
+  }
+
+  loadEscrow();
 }
 
-/* ================= REALTIME UPDATES ================= */
-supabase
-  .channel("admin-invoices")
-  .on("postgres_changes",
-    { event:"*", schema:"public", table:"invoices" },
-    payload => {
-      loadInvoices();
-    }
-  )
-  .subscribe();
+/* =========================
+   MARK DISPUTE
+========================= */
+async function markDispute(id) {
+  const { error } = await supabase
+    .from("escrow")
+    .update({ status: "disputed" })
+    .eq("id", id);
 
-/* ================= INIT ================= */
-loadInvoices();
+  if (error) {
+    alert("Error marking dispute");
+    return;
+  }
+
+  loadEscrow();
+}
+
+/* =========================
+   INIT
+========================= */
+checkAdmin().then(loadEscrow);
 
 </script>
 
