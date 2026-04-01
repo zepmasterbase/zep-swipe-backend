@@ -1,183 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — Escrow Wallet</title>
+  <title>Zep Wallet</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-body { background:#050018; color:#fff; font-family:Poppins; }
-.container { max-width:900px; margin:auto; padding:20px; }
-
-.card { background:rgba(255,255,255,0.05); padding:20px; border-radius:16px; margin-bottom:20px; }
-
-button {
-  padding:12px 18px;
-  border:none;
-  border-radius:999px;
-  background:linear-gradient(90deg,#00f0ff,#9c4dff);
-  cursor:pointer;
-}
-</style>
+  <style>
+    body { font-family: Arial; background:#0f172a; color:white; padding:20px; }
+    .card { background:#1e293b; padding:15px; margin:10px 0; border-radius:10px; }
+    .balance { font-size:30px; font-weight:bold; color:#22c55e; }
+    .tx { border-bottom:1px solid #334155; padding:10px 0; }
+    .credit { color:lime; }
+    .debit { color:red; }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
+<h2>💳 My Wallet</h2>
 
-  <div class="card">
-    <h2>Wallet Balance</h2>
-    <h1 id="balance">$0.00</h1>
-    <small>Only released funds (ESCROW PROTECTED SYSTEM)</small>
-  </div>
+<div class="card">
+  <p>Available Balance</p>
+  <div class="balance" id="balance">0 ZAC</div>
+</div>
 
-  <div class="card">
-    <h3>Escrow Status</h3>
-    <p id="escrowInfo">Loading...</p>
-  </div>
-
-  <div class="card">
-    <button onclick="goToInvoices()">View Invoices</button>
-    <button onclick="openWithdraw()">Withdraw</button>
-  </div>
-
-  <div class="card">
-    <h3>Notifications</h3>
-    <div id="notifications"></div>
-  </div>
-
+<div class="card">
+  <h3>📜 Transaction Ledger</h3>
+  <div id="ledger"></div>
 </div>
 
 <script>
-/* ================= SUPABASE ================= */
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ================= USER ================= */
-const userId = localStorage.getItem("currentUserId");
-if(!userId) location.href="login.html";
+const supabaseUrl = "YOUR_SUPABASE_URL";
+const supabaseKey = "YOUR_ANON_KEY";
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-/* ================= STATE ================= */
-let profile = null;
-
-/* ================= LOAD WALLET ================= */
-async function loadWallet(){
-
-  const { data: user } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", userId)
-    .single();
-
-  profile = user;
-
-  document.getElementById("balance").innerText =
-    `$${user.wallet_balance.toFixed(2)}`;
-
-  loadEscrowInfo();
-  loadNotifications();
+// GET USER
+async function getUser() {
+  const { data } = await supabase.auth.getUser();
+  return data.user;
 }
 
-/* ================= ESCROW INFO ================= */
-async function loadEscrowInfo(){
-
-  const { data: invoices } = await supabase
-    .from("invoices")
-    .select("*")
-    .eq("student_id", userId);
-
-  let pending = 0;
-  let escrowed = 0;
-  let released = 0;
-
-  invoices.forEach(i=>{
-    if(i.status === "pending") pending += i.amount;
-    if(i.status === "escrowed") escrowed += i.amount;
-    if(i.status === "released") released += i.amount;
-  });
-
-  document.getElementById("escrowInfo").innerHTML = `
-    Pending: $${pending}<br>
-    Escrowed: $${escrowed}<br>
-    Released: $${released}
-  `;
-}
-
-/* ================= NOTIFICATIONS ================= */
-async function loadNotifications(){
+// LOAD WALLET BALANCE
+async function loadWallet() {
+  const user = await getUser();
+  if (!user) return;
 
   const { data } = await supabase
-    .from("notifications")
+    .from("users")
+    .select("zac_balance")
+    .eq("auth_id", user.id)
+    .single();
+
+  if (data) {
+    document.getElementById("balance").innerText = data.zac_balance + " ZAC";
+  }
+}
+
+// LOAD TRANSACTIONS (ESCROW + ACTIVITY)
+async function loadLedger() {
+  const user = await getUser();
+  if (!user) return;
+
+  const { data } = await supabase
+    .from("escrow")
     .select("*")
-    .eq("user_id", userId)
-    .order("created_at",{ascending:false});
+    .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`)
+    .order("created_at", { ascending: false });
 
-  const box = document.getElementById("notifications");
-  box.innerHTML = "";
+  const ledger = document.getElementById("ledger");
+  ledger.innerHTML = "";
 
-  data.forEach(n=>{
-    const div = document.createElement("div");
-    div.innerText = n.text;
-    box.appendChild(div);
+  data.forEach(tx => {
+
+    let type = "debit";
+
+    if (tx.status === "released" && tx.seller_id === user.id) {
+      type = "credit";
+    }
+
+    if (tx.status === "released" && tx.buyer_id === user.id) {
+      type = "debit";
+    }
+
+    ledger.innerHTML += `
+      <div class="tx">
+        <p><b>Amount:</b> ${tx.amount} ZAC</p>
+        <p><b>Status:</b> ${tx.status}</p>
+        <p class="${type}">
+          ${type === "credit" ? "+" : "-"} ${tx.amount} ZAC
+        </p>
+      </div>
+    `;
   });
 }
 
-/* ================= ESCROW RELEASE LISTENER ================= */
-supabase
-  .channel("invoices")
-  .on("postgres_changes",
-    { event:"UPDATE", schema:"public", table:"invoices" },
-    async (payload)=>{
-
-      const inv = payload.new;
-
-      if(inv.status === "released"){
-
-        // credit wallet ONLY on release
-        await supabase.rpc("add_balance", {
-          uid: inv.student_id,
-          amt: inv.amount
-        });
-
-        await supabase.from("notifications").insert({
-          user_id: inv.student_id,
-          type: "released",
-          text: `Invoice ${inv.id} released: $${inv.amount}`
-        });
-
+// REAL-TIME ESCROW UPDATE → WALLET AUTO REFRESH
+function listenEscrowUpdates() {
+  supabase
+    .channel('escrow-channel')
+    .on(
+      'postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'escrow' },
+      payload => {
+        console.log("Escrow updated:", payload);
         loadWallet();
+        loadLedger();
       }
-    }
-  )
-  .subscribe();
-
-/* ================= RPC FUNCTION REQUIRED ================= */
-/*
-CREATE FUNCTION add_balance(uid uuid, amt float)
-RETURNS void AS $$
-  UPDATE profiles
-  SET wallet_balance = wallet_balance + amt
-  WHERE id = uid;
-$$ LANGUAGE sql;
-*/
-
-/* ================= NAV ================= */
-function goToInvoices(){
-  location.href="invoices.html";
+    )
+    .subscribe();
 }
 
-function openWithdraw(){
-  location.href="withdraw.html";
+// INIT
+async function init() {
+  await loadWallet();
+  await loadLedger();
+  listenEscrowUpdates();
 }
 
-/* ================= INIT ================= */
-loadWallet();
+init();
+
 </script>
 
 </body>
