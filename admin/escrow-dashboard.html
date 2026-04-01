@@ -1,50 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin Escrow Dashboard</title>
+<meta charset="UTF-8" />
+<title>Zep AI Admin Escrow Dashboard</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      padding: 20px;
-    }
+<style>
+body{
+  font-family:Arial;
+  background:#050014;
+  color:white;
+  padding:20px;
+}
 
-    .card {
-      background: #1e293b;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 10px;
-    }
+h2{margin-bottom:10px;}
 
-    button {
-      padding: 10px;
-      margin: 5px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      color: white;
-    }
+.card{
+  background:#111827;
+  padding:15px;
+  margin:10px 0;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+}
 
-    .release { background: #22c55e; }
-    .dispute { background: #ef4444; }
-    .refresh { background: #3b82f6; }
-  </style>
+button{
+  padding:10px;
+  margin:5px 5px 0 0;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  color:white;
+  font-weight:bold;
+}
+
+.release{background:#22c55e;}
+.dispute{background:#ef4444;}
+.freeze{background:#f59e0b;}
+.refresh{background:#3b82f6;}
+
+.aiBox{
+  background:rgba(0,255,255,0.08);
+  border:1px solid rgba(0,255,255,0.3);
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:15px;
+  font-size:13px;
+}
+
+.high-risk{color:#ff4d4d;}
+.medium-risk{color:orange;}
+.safe{color:#00ff9d;}
+</style>
 </head>
 
 <body>
 
-<h2>👑 Admin Escrow Dashboard</h2>
+<h2>👑 Zep AI Admin Escrow Control Center</h2>
 
-<button class="refresh" onclick="loadEscrow()">Refresh</button>
+<button class="refresh" onclick="loadEscrow()">🔄 Refresh</button>
+
+<!-- 🤖 AI SYSTEM INSIGHT -->
+<div class="aiBox">
+  🤖 <span id="aiInsight">Analyzing escrow network...</span>
+</div>
 
 <div id="escrowContainer"></div>
 
 <script>
+
 const supabaseUrl = "YOUR_SUPABASE_URL";
 const supabaseKey = "YOUR_ANON_KEY";
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -54,67 +78,82 @@ let currentUser = null;
 /* =========================
    ADMIN AUTH CHECK
 ========================= */
-async function checkAdmin() {
-  const { data: { user } } = await supabase.auth.getUser();
+async function checkAdmin(){
 
-  if (!user) {
+  const { data:{user} } = await supabase.auth.getUser();
+
+  if(!user){
     window.location.href = "/login-signup.html";
     return;
   }
 
-  currentUser = user;
-
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("users")
     .select("role")
     .eq("auth_id", user.id)
     .single();
 
-  if (error || data.role !== "admin") {
+  if(!data || data.role !== "admin"){
     alert("Access denied: Admins only");
-    window.location.href = "/login-signup.html";
+    window.location.href = "/";
   }
+
+  currentUser = user;
 }
 
 /* =========================
-   LOAD ALL ESCROW (ADMIN)
+   LOAD ESCROW
 ========================= */
-async function loadEscrow() {
-  const { data, error } = await supabase
+async function loadEscrow(){
+
+  const { data } = await supabase
     .from("escrow")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending:false });
 
-  if (error) {
-    console.log(error);
-    return;
-  }
-
-  render(data);
+  render(data || []);
+  runAI(data || []);
 }
 
 /* =========================
    RENDER DASHBOARD
 ========================= */
-function render(data) {
+function render(data){
+
   const container = document.getElementById("escrowContainer");
   container.innerHTML = "";
 
   data.forEach(item => {
+
+    const risk = item.ai_risk || "unknown";
+
     container.innerHTML += `
       <div class="card">
         <p><b>ID:</b> ${item.id}</p>
+        <p><b>Invoice:</b> ${item.invoice_id || "N/A"}</p>
         <p><b>Buyer:</b> ${item.buyer_id}</p>
         <p><b>Seller:</b> ${item.seller_id}</p>
         <p><b>Amount:</b> ${item.amount} ZAC</p>
+
         <p><b>Status:</b> ${item.status}</p>
 
-        <button class="release" onclick="releaseFunds('${item.id}')">
+        <p><b>AI Risk:</b>
+          <span class="${risk}">${risk}</span>
+        </p>
+
+        <button class="release"
+          onclick="releaseFunds('${item.id}')">
           Release Funds
         </button>
 
-        <button class="dispute" onclick="markDispute('${item.id}')">
+        <button class="dispute"
+          onclick="markDispute('${item.id}')">
           Mark Dispute
+        </button>
+
+        <button class="freeze"
+          onclick="freezeEscrow('${item.id}')">
+          Freeze
         </button>
       </div>
     `;
@@ -122,35 +161,73 @@ function render(data) {
 }
 
 /* =========================
-   RELEASE FUNDS
+   🤖 ZEP AI DASHBOARD BRAIN
 ========================= */
-async function releaseFunds(id) {
-  const { error } = await supabase
-    .from("escrow")
-    .update({ status: "released" })
-    .eq("id", id);
+function runAI(data){
 
-  if (error) {
-    alert("Error releasing funds");
-    return;
+  let total = data.length;
+  let disputed = 0;
+  let highRisk = 0;
+  let locked = 0;
+
+  data.forEach(e => {
+
+    if(e.status === "disputed") disputed++;
+    if(e.ai_risk === "high-risk") highRisk++;
+    if(e.status === "locked") locked++;
+
+  });
+
+  let msg = "";
+
+  if(highRisk > 3){
+    msg = "⚠️ Multiple high-risk escrows detected. Recommend admin review before releasing funds.";
   }
+
+  else if(disputed > 0){
+    msg = "🚨 Disputes active. Admin intervention required.";
+  }
+
+  else if(locked > 5){
+    msg = "💰 High escrow volume. System stable but monitor liquidity flow.";
+  }
+
+  else{
+    msg = "✅ Escrow system stable. No critical issues detected.";
+  }
+
+  document.getElementById("aiInsight").innerText = msg;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+async function releaseFunds(id){
+
+  await supabase
+    .from("escrow")
+    .update({ status:"released" })
+    .eq("id", id);
 
   loadEscrow();
 }
 
-/* =========================
-   MARK DISPUTE
-========================= */
-async function markDispute(id) {
-  const { error } = await supabase
+async function markDispute(id){
+
+  await supabase
     .from("escrow")
-    .update({ status: "disputed" })
+    .update({ status:"disputed" })
     .eq("id", id);
 
-  if (error) {
-    alert("Error marking dispute");
-    return;
-  }
+  loadEscrow();
+}
+
+async function freezeEscrow(id){
+
+  await supabase
+    .from("escrow")
+    .update({ status:"frozen" })
+    .eq("id", id);
 
   loadEscrow();
 }
