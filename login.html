@@ -3,211 +3,274 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Login</title>
+<title>Zep Swipe Access</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --blue:#00f0ff;
-  --violet:#9c4dff;
-  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  background: radial-gradient(circle at top, #0b0f1a, #05070d);
+  color: white;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
-
-body{
-  background:var(--bg);
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
+/* GLOW */
+.glow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: #00f0ff;
+  filter: blur(120px);
+  opacity: 0.15;
+  top: -100px;
+  left: -100px;
 }
 
-.container{
-  width:90%;
-  max-width:380px;
-  background:rgba(255,255,255,.08);
-  padding:24px;
-  border-radius:18px;
-  backdrop-filter:blur(12px);
-  box-shadow:0 0 30px rgba(0,240,255,.2);
+/* CONTAINER */
+.container {
+  max-width: 420px;
+  margin: auto;
+  padding: 20px;
 }
 
-h2{
-  text-align:center;
-  font-family:Orbitron;
-  margin-bottom:20px;
-  background:linear-gradient(90deg,var(--blue),var(--violet));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+/* LOGO */
+.logo {
+  text-align: center;
+  margin-top: 30px;
+}
+.logo img {
+  width: 85px;
+  animation: pulse 2s infinite;
+  filter: drop-shadow(0 0 15px #00f0ff);
 }
 
-input{
-  width:100%;
-  padding:12px;
-  margin-bottom:12px;
-  border:none;
-  border-radius:10px;
-  background:#020617;
-  color:#fff;
+@keyframes pulse {
+  0% {transform: scale(1); opacity: 0.7;}
+  50% {transform: scale(1.05); opacity: 1;}
+  100% {transform: scale(1); opacity: 0.7;}
 }
 
-button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:999px;
-  background:linear-gradient(90deg,var(--blue),var(--violet));
-  color:#050015;
-  font-family:Orbitron;
-  cursor:pointer;
-  margin-top:8px;
+/* TEXT */
+.title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+.subtitle {
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.7;
 }
 
-.switch{
-  text-align:center;
-  margin-top:14px;
-  font-size:14px;
-  cursor:pointer;
-  color:#ccc;
+/* CARD */
+.card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,255,255,0.2);
+  border-radius: 16px;
+  padding: 18px;
+  margin-top: 20px;
+  backdrop-filter: blur(10px);
 }
 
-.message{
-  margin-top:10px;
-  font-size:13px;
-  text-align:center;
+/* INPUT */
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.4);
+  color: white;
 }
 
-.success{color:#00ff94;}
-.error{color:#ff4d4d;}
+/* BUTTON */
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #00f0ff, #6a5cff);
+  color: black;
+}
+
+.btn-toggle {
+  background: transparent;
+  color: #00f0ff;
+  font-size: 12px;
+  border: 1px solid rgba(0,255,255,0.3);
+}
+
+/* BADGE */
+.badge {
+  font-size: 12px;
+  margin-top: 10px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: rgba(0,255,255,0.1);
+  border: 1px solid rgba(0,255,255,0.3);
+  display: inline-block;
+  text-align: center;
+}
 </style>
 </head>
 
 <body>
 
+<div class="glow"></div>
+
 <div class="container">
 
-  <h2 id="formTitle">Login</h2>
+<!-- LOGO -->
+<div class="logo">
+<img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
+</div>
 
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
+<div class="title">Zep Swipe Access</div>
+<div class="subtitle">Login or create your student account</div>
 
-  <button onclick="handleAuth()" id="actionBtn">Login</button>
+<div class="card">
 
-  <div class="switch" onclick="toggleMode()">
-    Don't have an account? Sign Up
-  </div>
+<div id="detected" class="badge">Detecting location...</div>
 
-  <div class="message" id="message"></div>
+<select id="country">
+  <option>South Africa 🇿🇦</option>
+  <option>Ghana 🇬🇭</option>
+  <option>Zambia 🇿🇲</option>
+  <option>Rwanda 🇷🇼</option>
+  <option>Namibia 🇳🇦</option>
+  <option>Botswana 🇧🇼</option>
+  <option>Malawi 🇲🇼</option>
+</select>
+
+<div id="nameField" style="display:none;">
+  <input type="text" id="name" placeholder="Full Name">
+</div>
+
+<input type="email" id="email" placeholder="Email Address">
+<input type="password" id="password" placeholder="Password">
+
+<button class="btn-primary" onclick="handleAuth()" id="actionBtn">
+Login
+</button>
+
+<button class="btn-toggle" onclick="toggleMode()">
+Switch to Signup
+</button>
 
 </div>
 
-<script>
+</div>
 
-/* =========================
-   🔐 REPLACE THESE (IMPORTANT)
-========================= */
-const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = createClient("YOUR_SUPABASE_URL", "YOUR_SUPABASE_ANON_KEY");
 
-/* =========================
-   STATE
-========================= */
 let isLogin = true;
 
-/* =========================
-   TOGGLE LOGIN / SIGNUP
-========================= */
-function toggleMode(){
+/* AUTO DETECT COUNTRY */
+function detectCountry() {
+  let locale = navigator.language || "en-ZA";
+  let code = locale.split("-")[1] || "ZA";
+
+  const map = {
+    ZA: "South Africa 🇿🇦",
+    GH: "Ghana 🇬🇭",
+    ZM: "Zambia 🇿🇲",
+    RW: "Rwanda 🇷🇼",
+    NA: "Namibia 🇳🇦",
+    BW: "Botswana 🇧🇼",
+    MW: "Malawi 🇲🇼"
+  };
+
+  let country = map[code] || "South Africa 🇿🇦";
+
+  document.getElementById("detected").innerText =
+    `We think you're in ${country}`;
+
+  document.getElementById("country").value = country;
+}
+detectCountry();
+
+/* TOGGLE LOGIN/SIGNUP */
+window.toggleMode = function () {
   isLogin = !isLogin;
 
-  document.getElementById("formTitle").innerText = isLogin ? "Login" : "Sign Up";
-  document.getElementById("actionBtn").innerText = isLogin ? "Login" : "Create Account";
+  document.getElementById("actionBtn").innerText =
+    isLogin ? "Login" : "Create Account";
 
-  document.querySelector(".switch").innerText =
-    isLogin ? "Don't have an account? Sign Up"
-            : "Already have an account? Login";
+  document.getElementById("nameField").style.display =
+    isLogin ? "none" : "block";
+};
 
-  clearMessage();
-}
-
-/* =========================
-   AUTH FUNCTION
-========================= */
-async function handleAuth(){
-
+/* AUTH FLOW */
+window.handleAuth = async function () {
+  const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
+  const country = document.getElementById("country").value;
 
-  if(!email || !password){
-    showMessage("Please fill all fields", "error");
+  if (!email || !password) {
+    alert("Fill all fields");
     return;
   }
 
-  try{
-
-    if(isLogin){
-      /* LOGIN */
-      const { data, error } = await supabase.auth.signInWithPassword({
+  try {
+    if (isLogin) {
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
-      if(error) throw error;
-
-      showMessage("Login successful 🚀", "success");
-
-      setTimeout(()=>{
-        window.location.href = "student-dashboard.html";
-      },1000);
+      if (error) throw error;
 
     } else {
-      /* SIGNUP */
       const { data, error } = await supabase.auth.signUp({
         email,
-        password
+        password,
+        options: {
+          data: { name, country }
+        }
       });
 
-      if(error) throw error;
+      if (error) throw error;
 
-      showMessage("Account created! Check your email 📩", "success");
+      await supabase.from("users").insert([
+        {
+          id: data.user.id,
+          name,
+          email,
+          country,
+          xp: 0,
+          referrals: 0,
+          created_at: new Date()
+        }
+      ]);
     }
 
-  }catch(err){
-    showMessage(err.message, "error");
+    window.location.href = "student-dashboard.html";
+
+  } catch (err) {
+    alert(err.message);
   }
-}
+};
 
-/* =========================
-   MESSAGE UI
-========================= */
-function showMessage(msg, type){
-  const el = document.getElementById("message");
-  el.innerText = msg;
-  el.className = "message " + type;
-}
+/* SESSION CHECK */
+async function checkSession() {
+  const { data } = await supabase.auth.getSession();
 
-function clearMessage(){
-  document.getElementById("message").innerText="";
-}
-
-/* =========================
-   AUTO LOGIN CHECK
-========================= */
-async function checkSession(){
-  const { data:{ session } } = await supabase.auth.getSession();
-
-  if(session){
+  if (data.session) {
     window.location.href = "student-dashboard.html";
   }
 }
-
 checkSession();
 
 </script>
