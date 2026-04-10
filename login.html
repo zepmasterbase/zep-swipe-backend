@@ -15,7 +15,6 @@ body {
   color: white;
 }
 
-/* GLOW */
 .glow {
   position: absolute;
   width: 400px;
@@ -27,18 +26,17 @@ body {
   left: -100px;
 }
 
-/* CONTAINER */
 .container {
   max-width: 420px;
   margin: auto;
   padding: 20px;
 }
 
-/* LOGO */
 .logo {
   text-align: center;
   margin-top: 30px;
 }
+
 .logo img {
   width: 85px;
   animation: pulse 2s infinite;
@@ -51,20 +49,19 @@ body {
   100% {transform: scale(1); opacity: 0.7;}
 }
 
-/* TEXT */
 .title {
   text-align: center;
   font-size: 22px;
   font-weight: 700;
   margin-top: 10px;
 }
+
 .subtitle {
   text-align: center;
   font-size: 13px;
   opacity: 0.7;
 }
 
-/* CARD */
 .card {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(0,255,255,0.2);
@@ -74,7 +71,6 @@ body {
   backdrop-filter: blur(10px);
 }
 
-/* INPUT */
 input, select {
   width: 100%;
   padding: 12px;
@@ -85,7 +81,6 @@ input, select {
   color: white;
 }
 
-/* BUTTON */
 button {
   width: 100%;
   padding: 14px;
@@ -108,7 +103,6 @@ button {
   border: 1px solid rgba(0,255,255,0.3);
 }
 
-/* BADGE */
 .badge {
   font-size: 12px;
   margin-top: 10px;
@@ -128,7 +122,6 @@ button {
 
 <div class="container">
 
-<!-- LOGO -->
 <div class="logo">
 <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
 </div>
@@ -176,7 +169,18 @@ const supabase = createClient("YOUR_SUPABASE_URL", "YOUR_SUPABASE_ANON_KEY");
 
 let isLogin = true;
 
-/* AUTO DETECT COUNTRY */
+/* =========================
+   PILOT COUNTRIES
+========================= */
+const PILOT_COUNTRIES = [
+  "South Africa 🇿🇦",
+  "Ghana 🇬🇭",
+  "Zambia 🇿🇲"
+];
+
+/* =========================
+   COUNTRY DETECTION
+========================= */
 function detectCountry() {
   let locale = navigator.language || "en-ZA";
   let code = locale.split("-")[1] || "ZA";
@@ -197,10 +201,24 @@ function detectCountry() {
     `We think you're in ${country}`;
 
   document.getElementById("country").value = country;
-}
-detectCountry();
 
-/* TOGGLE LOGIN/SIGNUP */
+  return country;
+}
+
+const detectedCountry = detectCountry();
+
+/* =========================
+   ROUTING ENGINE
+========================= */
+function routeUser(country) {
+  return PILOT_COUNTRIES.includes(country)
+    ? "student-dashboard.html"
+    : "waitlist.html";
+}
+
+/* =========================
+   TOGGLE LOGIN/SIGNUP
+========================= */
 window.toggleMode = function () {
   isLogin = !isLogin;
 
@@ -211,12 +229,15 @@ window.toggleMode = function () {
     isLogin ? "none" : "block";
 };
 
-/* AUTH FLOW */
+/* =========================
+   AUTH FLOW
+========================= */
 window.handleAuth = async function () {
+
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-  const country = document.getElementById("country").value;
+  const country = document.getElementById("country").value || detectedCountry;
 
   if (!email || !password) {
     alert("Fill all fields");
@@ -224,15 +245,22 @@ window.handleAuth = async function () {
   }
 
   try {
+
+    let user;
+
+    /* LOGIN */
     if (isLogin) {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
       if (error) throw error;
+      user = data.user;
+    }
 
-    } else {
+    /* SIGNUP */
+    else {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -242,13 +270,15 @@ window.handleAuth = async function () {
       });
 
       if (error) throw error;
+      user = data.user;
 
       await supabase.from("users").insert([
         {
-          id: data.user.id,
+          id: user.id,
           name,
           email,
           country,
+          role: "student",
           xp: 0,
           referrals: 0,
           created_at: new Date()
@@ -256,23 +286,33 @@ window.handleAuth = async function () {
       ]);
     }
 
-    window.location.href = "student-dashboard.html";
+    /* SAVE CONTEXT */
+    localStorage.setItem("currentUserId", user.id);
+    localStorage.setItem("currentCountry", country);
+
+    /* ROUTE USER */
+    window.location.href = routeUser(country);
 
   } catch (err) {
     alert(err.message);
   }
 };
 
-/* SESSION CHECK */
+/* =========================
+   SESSION CHECK
+========================= */
 async function checkSession() {
   const { data } = await supabase.auth.getSession();
 
   if (data.session) {
-    window.location.href = "student-dashboard.html";
+    const country =
+      data.session.user?.user_metadata?.country || detectedCountry;
+
+    window.location.href = routeUser(country);
   }
 }
-checkSession();
 
+checkSession();
 </script>
 
 </body>
