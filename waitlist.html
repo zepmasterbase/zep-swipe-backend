@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe Waitlist</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- SUPABASE (READY TO CONNECT) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  background: radial-gradient(circle at top, #0b0f1a, #05070d);
+  color: white;
+}
+
+.glow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: #00f0ff;
+  filter: blur(120px);
+  opacity: 0.15;
+  top: -100px;
+  left: -100px;
+}
+
+.container {
+  max-width: 430px;
+  margin: auto;
+  padding: 20px;
+  position: relative;
+}
+
+.logo {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.logo img {
+  width: 85px;
+  animation: pulse 2s infinite;
+  filter: drop-shadow(0 0 15px #00f0ff);
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.7; }
+}
+
+.title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.7;
+  margin-bottom: 15px;
+}
+
+/* 🔥 CLEAN FORM GROUPING FIX */
+.card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(0,255,255,0.2);
+  border-radius: 16px;
+  padding: 18px;
+  backdrop-filter: blur(10px);
+  margin-top: 15px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* UNIFIED INPUT STYLE */
+input, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  outline: none;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* OPTIONAL: make placeholders cleaner */
+input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+/* BUTTONS */
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #00f0ff, #6a5cff);
+  color: black;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(0,255,255,0.4);
+  color: #00f0ff;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: rgba(0,255,255,0.1);
+  border: 1px solid rgba(0,255,255,0.3);
+  font-size: 11px;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="glow"></div>
+
+<div class="container">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
+  </div>
+
+  <div class="title">Zep Swipe Waitlist</div>
+  <div class="subtitle">Learn • Earn • Work remotely in 21 days</div>
+
+  <!-- FORM -->
+  <div class="card">
+
+    <!-- IDENTITY -->
+    <input type="text" id="name" placeholder="Full Name">
+    <input type="email" id="email" placeholder="Email Address">
+
+    <!-- LOCATION -->
+    <select id="country">
+      <option value="">Select Country</option>
+      <option>South Africa 🇿🇦</option>
+      <option>Ghana 🇬🇭</option>
+      <option>Zambia 🇿🇲</option>
+      <option>Rwanda 🇷🇼</option>
+      <option>Namibia 🇳🇦</option>
+      <option>Botswana 🇧🇼</option>
+      <option>Malawi 🇲🇼</option>
+      <option>Kenya 🇰🇪</option>
+      <option>Nigeria 🇳🇬</option>
+      <option>Uganda 🇺🇬</option>
+      <option>Tanzania 🇹🇿</option>
+    </select>
+
+    <!-- STATUS -->
+    <select id="status">
+      <option value="">Are you?</option>
+      <option>University Student 🎓</option>
+      <option>Free User 💻</option>
+      <option>Graduate 👨‍🎓</option>
+    </select>
+
+    <!-- WITHDRAW -->
+    <select id="withdraw">
+      <option value="">Preferred Withdrawal Method</option>
+      <option>MTN Mobile Money 📱</option>
+      <option>Airtel Money 📲</option>
+      <option>M-Pesa 💰</option>
+      <option>Bank Transfer 🏦</option>
+      <option>Crypto Wallet ₿</option>
+    </select>
+
+    <!-- REFERRAL -->
+    <input type="text" id="ref" placeholder="Referral Code (optional)">
+
+    <button class="btn-primary" onclick="join()">Join Waitlist</button>
+
+    <div class="badge">🔥 Early access + XP rewards enabled</div>
+  </div>
+
+</div>
+
+<script>
+lucide.createIcons();
+
+/* SUPABASE INIT (REPLACE WITH YOUR KEYS) */
+const supabaseUrl = "https://sqlisgobnayfpzamdolf.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+async function join() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const country = document.getElementById("country").value;
+  const status = document.getElementById("status").value;
+  const withdraw = document.getElementById("withdraw").value;
+  const ref = document.getElementById("ref").value;
+
+  if (!name || !email || !country) {
+    alert("Please fill required fields");
+    return;
+  }
+
+  const userData = {
+    name,
+    email,
+    country,
+    status,
+    withdraw_method: withdraw,
+    referred_by: ref || null
+  };
+
+  console.log("User Data:", userData);
+
+  /* SUPABASE INSERT (SAFE STRUCTURE) */
+  const { data, error } = await supabase
+    .from("waitlist_users")
+    .insert([userData]);
+
+  if (error) {
+    alert("Error submitting form");
+    console.error(error);
+    return;
+  }
+
+  /* REDIRECT AFTER SUCCESS */
+  window.location.href = "success.html";
+}
+</script>
+
+</body>
+</html>
