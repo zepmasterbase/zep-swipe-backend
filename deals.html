@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — AI Viral Deal OS</title>
+<title>Zep Commerce OS 3.0 — AI Viral Deal Engine</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -11,19 +11,24 @@
 
 <style>
 :root{
-  --bg:#050014;
+  --bg:#040010;
   --glass:rgba(255,255,255,.06);
   --stroke:rgba(255,255,255,.12);
   --blue:#00f0ff;
   --violet:#9c4dff;
   --green:#00ff94;
-  --text:rgba(255,255,255,.85);
+  --text:rgba(255,255,255,.88);
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins;
+}
 
 body{
-  background:radial-gradient(circle at 30% 10%, #050014, #000);
+  background:radial-gradient(circle at 25% 10%, #060018, #000);
   color:white;
 }
 
@@ -32,7 +37,7 @@ header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:14px 16px;
+  padding:14px;
   margin:14px;
   border-radius:14px;
   background:rgba(255,255,255,.04);
@@ -42,21 +47,23 @@ header{
 
 .brand{
   font-family:Orbitron;
+  font-size:16px;
   background:linear-gradient(90deg,var(--blue),var(--violet));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-/* AI PANEL */
-.ai-box{
+/* AI HEADER */
+.ai-panel{
   margin:14px;
   padding:14px;
   border-radius:14px;
-  background:rgba(0,240,255,.06);
+  background:rgba(0,240,255,.05);
   border:1px solid rgba(0,240,255,.2);
   font-size:13px;
 }
 
+/* GRID */
 .container{
   max-width:1100px;
   margin:auto;
@@ -65,17 +72,18 @@ header{
   gap:14px;
 }
 
+/* DEAL CARD */
 .deal-card{
   background:var(--glass);
   border:1px solid var(--stroke);
-  border-radius:14px;
   padding:14px;
+  border-radius:14px;
   transition:.2s;
 }
 
 .deal-card:hover{
   transform:translateY(-3px);
-  border-color:rgba(0,240,255,.4);
+  border-color:rgba(0,240,255,.5);
 }
 
 .badge{
@@ -87,9 +95,10 @@ header{
   background:rgba(255,255,255,.08);
 }
 
+/* BUTTON */
 button{
-  margin-top:10px;
   width:100%;
+  margin-top:10px;
   padding:10px;
   border:none;
   border-radius:999px;
@@ -97,7 +106,7 @@ button{
   font-family:Orbitron;
   background:linear-gradient(90deg,var(--blue),var(--violet));
   color:#000;
-  font-weight:bold;
+  font-weight:700;
 }
 
 /* MODAL */
@@ -112,12 +121,12 @@ button{
 
 .modal-box{
   background:var(--glass);
+  border:1px solid var(--stroke);
   padding:20px;
   border-radius:14px;
-  border:1px solid var(--stroke);
   text-align:center;
   width:90%;
-  max-width:360px;
+  max-width:380px;
 }
 </style>
 </head>
@@ -125,13 +134,14 @@ button{
 <body>
 
 <header>
-  <div class="brand">Zep AI Deal OS</div>
+  <div class="brand">Zep Commerce OS 3.0</div>
   <button onclick="location.href='student-dashboard.html'">🏠</button>
 </header>
 
-<!-- 🤖 AI VIRAL ENGINE -->
-<div class="ai-box">
-  🤖 <span id="aiInsight">Analyzing viral deal trends...</span>
+<!-- AI LAYER -->
+<div class="ai-panel">
+  🤖 Commerce Intelligence:
+  <span id="aiInsight">Analyzing market behavior...</span>
 </div>
 
 <div class="container" id="dealsContainer"></div>
@@ -145,17 +155,15 @@ button{
 </div>
 
 <script>
-/* ================= SUPABASE ================= */
 const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
-
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey...";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ================= STATE ================= */
+/* STATE */
 let user = null;
 let deals = [];
 
-/* ================= INIT ================= */
+/* INIT */
 async function init(){
   const { data: { user: authUser } } = await supabase.auth.getUser();
 
@@ -167,23 +175,21 @@ async function init(){
   user = authUser;
 
   loadDeals();
-  subscribeDeals(); // 🔥 realtime engine
+  subscribeRealtime();
 }
 
 init();
 
-/* ================= LOAD DEALS ================= */
+/* LOAD DEALS */
 async function loadDeals(){
-  const { data } = await supabase
-    .from("deals")
-    .select("*");
+  const { data } = await supabase.from("deals").select("*");
 
   deals = data || [];
   renderDeals();
   runAI();
 }
 
-/* ================= RENDER ================= */
+/* RENDER */
 function renderDeals(){
 
   const container = document.getElementById("dealsContainer");
@@ -191,7 +197,7 @@ function renderDeals(){
 
   deals.forEach(deal => {
 
-    const viralScore = calculateViralScore(deal);
+    const score = viralScore(deal);
 
     const div = document.createElement("div");
     div.className = "deal-card";
@@ -200,9 +206,9 @@ function renderDeals(){
       <h3>${deal.name}</h3>
       <p>${deal.description}</p>
 
-      <span class="badge">🔥 Viral Score: ${viralScore}/100</span>
-      <br>
-      <small>${deal.category || "General"} · ${deal.campus || "All Campuses"}</small>
+      <span class="badge">🔥 Viral Score: ${score}/100</span>
+
+      <small>${deal.category || "General"} · ${deal.campus || "All"}</small>
 
       <button onclick="redeem('${deal.id}')">
         Redeem Deal
@@ -213,42 +219,38 @@ function renderDeals(){
   });
 }
 
-/* ================= VIRAL AI ENGINE ================= */
-function calculateViralScore(deal){
-
-  let score = 50;
+/* 🔥 VIRAL ENGINE 3.0 */
+function viralScore(deal){
+  let score = 40;
 
   if(deal.description?.length > 80) score += 10;
   if(deal.category === "Food") score += 15;
   if(deal.category === "Tech") score += 20;
-
-  if(deal.name?.toLowerCase().includes("free")) score += 25;
+  if(deal.name?.toLowerCase().includes("free")) score += 30;
 
   return Math.min(100, score);
 }
 
-/* ================= AI INSIGHT PANEL ================= */
+/* 🤖 AI INSIGHT ENGINE */
 function runAI(){
-
-  if(deals.length === 0){
+  if(!deals.length){
     document.getElementById("aiInsight").innerText =
-      "No deals yet — system warming up...";
+      "No active deals — system warming up...";
     return;
   }
 
-  const top = deals
-    .map(d => ({...d, score: calculateViralScore(d)}))
+  const top = [...deals]
+    .map(d => ({...d, score: viralScore(d)}))
     .sort((a,b)=>b.score-a.score)[0];
 
   document.getElementById("aiInsight").innerText =
-    `🔥 Trending Deal: "${top.name}" predicted high engagement & virality.`;
+    `🔥 Trending: "${top.name}" is dominating engagement signals.`;
 }
 
-/* ================= REALTIME SUBSCRIPTION ================= */
-function subscribeDeals(){
-
+/* REALTIME */
+function subscribeRealtime(){
   supabase
-    .channel("deals-live")
+    .channel("deals-os3")
     .on("postgres_changes",
       { event: "*", schema: "public", table: "deals" },
       () => loadDeals()
@@ -256,7 +258,7 @@ function subscribeDeals(){
     .subscribe();
 }
 
-/* ================= REDEEM ================= */
+/* REDEEM (UNCHANGED LOGIC) */
 async function redeem(dealId){
 
   const { data: existing } = await supabase
@@ -275,11 +277,7 @@ async function redeem(dealId){
 
   const { error } = await supabase
     .from("redemptions")
-    .insert([{
-      user_id: user.id,
-      deal_id: dealId,
-      code
-    }]);
+    .insert([{ user_id:user.id, deal_id:dealId, code }]);
 
   if(error){
     showModal("Error redeeming deal");
@@ -289,7 +287,7 @@ async function redeem(dealId){
   showModal("🎉 Redeem Code: " + code);
 }
 
-/* ================= MODAL ================= */
+/* MODAL */
 function showModal(text){
   document.getElementById("modalText").innerText = text;
   document.getElementById("modal").style.display = "flex";
