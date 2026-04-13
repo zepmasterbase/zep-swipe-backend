@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Zep Swipe | AI Invoice OS</title>
+<title>Zep Invoice OS 3.5 — AI Escrow Ready</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500,600&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -42,11 +44,9 @@ header{
 header h1{
   font-size:16px;
   font-family:Orbitron;
-}
-
-header a{
-  color:var(--text);
-  text-decoration:none;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 /* LAYOUT */
@@ -133,21 +133,30 @@ button{
 button:hover{
   transform:scale(1.02);
 }
+
+/* STATUS */
+.status{
+  margin-top:10px;
+  padding:10px;
+  border-radius:12px;
+  font-size:12px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+}
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>⚡ Zep Invoice AI OS</h1>
-  <a href="wallet.html">Wallet</a>
+  <h1>⚡ Zep Invoice OS 3.5 — AUTO RELEASE READY</h1>
 </header>
 
 <div class="container">
 
 <!-- 🤖 AI PANEL -->
 <div class="ai">
-  🤖 Invoice AI: <span id="aiInsight">Ready to analyze invoice creation flow...</span>
+  🤖 Invoice AI: <span id="aiInsight">Ready for escrow + auto-release logic...</span>
 </div>
 
 <!-- STUDENT -->
@@ -194,7 +203,7 @@ button:hover{
 
 <!-- PRICING -->
 <div class="card">
-  <h3>Pricing Engine</h3>
+  <h3>Escrow Pricing Engine (USD)</h3>
 
   <input type="number" id="amount" placeholder="Enter USD amount">
 
@@ -202,23 +211,24 @@ button:hover{
     <p>Platform Fee (5%) → <span id="fee">$0</span></p>
     <p><b>You Receive → <span id="receive">$0</span></b></p>
   </div>
+
+  <div class="status" id="aiStatus">AI Status: waiting...</div>
 </div>
 
-<button onclick="createInvoice()">Generate Invoice</button>
+<button onclick="createInvoice()">Generate Invoice (Escrow Ready)</button>
 
 </div>
 
 <script>
 
-/* ================= SUPABASE ================= */
-const supabaseUrl = "https://sqlisgobnayfpzamdolf.supabase.co";
-const supabaseKey = "YOUR_KEY_HERE";
+const supabase = window.supabase.createClient(
+  "https://sqlisgobnayfpzamdolf.supabase.co",
+  "YOUR_KEY_HERE"
+);
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-/* ================= USER ================= */
 let user;
 
+/* USER LOAD */
 async function loadUser(){
   const { data } = await supabase.auth.getUser();
 
@@ -236,56 +246,48 @@ async function loadUser(){
   document.getElementById("studentId").value = user.id;
 
   document.getElementById("aiInsight").innerText =
-    "User authenticated. Invoice engine active ⚡";
+    "User authenticated — OS 3.5 engine active ⚡";
 }
-
 loadUser();
 
-/* ================= LIVE CALC ================= */
+/* LIVE CALC */
 document.getElementById("amount").addEventListener("input", e=>{
   const amount = parseFloat(e.target.value) || 0;
 
-  const fee = amount * 0.05;
-  const receive = amount - fee;
-
-  document.getElementById("fee").innerText = `$${fee.toFixed(2)}`;
-  document.getElementById("receive").innerText = `$${receive.toFixed(2)}`;
+  document.getElementById("fee").innerText = `$${(amount*0.05).toFixed(2)}`;
+  document.getElementById("receive").innerText = `$${(amount*0.95).toFixed(2)}`;
 });
 
-/* ================= AI VALIDATION ================= */
-function validateInvoice(amount, desc){
+/* AI SCORING (OS 3.5) */
+function generateAI(amount, desc){
 
-  let score = 0;
+  let score = 50;
 
-  if(amount > 0) score += 30;
-  if(amount > 500) score += 20;
-  if(desc?.length > 20) score += 20;
+  if(amount < 1000) score += 20;
+  if(amount > 100) score += 10;
+  if(desc?.length > 20) score += 15;
 
-  if(!desc) score -= 20;
-
-  let status = "normal";
-
-  if(score >= 60) status = "strong";
-  else if(score < 30) status = "weak";
-
-  return { score, status };
+  return {
+    score: Math.min(100, score),
+    release_mode: score > 70 ? "auto" : "manual"
+  };
 }
 
-/* ================= CREATE INVOICE ================= */
+/* CREATE INVOICE */
 async function createInvoice(){
 
   const amount = parseFloat(document.getElementById("amount").value);
   const desc = document.getElementById("description").value;
 
-  if(!amount || amount <= 0){
+  if(!amount){
     alert("Enter valid amount");
     return;
   }
 
-  const ai = validateInvoice(amount, desc);
+  const ai = generateAI(amount, desc);
 
-  document.getElementById("aiInsight").innerText =
-    `Invoice strength: ${ai.status.toUpperCase()} (${ai.score}/100)`;
+  document.getElementById("aiStatus").innerText =
+    `AI Score: ${ai.score}/100 | Release Mode: ${ai.release_mode}`;
 
   const invoiceId = crypto.randomUUID();
 
@@ -302,9 +304,15 @@ async function createInvoice(){
     amount_usd: amount,
     fee_usd: amount * 0.05,
     payout_usd: amount * 0.95,
-    status: "pending_payment",
+
+    /* OS 3.5 ADDITIONS */
+    status: "escrow_locked",
+    escrow_status: true,
     ai_score: ai.score,
-    ai_status: ai.status,
+    release_mode: ai.release_mode,
+    task_verified: false,
+    dispute_status: "none",
+
     created_at: new Date().toISOString()
   };
 
@@ -320,7 +328,7 @@ async function createInvoice(){
 
   const link = `${window.location.origin}/invoice.html?id=${invoiceId}`;
 
-  alert("Invoice created successfully!\n\n" + link);
+  alert("Escrow Invoice Created 🚀\n\n" + link);
   window.open(link, "_blank");
 }
 
