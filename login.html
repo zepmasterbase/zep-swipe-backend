@@ -11,12 +11,15 @@
 
 <style>
 :root{
-  --bg: radial-gradient(circle at 20% 10%, #0b0030, #000);
+  --bg: radial-gradient(circle at 20% 10%, #1a0025, #000);
   --glass: rgba(255,255,255,0.06);
   --stroke: rgba(255,255,255,0.12);
+
+  /* 💗 FULL LOVE GRADIENT */
+  --pink:#ff4fd8;
+  --purple:#9c4dff;
   --blue:#00f0ff;
-  --violet:#9c4dff;
-  --green:#00ff94;
+
   --text: rgba(255,255,255,0.85);
 }
 
@@ -34,19 +37,30 @@ body{
   overflow-x:hidden;
 }
 
-/* BACK GLOW */
-.glow{
+/* 💡 GLOW SYSTEM (PINK + BLUE) */
+.glow-pink{
+  position:absolute;
+  width:500px;
+  height:500px;
+  background:var(--pink);
+  filter:blur(140px);
+  opacity:.15;
+  top:-120px;
+  left:-120px;
+}
+
+.glow-blue{
   position:absolute;
   width:500px;
   height:500px;
   background:var(--blue);
   filter:blur(140px);
   opacity:.12;
-  top:-120px;
-  left:-120px;
+  bottom:-120px;
+  right:-120px;
 }
 
-/* CENTER WRAPPER */
+/* CONTAINER */
 .container{
   max-width:440px;
   margin:auto;
@@ -62,7 +76,7 @@ body{
 .logo img{
   width:90px;
   animation:pulse 2.4s infinite;
-  filter:drop-shadow(0 0 18px var(--blue));
+  filter:drop-shadow(0 0 18px var(--pink));
 }
 
 @keyframes pulse{
@@ -77,7 +91,9 @@ body{
   font-size:24px;
   font-family:Orbitron;
   margin-top:10px;
-  background:linear-gradient(90deg,var(--blue),var(--violet),var(--green));
+
+  /* 🌈 FULL GRADIENT */
+  background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
@@ -92,7 +108,7 @@ body{
 .card{
   margin-top:22px;
   background:var(--glass);
-  border:1px solid rgba(0,240,255,0.2);
+  border:1px solid rgba(255,79,216,0.25); /* 💗 pink border */
   border-radius:18px;
   padding:18px;
   backdrop-filter:blur(14px);
@@ -113,8 +129,8 @@ input,select{
 }
 
 input:focus,select:focus{
-  border-color:var(--blue);
-  box-shadow:0 0 0 2px rgba(0,240,255,0.15);
+  border-color:var(--pink);
+  box-shadow:0 0 0 2px rgba(255,79,216,0.2);
 }
 
 /* BUTTONS */
@@ -128,16 +144,18 @@ button{
   font-family:Orbitron;
 }
 
+/* 🌈 PRIMARY BUTTON */
 .btn-primary{
-  background:linear-gradient(90deg,var(--blue),var(--violet));
+  background:linear-gradient(90deg,var(--pink),var(--purple));
   color:black;
 }
 
+/* TOGGLE */
 .btn-toggle{
   background:transparent;
-  color:var(--blue);
+  color:var(--pink);
   font-size:12px;
-  border:1px solid rgba(0,240,255,0.25);
+  border:1px solid rgba(255,79,216,0.3);
 }
 
 /* BADGE */
@@ -145,12 +163,12 @@ button{
   font-size:12px;
   padding:6px 10px;
   border-radius:999px;
-  background:rgba(0,240,255,0.08);
-  border:1px solid rgba(0,240,255,0.25);
+  background:rgba(255,79,216,0.08);
+  border:1px solid rgba(255,79,216,0.25);
   text-align:center;
 }
 
-/* SMALL FOOTNOTE */
+/* FOOT */
 .foot{
   text-align:center;
   font-size:11px;
@@ -162,11 +180,12 @@ button{
 
 <body>
 
-<div class="glow"></div>
+<!-- 💡 GLOWS -->
+<div class="glow-pink"></div>
+<div class="glow-blue"></div>
 
 <div class="container">
 
-  <!-- LOGO -->
   <div class="logo">
     <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
   </div>
@@ -176,10 +195,8 @@ button{
 
   <div class="card">
 
-    <!-- DETECTION -->
     <div id="detected" class="badge">Detecting region...</div>
 
-    <!-- COUNTRY -->
     <select id="country">
       <option>South Africa 🇿🇦</option>
       <option>Ghana 🇬🇭</option>
@@ -210,152 +227,12 @@ button{
     </button>
 
     <div class="foot">
-      Zep OS 3.2 Secure Access Layer
+      Zep OS 3.2 — Neon Love Gradient Layer 💖
     </div>
 
   </div>
 
 </div>
-
-<script type="module">
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-/* ================= SUPABASE ================= */
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-/* ================= STATE ================= */
-let isLogin = true;
-
-/* referral */
-const urlParams = new URLSearchParams(window.location.search);
-const referrer = urlParams.get("ref");
-
-/* pilot countries */
-const PILOT_COUNTRIES = ["South Africa 🇿🇦","Ghana 🇬🇭","Zambia 🇿🇲"];
-
-/* ================= DETECT ================= */
-function detectCountry(){
-  let locale = navigator.language || "en-ZA";
-  let code = locale.split("-")[1] || "ZA";
-
-  const map = {
-    ZA:"South Africa 🇿🇦", GH:"Ghana 🇬🇭", ZM:"Zambia 🇿🇲",
-    RW:"Rwanda 🇷🇼", NA:"Namibia 🇳🇦", BW:"Botswana 🇧🇼",
-    KE:"Kenya 🇰🇪", NG:"Nigeria 🇳🇬", UG:"Uganda 🇺🇬", TZ:"Tanzania 🇹🇿"
-  };
-
-  const country = map[code] || "South Africa 🇿🇦";
-
-  document.getElementById("detected").innerText =
-    `Zep OS detected: ${country}`;
-
-  document.getElementById("country").value = country;
-
-  return country;
-}
-
-const detectedCountry = detectCountry();
-
-/* ================= ROUTE ================= */
-function routeUser(country){
-  return PILOT_COUNTRIES.includes(country)
-    ? "student-dashboard.html"
-    : "waitlist.html";
-}
-
-/* ================= TOGGLE ================= */
-window.toggleMode = function(){
-  isLogin = !isLogin;
-
-  document.getElementById("actionBtn").innerText =
-    isLogin ? "Login" : "Create Account";
-
-  document.getElementById("nameField").style.display =
-    isLogin ? "none" : "block";
-};
-
-/* ================= AUTH ================= */
-window.handleAuth = async function(){
-
-  const name = document.getElementById("name").value?.trim();
-  const email = document.getElementById("email").value?.trim();
-  const password = document.getElementById("password").value?.trim();
-  const country = document.getElementById("country").value || detectedCountry;
-
-  if(!email || !password){
-    alert("Fill required fields");
-    return;
-  }
-
-  try{
-
-    let user;
-
-    if(isLogin){
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email, password
-      });
-      if(error) throw error;
-      user = data.user;
-    } else {
-
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options:{ data:{ name, country, role:"student" } }
-      });
-      if(error) throw error;
-      user = data.user;
-
-      await supabase.from("users").upsert({
-        id:user.id,
-        full_name:name,
-        email,
-        country,
-        role:"student",
-        xp:0,
-        wallet_balance:0,
-        referrals:0,
-        referrer:referrer || null,
-        created_at:new Date()
-      });
-
-      await supabase.from("wallets").upsert({
-        user_id:user.id,
-        balance:0
-      });
-    }
-
-    localStorage.setItem("currentUserId", user.id);
-    localStorage.setItem("currentCountry", country);
-
-    window.location.href = routeUser(country);
-
-  } catch(err){
-    alert(err.message);
-  }
-};
-
-/* ================= SESSION ================= */
-async function checkSession(){
-  const { data } = await supabase.auth.getSession();
-
-  if(data.session){
-    const user = data.session.user;
-
-    const country =
-      user.user_metadata?.country ||
-      localStorage.getItem("currentCountry") ||
-      detectedCountry;
-
-    window.location.href = routeUser(country);
-  }
-}
-
-checkSession();
-</script>
 
 </body>
 </html>
