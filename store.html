@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Zep Swipe — Store Intelligence</title>
+<title>Zep Swipe — Store Intelligence OS 3.5</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -149,7 +149,6 @@ header h1{
   background:linear-gradient(90deg,var(--blue),var(--violet));
   color:#000;
 }
-
 </style>
 </head>
 
@@ -158,7 +157,7 @@ header h1{
 <div class="container">
 
 <header>
-  <h1 id="storeName">Loading...</h1>
+  <h1 id="storeName">Loading store...</h1>
   <button class="btn" onclick="location.href='deals.html'">Back</button>
 </header>
 
@@ -173,7 +172,7 @@ header h1{
 <!-- AI INTELLIGENCE -->
 <div class="ai-box">
   <div class="ai-title">🧠 AI Commerce Intelligence</div>
-  <p id="aiInsight" class="info"></p>
+  <p id="aiInsight" class="info">Analyzing store...</p>
 
   <div class="bar">
     <div id="scoreBar" class="bar-fill"></div>
@@ -195,74 +194,73 @@ header h1{
 
 const supabase = window.supabase.createClient(
   "https://sqlisgobnayfpzamdolf.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "YOUR_SUPABASE_ANON_KEY"
 );
 
 const storeId = new URLSearchParams(location.search).get("id");
 
+if(!storeId){
+  alert("No store selected");
+}
+
 /* LOAD STORE */
 async function loadStore(){
 
-  const { data: store } = await supabase
-    .from("stores")
-    .select("*")
-    .eq("id", storeId)
-    .single();
+  try{
 
-  if(!store) return;
+    const { data: store, error } = await supabase
+      .from("stores")
+      .select("*")
+      .eq("id", storeId)
+      .single();
 
-  document.getElementById("storeName").innerText = store.name;
-  document.getElementById("storeLogo").src = store.logo;
-  document.getElementById("storeAddress").innerText = store.address;
-  document.getElementById("storeHours").innerText = "Hours: " + store.hours;
-  document.getElementById("storeContact").innerText = store.contact;
+    if(error || !store){
+      document.getElementById("storeName").innerText = "Store not found";
+      return;
+    }
 
-  renderDeals(store.deals || []);
-  runAI(store);
-  getDistance(store.lat, store.lng);
-}
+    document.getElementById("storeName").innerText = store.name || "Unknown Store";
+    document.getElementById("storeLogo").src = store.logo || "";
+    document.getElementById("storeAddress").innerText = store.address || "No address";
+    document.getElementById("storeHours").innerText = "Hours: " + (store.hours || "N/A");
+    document.getElementById("storeContact").innerText = store.contact || "No contact";
 
-/* AI ENGINE 3.0 */
-function runAI(store){
+    runAI(store);
+    loadDeals(store.id);
+    getDistance(store.lat, store.lng);
 
-  let score = 60;
-
-  if(store.deals?.length > 2) score += 15;
-  if(store.hours?.includes("24")) score += 15;
-  if(store.name?.length > 5) score += 10;
-
-  let insight = "";
-
-  if(score > 85){
-    insight = "🔥 Prime campus store — high student value + strong deals.";
-  } else if(score > 70){
-    insight = "⚡ Good store — worth visiting for student savings.";
-  } else {
-    insight = "📌 Average store — check deals before visiting.";
+  } catch(err){
+    console.error(err);
   }
-
-  document.getElementById("aiInsight").innerText = insight;
-  document.getElementById("scoreText").innerText = "Store Score: " + score + "/100";
-  document.getElementById("scoreBar").style.width = score + "%";
 }
 
-/* DEALS RENDER */
-function renderDeals(deals){
+/* LOAD DEALS (FIXED) */
+async function loadDeals(storeId){
+
+  const { data: deals, error } = await supabase
+    .from("store_deals")
+    .select("*")
+    .eq("store_id", storeId);
 
   const wrap = document.getElementById("dealsList");
   wrap.innerHTML = "";
 
+  if(error || !deals || deals.length === 0){
+    wrap.innerHTML = "<p class='info'>No deals available</p>";
+    return;
+  }
+
   deals.forEach(d => {
 
-    let tag = "Budget Saver";
-    if(d.includes("50") || d.includes("%")) tag = "🔥 Hot Deal";
-    if(d.includes("premium")) tag = "Premium";
+    const tag =
+      d.tag ||
+      (d.title.includes("%") ? "🔥 Hot Deal" : "Budget Saver");
 
     const div = document.createElement("div");
     div.className = "deal";
 
     div.innerHTML = `
-      <span>${d}</span>
+      <span>${d.title}</span>
       <div style="display:flex;gap:6px;align-items:center">
         <span class="tag">${tag}</span>
         <button class="action-btn">Go</button>
@@ -273,8 +271,38 @@ function renderDeals(deals){
   });
 }
 
+/* AI ENGINE */
+function runAI(store){
+
+  let score = 50;
+
+  if(store.deals_count > 3) score += 15;
+  if(store.hours && store.hours.includes("24")) score += 15;
+  if(store.name) score += 10;
+  if(store.logo) score += 10;
+
+  let insight = "";
+
+  if(score >= 85){
+    insight = "🔥 Prime student hotspot — high-value store with strong deals.";
+  } else if(score >= 70){
+    insight = "⚡ Good store — recommended for savings.";
+  } else {
+    insight = "📌 Average store — check deals before visiting.";
+  }
+
+  document.getElementById("aiInsight").innerText = insight;
+  document.getElementById("scoreText").innerText = "Store Score: " + score + "/100";
+  document.getElementById("scoreBar").style.width = score + "%";
+}
+
 /* DISTANCE */
 function getDistance(lat2, lon2){
+
+  if(!navigator.geolocation || !lat2 || !lon2){
+    document.getElementById("distanceDisplay").innerText = "📍 Location unavailable";
+    return;
+  }
 
   navigator.geolocation.getCurrentPosition(pos => {
 
@@ -296,6 +324,8 @@ function getDistance(lat2, lon2){
     document.getElementById("distanceDisplay").innerText =
       `📍 ${d.toFixed(2)} km away`;
 
+  }, () => {
+    document.getElementById("distanceDisplay").innerText = "📍 Location blocked";
   });
 
 }
