@@ -3,76 +3,156 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Access OS 3.2</title>
+<title>Zep Swipe Access OS 3.4</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-/* (✅ SAME — unchanged UI) */
 :root{
-  --bg: radial-gradient(circle at 20% 10%, #1a0025, #000);
+  --bg: radial-gradient(circle at 20% 10%, #120018, #000);
   --glass: rgba(255,255,255,0.06);
   --stroke: rgba(255,255,255,0.12);
+
   --pink:#ff4fd8;
   --purple:#9c4dff;
   --blue:#00f0ff;
+
   --text: rgba(255,255,255,0.85);
 }
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
-body{background:var(--bg);color:white;min-height:100vh;overflow-x:hidden;}
 
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins;
+}
+
+body{
+  background:var(--bg);
+  color:white;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* 🌌 BACK GLOW */
 .glow{
-  position:absolute;width:500px;height:500px;
+  position:absolute;
+  width:520px;
+  height:520px;
   background:radial-gradient(circle,var(--pink),transparent);
-  filter:blur(140px);opacity:.12;top:-120px;left:-120px;
+  filter:blur(140px);
+  opacity:.14;
+  top:-140px;
+  left:-140px;
 }
 
-.container{max-width:440px;margin:auto;padding:26px;}
+/* ================= WEB3 LOGO (UPGRADED) ================= */
+.logo{
+  display:flex;
+  justify-content:center;
+  margin-top:45px;
+}
 
-.logo{display:flex;justify-content:center;margin-top:40px;}
+.logo-ring{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  position:relative;
 
-.logo-wrap{
-  position:relative;width:110px;height:110px;border-radius:50%;
+  background:conic-gradient(
+    from 180deg,
+    var(--pink),
+    var(--purple),
+    var(--blue),
+    var(--pink)
+  );
+
   padding:4px;
-  background:linear-gradient(135deg,var(--pink),var(--purple),var(--blue));
-  box-shadow:0 0 25px rgba(255,79,216,0.6),
-             0 0 50px rgba(156,77,255,0.4),
-             0 0 80px rgba(0,240,255,0.3);
-  animation:rotateGlow 6s linear infinite;
+
+  box-shadow:
+    0 0 25px rgba(255,79,216,0.6),
+    0 0 60px rgba(156,77,255,0.35),
+    0 0 90px rgba(0,240,255,0.25);
+
+  animation:spin 6s linear infinite;
 }
-.logo-wrap::before{
-  content:"";position:absolute;inset:-6px;border-radius:50%;
-  background:linear-gradient(135deg,var(--pink),var(--purple),var(--blue));
-  filter:blur(18px);opacity:.6;z-index:-1;
+
+.logo-ring::before{
+  content:"";
+  position:absolute;
+  inset:-10px;
+  border-radius:50%;
+  background:conic-gradient(var(--pink),var(--purple),var(--blue));
+  filter:blur(22px);
+  opacity:.5;
+  z-index:-1;
 }
+
 .logo-inner{
-  width:100%;height:100%;border-radius:50%;
-  background:#050014;display:flex;align-items:center;justify-content:center;
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  background:rgba(5,0,20,0.9);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  backdrop-filter:blur(10px);
 }
-.logo-inner img{width:70%;height:70%;object-fit:contain;}
 
-@keyframes rotateGlow{0%{transform:rotate(0)}100%{transform:rotate(360deg);}}
+.logo-inner img{
+  width:68%;
+  height:68%;
+  object-fit:contain;
+  filter:drop-shadow(0 0 10px rgba(255,79,216,0.6));
+}
 
+@keyframes spin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+
+/* TITLE */
 .title{
-  text-align:center;font-size:24px;font-family:Orbitron;margin-top:16px;
+  text-align:center;
+  font-size:24px;
+  font-family:Orbitron;
+  margin-top:18px;
   background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
-.subtitle{text-align:center;font-size:13px;opacity:.7;}
 
+.subtitle{
+  text-align:center;
+  font-size:13px;
+  opacity:.7;
+}
+
+/* CARD */
 .card{
-  margin-top:22px;background:var(--glass);
-  border:1px solid rgba(255,79,216,0.2);
-  border-radius:18px;padding:18px;backdrop-filter:blur(14px);
-  display:flex;flex-direction:column;gap:12px;
+  margin-top:22px;
+  background:var(--glass);
+  border:1px solid rgba(255,79,216,0.18);
+  border-radius:18px;
+  padding:18px;
+  backdrop-filter:blur(14px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
 
+/* INPUTS */
 input,select{
-  width:100%;padding:13px;border-radius:12px;
+  width:100%;
+  padding:13px;
+  border-radius:12px;
   border:1px solid rgba(255,255,255,0.12);
-  background:rgba(0,0,0,0.35);color:white;
+  background:rgba(0,0,0,0.35);
+  color:white;
+  outline:none;
 }
 
 input:focus,select:focus{
@@ -80,23 +160,44 @@ input:focus,select:focus{
   box-shadow:0 0 0 2px rgba(255,79,216,0.2);
 }
 
+/* BUTTONS */
 button{
-  width:100%;padding:14px;border-radius:14px;border:none;
-  font-weight:800;cursor:pointer;font-family:Orbitron;
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  font-weight:800;
+  cursor:pointer;
+  font-family:Orbitron;
 }
-.btn-primary{background:linear-gradient(90deg,var(--pink),var(--purple));color:black;}
+
+.btn-primary{
+  background:linear-gradient(90deg,var(--pink),var(--purple));
+  color:black;
+}
+
 .btn-toggle{
-  background:transparent;color:var(--pink);font-size:12px;
+  background:transparent;
+  color:var(--pink);
+  font-size:12px;
   border:1px solid rgba(255,79,216,0.3);
 }
 
 .badge{
-  font-size:12px;padding:6px 10px;border-radius:999px;
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:999px;
   background:rgba(255,79,216,0.08);
-  border:1px solid rgba(255,79,216,0.25);text-align:center;
+  border:1px solid rgba(255,79,216,0.25);
+  text-align:center;
 }
 
-.foot{text-align:center;font-size:11px;opacity:.6;margin-top:10px;}
+.foot{
+  text-align:center;
+  font-size:11px;
+  opacity:.6;
+  margin-top:10px;
+}
 </style>
 </head>
 
@@ -106,8 +207,9 @@ button{
 
 <div class="container">
 
+  <!-- WEB3 LOGO -->
   <div class="logo">
-    <div class="logo-wrap">
+    <div class="logo-ring">
       <div class="logo-inner">
         <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
       </div>
@@ -115,16 +217,18 @@ button{
   </div>
 
   <div class="title">Zep Swipe Access</div>
-  <div class="subtitle">Login or create your student OS account</div>
+  <div class="subtitle">OS 3.4 Secure Auth Layer</div>
 
   <div class="card">
 
-    <div id="detected" class="badge">Detecting region...</div>
+    <div id="detected" class="badge">Initializing secure session...</div>
 
     <select id="country">
       <option>South Africa 🇿🇦</option>
       <option>Ghana 🇬🇭</option>
       <option>Zambia 🇿🇲</option>
+      <option>Rwanda 🇷🇼</option>
+      <option>Kenya 🇰🇪</option>
     </select>
 
     <div id="nameField" style="display:none;">
@@ -142,7 +246,7 @@ button{
       Switch to Signup
     </button>
 
-    <div class="foot">Zep Swipe Secure Access Layer</div>
+    <div class="foot">Zep OS 3.4 — Web3 Identity Layer</div>
 
   </div>
 
@@ -157,22 +261,27 @@ let isLogin = true;
 
 const PILOT_COUNTRIES = ["South Africa 🇿🇦","Ghana 🇬🇭","Zambia 🇿🇲"];
 
-/* DETECT */
+/* COUNTRY DETECT */
 function detectCountry(){
-  let locale = navigator.language || "en-ZA";
-  let code = locale.split("-")[1] || "ZA";
+  const code = (navigator.language || "en-ZA").split("-")[1] || "ZA";
 
-  const map = { ZA:"South Africa 🇿🇦", GH:"Ghana 🇬🇭", ZM:"Zambia 🇿🇲" };
+  const map = {
+    ZA:"South Africa 🇿🇦",
+    GH:"Ghana 🇬🇭",
+    ZM:"Zambia 🇿🇲",
+    KE:"Kenya 🇰🇪"
+  };
 
   const country = map[code] || "South Africa 🇿🇦";
 
   document.getElementById("detected").innerText =
-    `Zep Swipe detected: ${country}`;
+    `Secure region detected: ${country}`;
 
   document.getElementById("country").value = country;
 
   return country;
 }
+
 const detectedCountry = detectCountry();
 
 /* ROUTE */
@@ -182,25 +291,41 @@ function routeUser(country){
     : "waitlist.html";
 }
 
-/* 🔥 REAL PERSISTENCE */
+/* ================= OS 3.4 PERSISTENCE ENGINE ================= */
+async function bootSession(){
+
+  const { data } = await supabase.auth.getSession();
+
+  if(data?.session){
+    redirectUser(data.session.user);
+  }
+}
+
+/* REAL-TIME AUTH LISTENER */
 supabase.auth.onAuthStateChange((event, session)=>{
   if(session){
-    const user = session.user;
-
-    const country =
-      user.user_metadata?.country ||
-      localStorage.getItem("currentCountry") ||
-      detectedCountry;
-
-    window.location.href = routeUser(country);
+    redirectUser(session.user);
   }
 });
+
+function redirectUser(user){
+  const country =
+    user.user_metadata?.country ||
+    localStorage.getItem("currentCountry") ||
+    detectedCountry;
+
+  localStorage.setItem("currentCountry", country);
+
+  window.location.href = routeUser(country);
+}
 
 /* TOGGLE */
 window.toggleMode = function(){
   isLogin = !isLogin;
+
   document.getElementById("actionBtn").innerText =
     isLogin ? "Login" : "Create Account";
+
   document.getElementById("nameField").style.display =
     isLogin ? "none" : "block";
 };
@@ -221,7 +346,9 @@ window.handleAuth = async function(){
   try{
 
     if(isLogin){
-      const { error } = await supabase.auth.signInWithPassword({ email,password });
+      const { error } = await supabase.auth.signInWithPassword({
+        email,password
+      });
       if(error) throw error;
     } else {
 
@@ -229,16 +356,21 @@ window.handleAuth = async function(){
         email,password,
         options:{ data:{ name, country, role:"student" } }
       });
+
       if(error) throw error;
 
       const user = data.user;
 
       await supabase.from("users").upsert({
-        id:user.id, full_name:name, email, country
+        id:user.id,
+        full_name:name,
+        email,
+        country
       });
 
       await supabase.from("wallets").upsert({
-        user_id:user.id, balance:0
+        user_id:user.id,
+        balance:0
       });
     }
 
@@ -249,21 +381,7 @@ window.handleAuth = async function(){
   }
 };
 
-/* SESSION CHECK (fallback) */
-(async ()=>{
-  const { data } = await supabase.auth.getSession();
-
-  if(data.session){
-    const user = data.session.user;
-
-    const country =
-      user.user_metadata?.country ||
-      localStorage.getItem("currentCountry") ||
-      detectedCountry;
-
-    window.location.href = routeUser(country);
-  }
-})();
+bootSession();
 </script>
 
 </body>
