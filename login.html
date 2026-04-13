@@ -15,10 +15,8 @@ body {
   font-family: Inter, sans-serif;
   background: radial-gradient(circle at top, #0b0f1a, #05070d);
   color: white;
-  overflow-x: hidden;
 }
 
-/* glow */
 .glow {
   position: absolute;
   width: 420px;
@@ -30,14 +28,12 @@ body {
   left: -120px;
 }
 
-/* container */
 .container {
   max-width: 420px;
   margin: auto;
   padding: 24px;
 }
 
-/* logo */
 .logo {
   text-align: center;
   margin-top: 30px;
@@ -55,7 +51,6 @@ body {
   100% {transform: scale(1); opacity: 0.7;}
 }
 
-/* text */
 .title {
   text-align: center;
   font-size: 24px;
@@ -67,10 +62,8 @@ body {
   text-align: center;
   font-size: 13px;
   opacity: 0.7;
-  margin-bottom: 10px;
 }
 
-/* CARD */
 .card {
   margin-top: 20px;
   background: rgba(255,255,255,0.05);
@@ -78,23 +71,11 @@ body {
   border-radius: 18px;
   padding: 18px;
   backdrop-filter: blur(12px);
-
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* badge */
-.badge {
-  font-size: 12px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(0,255,255,0.1);
-  border: 1px solid rgba(0,255,255,0.25);
-  text-align: center;
-}
-
-/* inputs */
 input, select {
   width: 100%;
   padding: 13px;
@@ -103,16 +84,13 @@ input, select {
   background: rgba(0,0,0,0.35);
   color: white;
   outline: none;
-  font-size: 14px;
 }
 
-/* focus glow */
 input:focus, select:focus {
   border-color: #00f0ff;
   box-shadow: 0 0 0 2px rgba(0,240,255,0.2);
 }
 
-/* button */
 button {
   width: 100%;
   padding: 14px;
@@ -122,13 +100,11 @@ button {
   cursor: pointer;
 }
 
-/* primary */
 .btn-primary {
   background: linear-gradient(90deg, #00f0ff, #6a5cff);
   color: black;
 }
 
-/* toggle */
 .btn-toggle {
   background: transparent;
   color: #00f0ff;
@@ -136,14 +112,13 @@ button {
   border: 1px solid rgba(0,255,255,0.3);
 }
 
-/* name field spacing */
-#nameField {
-  display: none;
-}
-
-/* mobile polish */
-@media (max-width: 420px) {
-  .container { padding: 16px; }
+.badge {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0,255,255,0.1);
+  border: 1px solid rgba(0,255,255,0.25);
+  text-align: center;
 }
 </style>
 </head>
@@ -179,7 +154,7 @@ button {
       <option>Tanzania 🇹🇿</option>
     </select>
 
-    <div id="nameField">
+    <div id="nameField" style="display:none;">
       <input type="text" id="name" placeholder="Full Name">
     </div>
 
@@ -202,7 +177,7 @@ button {
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 /* =========================
-   🔑 SUPABASE CONNECT
+   🔑 SUPABASE
 ========================= */
 const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
@@ -212,13 +187,15 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let isLogin = true;
 
 /* =========================
-   COUNTRIES
+   REFERRAL SYSTEM
 ========================= */
-const PILOT_COUNTRIES = [
-  "South Africa 🇿🇦",
-  "Ghana 🇬🇭",
-  "Zambia 🇿🇲"
-];
+const urlParams = new URLSearchParams(window.location.search);
+const referrer = urlParams.get("ref"); // 👈 NEW
+
+/* =========================
+   PILOT COUNTRIES
+========================= */
+const PILOT_COUNTRIES = ["South Africa 🇿🇦","Ghana 🇬🇭","Zambia 🇿🇲"];
 
 /* =========================
    DETECT COUNTRY
@@ -228,16 +205,9 @@ function detectCountry() {
   let code = locale.split("-")[1] || "ZA";
 
   const map = {
-    ZA: "South Africa 🇿🇦",
-    GH: "Ghana 🇬🇭",
-    ZM: "Zambia 🇿🇲",
-    RW: "Rwanda 🇷🇼",
-    NA: "Namibia 🇳🇦",
-    BW: "Botswana 🇧🇼",
-    KE: "Kenya 🇰🇪",
-    NG: "Nigeria 🇳🇬",
-    UG: "Uganda 🇺🇬",
-    TZ: "Tanzania 🇹🇿"
+    ZA:"South Africa 🇿🇦", GH:"Ghana 🇬🇭", ZM:"Zambia 🇿🇲",
+    RW:"Rwanda 🇷🇼", NA:"Namibia 🇳🇦", BW:"Botswana 🇧🇼",
+    KE:"Kenya 🇰🇪", NG:"Nigeria 🇳🇬", UG:"Uganda 🇺🇬", TZ:"Tanzania 🇹🇿"
   };
 
   const country = map[code] || "South Africa 🇿🇦";
@@ -285,7 +255,7 @@ window.handleAuth = async function () {
   const country = document.getElementById("country").value || detectedCountry;
 
   if (!email || !password) {
-    alert("Please fill all required fields");
+    alert("Fill all required fields");
     return;
   }
 
@@ -293,19 +263,17 @@ window.handleAuth = async function () {
 
     let user;
 
+    /* LOGIN */
     if (isLogin) {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
+        email, password
       });
       if (error) throw error;
       user = data.user;
-    } else {
+    }
 
-      if (!name) {
-        alert("Full name required");
-        return;
-      }
+    /* SIGNUP */
+    else {
 
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -318,13 +286,14 @@ window.handleAuth = async function () {
       if (error) throw error;
       user = data.user;
 
-      const { data: existing } = await supabase
+      const { data: exists } = await supabase
         .from("users")
         .select("id")
         .eq("id", user.id)
         .maybeSingle();
 
-      if (!existing) {
+      if (!exists) {
+
         await supabase.from("users").insert({
           id: user.id,
           full_name: name,
@@ -334,6 +303,7 @@ window.handleAuth = async function () {
           xp: 0,
           wallet_balance: 0,
           referrals: 0,
+          referrer: referrer || null,
           created_at: new Date()
         });
 
@@ -344,6 +314,7 @@ window.handleAuth = async function () {
       }
     }
 
+    /* SESSION */
     localStorage.setItem("currentUserId", user.id);
     localStorage.setItem("currentCountry", country);
 
