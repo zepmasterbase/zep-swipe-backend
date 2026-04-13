@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Access OS 3.5 Identity</title>
+
+<title>Zep OS 3.6 Identity Passport</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -11,24 +12,30 @@
 
 <style>
 :root{
-  --bg: radial-gradient(circle at 20% 10%, #120018, #000);
+  --bg: radial-gradient(circle at 20% 10%, #0a0018, #000);
   --glass: rgba(255,255,255,0.06);
-  --stroke: rgba(255,255,255,0.12);
+
   --pink:#ff4fd8;
   --purple:#9c4dff;
   --blue:#00f0ff;
+
   --text: rgba(255,255,255,0.85);
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins;
+}
 
 body{
   background:var(--bg);
   color:white;
   min-height:100vh;
-  overflow-x:hidden;
 }
 
+/* BACK GLOW */
 .glow{
   position:absolute;
   width:520px;
@@ -40,13 +47,14 @@ body{
   left:-140px;
 }
 
+/* CONTAINER */
 .container{
   max-width:440px;
   margin:auto;
   padding:26px;
 }
 
-/* LOGO */
+/* WEB3 LOGO */
 .logo{
   display:flex;
   justify-content:center;
@@ -57,27 +65,33 @@ body{
   width:120px;
   height:120px;
   border-radius:50%;
-  position:relative;
-  background:conic-gradient(var(--pink),var(--purple),var(--blue),var(--pink));
   padding:4px;
-  box-shadow:0 0 25px rgba(255,79,216,0.6),0 0 60px rgba(156,77,255,0.35),0 0 90px rgba(0,240,255,0.25);
+  background:conic-gradient(var(--pink),var(--purple),var(--blue),var(--pink));
   animation:spin 6s linear infinite;
+  box-shadow:0 0 25px rgba(255,79,216,0.5);
 }
 
 .logo-inner{
   width:100%;
   height:100%;
   border-radius:50%;
-  background:rgba(5,0,20,0.9);
+  background:#050014;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
-.logo-inner img{width:68%;filter:drop-shadow(0 0 10px rgba(255,79,216,0.6));}
+.logo-inner img{
+  width:68%;
+  filter:drop-shadow(0 0 10px rgba(255,79,216,0.6));
+}
 
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes spin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
 
+/* TEXT */
 .title{
   text-align:center;
   font-size:24px;
@@ -88,61 +102,64 @@ body{
   -webkit-text-fill-color:transparent;
 }
 
-.subtitle{text-align:center;font-size:13px;opacity:.7;}
+.subtitle{
+  text-align:center;
+  font-size:13px;
+  opacity:.7;
+}
 
+/* CARD */
 .card{
   margin-top:22px;
   background:var(--glass);
-  border:1px solid rgba(255,79,216,0.18);
   border-radius:18px;
   padding:18px;
   backdrop-filter:blur(14px);
+  border:1px solid rgba(255,79,216,0.2);
   display:flex;
   flex-direction:column;
   gap:12px;
 }
 
+/* INPUTS */
 input,select{
   width:100%;
   padding:13px;
   border-radius:12px;
-  border:1px solid rgba(255,255,255,0.12);
-  background:rgba(0,0,0,0.35);
+  border:none;
+  background:rgba(0,0,0,0.4);
   color:white;
-  outline:none;
 }
 
-input:focus,select:focus{
-  border-color:var(--pink);
-}
-
+/* BUTTON */
 button{
   width:100%;
   padding:14px;
-  border-radius:14px;
   border:none;
+  border-radius:14px;
+  font-family:Orbitron;
   font-weight:800;
   cursor:pointer;
-  font-family:Orbitron;
 }
 
-.btn-primary{
+.btn{
   background:linear-gradient(90deg,var(--pink),var(--purple));
   color:black;
 }
 
-.btn-toggle{
+.toggle{
   background:transparent;
-  color:var(--pink);
   border:1px solid rgba(255,79,216,0.3);
+  color:var(--pink);
 }
 
+/* BADGE */
 .badge{
   font-size:12px;
   padding:6px 10px;
   border-radius:999px;
   background:rgba(255,79,216,0.08);
-  border:1px solid rgba(255,79,216,0.25);
+  border:1px solid rgba(255,79,216,0.2);
   text-align:center;
 }
 </style>
@@ -154,6 +171,7 @@ button{
 
 <div class="container">
 
+  <!-- LOGO -->
   <div class="logo">
     <div class="logo-ring">
       <div class="logo-inner">
@@ -162,18 +180,21 @@ button{
     </div>
   </div>
 
-  <div class="title">Zep Swipe Identity</div>
-  <div class="subtitle">OS 3.5 Secure Identity Layer</div>
+  <div class="title">Zep OS 3.6 Identity</div>
+  <div class="subtitle">Web3 Passport Access Layer</div>
 
   <div class="card">
 
-    <div id="detected" class="badge">Detecting identity...</div>
+    <div id="detect" class="badge">Detecting identity...</div>
 
     <select id="country">
       <option>South Africa 🇿🇦</option>
       <option>Ghana 🇬🇭</option>
       <option>Zambia 🇿🇲</option>
       <option>Kenya 🇰🇪</option>
+      <option>Nigeria 🇳🇬</option>
+      <option>UK 🇬🇧</option>
+      <option>USA 🇺🇸</option>
     </select>
 
     <div id="nameField" style="display:none;">
@@ -183,81 +204,101 @@ button{
     <input id="email" type="email" placeholder="Email">
     <input id="password" type="password" placeholder="Password">
 
-    <button class="btn-primary" onclick="handleAuth()" id="btn">
+    <button class="btn" onclick="auth()" id="btn">
       Login
     </button>
 
-    <button class="btn-toggle" onclick="toggleMode()">
+    <button class="toggle" onclick="toggle()">
       Switch Mode
     </button>
 
   </div>
-
 </div>
 
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-const supabase = createClient("https://zazbdbkoqjxdzisfszeg.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphemJkYmtvcWp4ZHppc2ZzemVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MTA4MzAsImV4cCI6MjA5MTQ4NjgzMH0.uTqieGXErIpooSUn0TMmYwYYJuo0yHYcAqdampHWRj4;
+const supabase = createClient(
+  "YOUR_SUPABASE_URL",
+  "YOUR_SUPABASE_ANON_KEY"
+);
 
+/* PILOT ROUTE */
+const PILOT = ["South Africa 🇿🇦","Ghana 🇬🇭","Zambia 🇿🇲"];
+
+/* STATE */
 let isLogin = true;
-let detectedCountry = "South Africa";
 
-/* detect */
-async function getIP(){
-  try{
-    const res = await fetch("https://ipapi.co/json/");
-    const data = await res.json();
-    return data.country_name || "South Africa";
-  }catch{
-    return "South Africa";
-  }
+/* DETECT COUNTRY */
+function detectCountry(){
+  const code = (navigator.language || "en-ZA").split("-")[1] || "ZA";
+
+  const map = {
+    ZA:"South Africa 🇿🇦",
+    GH:"Ghana 🇬🇭",
+    ZM:"Zambia 🇿🇲",
+    KE:"Kenya 🇰🇪",
+    NG:"Nigeria 🇳🇬",
+    US:"USA 🇺🇸",
+    GB:"UK 🇬🇧"
+  };
+
+  const country = map[code] || "South Africa 🇿🇦";
+
+  document.getElementById("detect").innerText =
+    "Identity detected: " + country;
+
+  document.getElementById("country").value = country;
+
+  return country;
 }
 
-async function init(){
-  detectedCountry = await getIP();
-  document.getElementById("detected").innerText =
-    "Identity locked: " + detectedCountry;
-}
-init();
+const detectedCountry = detectCountry();
 
-/* routing */
+/* ROUTE */
 function route(country){
-  return ["South Africa","Ghana","Zambia","Kenya"].includes(country)
-    ? "student-dashboard.html"
+  return PILOT.includes(country)
+    ? "student.html"
     : "waitlist.html";
 }
 
-/* session restore */
-async function boot(){
+/* SESSION CHECK (PERSISTENCE) */
+async function sessionCheck(){
   const { data } = await supabase.auth.getSession();
-  if(data?.session) redirect(data.session.user);
+
+  if(data?.session){
+    redirect(data.session.user);
+  }
 }
-supabase.auth.onAuthStateChange((_,session)=>{
+
+supabase.auth.onAuthStateChange((_, session)=>{
   if(session) redirect(session.user);
 });
 
 /* REDIRECT */
 function redirect(user){
   const country =
-    user.user_metadata?.country || detectedCountry;
+    user.user_metadata?.country ||
+    detectedCountry;
 
-  localStorage.setItem("currentCountry", country);
+  localStorage.setItem("country", country);
 
   window.location.href = route(country);
 }
 
-/* toggle */
-window.toggleMode = function(){
+/* TOGGLE */
+window.toggle = function(){
   isLogin = !isLogin;
+
   document.getElementById("btn").innerText =
     isLogin ? "Login" : "Create Account";
+
   document.getElementById("nameField").style.display =
     isLogin ? "none" : "block";
 };
 
 /* AUTH */
-window.handleAuth = async function(){
+window.auth = async function(){
 
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
@@ -269,54 +310,34 @@ window.handleAuth = async function(){
     return;
   }
 
-  try{
+  if(isLogin){
 
-    if(isLogin){
+    const { error } = await supabase.auth.signInWithPassword({
+      email,password
+    });
 
-      const { error } = await supabase.auth.signInWithPassword({
-        email,password
-      });
+    if(error) return alert(error.message);
 
-      if(error) throw error;
+  } else {
 
-      // 🔥 FORCE REDIRECT IMMEDIATELY
-      const { data } = await supabase.auth.getSession();
-      redirect(data.session.user);
-
-    } else {
-
-      const { data, error } = await supabase.auth.signUp({
-        email,password,
-        options:{
-          data:{ name, country, role:"student" }
+    const { error } = await supabase.auth.signUp({
+      email,password,
+      options:{
+        data:{
+          name,
+          country,
+          role:"student"
         }
-      });
+      }
+    });
 
-      if(error) throw error;
-
-      const user = data.user;
-
-      await supabase.from("users").upsert({
-        id:user.id,
-        full_name:name,
-        email,
-        country
-      });
-
-      await supabase.from("wallets").upsert({
-        user_id:user.id,
-        balance:0
-      });
-
-      redirect(user);
-    }
-
-  }catch(err){
-    alert(err.message);
+    if(error) return alert(error.message);
   }
+
+  localStorage.setItem("country", country);
 };
 
-boot();
+sessionCheck();
 </script>
 
 </body>
