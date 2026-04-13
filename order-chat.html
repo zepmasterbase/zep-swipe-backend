@@ -10,55 +10,137 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@400;500&display=swap" rel="stylesheet"/>
 
 <style>
-body{margin:0;font-family:Poppins;background:#050018;color:#fff}
-.container{max-width:900px;margin:auto;padding:16px}
-
-.card{background:rgba(255,255,255,0.06);padding:16px;border-radius:16px;margin-top:16px}
-
-.chat{
-  height:320px;
-  overflow-y:auto;
-  padding:10px;
-  background:rgba(0,0,0,0.35);
-  border-radius:12px;
+:root{
+  --bg:#050012;
+  --glass:rgba(255,255,255,0.06);
+  --blue:#00f0ff;
+  --purple:#9c4dff;
+  --green:#00ff9d;
+  --text:rgba(255,255,255,0.85);
 }
 
-.msg{margin:6px 0;font-size:14px}
-.you{color:#9ff;text-align:right}
-.them{color:#fff}
-.system{color:#00ff9d;text-align:center;font-size:13px}
-
-input{
-width:78%;
-padding:10px;
-border-radius:10px;
-border:none;
-background:#111;
-color:#fff;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
 }
 
+body{
+  background:radial-gradient(circle at top,#0b0620,#050012);
+  color:white;
+  min-height:100vh;
+}
+
+/* CONTAINER */
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:18px;
+}
+
+/* HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 16px;
+  border-radius:16px;
+  background:linear-gradient(90deg,rgba(0,240,255,0.12),rgba(156,77,255,0.12));
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.header h2{
+  font-family:Orbitron;
+  font-size:18px;
+}
+
+/* BUTTON */
 button{
-padding:10px 14px;
-border:none;
-border-radius:10px;
-background:linear-gradient(90deg,#00f0ff,#9c4dff);
-cursor:pointer;
-font-weight:bold;
+  padding:10px 14px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-family:Orbitron;
+  font-weight:700;
+  background:linear-gradient(90deg,var(--blue),var(--purple));
+  color:#000;
 }
 
-.header{display:flex;justify-content:space-between;align-items:center}
-
+/* AI BOX */
 .ai-box{
-  margin-top:10px;
-  padding:10px;
-  border-radius:12px;
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
   background:rgba(0,240,255,0.08);
-  border:1px solid rgba(0,240,255,0.2);
+  border:1px solid rgba(0,240,255,0.25);
   font-size:13px;
 }
 
+/* CHAT CARD */
+.card{
+  margin-top:14px;
+  background:var(--glass);
+  padding:16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+/* CHAT BOX */
+.chat{
+  height:340px;
+  overflow-y:auto;
+  padding:12px;
+  background:rgba(0,0,0,0.35);
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+/* MESSAGES */
+.msg{
+  margin:8px 0;
+  font-size:14px;
+  line-height:1.4;
+  white-space:pre-wrap;
+}
+
+.you{
+  text-align:right;
+  color:var(--blue);
+}
+
+.them{
+  text-align:left;
+  color:white;
+  opacity:0.9;
+}
+
+.system{
+  text-align:center;
+  color:var(--green);
+  font-size:12px;
+}
+
+/* INPUT AREA */
+#inputBox{
+  margin-top:12px;
+  display:flex;
+  gap:8px;
+}
+
+input{
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:#0d0a1f;
+  color:white;
+  outline:none;
+}
+
+/* DISABLED STATE */
 .disabled{
-  opacity:0.5;
+  opacity:0.4;
   pointer-events:none;
 }
 </style>
@@ -73,17 +155,18 @@ font-weight:bold;
     <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- 🤖 ZEP AI PANEL -->
+  <!-- AI PANEL -->
   <div class="ai-box">
     🤖 <span id="aiStatus">Analyzing order...</span>
   </div>
 
+  <!-- CHAT -->
   <div class="card">
 
     <div id="chatBox" class="chat"></div>
 
-    <div style="margin-top:10px" id="inputBox">
-      <input id="msgInput" placeholder="Type message..."/>
+    <div id="inputBox">
+      <input id="msgInput" placeholder="Type message..." />
       <button onclick="sendMessage()">Send</button>
     </div>
 
@@ -92,12 +175,12 @@ font-weight:bold;
 </div>
 
 <script>
-
 /* =======================
    SUPABASE INIT
 ======================= */
 const supabaseUrl = "https://wucferiudoekefgaciua.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
+const supabaseKey = "YOUR_SUPABASE_ANON_KEY";
+
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 /* =======================
@@ -125,7 +208,7 @@ async function loadUser(){
 loadUser();
 
 /* =======================
-   LOAD MESSAGES
+   LOAD CHAT
 ======================= */
 async function loadMessages(){
 
@@ -143,14 +226,16 @@ function renderMessages(messages){
   const box = document.getElementById("chatBox");
   box.innerHTML = "";
 
-  messages.forEach(m=>{
+  messages.forEach(m => {
 
     const div = document.createElement("div");
 
     if(m.sender_id === "system"){
       div.className = "msg system";
-    } else {
-      div.className = "msg " + (m.sender_id === currentUser.id ? "you" : "them");
+    }
+    else{
+      div.className = "msg " +
+        (m.sender_id === currentUser.id ? "you" : "them");
     }
 
     div.textContent = m.message;
@@ -171,7 +256,7 @@ async function sendMessage(){
   }
 
   const input = document.getElementById("msgInput");
-  if(!input.value) return;
+  if(!input.value.trim()) return;
 
   await supabase.from("messages").insert({
     order_id: orderId,
@@ -188,14 +273,15 @@ async function sendMessage(){
 ======================= */
 supabase
   .channel("chat-channel")
-  .on("postgres_changes",
+  .on(
+    "postgres_changes",
     { event: "INSERT", schema: "public", table: "messages" },
     () => loadMessages()
   )
   .subscribe();
 
 /* =======================
-   WATCH ESCROW / ORDER STATUS
+   ORDER STATUS WATCHER
 ======================= */
 async function watchOrderStatus(){
 
@@ -215,7 +301,7 @@ async function watchOrderStatus(){
 }
 
 /* =======================
-   🤖 ZEP AI ENGINE
+   ZEP AI STATUS ENGINE
 ======================= */
 function runZepAI(escrow){
 
@@ -224,24 +310,21 @@ function runZepAI(escrow){
   if(!escrow){
     statusText = "Waiting for order confirmation...";
   }
-
   else if(escrow.status === "locked"){
-    statusText = "Order active. Funds secured in escrow. Work in progress.";
+    statusText = "Order active. Funds secured in escrow.";
   }
-
   else if(escrow.status === "pending"){
-    statusText = "Payment pending approval. Stay active in chat.";
+    statusText = "Payment pending approval.";
   }
-
   else if(escrow.status === "released"){
-    statusText = "Payment released. Order completed successfully.";
+    statusText = "Payment released. Order completed.";
   }
 
   document.getElementById("aiStatus").innerText = statusText;
 }
 
 /* =======================
-   CLOSE CHAT AFTER PAYMENT
+   CLOSE CHAT
 ======================= */
 function closeChat(){
 
@@ -253,12 +336,12 @@ function closeChat(){
 
   const sys = document.createElement("div");
   sys.className = "msg system";
-  sys.textContent = "🔒 This order is completed. Chat has been locked by Zep AI.";
+  sys.textContent = "🔒 Order completed. Chat locked by Zep AI.";
 
   box.appendChild(sys);
 
   document.getElementById("aiStatus").innerText =
-    "Order completed. Chat locked automatically by Zep AI.";
+    "Order completed. Chat locked automatically.";
 }
 
 /* =======================
@@ -268,7 +351,6 @@ async function logout(){
   await supabase.auth.signOut();
   window.location.href = "login.html";
 }
-
 </script>
 
 </body>
