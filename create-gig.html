@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — Create Gig</title>
+<title>Zep AI Gig OS — Create Gig</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500,600&display=swap" rel="stylesheet">
 
@@ -11,18 +11,25 @@
 
 <style>
 :root{
-  --zep-blue:#00f0ff;
-  --zep-violet:#9c4dff;
+  --blue:#00f0ff;
+  --violet:#9c4dff;
   --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
-  --glass:rgba(255,255,255,0.08);
-  --text-light:rgba(255,255,255,0.85);
+  --glass:rgba(255,255,255,0.06);
+  --text:rgba(255,255,255,0.92);
+  --muted:rgba(255,255,255,0.6);
+  --shadow:0 0 40px rgba(156,77,255,0.25);
 }
 
-*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
+}
 
 body{
   background:var(--bg);
-  color:#fff;
+  color:var(--text);
   min-height:100vh;
 }
 
@@ -31,72 +38,97 @@ header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:18px;
+  padding:16px 18px;
   margin:16px;
   border-radius:16px;
-  background:radial-gradient(circle at center, rgba(0,240,255,.2), rgba(156,77,255,.2));
-  backdrop-filter:blur(14px);
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(12px);
 }
 
 .brand{
   font-family:Orbitron;
-  font-size:1.5rem;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  font-size:1.4rem;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-.logout-btn{
-  background:rgba(255,255,255,.1);
-  border:none;
-  border-radius:50%;
-  width:38px;
-  height:38px;
-  cursor:pointer;
-  color:#fff;
-}
-
-/* FORM */
+/* CONTAINER */
 .container{
-  max-width:600px;
+  max-width:650px;
   margin:30px auto;
-  background:var(--glass);
-  border-radius:16px;
   padding:20px;
-  border:1px solid rgba(255,255,255,.12);
+  background:var(--glass);
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,0.1);
+  box-shadow:var(--shadow);
   display:flex;
   flex-direction:column;
   gap:14px;
 }
 
+/* INPUTS */
 input, textarea{
   width:100%;
-  padding:12px;
+  padding:12px 14px;
   border-radius:12px;
   border:none;
   outline:none;
-  background:rgba(255,255,255,.05);
-  color:#fff;
+  background:rgba(255,255,255,0.05);
+  color:var(--text);
 }
 
-textarea{height:100px; resize:none;}
+textarea{
+  height:120px;
+  resize:none;
+}
 
+input::placeholder,
+textarea::placeholder{
+  color:var(--muted);
+}
+
+/* AI PANEL */
+.ai-box{
+  padding:12px;
+  border-radius:12px;
+  background:rgba(0,240,255,0.06);
+  border:1px solid rgba(0,240,255,0.2);
+  font-size:13px;
+}
+
+/* TOTAL */
+.total{
+  display:flex;
+  justify-content:space-between;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.05);
+  font-size:14px;
+}
+
+/* BUTTON */
 button{
   padding:14px;
   border:none;
   border-radius:999px;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
-  color:#050015;
-  font-family:Orbitron;
   cursor:pointer;
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  color:#050015;
+  transition:0.2s;
 }
 
-.total-card{
-  background:rgba(255,255,255,.05);
-  padding:12px;
-  border-radius:12px;
-  display:flex;
-  justify-content:space-between;
+button:hover{
+  transform:scale(1.02);
+}
+
+/* LOADING */
+.loading{
+  opacity:0.6;
+  pointer-events:none;
 }
 </style>
 </head>
@@ -104,38 +136,48 @@ button{
 <body>
 
 <header>
-  <div class="brand">Zep Swipe</div>
-  <button class="logout-btn" onclick="logout()">⎋</button>
+  <div class="brand">Zep AI Gig OS</div>
+  <button onclick="logout()">⎋</button>
 </header>
 
 <div class="container">
-  <h2>Create a New Gig</h2>
 
-  <input type="text" id="title" placeholder="Job Title">
-  <textarea id="desc" placeholder="Job Description"></textarea>
+  <h2>Create a Gig</h2>
+
+  <!-- AI PREVIEW -->
+  <div class="ai-box" id="aiPreview">
+    🤖 AI: Waiting for gig input...
+  </div>
+
+  <input type="text" id="title" placeholder="Gig Title">
+  <textarea id="desc" placeholder="Gig Description"></textarea>
 
   <input type="number" id="rate" placeholder="Rate per Hour (USD)">
   <input type="number" id="duration" placeholder="Duration (Hours)">
 
-  <div class="total-card">
-    <span>Total + $25 fee:</span>
+  <!-- TOTAL -->
+  <div class="total">
+    <span>Total (includes $25 listing fee)</span>
     <span id="totalAmount">$0</span>
   </div>
 
-  <button onclick="createGig()">Create Gig & Pay $25</button>
+  <button id="createBtn" onclick="createGig()">
+    Create Gig & Pay $25
+  </button>
+
 </div>
 
 <script>
+
 /* =========================
    SUPABASE INIT
 ========================= */
 const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
-
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_KEY";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* =========================
-   AUTH CHECK (SUPABASE)
+   USER
 ========================= */
 let user = null;
 
@@ -144,63 +186,112 @@ async function loadUser(){
   user = data?.user;
 
   if(!user){
-    alert("Please login to create a gig.");
+    alert("Please login first");
     window.location.href = "employer-auth.html";
   }
 }
-
 loadUser();
+
+/* =========================
+   AI PREVIEW ENGINE
+========================= */
+function updateAIPreview(){
+
+  const title = document.getElementById("title").value;
+  const desc = document.getElementById("desc").value;
+  const rate = parseFloat(document.getElementById("rate").value) || 0;
+  const duration = parseFloat(document.getElementById("duration").value) || 0;
+
+  let score = 50;
+
+  if(title.length > 5) score += 10;
+  if(desc.length > 20) score += 20;
+  if(rate > 20) score += 10;
+  if(duration > 2) score += 10;
+
+  if(rate * duration > 200) score += 10;
+
+  let status =
+    score > 80 ? "🔥 HIGH QUALITY GIG" :
+    score > 60 ? "⚡ GOOD GIG" :
+    "⚠️ LOW VISIBILITY GIG";
+
+  document.getElementById("aiPreview").innerText =
+    `🤖 AI Score: ${score}/100 — ${status}`;
+}
+
+/* LIVE LISTENERS */
+["title","desc","rate","duration"].forEach(id=>{
+  document.getElementById(id).addEventListener("input", ()=>{
+    updateAIPreview();
+    updateTotal();
+  });
+});
 
 /* =========================
    TOTAL CALCULATION
 ========================= */
-const rateInput = document.getElementById("rate");
-const durationInput = document.getElementById("duration");
-const totalEl = document.getElementById("totalAmount");
-
 function updateTotal(){
-  const rate = parseFloat(rateInput.value) || 0;
-  const duration = parseFloat(durationInput.value) || 0;
-  totalEl.innerText = `$${(rate * duration + 25).toFixed(2)}`;
+  const rate = parseFloat(document.getElementById("rate").value) || 0;
+  const duration = parseFloat(document.getElementById("duration").value) || 0;
+
+  const total = (rate * duration) + 25;
+
+  document.getElementById("totalAmount").innerText =
+    `$${total.toFixed(2)}`;
 }
 
-rateInput.addEventListener("input", updateTotal);
-durationInput.addEventListener("input", updateTotal);
-
 /* =========================
-   CREATE GIG (SUPABASE)
+   CREATE GIG (BACKEND READY)
 ========================= */
 async function createGig(){
 
+  const btn = document.getElementById("createBtn");
+  btn.classList.add("loading");
+  btn.innerText = "Processing...";
+
   const title = document.getElementById("title").value.trim();
   const desc = document.getElementById("desc").value.trim();
-  const rate = parseFloat(rateInput.value);
-  const duration = parseFloat(durationInput.value);
+  const rate = parseFloat(document.getElementById("rate").value);
+  const duration = parseFloat(document.getElementById("duration").value);
 
   if(!title || !desc || !rate || !duration){
-    alert("Fill all fields properly");
+    alert("Fill all fields");
+    btn.classList.remove("loading");
+    btn.innerText = "Create Gig & Pay $25";
     return;
   }
 
-  const totalAmount = rate * duration + 25;
+  const totalAmount = (rate * duration) + 25;
 
-  const { data, error } = await supabaseClient
+  // AI SCORE
+  const ai_score =
+    Math.min(100,
+      (title.length * 2) +
+      (desc.length * 0.5) +
+      (rate * 0.2) +
+      (duration * 3)
+    );
+
+  const { error } = await supabaseClient
     .from("gigs")
-    .insert([
-      {
-        employer_id: user.id,
-        title,
-        description: desc,
-        rate,
-        duration,
-        total_amount: totalAmount,
-        listing_fee: 25,
-        escrow_paid: true,
-        escrow_released: false,
-        applicants: []
-      }
-    ])
-    .select();
+    .insert([{
+      employer_id: user.id,
+      title,
+      description: desc,
+      rate,
+      duration,
+      total_amount: totalAmount,
+      listing_fee: 25,
+      escrow_paid: true,
+      escrow_released: false,
+      ai_score: Math.round(ai_score),
+      status: "active",
+      created_at: new Date().toISOString()
+    }]);
+
+  btn.classList.remove("loading");
+  btn.innerText = "Create Gig & Pay $25";
 
   if(error){
     console.error(error);
@@ -208,7 +299,7 @@ async function createGig(){
     return;
   }
 
-  alert("Gig created successfully! $25 escrow recorded.");
+  alert("Gig created successfully 🚀");
   window.location.href = "employer-dashboard.html";
 }
 
@@ -219,6 +310,7 @@ async function logout(){
   await supabaseClient.auth.signOut();
   window.location.href = "index.html";
 }
+
 </script>
 
 </body>
