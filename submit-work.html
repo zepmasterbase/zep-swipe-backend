@@ -3,85 +3,124 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — Submit Work</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<title>Zep Swipe — Submit Work</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
 :root{
-  --zep-blue:#00f0ff;
-  --zep-violet:#9c4dff;
-  --bg:#050018;
-  --glass:rgba(255,255,255,.08);
-  --green:#00ff94;
+  --blue:#00f0ff;
+  --violet:#9c4dff;
+  --green:#00ff9d;
+  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
+  --glass:rgba(255,255,255,0.06);
 }
 
-*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif;}
-body{background:var(--bg);color:#fff;min-height:100vh;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
+}
 
+body{
+  background:var(--bg);
+  color:white;
+  min-height:100vh;
+}
+
+/* HEADER */
 header{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px;
-  background:rgba(255,255,255,.05);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 20px;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
 }
 
-.brand{display:flex;gap:10px;align-items:center;cursor:pointer;}
-.brand img{width:45px;height:45px;}
+.brand{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  cursor:pointer;
+}
+
+.brand img{
+  width:42px;
+  height:42px;
+}
+
 .brand span{
   font-family:Orbitron;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  background:linear-gradient(90deg,var(--blue),var(--violet));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
+/* CONTAINER */
 .container{
   max-width:900px;
   margin:20px auto;
   padding:16px;
 }
 
+/* CARD */
 .card{
   background:var(--glass);
   padding:18px;
   border-radius:16px;
   margin-bottom:12px;
-  border:1px solid rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,0.08);
+  transition:0.3s;
 }
 
+.card:hover{
+  box-shadow:0 0 20px rgba(0,240,255,0.12);
+}
+
+/* BUTTON */
 button{
   padding:10px 16px;
   border:none;
   border-radius:999px;
   cursor:pointer;
   font-family:Orbitron;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
-  color:#050015;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  color:#000;
   margin-top:10px;
+  width:100%;
 }
 
 button:disabled{
-  opacity:.4;
+  opacity:0.4;
   cursor:not-allowed;
 }
 
+/* STATUS */
 .status{
   padding:5px 10px;
   border-radius:10px;
   font-size:12px;
 }
 
-.Escrow{background:var(--zep-blue);color:#000;}
+.Escrow{background:var(--blue);color:#000;}
 .Submitted{background:var(--green);color:#000;}
 .Pending{background:orange;color:#000;}
+.ready_to_release{background:var(--green);color:#000;}
 
+/* MODAL */
 .modal{
-  position:fixed;inset:0;
+  position:fixed;
+  inset:0;
   display:none;
   justify-content:center;
   align-items:center;
-  background:rgba(0,0,0,.7);
+  background:rgba(0,0,0,0.7);
 }
 
 .modal-box{
@@ -89,6 +128,8 @@ button:disabled{
   padding:20px;
   border-radius:12px;
   text-align:center;
+  width:90%;
+  max-width:400px;
 }
 </style>
 </head>
@@ -100,6 +141,7 @@ button:disabled{
     <img src="https://pe56d.s3.amazonaws.com/o_1jfnua21qtu1vi2pfom33p641h.png">
     <span>Zep Swipe</span>
   </div>
+
   <div>Submit Work</div>
 </header>
 
@@ -108,6 +150,7 @@ button:disabled{
   <div id="list"></div>
 </div>
 
+<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
     <p id="msg">Processing...</p>
@@ -116,26 +159,41 @@ button:disabled{
 </div>
 
 <script>
-/* ================= SUPABASE INIT ================= */
-const supabase = window.supabase.createClient(
-  "https://sqlisgobnayfpzamdolf.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28"
-);
+/* ================= SUPABASE ================= */
+const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-const userId = localStorage.getItem("currentUserId");
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ================= UI ================= */
+/* ================= USER ================= */
+let userId = localStorage.getItem("currentUserId");
+
+/* fallback safety */
+async function getUser(){
+  const { data } = await supabase.auth.getUser();
+  if(data?.user){
+    userId = data.user.id;
+  }
+
+  if(!userId){
+    window.location.href = "login-signup.html";
+  }
+}
+
+/* ================= MODAL ================= */
 function show(msg){
   document.getElementById("msg").innerText = msg;
-  document.getElementById("modal").style.display="flex";
+  document.getElementById("modal").style.display = "flex";
 }
 
 function closeModal(){
-  document.getElementById("modal").style.display="none";
+  document.getElementById("modal").style.display = "none";
 }
 
 /* ================= LOAD INVOICES ================= */
 async function loadInvoices(){
+
+  await getUser();
 
   const { data, error } = await supabase
     .from("invoices")
@@ -145,20 +203,26 @@ async function loadInvoices(){
   const container = document.getElementById("list");
   container.innerHTML = "";
 
+  if(error){
+    container.innerHTML = "<p>Error loading invoices</p>";
+    return;
+  }
+
   if(!data || data.length === 0){
     container.innerHTML = "<p>No invoices found</p>";
     return;
   }
 
   data.forEach(inv=>{
+
     const card = document.createElement("div");
-    card.className="card";
+    card.className = "card";
 
     card.innerHTML = `
-      <h3>${inv.service_title} - $${inv.payout_usd}</h3>
+      <h3>${inv.service_title || "Service"} - $${inv.payout_usd || 0}</h3>
 
-      <p>Client: ${inv.client_name}</p>
-      <p>Delivery: ${inv.delivery_date}</p>
+      <p>Client: ${inv.client_name || "N/A"}</p>
+      <p>Delivery: ${inv.delivery_date || "TBD"}</p>
 
       <p>Status:
         <span class="status ${inv.status}">
@@ -167,7 +231,7 @@ async function loadInvoices(){
       </p>
 
       <button ${inv.status !== "Escrow" ? "disabled" : ""}
-        onclick="submitWork('${inv.id}','${inv.payout_usd}')">
+        onclick="submitWork('${inv.id}','${inv.payout_usd || 0}')">
         Submit Work
       </button>
     `;
@@ -181,40 +245,48 @@ async function submitWork(invoiceId, amount){
 
   show("Submitting work...");
 
-  // 1. update invoice
-  await supabase
-    .from("invoices")
-    .update({
-      status: "Submitted"
-    })
-    .eq("id", invoiceId);
+  try{
 
-  // 2. update escrow
-  await supabase
-    .from("escrow")
-    .update({
-      status: "ready_to_release"
-    })
-    .eq("invoice_id", invoiceId);
+    // 1. update invoice
+    await supabase
+      .from("invoices")
+      .update({ status: "Submitted" })
+      .eq("id", invoiceId);
 
-  // 3. credit wallet
-  const { data: wallet } = await supabase
-    .from("wallets")
-    .select("*")
-    .eq("user_id", userId)
-    .single();
+    // 2. update escrow
+    await supabase
+      .from("escrow")
+      .update({ status: "ready_to_release" })
+      .eq("invoice_id", invoiceId);
 
-  await supabase
-    .from("wallets")
-    .update({
-      balance: wallet.balance + Number(amount)
-    })
-    .eq("user_id", userId);
+    // 3. credit wallet
+    const { data: wallet } = await supabase
+      .from("wallets")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle();
 
-  show(`Work submitted! $${amount} released to wallet`);
-  loadInvoices();
+    if(wallet){
+
+      await supabase
+        .from("wallets")
+        .update({
+          balance: Number(wallet.balance || 0) + Number(amount || 0)
+        })
+        .eq("user_id", userId);
+    }
+
+    show(`Work submitted! $${amount} released to wallet`);
+
+    loadInvoices();
+
+  } catch(err){
+    console.error(err);
+    show("Error submitting work");
+  }
 }
 
+/* INIT */
 loadInvoices();
 </script>
 
