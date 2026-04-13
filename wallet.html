@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Zep Wallet AI Dashboard</title>
+<title>Zep Finance OS 3.3 Wallet</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -14,10 +14,12 @@
 :root{
   --blue:#00f0ff;
   --violet:#9c4dff;
+  --pink:#ff4fd8;
   --green:#00ff9d;
-  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
+  --bg:radial-gradient(circle at 25% 10%, #14001f, #000);
   --glass:rgba(255,255,255,0.06);
-  --border:rgba(255,255,255,0.1);
+  --border:rgba(255,255,255,0.12);
+  --yellow:#ffd000;
 }
 
 body{
@@ -27,23 +29,22 @@ body{
   color:#fff;
 }
 
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:20px;
-}
-
 /* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:15px;
+  padding:16px;
+  margin:16px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  backdrop-filter:blur(14px);
 }
 
 .header h2{
   font-family:Orbitron;
-  background:linear-gradient(90deg,var(--blue),var(--violet));
+  background:linear-gradient(90deg,var(--pink),var(--violet),var(--blue));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
@@ -51,8 +52,9 @@ body{
 button{
   padding:10px 14px;
   border:none;
-  border-radius:10px;
+  border-radius:999px;
   cursor:pointer;
+  font-family:Orbitron;
   background:linear-gradient(90deg,var(--blue),var(--violet));
   color:#000;
   font-weight:bold;
@@ -60,11 +62,12 @@ button{
 
 /* AI BOX */
 .ai-box{
-  margin:15px 0;
+  margin:15px;
   padding:16px;
   border-radius:14px;
-  background:rgba(0,240,255,0.08);
-  border:1px solid rgba(0,240,255,0.3);
+  background:rgba(255,79,216,0.08);
+  border:1px solid rgba(255,79,216,0.25);
+  font-size:13px;
 }
 
 /* GRID */
@@ -72,6 +75,7 @@ button{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:12px;
+  padding:0 16px;
 }
 
 .card{
@@ -84,124 +88,228 @@ button{
 .big{
   font-size:22px;
   font-weight:bold;
-  color:var(--green);
 }
 
-/* TRANSACTIONS */
+.usd{ color:var(--green); }
+.zac{ color:var(--blue); }
+.escrow{ color:var(--yellow); }
+
+/* WITHDRAW */
+.withdraw{
+  margin:16px;
+  padding:16px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  border:none;
+  background:rgba(0,0,0,0.3);
+  color:#fff;
+}
+
+.withdraw-btn{
+  margin-top:10px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--pink),var(--violet),var(--blue));
+  color:#000;
+  font-weight:bold;
+}
+
+/* TX */
 .tx{
   background:rgba(255,255,255,0.05);
   padding:12px;
   margin-top:10px;
   border-radius:10px;
+  border:1px solid rgba(255,255,255,0.08);
 }
 
 .pending{color:yellow;}
-.released{color:var(--green);}
-.disputed{color:#ff4d4d;}
+.processing{color:orange;}
+.completed{color:var(--green);}
+.failed{color:#ff4d4d;}
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="header">
+  <h2>💳 Zep Finance OS 3.3</h2>
+  <button onclick="loadWallet()">Refresh</button>
+</div>
 
-  <!-- HEADER -->
-  <div class="header">
-    <h2>💳 Zep Wallet AI</h2>
-    <button onclick="loadWallet()">Refresh</button>
+<!-- AI ENGINE -->
+<div class="ai-box">
+  <h3>🤖 AI Finance Engine</h3>
+  <p id="aiInsight">Analyzing USD flow, escrow, and withdrawal readiness...</p>
+</div>
+
+<!-- BALANCES -->
+<div class="grid">
+
+  <div class="card">
+    <p>💵 USD Balance</p>
+    <div class="big usd" id="usdBalance">0</div>
   </div>
 
-  <!-- AI -->
-  <div class="ai-box">
-    <h3>🤖 Zep AI Financial Agent</h3>
-    <p id="aiInsight">Analyzing your wallet activity...</p>
+  <div class="card">
+    <p>🪙 ZAC Balance</p>
+    <div class="big zac" id="zacBalance">0</div>
   </div>
 
-  <!-- BALANCES -->
-  <div class="grid">
-
-    <div class="card">
-      <p>ZAC Balance</p>
-      <div class="big" id="zacBalance">0</div>
-    </div>
-
-    <div class="card">
-      <p>Cash Balance</p>
-      <div class="big" id="cashBalance">0</div>
-    </div>
-
-    <div class="card">
-      <p>Escrow Locked</p>
-      <div class="big" id="pendingEscrow">0</div>
-    </div>
-
-  </div>
-
-  <!-- TRANSACTIONS -->
-  <div class="card" style="margin-top:15px;">
-    <h3>📜 Transactions</h3>
-    <div id="transactions"></div>
+  <div class="card">
+    <p>🧾 USD Escrow</p>
+    <div class="big escrow" id="escrowBalance">0</div>
   </div>
 
 </div>
 
-<script>
-/* ================= SUPABASE ================= */
-const supabaseUrl = "https://sqlisgobnayfpzamdolf.supabase.co";
-const supabaseKey = "YOUR_SUPABASE_ANON_KEY"; // keep safe in production
+<!-- WITHDRAW SECTION -->
+<div class="withdraw">
 
+  <h3>💸 Withdraw USD</h3>
+
+  <input type="number" id="amount" placeholder="Amount in USD">
+
+  <select id="country" onchange="updateMethods()">
+    <option value="">Select Country</option>
+    <option value="ZM">Zambia</option>
+    <option value="ZA">South Africa</option>
+  </select>
+
+  <select id="method"></select>
+
+  <input type="text" id="accountName" placeholder="Account Name / Mobile Name">
+  <input type="text" id="accountNumber" placeholder="Account / Mobile Number">
+
+  <button class="withdraw-btn" onclick="withdraw()">Withdraw Now</button>
+
+</div>
+
+<!-- TRANSACTIONS -->
+<div class="card" style="margin:16px;">
+  <h3>📜 Transactions</h3>
+  <div id="transactions"></div>
+</div>
+
+<script>
+
+const supabaseUrl = "https://sqlisgobnayfpzamdolf.supabase.co";
+const supabaseKey = "YOUR_SUPABASE_ANON_KEY";
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-/* ================= STATE ================= */
 let user = null;
 
-/* ================= LOAD WALLET ================= */
+/* LOAD WALLET */
 async function loadWallet(){
 
   const { data: auth } = await supabase.auth.getUser();
   user = auth?.user;
 
   if(!user){
-    window.location.href = "login-signup.html";
+    window.location.href = "login.html";
     return;
   }
 
-  /* ================= USER DATA ================= */
   const { data: userData } = await supabase
     .from("users")
     .select("*")
     .eq("auth_id", user.id)
     .maybeSingle();
 
+  const usd = userData?.usd_balance || 0;
   const zac = userData?.zac_balance || 0;
-  const cash = userData?.wallet_balance || 0;
 
+  document.getElementById("usdBalance").innerText = usd;
   document.getElementById("zacBalance").innerText = zac;
-  document.getElementById("cashBalance").innerText = cash;
 
-  /* ================= ESCROW ================= */
-  const { data: escrowData } = await supabase
+  const { data: escrow } = await supabase
     .from("escrow")
     .select("*")
     .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`);
 
-  let pending = 0;
-  const safeEscrow = escrowData || [];
+  let totalEscrow = 0;
 
-  safeEscrow.forEach(e=>{
-    if(e.status === "locked" || e.status === "pending"){
-      pending += Number(e.amount || 0);
+  (escrow || []).forEach(e=>{
+    if(e.status === "pending" || e.status === "locked"){
+      totalEscrow += Number(e.amount || 0);
     }
   });
 
-  document.getElementById("pendingEscrow").innerText = pending;
+  document.getElementById("escrowBalance").innerText = totalEscrow;
 
-  renderTransactions(safeEscrow);
-  runZepAI(zac, cash, pending);
+  renderTx(escrow || []);
+  runAI(usd, zac, totalEscrow);
 }
 
-/* ================= TRANSACTIONS ================= */
-function renderTransactions(data){
+/* WITHDRAW METHODS */
+function updateMethods(){
+
+  const country = document.getElementById("country").value;
+  const method = document.getElementById("method");
+
+  method.innerHTML = "";
+
+  if(country === "ZM"){
+    method.innerHTML = `
+      <option>Airtel Money</option>
+      <option>MTN Money</option>
+      <option>Zamtel Money</option>
+    `;
+  }
+
+  if(country === "ZA"){
+    method.innerHTML = `
+      <option>Capitec Bank</option>
+      <option>FNB</option>
+      <option>Standard Bank</option>
+      <option>Absa</option>
+    `;
+  }
+}
+
+/* WITHDRAW */
+async function withdraw(){
+
+  const amount = Number(document.getElementById("amount").value);
+  const country = document.getElementById("country").value;
+  const method = document.getElementById("method").value;
+  const accountName = document.getElementById("accountName").value;
+  const accountNumber = document.getElementById("accountNumber").value;
+
+  if(amount < 5){
+    alert("Minimum withdrawal is $5");
+    return;
+  }
+
+  await supabase.from("withdrawals").insert([{
+    user_id: user.id,
+    amount_usd: amount,
+    country,
+    provider: method,
+    account_name: accountName,
+    account_number: accountNumber,
+    status: "pending",
+    created_at: new Date().toISOString()
+  }]);
+
+  alert("Withdrawal submitted 🚀 Processing...");
+  loadWallet();
+}
+
+/* TRANSACTIONS */
+function renderTx(data){
 
   const box = document.getElementById("transactions");
   box.innerHTML = "";
@@ -214,37 +322,33 @@ function renderTransactions(data){
   data.forEach(tx=>{
     box.innerHTML += `
       <div class="tx">
-        <p><b>Amount:</b> ${tx.amount || 0}</p>
+        <p><b>USD:</b> $${tx.amount || 0}</p>
         <p><b>Status:</b> <span class="${tx.status}">${tx.status}</span></p>
       </div>
     `;
   });
 }
 
-/* ================= AI ENGINE ================= */
-function runZepAI(zac, cash, escrow){
+/* AI ENGINE */
+function runAI(usd, zac, escrow){
 
-  const total = Number(zac) + Number(cash);
   let msg = "";
 
-  if(total === 0){
-    msg = "No activity yet. Start working to activate your wallet.";
+  if(usd > 100){
+    msg = "🔥 Strong USD income detected. Eligible for fast withdrawal.";
   }
-  else if(escrow > cash){
-    msg = "⚠️ High escrow detected. Complete jobs to unlock funds faster.";
-  }
-  else if(cash > 100){
-    msg = "🔥 Strong cash flow detected. You're scaling well!";
+  else if(escrow > usd){
+    msg = "⚠️ High escrow detected. Wait for completion before withdrawing.";
   }
   else{
-    msg = "Your wallet is active. Keep building consistency.";
+    msg = "Your financial flow is stable. Keep earning.";
   }
 
   document.getElementById("aiInsight").innerText = msg;
 }
 
-/* INIT */
 loadWallet();
+
 </script>
 
 </body>
