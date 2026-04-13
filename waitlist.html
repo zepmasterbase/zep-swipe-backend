@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 
-<!-- SUPABASE (READY TO CONNECT) -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -68,7 +67,6 @@ body {
   margin-bottom: 15px;
 }
 
-/* 🔥 CLEAN FORM GROUPING FIX */
 .card {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(0,255,255,0.2);
@@ -76,13 +74,11 @@ body {
   padding: 18px;
   backdrop-filter: blur(10px);
   margin-top: 15px;
-
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-/* UNIFIED INPUT STYLE */
 input, select {
   width: 100%;
   padding: 12px;
@@ -91,16 +87,8 @@ input, select {
   background: rgba(0,0,0,0.4);
   color: white;
   outline: none;
-  font-size: 14px;
-  box-sizing: border-box;
 }
 
-/* OPTIONAL: make placeholders cleaner */
-input::placeholder {
-  color: rgba(255,255,255,0.5);
-}
-
-/* BUTTONS */
 button {
   width: 100%;
   padding: 14px;
@@ -116,10 +104,9 @@ button {
   color: black;
 }
 
-.btn-secondary {
-  background: transparent;
-  border: 1px solid rgba(0,255,255,0.4);
-  color: #00f0ff;
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .badge {
@@ -131,6 +118,12 @@ button {
   font-size: 11px;
   margin-top: 10px;
 }
+
+.loading {
+  display: none;
+  font-size: 12px;
+  color: #00f0ff;
+}
 </style>
 </head>
 
@@ -140,7 +133,6 @@ button {
 
 <div class="container">
 
-  <!-- LOGO -->
   <div class="logo">
     <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
   </div>
@@ -148,14 +140,11 @@ button {
   <div class="title">Zep Swipe Waitlist</div>
   <div class="subtitle">Learn • Earn • Work remotely in 21 days</div>
 
-  <!-- FORM -->
   <div class="card">
 
-    <!-- IDENTITY -->
     <input type="text" id="name" placeholder="Full Name">
     <input type="email" id="email" placeholder="Email Address">
 
-    <!-- LOCATION -->
     <select id="country">
       <option value="">Select Country</option>
       <option>South Africa 🇿🇦</option>
@@ -171,7 +160,6 @@ button {
       <option>Tanzania 🇹🇿</option>
     </select>
 
-    <!-- STATUS -->
     <select id="status">
       <option value="">Are you?</option>
       <option>University Student 🎓</option>
@@ -179,9 +167,8 @@ button {
       <option>Graduate 👨‍🎓</option>
     </select>
 
-    <!-- WITHDRAW -->
     <select id="withdraw">
-      <option value="">Preferred Withdrawal Method</option>
+      <option value="">Withdrawal Method</option>
       <option>MTN Mobile Money 📱</option>
       <option>Airtel Money 📲</option>
       <option>M-Pesa 💰</option>
@@ -189,61 +176,71 @@ button {
       <option>Crypto Wallet ₿</option>
     </select>
 
-    <!-- REFERRAL -->
     <input type="text" id="ref" placeholder="Referral Code (optional)">
 
-    <button class="btn-primary" onclick="join()">Join Waitlist</button>
+    <button class="btn-primary" id="submitBtn" onclick="join()">Join Waitlist</button>
+
+    <div class="loading" id="loading">Submitting...</div>
 
     <div class="badge">🔥 Early access + XP rewards enabled</div>
+
   </div>
 
 </div>
 
 <script>
-lucide.createIcons();
+/* ================= SUPABASE INIT (FIXED) ================= */
+const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_ANON_KEY_HERE";
 
-/* SUPABASE INIT (REPLACE WITH YOUR KEYS) */
-const supabaseUrl = "https://sqlisgobnayfpzamdolf.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+/* ================= JOIN FUNCTION ================= */
 async function join() {
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
+
+  const btn = document.getElementById("submitBtn");
+  const loading = document.getElementById("loading");
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
   const country = document.getElementById("country").value;
   const status = document.getElementById("status").value;
   const withdraw = document.getElementById("withdraw").value;
-  const ref = document.getElementById("ref").value;
+  const ref = document.getElementById("ref").value.trim();
 
   if (!name || !email || !country) {
     alert("Please fill required fields");
     return;
   }
 
-  const userData = {
-    name,
-    email,
-    country,
-    status,
-    withdraw_method: withdraw,
-    referred_by: ref || null
-  };
+  try {
 
-  console.log("User Data:", userData);
+    btn.disabled = true;
+    loading.style.display = "block";
 
-  /* SUPABASE INSERT (SAFE STRUCTURE) */
-  const { data, error } = await supabase
-    .from("waitlist_users")
-    .insert([userData]);
+    const { error } = await supabase
+      .from("waitlist_users")
+      .insert([{
+        name,
+        email,
+        country,
+        status,
+        withdraw_method: withdraw || null,
+        referred_by: ref || null,
+        created_at: new Date()
+      }]);
 
-  if (error) {
+    if (error) throw error;
+
+    window.location.href = "success.html";
+
+  } catch (err) {
+    console.error(err);
     alert("Error submitting form");
-    console.error(error);
-    return;
+  } finally {
+    btn.disabled = false;
+    loading.style.display = "none";
   }
-
-  /* REDIRECT AFTER SUCCESS */
-  window.location.href = "success.html";
 }
 </script>
 
