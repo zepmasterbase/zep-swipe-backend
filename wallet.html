@@ -2,28 +2,50 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
 <title>Zep Wallet AI Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
+:root{
+  --blue:#00f0ff;
+  --violet:#9c4dff;
+  --green:#00ff9d;
+  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
+  --glass:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,0.1);
+}
+
 body{
   margin:0;
-  font-family:Poppins, sans-serif;
-  background:#050012;
-  color:white;
+  font-family:Poppins,sans-serif;
+  background:var(--bg);
+  color:#fff;
 }
 
 .container{
-  max-width:1000px;
+  max-width:1100px;
   margin:auto;
   padding:20px;
 }
 
+/* HEADER */
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  margin-bottom:15px;
+}
+
+.header h2{
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 button{
@@ -31,55 +53,51 @@ button{
   border:none;
   border-radius:10px;
   cursor:pointer;
-  background:linear-gradient(90deg,#00f0ff,#9b5cff);
+  background:linear-gradient(90deg,var(--blue),var(--violet));
   color:#000;
   font-weight:bold;
 }
 
-/* CARDS */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin-top:15px;
-}
-
-.card{
-  background:rgba(255,255,255,0.06);
-  padding:16px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,0.1);
-}
-
-.big{
-  font-size:22px;
-  font-weight:bold;
-  color:#00ff9d;
-}
-
 /* AI BOX */
 .ai-box{
-  margin-top:15px;
+  margin:15px 0;
   padding:16px;
   border-radius:14px;
   background:rgba(0,240,255,0.08);
   border:1px solid rgba(0,240,255,0.3);
 }
 
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+
+.card{
+  background:var(--glass);
+  padding:16px;
+  border-radius:14px;
+  border:1px solid var(--border);
+}
+
+.big{
+  font-size:22px;
+  font-weight:bold;
+  color:var(--green);
+}
+
 /* TRANSACTIONS */
 .tx{
   background:rgba(255,255,255,0.05);
-  padding:10px;
+  padding:12px;
   margin-top:10px;
   border-radius:10px;
-  font-size:14px;
 }
 
 .pending{color:yellow;}
-.released{color:#00ff9d;}
+.released{color:var(--green);}
 .disputed{color:#ff4d4d;}
-
-h2,h3{margin:0;}
 </style>
 </head>
 
@@ -93,36 +111,34 @@ h2,h3{margin:0;}
     <button onclick="loadWallet()">Refresh</button>
   </div>
 
-  <!-- AI INSIGHT PANEL -->
+  <!-- AI -->
   <div class="ai-box">
     <h3>🤖 Zep AI Financial Agent</h3>
     <p id="aiInsight">Analyzing your wallet activity...</p>
   </div>
 
-  <!-- BALANCE -->
-  <div class="card">
-    <div class="grid">
+  <!-- BALANCES -->
+  <div class="grid">
 
-      <div class="card">
-        <p>ZAC Balance</p>
-        <div class="big" id="zacBalance">0</div>
-      </div>
-
-      <div class="card">
-        <p>Cash Balance</p>
-        <div class="big" id="cashBalance">0</div>
-      </div>
-
-      <div class="card">
-        <p>Escrow Locked</p>
-        <div class="big" id="pendingEscrow">0</div>
-      </div>
-
+    <div class="card">
+      <p>ZAC Balance</p>
+      <div class="big" id="zacBalance">0</div>
     </div>
+
+    <div class="card">
+      <p>Cash Balance</p>
+      <div class="big" id="cashBalance">0</div>
+    </div>
+
+    <div class="card">
+      <p>Escrow Locked</p>
+      <div class="big" id="pendingEscrow">0</div>
+    </div>
+
   </div>
 
   <!-- TRANSACTIONS -->
-  <div class="card">
+  <div class="card" style="margin-top:15px;">
     <h3>📜 Transactions</h3>
     <div id="transactions"></div>
   </div>
@@ -130,59 +146,49 @@ h2,h3{margin:0;}
 </div>
 
 <script>
-
-/* =========================
-   SUPABASE SETUP
-========================= */
+/* ================= SUPABASE ================= */
 const supabaseUrl = "https://sqlisgobnayfpzamdolf.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
+const supabaseKey = "YOUR_SUPABASE_ANON_KEY"; // keep safe in production
+
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-/* =========================
-   USER
-========================= */
+/* ================= STATE ================= */
 let user = null;
 
-/* =========================
-   LOAD WALLET
-========================= */
+/* ================= LOAD WALLET ================= */
 async function loadWallet(){
 
-  const { data } = await supabase.auth.getUser();
-  user = data.user;
+  const { data: auth } = await supabase.auth.getUser();
+  user = auth?.user;
 
   if(!user){
     window.location.href = "login-signup.html";
     return;
   }
 
-  /* USER WALLET */
+  /* ================= USER DATA ================= */
   const { data: userData } = await supabase
     .from("users")
     .select("*")
     .eq("auth_id", user.id)
-    .single();
+    .maybeSingle();
 
-  let zac = 0;
-  let cash = 0;
+  const zac = userData?.zac_balance || 0;
+  const cash = userData?.wallet_balance || 0;
 
-  if(userData){
-    zac = userData.zac_balance || 0;
-    cash = userData.wallet_balance || 0;
+  document.getElementById("zacBalance").innerText = zac;
+  document.getElementById("cashBalance").innerText = cash;
 
-    document.getElementById("zacBalance").innerText = zac;
-    document.getElementById("cashBalance").innerText = cash;
-  }
-
-  /* ESCROW */
-  const { data: escrow } = await supabase
+  /* ================= ESCROW ================= */
+  const { data: escrowData } = await supabase
     .from("escrow")
     .select("*")
     .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`);
 
   let pending = 0;
+  const safeEscrow = escrowData || [];
 
-  escrow.forEach(e => {
+  safeEscrow.forEach(e=>{
     if(e.status === "locked" || e.status === "pending"){
       pending += Number(e.amount || 0);
     }
@@ -190,18 +196,22 @@ async function loadWallet(){
 
   document.getElementById("pendingEscrow").innerText = pending;
 
-  renderTransactions(escrow);
+  renderTransactions(safeEscrow);
   runZepAI(zac, cash, pending);
 }
 
-/* =========================
-   TRANSACTIONS UI
-========================= */
+/* ================= TRANSACTIONS ================= */
 function renderTransactions(data){
+
   const box = document.getElementById("transactions");
   box.innerHTML = "";
 
-  data.forEach(tx => {
+  if(!data.length){
+    box.innerHTML = "<p>No transactions yet</p>";
+    return;
+  }
+
+  data.forEach(tx=>{
     box.innerHTML += `
       <div class="tx">
         <p><b>Amount:</b> ${tx.amount || 0}</p>
@@ -211,37 +221,30 @@ function renderTransactions(data){
   });
 }
 
-/* =========================
-   🤖 ZEP AI WALLET ENGINE
-========================= */
+/* ================= AI ENGINE ================= */
 function runZepAI(zac, cash, escrow){
 
-  let insight = "";
-
-  const total = Number(cash) + Number(zac);
+  const total = Number(zac) + Number(cash);
+  let msg = "";
 
   if(total === 0){
-    insight = "No activity yet. Start applying for gigs to activate your wallet system.";
+    msg = "No activity yet. Start working to activate your wallet.";
   }
-
   else if(escrow > cash){
-    insight = "⚠️ High escrow lock detected. Focus on completing active jobs to unlock funds faster.";
+    msg = "⚠️ High escrow detected. Complete jobs to unlock funds faster.";
   }
-
   else if(cash > 100){
-    insight = "🔥 Strong cash flow detected. You are scaling well in the freelance marketplace.";
+    msg = "🔥 Strong cash flow detected. You're scaling well!";
+  }
+  else{
+    msg = "Your wallet is active. Keep building consistency.";
   }
 
-  else {
-    insight = "Your wallet is active. Keep applying for gigs to increase earnings consistency.";
-  }
-
-  document.getElementById("aiInsight").innerText = insight;
+  document.getElementById("aiInsight").innerText = msg;
 }
 
 /* INIT */
 loadWallet();
-
 </script>
 
 </body>
