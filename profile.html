@@ -4,71 +4,103 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Zep Swipe — Student Profile</title>
+<title>Zep OS 3.6 — Global Identity Passport</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
-
 <style>
-body{background:#050018;color:white;font-family:Poppins;display:flex;justify-content:center;padding:20px;}
-.container{width:100%;max-width:700px;background:rgba(255,255,255,0.05);padding:20px;border-radius:20px;}
-input,button{width:100%;padding:12px;margin:6px 0;border-radius:10px;border:none;}
-button{background:linear-gradient(90deg,#00f0ff,#9c4dff);cursor:pointer;}
-img{width:120px;height:120px;border-radius:50%;cursor:pointer;}
-.task{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:10px;}
-.task div{background:rgba(255,255,255,0.1);padding:10px;text-align:center;border-radius:8px;}
-.completed{background:#00f0ff;}
-</style>
+body{
+  background:#050014;
+  color:white;
+  font-family:Poppins;
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
 
+.container{
+  max-width:720px;
+  width:100%;
+  background:rgba(255,255,255,0.05);
+  padding:20px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+input,button{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border-radius:10px;
+  border:none;
+  background:rgba(0,0,0,0.4);
+  color:white;
+}
+
+button{
+  background:linear-gradient(90deg,#00f0ff,#9c4dff);
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.badge{
+  padding:6px 10px;
+  border-radius:999px;
+  display:inline-block;
+  background:rgba(0,240,255,0.1);
+  border:1px solid rgba(0,240,255,0.3);
+  font-size:12px;
+}
+
+.locked{
+  opacity:0.6;
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-<h2>👤 Student Profile</h2>
+<h2>🛂 Zep OS 3.6 Global Passport</h2>
 
-<img id="profileImg" src="https://via.placeholder.com/120">
+<div id="status" class="badge">Identity Status: Loading...</div>
 
-<input id="name" placeholder="Full Name">
-<input id="university" placeholder="University">
-<input id="country" placeholder="Country">
-<input id="city" placeholder="City">
-<input id="level" placeholder="Level">
+<input id="name" placeholder="Full Name" disabled>
+<input id="country" placeholder="Country" disabled>
 
-<button onclick="saveProfile()">Save Profile</button>
+<div class="badge" id="passportCode">Passport: Not Issued</div>
 
-<h3>📊 21-Day Progress</h3>
-<div class="task" id="tasks"></div>
+<button onclick="requestVerification()">
+Request Identity Verification
+</button>
 
-<button id="verifyBtn" onclick="verifyUser()">Verify Freelancer ($15)</button>
+<button onclick="loadProfile()">
+Refresh Identity
+</button>
 
 </div>
 
 <script>
 
-const supabaseUrl = "https://wucferiudoekefgaciua.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+const supabase = window.supabase.createClient(
+  "https://YOUR_PROJECT.supabase.co",
+  "YOUR_ANON_KEY"
+);
 
-let user = null;
+let user;
 
-/* ======================
-   GET AUTH USER
-====================== */
+/* LOAD USER */
 async function getUser(){
   const { data } = await supabase.auth.getUser();
   user = data.user;
 
   if(!user){
-    window.location.href = "login-signup.html";
+    location.href = "login-signup.html";
   }
 }
 
-/* ======================
-   LOAD PROFILE
-====================== */
+/* LOAD PROFILE */
 async function loadProfile(){
 
   await getUser();
@@ -76,75 +108,55 @@ async function loadProfile(){
   const { data } = await supabase
     .from("users")
     .select("*")
-    .eq("auth_id", user.id)
+    .eq("id", user.id)
     .single();
 
-  if(data){
-    document.getElementById("name").value = data.name || "";
-    document.getElementById("university").value = data.university || "";
-    document.getElementById("country").value = data.country || "";
-    document.getElementById("city").value = data.city || "";
-    document.getElementById("level").value = data.level || "";
-    document.getElementById("profileImg").src = data.profile_image || "https://via.placeholder.com/120";
+  if(!data) return;
 
-    renderTasks(data.tasks_completed || 0);
+  document.getElementById("name").value = data.name || "";
+  document.getElementById("country").value = data.country || "";
+
+  document.getElementById("status").innerText =
+    "Identity Status: " + data.verification_status;
+
+  if(data.passport_id){
+    document.getElementById("passportCode").innerText =
+      "Passport: " + data.passport_id;
   }
 }
 
-/* ======================
-   SAVE PROFILE
-====================== */
-async function saveProfile(){
+/* REQUEST VERIFICATION (NO DEVICE UPLOAD) */
+async function requestVerification(){
 
-  const updates = {
-    auth_id: user.id,
-    name: name.value,
-    university: university.value,
-    country: country.value,
-    city: city.value,
-    level: level.value
-  };
+  const { data: passport } = await supabase
+    .from("passports")
+    .insert([{
+      user_id: user.id,
+      passport_code: "ZEP-" + Math.floor(Math.random()*999999),
+      full_name: name.value,
+      country: country.value,
+      status: "pending",
+      tier: "basic"
+    }])
+    .select()
+    .single();
 
-  const { error } = await supabase
+  await supabase
     .from("users")
-    .upsert(updates, { onConflict: "auth_id" });
+    .update({
+      verification_status: "pending",
+      passport_id: passport.id,
+      identity_locked: true
+    })
+    .eq("id", user.id);
 
-  if(error){
-    alert("Error saving profile");
-    console.log(error);
-    return;
-  }
+  document.getElementById("status").innerText =
+    "Identity Status: pending";
 
-  alert("Profile saved");
+  document.getElementById("passportCode").innerText =
+    "Passport: " + passport.passport_code;
 }
 
-/* ======================
-   TASKS
-====================== */
-function renderTasks(completed){
-  const container = document.getElementById("tasks");
-  container.innerHTML = "";
-
-  for(let i=1;i<=21;i++){
-    const div = document.createElement("div");
-    div.innerText = i;
-
-    if(i <= completed){
-      div.classList.add("completed");
-    }
-
-    container.appendChild(div);
-  }
-}
-
-/* ======================
-   VERIFY (placeholder)
-====================== */
-function verifyUser(){
-  alert("Connect payment gateway later (Paystack/Momo)");
-}
-
-/* INIT */
 loadProfile();
 
 </script>
