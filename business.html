@@ -3,78 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — Submit Student Deal</title>
+<title>Zep AI Business OS</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500,600&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root{
-  --zep-blue:#00f0ff;
-  --zep-violet:#9c4dff;
-  --bg:radial-gradient(circle at 25% 10%, #050018 0%, #00000c 100%);
-  --glass:rgba(255,255,255,0.08);
+  --blue:#00f0ff;
+  --violet:#9c4dff;
+  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
+  --glass:rgba(255,255,255,0.06);
+  --text:rgba(255,255,255,0.9);
+  --muted:rgba(255,255,255,0.6);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins, sans-serif;
 }
 
 body{
-  margin:0;
-  font-family:Poppins,sans-serif;
-  background: var(--bg);
-  color:#fff;
+  background:var(--bg);
+  color:var(--text);
   min-height:100vh;
-  padding:20px;
 }
 
-h1{
-  text-align:center;
-  font-size:1.6rem;
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 18px;
+  margin:16px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+.brand{
   font-family:Orbitron;
-  background: linear-gradient(90deg, var(--zep-blue), var(--zep-violet));
+  font-size:1.4rem;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-form{
-  background:var(--glass);
-  border:1px solid rgba(255,255,255,.12);
-  padding:20px;
-  border-radius:18px;
-  max-width:500px;
-  margin:0 auto;
-}
-
-input, textarea, select{
-  width:100%;
-  padding:10px;
-  margin-bottom:14px;
-  border:none;
-  border-radius:12px;
-  background:rgba(255,255,255,.05);
-  color:#fff;
-}
-
 button{
-  width:100%;
-  padding:12px;
   border:none;
+  padding:10px 14px;
   border-radius:999px;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
-  font-family:Orbitron;
   cursor:pointer;
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  color:#050015;
 }
 
-/* LIST */
-.submissions{
-  max-width:500px;
-  margin:20px auto;
+/* GRID */
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;
+}
+
+.card{
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,0.1);
   padding:16px;
   border-radius:16px;
-  background:rgba(0,0,0,0.35);
-  border:1px solid rgba(255,255,255,.12);
 }
 
-.item{
-  padding:10px;
-  border-bottom:1px solid rgba(255,255,255,.1);
+/* BUSINESS ITEM */
+.business{
+  padding:12px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.04);
+  margin-top:10px;
+}
+
+.status{
+  font-size:12px;
+  padding:4px 8px;
+  border-radius:999px;
+  display:inline-block;
+  margin-top:6px;
+}
+
+.active{background:#00ff94;color:#000;}
+.pending{background:#ffc107;color:#000;}
+.suspended{background:#ff4d4d;color:#fff;}
+
+/* AI PANEL */
+.ai{
+  padding:12px;
+  border-radius:12px;
+  background:rgba(0,240,255,0.08);
+  border:1px solid rgba(0,240,255,0.2);
   font-size:13px;
 }
 </style>
@@ -82,122 +112,151 @@ button{
 
 <body>
 
-<h1>Submit Your Student Deal</h1>
+<header>
+  <div class="brand">Zep Business OS</div>
+  <button onclick="logout()">Logout</button>
+</header>
 
-<form id="dealForm">
-  <input type="text" id="storeName" placeholder="Store Name" required>
-  <input type="url" id="storeLogo" placeholder="Store Logo URL">
-  <input type="text" id="storeAddress" placeholder="Store Address" required>
+<div class="container">
 
-  <textarea id="dealDesc" placeholder="Deal Description" required></textarea>
+  <!-- AI STATUS -->
+  <div class="ai">
+    🤖 <span id="aiStatus">Loading business intelligence...</span>
+  </div>
 
-  <select id="dealCategory" required>
-    <option value="">Select Category</option>
-    <option value="Food">Food</option>
-    <option value="Retail">Retail</option>
-    <option value="Services">Services</option>
-    <option value="Other">Other</option>
-  </select>
+  <!-- BUSINESS LIST -->
+  <div class="card">
+    <h3>Your Businesses</h3>
+    <div id="businessList"></div>
+  </div>
 
-  <input type="text" id="contactInfo" placeholder="Contact Info">
-
-  <button type="submit">Submit Deal</button>
-</form>
-
-<div class="submissions">
-  <h3 style="text-align:center;">Live Deals</h3>
-  <div id="list"></div>
 </div>
 
 <script>
-/* =========================
+
+/* =======================
    SUPABASE INIT
-========================= */
+======================= */
 const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_KEY";
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* =========================
-   GET USER (OPTIONAL)
-========================= */
+/* =======================
+   STATE
+======================= */
 let user = null;
+let businesses = [];
 
-async function getUser(){
-  const { data } = await sb.auth.getUser();
-  user = data?.user || null;
+/* =======================
+   AUTH CHECK
+======================= */
+async function loadUser(){
+  const { data } = await supabase.auth.getUser();
+  user = data?.user;
+
+  if(!user){
+    window.location.href = "login.html";
+  } else {
+    loadBusinesses();
+  }
 }
-getUser();
+loadUser();
 
-/* =========================
-   LOAD DEALS
-========================= */
-async function loadDeals(){
-  const { data, error } = await sb
-    .from("student_deals")
+/* =======================
+   LOAD BUSINESSES
+======================= */
+async function loadBusinesses(){
+
+  const { data, error } = await supabase
+    .from("businesses")
     .select("*")
-    .order("created_at", { ascending: false });
+    .eq("owner_id", user.id)
+    .order("created_at", { ascending:false });
 
   if(error){
     console.error(error);
     return;
   }
 
-  const list = document.getElementById("list");
+  businesses = data || [];
+  render();
+  runAI();
+}
+
+/* =======================
+   RENDER UI
+======================= */
+function render(){
+
+  const list = document.getElementById("businessList");
   list.innerHTML = "";
 
-  data.forEach(d => {
+  if(businesses.length === 0){
+    list.innerHTML = "<small>No businesses found</small>";
+    return;
+  }
+
+  businesses.forEach(b => {
+
     const div = document.createElement("div");
-    div.className = "item";
+    div.className = "business";
+
     div.innerHTML = `
-      <strong>${d.store_name}</strong> (${d.deal_category})<br>
-      ${d.deal_desc}<br>
-      📍 ${d.store_address}<br>
-      📞 ${d.contact_info || "N/A"}
+      <h4>${b.name}</h4>
+      <p>${b.description || "No description"}</p>
+      <span class="status ${b.status || 'pending'}">
+        ${b.status || "pending"}
+      </span>
     `;
+
     list.appendChild(div);
   });
 }
 
-loadDeals();
+/* =======================
+   AI ENGINE (LIGHTWEIGHT)
+======================= */
+function runAI(){
 
-/* =========================
-   SUBMIT DEAL
-========================= */
-document.getElementById("dealForm").addEventListener("submit", async (e)=>{
-  e.preventDefault();
+  let active = businesses.filter(b => b.status === "active").length;
+  let pending = businesses.filter(b => b.status === "pending").length;
+  let suspended = businesses.filter(b => b.status === "suspended").length;
 
-  const store_name = storeName.value.trim();
-  const store_logo = storeLogo.value.trim();
-  const store_address = storeAddress.value.trim();
-  const deal_desc = dealDesc.value.trim();
-  const deal_category = dealCategory.value;
-  const contact_info = contactInfo.value.trim();
+  let msg = "";
 
-  const { error } = await sb
-    .from("student_deals")
-    .insert([
-      {
-        user_id: user?.id || null,
-        store_name,
-        store_logo,
-        store_address,
-        deal_desc,
-        deal_category,
-        contact_info
-      }
-    ]);
-
-  if(error){
-    console.error(error);
-    alert("Error submitting deal");
-    return;
+  if(active > pending){
+    msg = "🔥 Business growth is healthy and active listings dominate.";
+  } else if(pending > active){
+    msg = "⚠️ Many businesses pending approval. Review recommended.";
+  } else if(suspended > 0){
+    msg = "🚨 Suspensions detected. System risk flagged.";
+  } else {
+    msg = "System stable. Monitoring business ecosystem...";
   }
 
-  alert("Deal submitted successfully!");
-  e.target.reset();
-  loadDeals();
-});
+  document.getElementById("aiStatus").innerText = msg;
+}
+
+/* =======================
+   REAL-TIME UPDATES
+======================= */
+supabase
+  .channel("business-live")
+  .on("postgres_changes",
+    { event:"*", schema:"public", table:"businesses" },
+    () => loadBusinesses()
+  )
+  .subscribe();
+
+/* =======================
+   LOGOUT
+======================= */
+async function logout(){
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
+
 </script>
 
 </body>
