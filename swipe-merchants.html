@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
 <title>Zep Swipe AI Marketplace</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -11,7 +12,7 @@
 
 <style>
 :root{
-  --bg:#050012;
+  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
   --glass:rgba(255,255,255,0.06);
   --blue:#00f0ff;
   --purple:#9b5cff;
@@ -19,15 +20,27 @@
   --text:rgba(255,255,255,0.85);
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
-body{background:var(--bg);color:white;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
+}
 
+body{
+  background:var(--bg);
+  color:white;
+}
+
+/* HEADER */
 header{
   display:flex;
   justify-content:space-between;
-  padding:16px;
+  align-items:center;
+  padding:16px 20px;
   background:rgba(0,0,0,0.4);
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.08);
 }
 
 .brand{
@@ -38,57 +51,80 @@ header{
   -webkit-text-fill-color:transparent;
 }
 
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:20px;
-}
-
-.ai-box{
-  background:var(--glass);
-  padding:14px;
-  border-radius:14px;
-  margin-bottom:20px;
-  border:1px solid rgba(255,255,255,0.1);
-}
-
-.jobs{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:14px;
-}
-
-@media(min-width:800px){
-  .jobs{grid-template-columns:1fr 1fr 1fr;}
-}
-
-.card{
-  background:var(--glass);
-  padding:14px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,0.1);
-}
-
-.card h3{font-size:1rem;}
-.card p{font-size:.85rem;color:var(--text);margin:6px 0;}
-
-.meta{
-  display:flex;
-  justify-content:space-between;
-  font-size:.8rem;
-  margin-top:10px;
-  color:var(--text);
-}
-
 button{
-  margin-top:10px;
-  padding:10px;
+  padding:10px 14px;
   border:none;
   border-radius:999px;
   cursor:pointer;
   font-family:Orbitron;
   background:linear-gradient(90deg,var(--blue),var(--purple));
   color:#000;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+}
+
+/* AI PANEL */
+.ai-box{
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:20px;
+}
+
+/* GRID */
+.jobs{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+}
+
+@media(min-width:768px){
+  .jobs{grid-template-columns:repeat(3,1fr);}
+}
+
+/* CARD */
+.card{
+  background:var(--glass);
+  padding:14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.1);
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 0 20px rgba(0,240,255,0.15);
+}
+
+.card h3{
+  font-size:1rem;
+}
+
+.card p{
+  font-size:0.85rem;
+  color:var(--text);
+  margin:6px 0;
+}
+
+/* META */
+.meta{
+  display:flex;
+  justify-content:space-between;
+  font-size:0.8rem;
+  margin-top:10px;
+  color:var(--text);
+}
+
+/* APPLY BUTTON */
+.card button{
+  margin-top:10px;
+  width:100%;
 }
 </style>
 </head>
@@ -102,7 +138,7 @@ button{
 
 <div class="container">
 
-  <!-- 🤖 ZEP AI INSIGHT PANEL -->
+  <!-- AI PANEL -->
   <div class="ai-box">
     <h3>🤖 Zep AI Freelance Agent</h3>
     <p id="aiSuggestion">Analyzing best gigs for you...</p>
@@ -114,88 +150,97 @@ button{
 </div>
 
 <script>
-/* =========================
-   SUPABASE INIT
-========================= */
+/* ================= SUPABASE ================= */
 const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* =========================
-   USER SESSION
-========================= */
+/* ================= STATE ================= */
 let user = null;
 
+/* ================= LOAD USER ================= */
 async function loadUser(){
   const { data } = await supabase.auth.getUser();
-  user = data.user;
+  user = data?.user || null;
 }
 loadUser();
 
-/* =========================
-   FETCH GIGS FROM SUPABASE
-========================= */
+/* ================= LOAD GIGS ================= */
 async function loadGigs(){
-  let { data: gigs } = await supabase
+
+  let { data: gigs, error } = await supabase
     .from("gigs")
     .select("*")
     .limit(20);
 
-  if(!gigs) gigs = [];
+  if(error){
+    console.error(error);
+    gigs = [];
+  }
 
-  renderGigs(gigs);
-  runAI(gigs);
+  renderGigs(gigs || []);
+  runAI(gigs || []);
 }
 
-/* =========================
-   RENDER GIGS
-========================= */
+/* ================= RENDER GIGS ================= */
 function renderGigs(gigs){
+
   const container = document.getElementById("jobs");
   container.innerHTML = "";
 
+  if(!gigs.length){
+    container.innerHTML = "<p>No gigs available</p>";
+    return;
+  }
+
   gigs.forEach(g => {
+
     const div = document.createElement("div");
     div.className = "card";
 
     div.innerHTML = `
       <h3>${g.title}</h3>
       <p>${g.description}</p>
+
       <div class="meta">
         <span>${g.country || "Remote"}</span>
         <strong>$${g.price || 0}</strong>
       </div>
-      <button onclick="applyGig('${g.id}','${g.title}')">Apply</button>
+
+      <button onclick="applyGig('${g.id}','${g.title}')">
+        Apply
+      </button>
     `;
 
     container.appendChild(div);
   });
 }
 
-/* =========================
-   ZEP AI FREELANCE ENGINE
-========================= */
+/* ================= AI ENGINE ================= */
 function runAI(gigs){
+
+  const ai = document.getElementById("aiSuggestion");
+
   if(!user){
-    document.getElementById("aiSuggestion").innerText =
-      "Login to get AI-powered gig recommendations.";
+    ai.innerText = "Login to get AI-powered gig recommendations.";
     return;
   }
 
-  let best = gigs[Math.floor(Math.random() * gigs.length)];
-
-  if(best){
-    document.getElementById("aiSuggestion").innerHTML = `
-      Recommended for you: <b>${best.title}</b> earning ~$${best.price}<br>
-      Zep AI predicts 78% match based on your profile.
-    `;
+  if(!gigs.length){
+    ai.innerText = "No gigs found for AI analysis.";
+    return;
   }
+
+  const best = gigs[Math.floor(Math.random() * gigs.length)];
+
+  ai.innerHTML = `
+    Recommended: <b>${best.title}</b> ($${best.price || 0})<br>
+    Zep AI Match Score: 78%
+  `;
 }
 
-/* =========================
-   APPLY → INVOICE → ESCROW FLOW
-========================= */
+/* ================= APPLY FLOW ================= */
 async function applyGig(gigId, title){
 
   if(!user){
@@ -203,8 +248,8 @@ async function applyGig(gigId, title){
     return;
   }
 
-  // 1. Create invoice
-  const { data: invoice } = await supabase
+  // CREATE INVOICE
+  const { data: invoice, error: invErr } = await supabase
     .from("invoices")
     .insert([{
       user_id: user.id,
@@ -214,29 +259,30 @@ async function applyGig(gigId, title){
     }])
     .select();
 
-  // 2. Lock escrow
+  if(invErr){
+    alert("Invoice error");
+    return;
+  }
+
+  // CREATE ESCROW
   await supabase
     .from("escrow")
     .insert([{
       user_id: user.id,
       gig_id: gigId,
-      invoice_id: invoice[0].id,
+      invoice_id: invoice?.[0]?.id,
       status: "locked"
     }]);
 
-  alert("Invoice created & funds locked in escrow for: " + title);
+  alert("Application submitted & escrow locked for: " + title);
 }
 
-/* =========================
-   DASHBOARD NAV
-========================= */
+/* ================= NAV ================= */
 function openDashboard(){
   window.location.href = "student-dashboard.html";
 }
 
-/* =========================
-   INIT
-========================= */
+/* ================= INIT ================= */
 loadGigs();
 </script>
 
