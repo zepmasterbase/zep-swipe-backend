@@ -6,47 +6,40 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
+:root{
+  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
+  --blue:#00f0ff;
+  --violet:#9c4dff;
+  --green:#00ff94;
+  --red:#ff4d4d;
+  --yellow:#ffcc00;
+  --glass:rgba(255,255,255,0.07);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
+}
+
 body{
-  font-family:Poppins, sans-serif;
-  background:#050012;
-  color:white;
+  background:var(--bg);
+  color:#fff;
   padding:20px;
 }
 
-h2{margin-bottom:10px;}
-
-.box{
-  background:rgba(255,255,255,0.06);
-  padding:15px;
-  margin:10px 0;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,0.1);
+/* TITLE */
+h2{
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:10px;
 }
-
-input,button{
-  padding:10px;
-  margin:5px 0;
-  width:100%;
-  border-radius:10px;
-  border:none;
-}
-
-button{
-  cursor:pointer;
-  font-weight:bold;
-  background:linear-gradient(90deg,#00f0ff,#9c4dff);
-  color:#000;
-}
-
-.danger{
-  background:linear-gradient(90deg,#ff4d4d,#ff0000);
-  color:#fff;
-}
-
-.pending{color:yellow;}
-.released{color:#00ff9d;}
-.disputed{color:#ff4d4d;}
 
 /* AI PANEL */
 .ai-box{
@@ -54,9 +47,60 @@ button{
   margin-bottom:15px;
   border-radius:14px;
   background:rgba(0,240,255,0.08);
-  border:1px solid rgba(0,240,255,0.3);
+  border:1px solid rgba(0,240,255,0.25);
   font-size:13px;
 }
+
+/* CARDS */
+.box{
+  background:var(--glass);
+  padding:15px;
+  margin:10px 0;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+/* INPUTS */
+input{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border-radius:10px;
+  border:none;
+  background:rgba(0,0,0,0.4);
+  color:#fff;
+  outline:none;
+}
+
+/* BUTTONS */
+button{
+  width:100%;
+  padding:12px;
+  margin-top:6px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:Orbitron;
+  font-weight:bold;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  color:#000;
+  transition:0.2s;
+}
+
+button:hover{
+  transform:scale(1.02);
+}
+
+/* DANGER BUTTON */
+.danger{
+  background:linear-gradient(90deg,var(--red),#ff0000);
+  color:#fff;
+}
+
+/* STATUS COLORS */
+.locked{color:var(--yellow);}
+.released{color:var(--green);}
+.disputed{color:var(--red);}
 </style>
 </head>
 
@@ -73,9 +117,9 @@ button{
 <div class="box">
   <h3>Create Escrow</h3>
 
-  <input id="buyer" placeholder="Buyer ID (auth_id)" />
-  <input id="seller" placeholder="Seller ID (auth_id)" />
-  <input id="amount" placeholder="Amount (ZAC)" type="number" />
+  <input id="buyer" placeholder="Buyer ID (auth_id)">
+  <input id="seller" placeholder="Seller ID (auth_id)">
+  <input id="amount" type="number" placeholder="Amount (ZAC)">
 
   <button onclick="createEscrow()">Create Escrow</button>
 </div>
@@ -88,16 +132,13 @@ button{
 
 <script>
 
-/* =========================
-   SUPABASE INIT
-========================= */
-const supabaseUrl = "https://sqlisgobnayfpzamdolf.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+/* ================= SUPABASE ================= */
+const supabase = window.supabase.createClient(
+  "https://sqlisgobnayfpzamdolf.supabase.co",
+  "YOUR_ANON_KEY"
+);
 
-/* =========================
-   USER
-========================= */
+/* ================= USER ================= */
 let currentUser = null;
 
 async function getUser(){
@@ -106,14 +147,12 @@ async function getUser(){
   return currentUser;
 }
 
-/* =========================
-   CREATE ESCROW
-========================= */
+/* ================= CREATE ESCROW ================= */
 async function createEscrow(){
 
   const buyer_id = document.getElementById("buyer").value;
   const seller_id = document.getElementById("seller").value;
-  const amount = document.getElementById("amount").value;
+  const amount = Number(document.getElementById("amount").value);
 
   if(!buyer_id || !seller_id || !amount){
     alert("Fill all fields");
@@ -128,17 +167,16 @@ async function createEscrow(){
   }]);
 
   if(error){
+    console.log(error);
     alert("Error creating escrow");
     return;
   }
 
-  alert("Escrow created & funds locked");
+  alert("Escrow created & funds locked 🔒");
   loadEscrow();
 }
 
-/* =========================
-   LOAD ESCROW
-========================= */
+/* ================= LOAD ESCROW ================= */
 async function loadEscrow(){
 
   const user = await getUser();
@@ -154,9 +192,7 @@ async function loadEscrow(){
   runZepAI(data || []);
 }
 
-/* =========================
-   RENDER UI
-========================= */
+/* ================= RENDER ================= */
 function render(data){
 
   const box = document.getElementById("escrowList");
@@ -178,9 +214,7 @@ function render(data){
   });
 }
 
-/* =========================
-   RELEASE
-========================= */
+/* ================= RELEASE FUNDS ================= */
 async function release(id){
 
   await supabase
@@ -191,9 +225,7 @@ async function release(id){
   loadEscrow();
 }
 
-/* =========================
-   DISPUTE
-========================= */
+/* ================= DISPUTE ================= */
 async function dispute(id){
 
   await supabase
@@ -204,45 +236,38 @@ async function dispute(id){
   loadEscrow();
 }
 
-/* =========================
-   🤖 ZEP AI ESCROW ENGINE
-========================= */
+/* ================= ZEP AI ENGINE ================= */
 function runZepAI(data){
 
   let locked = 0;
-  let disputed = 0;
   let released = 0;
+  let disputed = 0;
 
   data.forEach(e => {
     if(e.status === "locked") locked++;
-    if(e.status === "disputed") disputed++;
     if(e.status === "released") released++;
+    if(e.status === "disputed") disputed++;
   });
 
   let insight = "";
 
   if(disputed > 0){
-    insight = "⚠️ Disputes detected. Admin attention recommended immediately.";
+    insight = "⚠️ Disputes detected — immediate review recommended.";
   }
-
-  else if(locked > 3){
-    insight = "💰 High escrow activity. Ensure timely job completion to avoid delays.";
+  else if(locked > 5){
+    insight = "💰 High escrow volume — ensure fast delivery cycles.";
   }
-
   else if(released > locked){
-    insight = "🔥 Healthy system flow. More funds are being successfully released.";
+    insight = "🔥 Healthy system — successful payouts dominating.";
   }
-
-  else {
-    insight = "Escrow system stable. Monitoring active transactions...";
+  else{
+    insight = "Escrow system stable — monitoring active flows...";
   }
 
   document.getElementById("aiInsight").innerText = insight;
 }
 
-/* =========================
-   INIT
-========================= */
+/* ================= INIT ================= */
 loadEscrow();
 
 </script>
