@@ -2,50 +2,97 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Zep AI Invoice System</title>
+<title>Zep AI Invoice → Escrow System</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
+:root{
+  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
+  --blue:#00f0ff;
+  --violet:#9c4dff;
+  --green:#00ff94;
+  --orange:#ffb020;
+  --red:#ff4d4d;
+  --glass:rgba(255,255,255,0.07);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
+}
+
 body{
-  font-family:Arial;
-  background:#070018;
-  color:white;
+  background:var(--bg);
+  color:#fff;
   padding:20px;
 }
 
-.box{
-  background:#111827;
-  padding:15px;
-  border-radius:12px;
-  margin-top:10px;
-}
-
-input,button{
-  width:100%;
-  padding:10px;
-  margin:6px 0;
-  border:none;
-  border-radius:8px;
-}
-
-button{
-  background:linear-gradient(90deg,#22c55e,#00d4ff);
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.ai{
-  background:#0ea5e9;
-  padding:10px;
-  border-radius:10px;
+/* HEADER */
+h2{
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
   margin-bottom:10px;
+}
+
+/* AI BOX */
+.ai{
+  background:rgba(0,240,255,0.08);
+  border:1px solid rgba(0,240,255,0.25);
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:15px;
   font-size:13px;
 }
 
-.warn{color:orange;}
-.good{color:#00ff9d;}
-.bad{color:#ff4d4d;}
+/* FORM CARD */
+.box{
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:16px;
+  border-radius:14px;
+  max-width:500px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border-radius:10px;
+  border:none;
+  background:rgba(0,0,0,0.4);
+  color:#fff;
+  outline:none;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:Orbitron;
+  font-weight:bold;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  color:#000;
+  transition:0.2s;
+}
+
+button:hover{
+  transform:scale(1.02);
+}
+
+/* STATUS COLORS */
+.safe{color:var(--green);}
+.medium{color:var(--orange);}
+.high{color:var(--red);}
 </style>
 </head>
 
@@ -53,30 +100,30 @@ button{
 
 <h2>🧾 Zep AI Invoice → Escrow System</h2>
 
-<!-- 🤖 AI INSIGHT -->
+<!-- 🤖 AI PANEL -->
 <div class="ai">
-  🤖 <span id="aiStatus">AI ready to analyze invoice data...</span>
+  🤖 <span id="aiStatus">AI ready to analyze invoice risk...</span>
 </div>
 
 <div class="box">
 
-  <input id="desc" placeholder="Job description" />
-  <input id="buyer" placeholder="Buyer (auth_id)" />
-  <input id="seller" placeholder="Seller (auth_id)" />
-  <input id="amount" type="number" placeholder="Amount (ZAC)" />
+  <input id="desc" placeholder="Job description">
+  <input id="buyer" placeholder="Buyer (auth_id)">
+  <input id="seller" placeholder="Seller (auth_id)">
+  <input id="amount" type="number" placeholder="Amount (ZAC)">
 
   <button onclick="createInvoice()">Create Invoice → Escrow</button>
 </div>
 
 <script>
 
-const supabaseUrl = "https://sqlisgobnayfpzamdolf.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+/* ================= SUPABASE ================= */
+const supabase = window.supabase.createClient(
+  "https://sqlisgobnayfpzamdolf.supabase.co",
+  "YOUR_ANON_KEY"
+);
 
-/* =========================
-   ZEP AI ANALYSIS ENGINE
-========================= */
+/* ================= ZEP AI RISK ENGINE ================= */
 function analyzeInvoice(desc, amount){
 
   let risk = 0;
@@ -97,10 +144,9 @@ function analyzeInvoice(desc, amount){
     notes.push("High-value transaction");
   }
 
-  // suspicious keywords
   const badWords = ["cash", "urgent scam", "gift", "refund me", "hack"];
-  badWords.forEach(w => {
-    if(desc.toLowerCase().includes(w)){
+  badWords.forEach(word=>{
+    if(desc.toLowerCase().includes(word)){
       risk += 30;
       notes.push("Suspicious keyword detected");
     }
@@ -108,15 +154,13 @@ function analyzeInvoice(desc, amount){
 
   let status = "safe";
 
-  if(risk >= 70) status = "high-risk";
-  else if(risk >= 40) status = "medium-risk";
+  if(risk >= 70) status = "high";
+  else if(risk >= 40) status = "medium";
 
   return { risk, status, notes };
 }
 
-/* =========================
-   CREATE INVOICE → ESCROW
-========================= */
+/* ================= CREATE INVOICE → ESCROW ================= */
 async function createInvoice(){
 
   const description = document.getElementById("desc").value;
@@ -129,15 +173,15 @@ async function createInvoice(){
     return;
   }
 
-  // 🔥 AI ANALYSIS
+  // 🤖 AI ANALYSIS
   const ai = analyzeInvoice(description, amount);
 
   document.getElementById("aiStatus").innerHTML =
-    `Risk: ${ai.status.toUpperCase()} | Score: ${ai.risk} | Notes: ${ai.notes.join(", ")}`;
+    `Risk: <b class="${ai.status}">${ai.status.toUpperCase()}</b> | Score: ${ai.risk} | Notes: ${ai.notes.join(", ")}`;
 
   const invoice_id = "INV-" + Date.now();
 
-  // 💼 CREATE ESCROW FROM INVOICE
+  // 💼 INSERT ESCROW
   const { error } = await supabase
     .from("escrow")
     .insert([{
@@ -152,18 +196,18 @@ async function createInvoice(){
     }]);
 
   if(error){
-    alert("Failed to create invoice escrow");
     console.log(error);
+    alert("Failed to create invoice escrow");
     return;
   }
 
-  alert("Invoice created → Escrow locked 🔒");
-
-  // reset
+  // RESET
   document.getElementById("desc").value = "";
   document.getElementById("buyer").value = "";
   document.getElementById("seller").value = "";
   document.getElementById("amount").value = "";
+
+  alert("Invoice created → Escrow locked 🔒");
 }
 
 </script>
