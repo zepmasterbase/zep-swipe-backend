@@ -13,11 +13,12 @@
 :root{
   --blue:#00f0ff;
   --violet:#9c4dff;
-  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
+  --pink:#ff4fd8;
+  --bg:radial-gradient(circle at 20% 10%, #14001f, #000);
   --glass:rgba(255,255,255,0.06);
   --text:rgba(255,255,255,0.92);
   --muted:rgba(255,255,255,0.6);
-  --shadow:0 0 40px rgba(156,77,255,0.25);
+  --shadow:0 0 40px rgba(255,79,216,0.25);
 }
 
 *{
@@ -47,12 +48,22 @@ header{
   backdrop-filter:blur(12px);
 }
 
+/* LOGO */
 .brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
   font-family:Orbitron;
-  font-size:1.4rem;
-  background:linear-gradient(90deg,var(--blue),var(--violet));
+  font-size:1.3rem;
+  background:linear-gradient(90deg,var(--pink),var(--violet),var(--blue));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
+}
+
+.brand img{
+  width:28px;
+  height:28px;
+  object-fit:contain;
 }
 
 /* CONTAINER */
@@ -90,12 +101,12 @@ textarea::placeholder{
   color:var(--muted);
 }
 
-/* AI PANEL */
+/* AI BOX */
 .ai-box{
   padding:12px;
   border-radius:12px;
-  background:rgba(0,240,255,0.06);
-  border:1px solid rgba(0,240,255,0.2);
+  background:rgba(255,79,216,0.08);
+  border:1px solid rgba(255,79,216,0.25);
   font-size:13px;
 }
 
@@ -107,6 +118,7 @@ textarea::placeholder{
   border-radius:12px;
   background:rgba(255,255,255,0.05);
   font-size:14px;
+  border:1px solid rgba(255,255,255,0.08);
 }
 
 /* BUTTON */
@@ -116,9 +128,10 @@ button{
   border-radius:999px;
   cursor:pointer;
   font-family:Orbitron;
-  background:linear-gradient(90deg,var(--blue),var(--violet));
+  background:linear-gradient(90deg,var(--pink),var(--violet),var(--blue));
   color:#050015;
   transition:0.2s;
+  font-weight:bold;
 }
 
 button:hover{
@@ -130,13 +143,24 @@ button:hover{
   opacity:0.6;
   pointer-events:none;
 }
+
+/* USD LOCK NOTICE */
+.usd-lock{
+  font-size:12px;
+  opacity:0.7;
+  text-align:center;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="brand">Zep AI Gig OS</div>
+  <div class="brand">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
+    Zep Gig OS
+  </div>
+
   <button onclick="logout()">⎋</button>
 </header>
 
@@ -144,9 +168,12 @@ button:hover{
 
   <h2>Create a Gig</h2>
 
-  <!-- AI PREVIEW -->
   <div class="ai-box" id="aiPreview">
     🤖 AI: Waiting for gig input...
+  </div>
+
+  <div class="usd-lock">
+    💳 All freelancer services are processed in USD only (System Locked)
   </div>
 
   <input type="text" id="title" placeholder="Gig Title">
@@ -155,14 +182,13 @@ button:hover{
   <input type="number" id="rate" placeholder="Rate per Hour (USD)">
   <input type="number" id="duration" placeholder="Duration (Hours)">
 
-  <!-- TOTAL -->
   <div class="total">
     <span>Total (includes $25 listing fee)</span>
     <span id="totalAmount">$0</span>
   </div>
 
   <button id="createBtn" onclick="createGig()">
-    Create Gig & Pay $25
+    Create Gig & Pay $25 (USD)
   </button>
 
 </div>
@@ -175,6 +201,9 @@ button:hover{
 const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_KEY";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* FORCE USD (SYSTEM LOCK) */
+const CURRENCY = "USD";
 
 /* =========================
    USER
@@ -193,7 +222,7 @@ async function loadUser(){
 loadUser();
 
 /* =========================
-   AI PREVIEW ENGINE
+   AI ENGINE
 ========================= */
 function updateAIPreview(){
 
@@ -220,7 +249,7 @@ function updateAIPreview(){
     `🤖 AI Score: ${score}/100 — ${status}`;
 }
 
-/* LIVE LISTENERS */
+/* LISTENERS */
 ["title","desc","rate","duration"].forEach(id=>{
   document.getElementById(id).addEventListener("input", ()=>{
     updateAIPreview();
@@ -229,7 +258,7 @@ function updateAIPreview(){
 });
 
 /* =========================
-   TOTAL CALCULATION
+   TOTAL
 ========================= */
 function updateTotal(){
   const rate = parseFloat(document.getElementById("rate").value) || 0;
@@ -238,11 +267,11 @@ function updateTotal(){
   const total = (rate * duration) + 25;
 
   document.getElementById("totalAmount").innerText =
-    `$${total.toFixed(2)}`;
+    `$${total.toFixed(2)} USD`;
 }
 
 /* =========================
-   CREATE GIG (BACKEND READY)
+   CREATE GIG
 ========================= */
 async function createGig(){
 
@@ -258,13 +287,12 @@ async function createGig(){
   if(!title || !desc || !rate || !duration){
     alert("Fill all fields");
     btn.classList.remove("loading");
-    btn.innerText = "Create Gig & Pay $25";
+    btn.innerText = "Create Gig & Pay $25 (USD)";
     return;
   }
 
   const totalAmount = (rate * duration) + 25;
 
-  // AI SCORE
   const ai_score =
     Math.min(100,
       (title.length * 2) +
@@ -281,6 +309,7 @@ async function createGig(){
       description: desc,
       rate,
       duration,
+      currency: CURRENCY,   // 💰 USD LOCK ENFORCED
       total_amount: totalAmount,
       listing_fee: 25,
       escrow_paid: true,
@@ -291,7 +320,7 @@ async function createGig(){
     }]);
 
   btn.classList.remove("loading");
-  btn.innerText = "Create Gig & Pay $25";
+  btn.innerText = "Create Gig & Pay $25 (USD)";
 
   if(error){
     console.error(error);
