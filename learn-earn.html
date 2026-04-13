@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep AI Learn & Earn</title>
+<title>Zep OS 3.2 — Learn & Earn</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500,600&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -14,104 +14,184 @@
   --blue:#00f0ff;
   --violet:#9c4dff;
   --green:#00ff94;
-  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
-  --glass:rgba(255,255,255,.08);
+  --bg: radial-gradient(circle at 20% 10%, #0b0030, #000);
+  --glass: rgba(255,255,255,0.06);
+  --stroke: rgba(255,255,255,0.12);
+  --text:#fff;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
-body{background:var(--bg);color:#fff;min-height:100vh;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins;
+}
 
+body{
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* HEADER */
 header{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px;margin:16px;border-radius:16px;
-  background:rgba(255,255,255,.05);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 16px;
+  margin:14px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--stroke);
+  backdrop-filter:blur(14px);
 }
 
 .brand{
   font-family:Orbitron;
-  background:linear-gradient(90deg,var(--blue),var(--violet));
+  font-size:1.2rem;
+  background:linear-gradient(90deg,var(--blue),var(--violet),var(--green));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
 .home-btn{
-  width:46px;height:46px;border-radius:50%;
-  background:linear-gradient(135deg,var(--blue),var(--violet));
-  border:none;color:#000;font-size:20px;
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  border:none;
   cursor:pointer;
+  background:linear-gradient(135deg,var(--blue),var(--violet));
+  color:#000;
+  font-size:18px;
+  transition:0.2s;
+}
+.home-btn:hover{
+  transform:scale(1.05);
 }
 
-.container{max-width:1200px;margin:auto;padding:16px;}
+/* CONTAINER */
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:16px;
+}
 
+/* PROFILE */
 .profile{
-  display:flex;gap:14px;align-items:center;
-  background:var(--glass);padding:14px;border-radius:14px;
+  display:flex;
+  gap:14px;
+  align-items:center;
+  background:linear-gradient(90deg,rgba(0,240,255,0.06),rgba(156,77,255,0.06));
+  border:1px solid var(--stroke);
+  padding:14px;
+  border-radius:14px;
 }
 
-.profile img{width:70px;height:70px;border-radius:50%;}
-
-.courses{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:16px;margin-top:16px;
+.profile img{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  border:2px solid rgba(0,240,255,0.3);
 }
 
-.course{
-  background:rgba(255,255,255,.06);
-  padding:16px;border-radius:14px;cursor:pointer;
-}
-
-.course.selected{border:2px solid var(--green);}
-
-.tasks{
-  margin-top:20px;
-  background:var(--glass);
-  padding:16px;border-radius:16px;
-}
-
-.task{
-  background:rgba(255,255,255,.05);
-  padding:14px;margin-bottom:10px;border-radius:12px;
-}
-
-.task.completed{opacity:.5;}
-
+/* AI BOX */
 .ai-box{
-  background:rgba(0,255,255,.08);
-  border:1px solid rgba(0,255,255,.3);
-  padding:10px;
-  border-radius:10px;
-  margin:10px 0;
+  margin:14px 0;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(0,240,255,0.06);
+  border:1px solid rgba(0,240,255,0.2);
   font-size:13px;
 }
 
+/* COURSES */
+.courses{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px;
+  margin-top:14px;
+}
+
+.course{
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--stroke);
+  padding:14px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.course:hover{
+  transform:translateY(-4px);
+  border-color:var(--blue);
+}
+
+.course.selected{
+  border:2px solid var(--green);
+}
+
+/* TASKS */
+.tasks{
+  margin-top:18px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--stroke);
+  padding:16px;
+  border-radius:16px;
+}
+
+.task{
+  background:rgba(255,255,255,0.05);
+  padding:14px;
+  margin-bottom:10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.task.completed{
+  opacity:0.5;
+}
+
+/* BUTTON */
 button{
-  border:none;border-radius:999px;
+  border:none;
+  border-radius:999px;
   padding:10px 14px;
+  cursor:pointer;
+  font-family:Orbitron;
   background:linear-gradient(90deg,var(--blue),var(--violet));
-  color:#000;font-family:Orbitron;cursor:pointer;
+  color:#000;
+  font-weight:bold;
 }
 
 /* MODAL */
 .modal-bg{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.7);
-  display:none;align-items:center;justify-content:center;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
 }
 
 .modal{
   background:var(--glass);
-  padding:20px;border-radius:14px;
-  width:90%;max-width:400px;
+  border:1px solid var(--stroke);
+  padding:18px;
+  border-radius:14px;
+  width:90%;
+  max-width:400px;
+  backdrop-filter:blur(12px);
 }
 
 .modal input{
   width:100%;
-  padding:10px;
+  padding:12px;
   border-radius:10px;
   border:none;
   margin-bottom:10px;
   outline:none;
+  background:rgba(0,0,0,0.4);
+  color:white;
 }
 </style>
 </head>
@@ -119,7 +199,7 @@ button{
 <body>
 
 <header>
-  <div class="brand">Zep AI Learn & Earn</div>
+  <div class="brand">Zep OS 3.2 Learn & Earn</div>
   <button class="home-btn" onclick="location.href='student-dashboard.html'">🏠</button>
 </header>
 
@@ -129,7 +209,7 @@ button{
     <img id="profileImg" src="https://via.placeholder.com/70">
     <div>
       <h3 id="studentName">Loading...</h3>
-      <span id="studentEmail"></span>
+      <small id="studentEmail"></small>
     </div>
   </div>
 
@@ -156,19 +236,15 @@ button{
 </div>
 
 <script>
-/* ================= SUPABASE ================= */
 const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
 const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
-
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ================= STATE ================= */
-let user = null;
-let currentCourse = null;
-let selectedDay = null;
+let user=null;
+let currentCourse=null;
+let selectedDay=null;
 
-/* ================= COURSES ================= */
-const coursesData = {
+const coursesData={
   "Virtual Assistant":[
     "Intro video task",
     "Email system setup",
@@ -183,60 +259,53 @@ const coursesData = {
   ]
 };
 
-/* ================= AUTH ================= */
 async function loadUser(){
 
-  const { data: { user: authUser } } = await sb.auth.getUser();
+  const { data:{user:authUser} } = await sb.auth.getUser();
 
   if(!authUser){
-    location.href = "login.html";
+    location.href="login.html";
     return;
   }
 
-  user = authUser;
+  user=authUser;
 
   document.getElementById("studentName").innerText =
     user.user_metadata?.name || user.email;
 
-  document.getElementById("studentEmail").innerText = user.email;
+  document.getElementById("studentEmail").innerText =
+    user.email;
 
   loadProgress();
 }
 
 loadUser();
 
-/* ================= LOAD PROGRESS ================= */
 async function loadProgress(){
 
-  const { data, error } = await sb
+  const { data } = await sb
     .from("learn_earn_progress")
     .select("*")
-    .eq("user_id", user.id);
-
-  if(error){
-    console.error(error);
-    return;
-  }
+    .eq("user_id",user.id);
 
   renderCourses();
-  renderTasks(data || []);
-  runAI(data || []);
+  renderTasks(data||[]);
+  runAI(data||[]);
 }
 
-/* ================= COURSES ================= */
 function renderCourses(){
 
-  const container = document.getElementById("courseList");
-  container.innerHTML = "";
+  const container=document.getElementById("courseList");
+  container.innerHTML="";
 
   Object.keys(coursesData).forEach(course=>{
 
-    const div = document.createElement("div");
-    div.className = "course";
-    div.innerHTML = `<h4>${course}</h4>`;
+    const div=document.createElement("div");
+    div.className="course";
+    div.innerHTML=`<h4>${course}</h4>`;
 
-    div.onclick = () => {
-      currentCourse = course;
+    div.onclick=()=>{
+      currentCourse=course;
       loadProgress();
     };
 
@@ -244,107 +313,83 @@ function renderCourses(){
   });
 }
 
-/* ================= TASKS ================= */
 function renderTasks(progress){
 
   if(!currentCourse) return;
 
-  document.getElementById("taskSection").style.display = "block";
-  document.getElementById("courseTitle").innerText = currentCourse;
+  document.getElementById("taskSection").style.display="block";
+  document.getElementById("courseTitle").innerText=currentCourse;
 
-  const container = document.getElementById("tasksContainer");
-  container.innerHTML = "";
+  const container=document.getElementById("tasksContainer");
+  container.innerHTML="";
 
-  const completedDays = progress
-    .filter(p => p.course === currentCourse)
-    .map(p => p.day);
+  const completed=progress
+    .filter(p=>p.course===currentCourse)
+    .map(p=>p.day);
 
-  coursesData[currentCourse].forEach((task, i) => {
+  coursesData[currentCourse].forEach((task,i)=>{
 
-    const day = i + 1;
-    const done = completedDays.includes(day);
+    const day=i+1;
+    const done=completed.includes(day);
 
-    const div = document.createElement("div");
-    div.className = "task" + (done ? " completed" : "");
+    const div=document.createElement("div");
+    div.className="task"+(done?" completed":"");
 
-    div.innerHTML = `
+    div.innerHTML=`
       <b>Day ${day}</b>
       <p>${task}</p>
-      ${done ? "✔ Completed" : `<button onclick="openModal(${day})">Submit</button>`}
+      ${done?"✔ Completed":`<button onclick="openModal(${day})">Submit</button>`}
     `;
 
     container.appendChild(div);
   });
 }
 
-/* ================= AI ENGINE ================= */
 function runAI(progress){
 
-  let completed = progress.length;
+  let completed=progress.length;
 
-  let status =
-    completed >= 8 ? "advanced learner" :
-    completed >= 4 ? "intermediate learner" :
-    completed > 0 ? "beginner learner" :
-    "new learner";
-
-  let msg =
-    completed === 0 ? "Start your first task to earn ZAC" :
-    completed < 3 ? "Keep going, momentum building" :
-    completed < 7 ? "Great progress, stay consistent" :
+  let msg=
+    completed===0?"Start your first task to earn ZAC":
+    completed<3?"Keep going, momentum building":
+    completed<7?"Great progress, stay consistent":
     "Excellent! You're becoming job-ready";
 
-  document.getElementById("aiInsight").innerText =
-    `Status: ${status} | ${msg}`;
+  document.getElementById("aiInsight").innerText=
+    `AI Insight: ${msg}`;
 }
 
-/* ================= MODAL ================= */
 function openModal(day){
-  selectedDay = day;
-  document.getElementById("modalBg").style.display = "flex";
+  selectedDay=day;
+  document.getElementById("modalBg").style.display="flex";
 }
 
-/* ================= SUBMIT TASK ================= */
 async function submitTask(){
 
-  const link = document.getElementById("linkInput").value.trim();
+  const link=document.getElementById("linkInput").value.trim();
 
-  if(!link){
-    alert("Please enter a valid link");
-    return;
-  }
+  if(!link) return alert("Enter link");
 
-  // prevent duplicate
-  const { data: existing } = await sb
+  const { data:existing } = await sb
     .from("learn_earn_progress")
     .select("*")
-    .eq("user_id", user.id)
-    .eq("course", currentCourse)
-    .eq("day", selectedDay)
+    .eq("user_id",user.id)
+    .eq("course",currentCourse)
+    .eq("day",selectedDay)
     .maybeSingle();
 
-  if(existing){
-    alert("Already submitted");
-    return;
-  }
+  if(existing) return alert("Already submitted");
 
-  const { error } = await sb
-    .from("learn_earn_progress")
-    .insert([{
-      user_id: user.id,
-      course: currentCourse,
-      day: selectedDay,
-      link,
-      created_at: new Date()
-    }]);
+  await sb.from("learn_earn_progress").insert([{
+    user_id:user.id,
+    course:currentCourse,
+    day:selectedDay,
+    link,
+    created_at:new Date()
+  }]);
 
-  if(error){
-    alert("Error saving task");
-    return;
-  }
-
-  document.getElementById("modalBg").style.display = "none";
-  document.getElementById("linkInput").value = "";
+  document.getElementById("modalBg").style.display="none";
+  document.getElementById("linkInput").value="";
 
   loadProgress();
 }
