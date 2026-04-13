@@ -17,7 +17,6 @@
   --pink:#ff4fd8;
   --purple:#9c4dff;
   --blue:#00f0ff;
-  --heart:#ff2e7a;
   --text:rgba(255,255,255,0.85);
 }
 
@@ -47,12 +46,22 @@ header{
   backdrop-filter:blur(14px);
 }
 
+/* LOGO BRAND */
 .logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
   font-family:Orbitron;
-  font-size:1.2rem;
-  background:linear-gradient(90deg,var(--pink),var(--purple),var(--heart));
+  font-size:1.1rem;
+  background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
+}
+
+.logo img{
+  width:28px;
+  height:28px;
+  object-fit:contain;
 }
 
 /* HERO */
@@ -75,7 +84,7 @@ header{
   opacity:.85;
 }
 
-/* LOVE AI BOX */
+/* AI BOX */
 .ai-box{
   margin:18px auto;
   max-width:520px;
@@ -168,7 +177,7 @@ header{
   border-bottom:1px solid rgba(255,255,255,0.06);
 }
 
-/* LOVE LOOP */
+/* LOOP */
 .loop{
   text-align:center;
   padding:12px;
@@ -191,30 +200,34 @@ footer{
 <body>
 
 <header>
-  <div class="logo">Zep Swipe 💖</div>
-  <button onclick="location.href='login.html'" style="padding:10px 14px;border-radius:999px;border:none;background:linear-gradient(90deg,#ff4fd8,#9c4dff);font-family:Orbitron;">
+  <div class="logo">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png" />
+    Zep Swipe
+  </div>
+
+  <button onclick="location.href='login.html'"
+    style="padding:10px 14px;border-radius:999px;border:none;background:linear-gradient(90deg,#ff4fd8,#9c4dff);font-family:Orbitron;">
     Enter
   </button>
 </header>
 
 <section class="hero">
 
-  <h1>Learn Skills. Earn Love. Build Your Future 💖</h1>
+  <h1>Build Skills. Earn. Grow Forever.</h1>
 
   <p>
-    Zep Swipe Love OS turns learning into emotion, progress into connection,
-    and skills into real income opportunities.
+    Zep Swipe turns learning into a living system of skills, earnings, and global student opportunity.
   </p>
 
   <div class="ai-box" id="aiBox">
-    💖 AI Love Engine: Connecting your skills to your future success...
+    🤖 AI Engine: Initializing growth model...
   </div>
 
   <div class="stats">
-    <div class="stat">🔥 Daily Love Tasks</div>
-    <div class="stat">💰 Earn With Emotion</div>
-    <div class="stat">🌍 Global Student Hearts</div>
-    <div class="stat">⚡ Viral Love Loop</div>
+    <div class="stat">🔥 Daily Skill Tasks</div>
+    <div class="stat">💰 Earn System Active</div>
+    <div class="stat">🌍 Global Students Online</div>
+    <div class="stat">⚡ Viral Referral Loop</div>
   </div>
 
 </section>
@@ -223,37 +236,37 @@ footer{
 
   <div class="card">
     <h3>🎓 Start Learning</h3>
-    <p>AI guided skill paths that adapt to your growth.</p>
+    <p>AI-guided skill paths adapted to your growth.</p>
     <button class="btn" onclick="location.href='login.html'">Start Learning</button>
   </div>
 
   <div class="card">
     <h3>💼 Browse Deals</h3>
-    <p>Student marketplace with real campus rewards.</p>
+    <p>Campus marketplace for student savings.</p>
     <button class="btn" onclick="location.href='login.html'">Browse Deals</button>
   </div>
 
   <div class="card">
     <h3>🧠 Skill Engine</h3>
-    <p>Adaptive AI that learns how YOU learn.</p>
+    <p>Adaptive AI learning system.</p>
     <button class="btn" onclick="location.href='login.html'">Open Engine</button>
   </div>
 
   <div class="card">
     <h3>💰 View Wallet</h3>
-    <p>Track your ZAC earnings and rewards.</p>
+    <p>Track earnings and rewards in real time.</p>
     <button class="btn" onclick="location.href='login.html'">View Wallet</button>
   </div>
 
   <div class="card">
-    <h3>🔁 Referral Love</h3>
-    <p>Invite friends and grow your love network.</p>
+    <h3>🔁 Referral System</h3>
+    <p>Invite friends and grow your network.</p>
     <button class="btn" onclick="location.href='login.html'">Invite</button>
   </div>
 
   <div class="card">
-    <h3>📊 Progress Love Streak</h3>
-    <p>Daily learning builds your earning multiplier.</p>
+    <h3>📊 Progress Streak</h3>
+    <p>Daily learning increases earning power.</p>
     <button class="btn" onclick="location.href='login.html'">View Streak</button>
   </div>
 
@@ -261,36 +274,36 @@ footer{
 
 <section class="feed">
 
-  <h3>🌍 Live Love Activity Feed</h3>
+  <h3>🌍 Live Student Activity Feed</h3>
 
-  <div class="feed-item">💖 Ama completed AI Prompt Skill — earned 50 ZAC</div>
-  <div class="feed-item">💼 John unlocked Freelance Love Badge in Lagos</div>
-  <div class="feed-item">🎓 4,120 students learning with love right now</div>
-  <div class="feed-item">⚡ Viral love loop activated: +200 invites</div>
+  <div class="feed-item">🔥 Ama completed AI Prompt Skill — earned 50 ZAC</div>
+  <div class="feed-item">💼 John unlocked Freelance Badge in Lagos</div>
+  <div class="feed-item">🎓 4,120 students learning right now</div>
+  <div class="feed-item">⚡ Referral spike detected: +200 invites</div>
 
 </section>
 
 <section class="loop">
-  💖 LOVE LOOP: Learn → Grow → Earn → Share → Connect → Level Up
+  🚀 LOOP: Learn → Earn → Share → Invite → Grow → Level Up
 </section>
 
 <footer>
-  © 2026 Zep Swipe Love OS 3.1 — Built for a Human Economy of 10M Students
+  © 2026 Zep Swipe OS 3.1 — Built for a 10M Student Economy
 </footer>
 
 <script>
 const messages = [
-  "💖 Aligning your learning path with opportunity...",
-  "Love-driven learning increases retention by 2.4x...",
-  "Students in your network are growing faster...",
-  "Your skill journey is being optimized..."
+  "Optimizing learning pathways...",
+  "Students in your network are accelerating growth...",
+  "Referral loop increasing engagement...",
+  "Skill completion boosting earnings potential..."
 ];
 
 let i = 0;
 
 setInterval(()=>{
   document.getElementById("aiBox").innerText =
-    "💖 AI Love Engine: " + messages[i % messages.length];
+    "🤖 AI Engine: " + messages[i % messages.length];
   i++;
 }, 2500);
 </script>
