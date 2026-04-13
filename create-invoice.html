@@ -2,96 +2,136 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Zep Swipe | Create Invoice</title>
+<title>Zep Swipe | AI Invoice OS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
-:root {
-  --primary:#5b6cff;
-  --bg:#0b1020;
-  --card:#121a35;
-  --text:#eaf0ff;
-  --muted:#9aa4d6;
-  --success:#2dd4bf;
-  --radius:16px;
+:root{
+  --bg:#050014;
+  --glass:rgba(255,255,255,0.06);
+  --stroke:rgba(255,255,255,0.12);
+  --blue:#00f0ff;
+  --violet:#9c4dff;
+  --green:#00ff94;
+  --text:rgba(255,255,255,0.85);
 }
 
-* {
+*{
   box-sizing:border-box;
-  font-family: Inter, system-ui, sans-serif;
+  font-family:Poppins, system-ui;
 }
 
-body {
+body{
   margin:0;
-  background:linear-gradient(135deg,#070b1a,#0f1633);
-  color:var(--text);
+  background:radial-gradient(circle at 20% 10%, #0b0020, var(--bg));
+  color:white;
 }
 
-header {
+/* HEADER */
+header{
   display:flex;
   justify-content:space-between;
-  padding:16px 24px;
-  background:#0d1430;
-  border-bottom:1px solid rgba(255,255,255,.05);
+  padding:14px 18px;
+  border-bottom:1px solid var(--stroke);
+  background:rgba(255,255,255,0.03);
+  backdrop-filter:blur(10px);
 }
 
-.container {
+header h1{
+  font-size:16px;
+  font-family:Orbitron;
+}
+
+header a{
+  color:var(--text);
+  text-decoration:none;
+}
+
+/* LAYOUT */
+.container{
   max-width:1000px;
-  margin:24px auto;
-  padding:0 16px;
-}
-
-.card {
-  background:var(--card);
-  padding:20px;
-  border-radius:var(--radius);
-  margin-bottom:18px;
-}
-
-.grid {
+  margin:auto;
+  padding:16px;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
   gap:14px;
 }
 
-label {
-  font-size:12px;
-  color:var(--muted);
+/* CARD */
+.card{
+  background:var(--glass);
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 0 20px rgba(156,77,255,0.05);
 }
 
-input, select, textarea {
+h3{
+  margin-bottom:10px;
+  font-size:14px;
+  color:var(--text);
+}
+
+/* INPUTS */
+input, select, textarea{
   width:100%;
   padding:12px;
   border-radius:10px;
   border:none;
-  background:#0a1230;
-  color:var(--text);
+  background:rgba(0,0,0,0.3);
+  color:white;
+  margin-bottom:10px;
+  outline:none;
 }
 
-textarea { min-height:100px; }
+textarea{
+  min-height:90px;
+  resize:none;
+}
 
-button {
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:10px;
+}
+
+/* BREAKDOWN */
+.breakdown{
+  background:rgba(0,0,0,0.35);
+  border:1px solid var(--stroke);
+  padding:12px;
+  border-radius:12px;
+  font-size:13px;
+}
+
+/* AI PANEL */
+.ai{
+  padding:12px;
+  border-radius:14px;
+  background:rgba(0,240,255,0.08);
+  border:1px solid rgba(0,240,255,0.2);
+  font-size:13px;
+  margin-bottom:10px;
+}
+
+/* BUTTON */
+button{
   width:100%;
   padding:14px;
   border:none;
-  border-radius:12px;
+  border-radius:999px;
   cursor:pointer;
-  background:linear-gradient(135deg,#5b6cff,#7c8cff);
-  color:white;
-  font-weight:600;
+  font-family:Orbitron;
+  font-weight:bold;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  color:#000;
+  transition:.2s;
 }
 
-button:hover {
-  opacity:.9;
-}
-
-.breakdown {
-  background:#0a1230;
-  padding:14px;
-  border-radius:12px;
-  margin-top:10px;
+button:hover{
+  transform:scale(1.02);
 }
 </style>
 </head>
@@ -99,13 +139,18 @@ button:hover {
 <body>
 
 <header>
-  <h1>Zep Swipe • Invoice</h1>
-  <a href="wallet.html" style="color:#9aa4d6">Wallet</a>
+  <h1>⚡ Zep Invoice AI OS</h1>
+  <a href="wallet.html">Wallet</a>
 </header>
 
 <div class="container">
 
-<!-- STUDENT INFO -->
+<!-- 🤖 AI PANEL -->
+<div class="ai">
+  🤖 Invoice AI: <span id="aiInsight">Ready to analyze invoice creation flow...</span>
+</div>
+
+<!-- STUDENT -->
 <div class="card">
   <h3>Student Info</h3>
   <div class="grid">
@@ -118,22 +163,21 @@ button:hover {
 <!-- CLIENT -->
 <div class="card">
   <h3>Client Details</h3>
-  <div class="grid">
-    <input id="clientName" placeholder="Client name">
-    <select id="clientCountry">
-      <option>South Africa</option>
-      <option>United States</option>
-      <option>United Kingdom</option>
-      <option>Canada</option>
-    </select>
-  </div>
+  <input id="clientName" placeholder="Client name">
+  <select id="clientCountry">
+    <option>South Africa</option>
+    <option>United States</option>
+    <option>United Kingdom</option>
+    <option>Canada</option>
+  </select>
 </div>
 
 <!-- SERVICE -->
 <div class="card">
-  <h3>Service</h3>
+  <h3>Service Info</h3>
+  <input id="serviceTitle" placeholder="Service title">
+
   <div class="grid">
-    <input id="serviceTitle" placeholder="Service title">
     <select id="category">
       <option>Design</option>
       <option>Writing</option>
@@ -141,20 +185,22 @@ button:hover {
       <option>Marketing</option>
       <option>Other</option>
     </select>
+
     <input type="date" id="deliveryDate">
   </div>
 
-  <textarea id="description" placeholder="Description"></textarea>
+  <textarea id="description" placeholder="Service description"></textarea>
 </div>
 
 <!-- PRICING -->
 <div class="card">
-  <h3>Pricing (USD)</h3>
-  <input type="number" id="amount" placeholder="Amount USD">
+  <h3>Pricing Engine</h3>
+
+  <input type="number" id="amount" placeholder="Enter USD amount">
 
   <div class="breakdown">
-    <p>Fee (5%) → <span id="fee">$0</span></p>
-    <p><b>You receive → <span id="receive">$0</span></b></p>
+    <p>Platform Fee (5%) → <span id="fee">$0</span></p>
+    <p><b>You Receive → <span id="receive">$0</span></b></p>
   </div>
 </div>
 
@@ -163,41 +209,42 @@ button:hover {
 </div>
 
 <script>
-/* =========================
-   SUPABASE INIT
-========================= */
+
+/* ================= SUPABASE ================= */
 const supabaseUrl = "https://sqlisgobnayfpzamdolf.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
+const supabaseKey = "YOUR_KEY_HERE";
+
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-/* =========================
-   AUTH USER
-========================= */
+/* ================= USER ================= */
 let user;
 
 async function loadUser(){
-  const { data, error } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getUser();
 
-  if(error || !data.user){
-    location.href = "auth.html";
+  if(!data.user){
+    location.href="auth.html";
     return;
   }
 
   user = data.user;
 
-  document.getElementById("studentName").value = user.user_metadata?.full_name || "";
+  document.getElementById("studentName").value =
+    user.user_metadata?.full_name || "";
+
   document.getElementById("studentEmail").value = user.email;
   document.getElementById("studentId").value = user.id;
+
+  document.getElementById("aiInsight").innerText =
+    "User authenticated. Invoice engine active ⚡";
 }
+
 loadUser();
 
-/* =========================
-   CALCULATION
-========================= */
-const amountInput = document.getElementById("amount");
+/* ================= LIVE CALC ================= */
+document.getElementById("amount").addEventListener("input", e=>{
+  const amount = parseFloat(e.target.value) || 0;
 
-amountInput.addEventListener("input", ()=>{
-  const amount = parseFloat(amountInput.value) || 0;
   const fee = amount * 0.05;
   const receive = amount - fee;
 
@@ -205,17 +252,40 @@ amountInput.addEventListener("input", ()=>{
   document.getElementById("receive").innerText = `$${receive.toFixed(2)}`;
 });
 
-/* =========================
-   CREATE INVOICE
-========================= */
+/* ================= AI VALIDATION ================= */
+function validateInvoice(amount, desc){
+
+  let score = 0;
+
+  if(amount > 0) score += 30;
+  if(amount > 500) score += 20;
+  if(desc?.length > 20) score += 20;
+
+  if(!desc) score -= 20;
+
+  let status = "normal";
+
+  if(score >= 60) status = "strong";
+  else if(score < 30) status = "weak";
+
+  return { score, status };
+}
+
+/* ================= CREATE INVOICE ================= */
 async function createInvoice(){
 
-  const amount = parseFloat(amountInput.value);
+  const amount = parseFloat(document.getElementById("amount").value);
+  const desc = document.getElementById("description").value;
 
   if(!amount || amount <= 0){
     alert("Enter valid amount");
     return;
   }
+
+  const ai = validateInvoice(amount, desc);
+
+  document.getElementById("aiInsight").innerText =
+    `Invoice strength: ${ai.status.toUpperCase()} (${ai.score}/100)`;
 
   const invoiceId = crypto.randomUUID();
 
@@ -227,12 +297,14 @@ async function createInvoice(){
     client_country: document.getElementById("clientCountry").value,
     service_title: document.getElementById("serviceTitle").value,
     category: document.getElementById("category").value,
-    description: document.getElementById("description").value,
+    description: desc,
     delivery_date: document.getElementById("deliveryDate").value,
     amount_usd: amount,
     fee_usd: amount * 0.05,
     payout_usd: amount * 0.95,
     status: "pending_payment",
+    ai_score: ai.score,
+    ai_status: ai.status,
     created_at: new Date().toISOString()
   };
 
@@ -248,9 +320,10 @@ async function createInvoice(){
 
   const link = `${window.location.origin}/invoice.html?id=${invoiceId}`;
 
-  alert("Invoice created!\n\n" + link);
+  alert("Invoice created successfully!\n\n" + link);
   window.open(link, "_blank");
 }
+
 </script>
 
 </body>
