@@ -3,93 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — Submit Student Deal</title>
+<title>Zep Swipe — Merchant Deal Form</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-:root {
-  --zep-blue:#00f0ff;
-  --zep-violet:#9c4dff;
+:root{
+  --blue:#00f0ff;
+  --violet:#9c4dff;
   --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
-  --glass:rgba(255,255,255,0.08);
-  --text-light:rgba(255,255,255,.85);
-  --card-bg:rgba(255,255,255,.05);
+  --glass:rgba(255,255,255,0.07);
+  --text:rgba(255,255,255,0.85);
+  --green:#00ff94;
+  --red:#ff4d4d;
 }
 
-* { box-sizing:border-box; margin:0; padding:0; font-family:Poppins,sans-serif; }
-body { background:var(--bg); color:#fff; min-height:100vh; }
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
 
-header {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:16px 20px; max-width:1200px; margin:auto;
-  background:rgba(0,0,0,0.15);
-  box-shadow:0 0 20px var(--zep-blue),0 0 40px var(--zep-violet);
+body{
+  background:var(--bg);
+  color:#fff;
+  min-height:100vh;
 }
 
-.brand {
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 20px;
+  background:rgba(255,255,255,0.04);
+  backdrop-filter:blur(10px);
+}
+
+.brand{
   font-family:Orbitron;
-  font-size:1.6rem;
-  background: linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  font-size:1.3rem;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-.header-login {
-  padding:10px 20px;
-  border-radius:999px;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
-  font-family:Orbitron;
-  cursor:pointer;
-}
-
-.form-container {
-  max-width:600px;
-  margin:40px auto;
-  padding:20px;
-  border-radius:16px;
-  background:var(--card-bg);
-}
-
-.form-group { margin-bottom:16px; display:flex; flex-direction:column; }
-
-input, select, textarea {
-  padding:12px;
-  border-radius:12px;
-  border:none;
-  background:rgba(255,255,255,0.1);
-  color:#fff;
-}
-
-.submit-btn {
-  width:100%;
-  padding:14px;
+.btn{
+  padding:10px 18px;
   border:none;
   border-radius:999px;
   cursor:pointer;
   font-family:Orbitron;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  background:linear-gradient(90deg,var(--blue),var(--violet));
   color:#000;
 }
 
-.error-msg { color:#ff4d4d; font-size:0.8rem; }
+/* LAYOUT */
+.container{
+  max-width:700px;
+  margin:30px auto;
+  padding:20px;
+}
 
-.modal {
+.card{
+  background:var(--glass);
+  padding:18px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.1);
+  margin-bottom:14px;
+}
+
+/* INPUTS */
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  margin-top:6px;
+  border-radius:12px;
+  border:none;
+  background:rgba(0,0,0,0.4);
+  color:#fff;
+}
+
+label{
+  font-size:13px;
+  opacity:0.8;
+}
+
+.submit-btn{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  color:#000;
+}
+
+/* AI BOX */
+.ai-box{
+  background:rgba(0,240,255,0.08);
+  border:1px solid rgba(0,240,255,0.2);
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:15px;
+  font-size:13px;
+}
+
+/* MODAL */
+.modal{
   position:fixed;
   inset:0;
   display:none;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   background:rgba(0,0,0,0.7);
 }
 
-.modal-content {
-  background:var(--card-bg);
-  padding:24px;
-  border-radius:16px;
+.modal-box{
+  background:var(--glass);
+  padding:20px;
+  border-radius:14px;
   text-align:center;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+/* STATUS LIVE */
+.status-live{
+  margin-top:10px;
+  font-size:13px;
+  color:var(--green);
 }
 </style>
 </head>
@@ -97,176 +139,194 @@ input, select, textarea {
 <body>
 
 <header>
-  <div class="brand">Zep Swipe</div>
-  <div class="header-login" onclick="location.href='employer-auth.html'">List a Job</div>
+  <div class="brand">Zep Swipe Merchant</div>
+  <button class="btn" onclick="location.href='merchant-dashboard.html'">Dashboard</button>
 </header>
 
-<section class="form-container">
-<h1>Submit Student Deal</h1>
+<div class="container">
 
-<form id="dealForm">
+  <!-- 🤖 AI PANEL -->
+  <div class="ai-box">
+    🤖 Zep AI: <span id="aiStatus">Waiting for deal submission...</span>
+  </div>
 
-<div class="form-group">
-<label>Business Name *</label>
-<input id="businessName" required>
-<span class="error-msg"></span>
+  <div class="card">
+    <h2>Submit Student Deal</h2>
+
+    <form id="dealForm">
+
+      <label>Business Name *</label>
+      <input id="businessName" required>
+
+      <label>Business Address *</label>
+      <input id="businessAddress" required>
+
+      <label>Deal Description *</label>
+      <textarea id="dealDescription" required></textarea>
+
+      <label>Deal Day *</label>
+      <select id="dealDay" required>
+        <option value="">Select</option>
+        <option>Monday</option><option>Tuesday</option>
+        <option>Wednesday</option><option>Thursday</option><option>Friday</option>
+      </select>
+
+      <label>Deal Type *</label>
+      <select id="dealType" required>
+        <option value="">Select</option>
+        <option>Discount %</option>
+        <option>Free Item</option>
+        <option>Bundle</option>
+      </select>
+
+      <div id="discountBox" style="display:none;">
+        <label>Discount %</label>
+        <input type="number" id="discountAmount">
+      </div>
+
+      <label>Location *</label>
+      <select id="dealLocation">
+        <option value="">Select</option>
+        <option>In-store</option>
+        <option>Online</option>
+      </select>
+
+      <label>Contact *</label>
+      <input id="contactInfo" required>
+
+      <label>Upload Logo *</label>
+      <input type="file" id="dealLogo" required>
+
+      <button class="submit-btn" type="submit">Submit Deal</button>
+    </form>
+  </div>
+
+  <!-- LIVE APPROVAL -->
+  <div class="card">
+    <h3>📡 Live Deal Status</h3>
+    <div id="liveStatus">No submissions yet</div>
+  </div>
+
 </div>
 
-<div class="form-group">
-<label>Business Address *</label>
-<input id="businessAddress" required>
-<span class="error-msg"></span>
-</div>
-
-<div class="form-group">
-<label>Deal Description *</label>
-<textarea id="dealDescription" required></textarea>
-<span class="error-msg"></span>
-</div>
-
-<div class="form-group">
-<label>Deal Day *</label>
-<select id="dealDay" required>
-<option value="">Select</option>
-<option>Monday</option><option>Tuesday</option>
-<option>Wednesday</option><option>Thursday</option><option>Friday</option>
-</select>
-</div>
-
-<div class="form-group">
-<label>Deal Type *</label>
-<select id="dealType" required>
-<option value="">Select</option>
-<option>Discount %</option>
-<option>Free Item</option>
-<option>Bundle</option>
-</select>
-</div>
-
-<div class="form-group" id="discountGroup" style="display:none;">
-<label>Discount %</label>
-<input type="number" id="discountAmount">
-</div>
-
-<div class="form-group">
-<label>Location *</label>
-<select id="dealLocation">
-<option value="">Select</option>
-<option>In-store</option>
-<option>Online</option>
-</select>
-</div>
-
-<div class="form-group" id="storeAddressGroup" style="display:none;">
-<label>Store Address</label>
-<input id="storeAddress">
-</div>
-
-<div class="form-group" id="onlineUrlGroup" style="display:none;">
-<label>Online URL</label>
-<input id="onlineUrl">
-</div>
-
-<div class="form-group">
-<label>Contact *</label>
-<input id="contactInfo" required>
-</div>
-
-<div class="form-group">
-<label>Upload Logo *</label>
-<input type="file" id="dealLogo" required>
-</div>
-
-<button class="submit-btn" type="submit">Submit Deal</button>
-
-</form>
-</section>
-
+<!-- MODAL -->
 <div class="modal" id="modal">
-  <div class="modal-content">
-    <h2>Deal Submitted 🎉</h2>
-    <p>Waiting for approval / activation</p>
+  <div class="modal-box">
+    <h3>🎉 Deal Submitted</h3>
+    <p>Waiting for Zep AI approval...</p>
     <button onclick="closeModal()">OK</button>
   </div>
 </div>
 
 <script>
-/* ================= SUPABASE INIT ================= */
-const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* ================= SUPABASE ================= */
+const supabase = window.supabase.createClient(
+  "https://sqlisgobnayfpzamdolf.supabase.co",
+  "YOUR_ANON_KEY"
+);
+
+let lastDealId = null;
 
 /* ================= UI LOGIC ================= */
-document.getElementById("dealType").addEventListener("change", e => {
-  document.getElementById("discountGroup").style.display =
+document.getElementById("dealType").addEventListener("change", (e)=>{
+  document.getElementById("discountBox").style.display =
     e.target.value === "Discount %" ? "block" : "none";
 });
 
-document.getElementById("dealLocation").addEventListener("change", e => {
-  document.getElementById("storeAddressGroup").style.display =
-    e.target.value === "In-store" ? "block" : "none";
+/* ================= AI ENGINE ================= */
+function runAI(deal){
+  const ai = document.getElementById("aiStatus");
 
-  document.getElementById("onlineUrlGroup").style.display =
-    e.target.value === "Online" ? "block" : "none";
-});
+  if(!deal){
+    ai.innerText = "Waiting for merchant submission...";
+    return;
+  }
+
+  if(deal.status === "pending"){
+    ai.innerText = "Zep AI reviewing deal quality & student impact...";
+  }
+
+  if(deal.status === "approved"){
+    ai.innerText = "✅ Approved by Zep AI — ready for marketplace";
+  }
+
+  if(deal.status === "rejected"){
+    ai.innerText = "❌ Rejected — improve clarity & value";
+  }
+}
 
 /* ================= FORM SUBMIT ================= */
-document.getElementById("dealForm").addEventListener("submit", async (e) => {
+document.getElementById("dealForm").addEventListener("submit", async (e)=>{
   e.preventDefault();
 
   const file = document.getElementById("dealLogo").files[0];
+  if(!file) return alert("Upload logo required");
 
-  if (!file) return alert("Upload logo required");
-
-  /* upload image to Supabase Storage */
   const fileName = `${Date.now()}-${file.name}`;
 
-  const { data: uploadData, error: uploadError } = await supabase
-    .storage
+  const { data: upload } = await supabase.storage
     .from("deal-logos")
     .upload(fileName, file);
 
-  if (uploadError) {
-    console.error(uploadError);
-    return alert("Image upload failed");
-  }
-
-  const { data: publicUrlData } = supabase
-    .storage
+  const { data: urlData } = supabase.storage
     .from("deal-logos")
     .getPublicUrl(fileName);
 
-  const logoUrl = publicUrlData.publicUrl;
+  const logoUrl = urlData.publicUrl;
 
-  /* insert deal into DB */
-  const { error } = await supabase.from("student_deals").insert([{
-    business_name: document.getElementById("businessName").value,
-    business_address: document.getElementById("businessAddress").value,
-    deal_description: document.getElementById("dealDescription").value,
-    deal_day: document.getElementById("dealDay").value,
-    deal_type: document.getElementById("dealType").value,
-    discount_amount: document.getElementById("discountAmount").value || null,
-    deal_location: document.getElementById("dealLocation").value,
-    store_address: document.getElementById("storeAddress").value || null,
-    online_url: document.getElementById("onlineUrl").value || null,
-    contact_info: document.getElementById("contactInfo").value,
-    logo_url: logoUrl
-  }]);
+  const { data, error } = await supabase
+    .from("student_deals")
+    .insert([{
+      business_name: businessName.value,
+      business_address: businessAddress.value,
+      deal_description: dealDescription.value,
+      deal_day: dealDay.value,
+      deal_type: dealType.value,
+      discount_amount: discountAmount.value || null,
+      deal_location: dealLocation.value,
+      contact_info: contactInfo.value,
+      logo_url: logoUrl,
+      status: "pending"
+    }])
+    .select()
+    .single();
 
-  if (error) {
+  if(error){
     console.error(error);
-    return alert("Failed to submit deal");
+    return alert("Submission failed");
   }
 
+  lastDealId = data.id;
+
   document.getElementById("modal").style.display = "flex";
+
+  runAI(data);
 });
 
+/* ================= REALTIME APPROVAL ================= */
+supabase
+  .channel("deal-updates")
+  .on("postgres_changes",
+    { event:"UPDATE", schema:"public", table:"student_deals" },
+    (payload)=>{
+      const deal = payload.new;
+
+      if(deal.id === lastDealId){
+        runAI(deal);
+
+        document.getElementById("liveStatus").innerHTML =
+          `Deal Status: <b>${deal.status}</b>`;
+      }
+    }
+  )
+  .subscribe();
+
 /* ================= MODAL ================= */
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-  window.location.href = "merchant-landing.html";
+function closeModal(){
+  document.getElementById("modal").style.display="none";
 }
+
 </script>
 
 </body>
