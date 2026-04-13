@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — Student Dashboard</title>
+<title>Zep Swipe — OS 3.3 AI Layer</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500,600&display=swap" rel="stylesheet">
 
@@ -11,20 +11,25 @@
 
 <style>
 :root{
-  --zep-blue:#00f0ff;
-  --zep-violet:#9c4dff;
-  --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
-  --glass:rgba(255,255,255,.08);
-  --glass-strong:rgba(255,255,255,.12);
+  --bg: radial-gradient(circle at 20% 10%, #0b0030, #000);
+  --glass: rgba(255,255,255,0.06);
+  --stroke: rgba(255,255,255,0.12);
+  --blue:#00f0ff;
+  --violet:#9c4dff;
   --green:#00ff94;
-  --text:#ffffff;
+  --text:#fff;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins;
+}
 
 body{
   background:var(--bg);
-  color:var(--text);
+  color:white;
   min-height:100vh;
 }
 
@@ -33,9 +38,10 @@ header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:16px 20px;
-  background:rgba(255,255,255,0.05);
+  padding:14px 18px;
+  background:rgba(255,255,255,0.04);
   border-bottom:1px solid rgba(255,255,255,0.08);
+  backdrop-filter:blur(12px);
 }
 
 .brand{
@@ -45,31 +51,62 @@ header{
   font-family:Orbitron;
 }
 
-.brand img{width:45px;height:45px;}
+.brand img{
+  width:44px;
+  height:44px;
+  filter:drop-shadow(0 0 12px var(--blue));
+}
 
 .brand span{
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  font-size:1.2rem;
+  background:linear-gradient(90deg,var(--blue),var(--violet),var(--green));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  font-size:1.3rem;
+}
+
+/* AI PANEL (NEW CORE UPGRADE) */
+.ai-panel{
+  margin:16px;
+  padding:14px;
+  border-radius:16px;
+  background:rgba(0,240,255,0.06);
+  border:1px solid rgba(0,240,255,0.25);
+}
+
+.ai-title{
+  font-family:Orbitron;
+  font-size:13px;
+  margin-bottom:6px;
+}
+
+.ai-text{
+  font-size:13px;
+  opacity:0.9;
+}
+
+.ai-next{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--green);
 }
 
 /* LAYOUT */
 .container{
   max-width:1100px;
   margin:auto;
-  padding:20px;
+  padding:18px;
   display:flex;
   flex-direction:column;
-  gap:20px;
+  gap:18px;
 }
 
 /* CARD */
 .card{
   background:var(--glass);
-  border:1px solid rgba(255,255,255,0.1);
+  border:1px solid var(--stroke);
   border-radius:18px;
   padding:18px;
+  backdrop-filter:blur(14px);
 }
 
 /* PROFILE */
@@ -77,53 +114,52 @@ header{
   display:flex;
   gap:16px;
   align-items:center;
-  background:linear-gradient(90deg,rgba(0,240,255,0.08),rgba(156,77,255,0.08));
+  background:linear-gradient(90deg,rgba(0,240,255,0.06),rgba(156,77,255,0.06));
 }
 
 .profile img{
-  width:80px;
-  height:80px;
+  width:82px;
+  height:82px;
   border-radius:50%;
   object-fit:cover;
+  border:2px solid rgba(0,240,255,0.3);
 }
 
 .badge{
   display:inline-block;
-  background:rgba(0,255,148,0.15);
+  background:rgba(0,255,148,0.12);
   color:var(--green);
-  padding:3px 8px;
-  border-radius:20px;
-  font-size:12px;
-  margin-left:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:11px;
 }
 
-/* METERS */
+/* PROGRESS */
 .meter{
   height:10px;
-  background:rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.08);
   border-radius:999px;
   overflow:hidden;
-  margin-top:6px;
 }
 
 .meter-fill{
   height:100%;
   width:0%;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  background:linear-gradient(90deg,var(--blue),var(--violet));
 }
 
 /* GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:16px;
+  gap:14px;
 }
 
 .small-card{
-  background:rgba(255,255,255,0.06);
-  padding:14px;
-  border-radius:14px;
+  background:rgba(255,255,255,0.05);
   border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  padding:14px;
 }
 
 /* BUTTONS */
@@ -139,42 +175,21 @@ button{
   padding:14px;
   cursor:pointer;
   font-family:Orbitron;
-  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  background:linear-gradient(90deg,var(--blue),var(--violet));
   color:black;
+  font-weight:bold;
 }
-
-/* GRAPH */
-.graph{
-  display:flex;
-  align-items:flex-end;
-  gap:8px;
-  height:140px;
-}
-
-.bar{
-  flex:1;
-  background:linear-gradient(180deg,var(--zep-blue),var(--zep-violet));
-  border-radius:8px 8px 0 0;
-  position:relative;
-}
-
-.bar span{
-  position:absolute;
-  top:-18px;
-  font-size:10px;
-  display:none;
-}
-
-.bar:hover span{display:block;}
 
 /* FLOAT AI */
 .ai-btn{
   position:fixed;
-  bottom:20px;
-  right:20px;
-  width:60px;
-  height:60px;
+  bottom:18px;
+  right:18px;
+  width:58px;
+  height:58px;
   border-radius:50%;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  border:none;
 }
 </style>
 </head>
@@ -189,6 +204,13 @@ button{
   <button onclick="logout()">⎋</button>
 </header>
 
+<!-- 🧠 AI LAYER 3.3 -->
+<div class="ai-panel">
+  <div class="ai-title">🧠 Zep AI OS 3.3 ENGINE</div>
+  <div class="ai-text" id="aiInsight">Analyzing your learning + earning behavior...</div>
+  <div class="ai-next" id="aiNext">Next Action: Loading recommendation...</div>
+</div>
+
 <div class="container">
 
   <!-- PROFILE -->
@@ -198,9 +220,11 @@ button{
       <h2 id="name">Loading...</h2>
       <small id="level"></small>
       <span id="verified" class="badge" style="display:none;">Verified</span>
+
       <br><br>
       <small id="completion"></small>
       <div class="meter"><div id="meterFill" class="meter-fill"></div></div>
+
       <br>
       <small id="wallet"></small>
     </div>
@@ -222,12 +246,6 @@ button{
     <div class="grid" id="courses"></div>
   </div>
 
-  <!-- GRAPH -->
-  <div class="card">
-    <h3>Weekly Earnings</h3>
-    <div class="graph" id="graph"></div>
-  </div>
-
   <!-- ACTIONS -->
   <div class="actions">
     <button onclick="location.href='learn-earn.html'">📚 Learn</button>
@@ -241,15 +259,13 @@ button{
 <button class="ai-btn">🤖</button>
 
 <script>
-/* ================= SUPABASE ================= */
 const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
 const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
-
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let userData = null;
 
-/* ================= AUTH GUARD ================= */
+/* LOAD */
 async function loadUser(){
 
   const { data: { user } } = await sb.auth.getUser();
@@ -259,22 +275,49 @@ async function loadUser(){
     return;
   }
 
-  const { data, error } = await sb
+  const { data } = await sb
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
 
-  if(error){
-    console.error(error);
-    return;
-  }
-
   userData = data;
   render();
+  runAI();
 }
 
-/* ================= RENDER UI ================= */
+/* 🧠 AI ENGINE 3.3 */
+function runAI(){
+
+  const xp = userData.xp || 0;
+  const earnings = userData.wallet_balance || 0;
+  const referrals = userData.referrals || 0;
+
+  let insight = "";
+  let next = "";
+
+  if(xp < 50){
+    insight = "You are in FOUNDATION stage. Focus on completing daily skills.";
+    next = "👉 Start Learn & Earn module for 15 minutes today.";
+  }
+  else if(earnings < 20){
+    insight = "You are entering EARLY EARNING stage. Skills are forming income potential.";
+    next = "👉 Apply for 1 freelance task or gig today.";
+  }
+  else if(referrals < 3){
+    insight = "You are ready for SCALE stage. Growth is now network-driven.";
+    next = "👉 Invite 3 students to unlock multiplier bonus.";
+  }
+  else{
+    insight = "You are in GROWTH ENGINE mode. Income + learning compounding.";
+    next = "👉 Focus on high-value gigs ($20+ tasks).";
+  }
+
+  document.getElementById("aiInsight").innerText = insight;
+  document.getElementById("aiNext").innerText = next;
+}
+
+/* RENDER */
 function render(){
 
   document.getElementById("profileImg").src =
@@ -295,11 +338,6 @@ function render(){
   document.getElementById("wallet").innerText =
     `Wallet: $${userData.wallet_balance || 0}`;
 
-  if(userData.verified){
-    document.getElementById("verified").style.display="inline-block";
-  }
-
-  /* XP + REF */
   document.getElementById("xpBox").innerText =
     `XP: ${userData.xp || 0}`;
 
@@ -309,40 +347,27 @@ function render(){
   document.getElementById("earnBox").innerText =
     `Earnings: $${userData.wallet_balance || 0}`;
 
-  /* COURSES */
   const courses = userData.learn_earn_progress || {};
-  const courseBox = document.getElementById("courses");
-  courseBox.innerHTML = "";
+  const box = document.getElementById("courses");
+  box.innerHTML = "";
 
   Object.entries(courses).forEach(([name, progress])=>{
     const div = document.createElement("div");
     div.className = "small-card";
     div.innerHTML = `<strong>${name}</strong><br>${progress}%`;
-    courseBox.appendChild(div);
-  });
-
-  /* GRAPH */
-  const graph = document.getElementById("graph");
-  graph.innerHTML = "";
-
-  const earnings = userData.earnings_history || [5,10,8,12,6,15];
-
-  earnings.forEach(v=>{
-    const bar = document.createElement("div");
-    bar.className = "bar";
-    bar.style.height = `${v * 5}px`;
-    bar.innerHTML = `<span>${v}</span>`;
-    graph.appendChild(bar);
+    box.appendChild(div);
   });
 }
 
-/* ================= LOGOUT ================= */
 async function logout(){
   await sb.auth.signOut();
   window.location.href = "login.html";
 }
 
 loadUser();
+
+/* live refresh AI */
+setInterval(runAI, 6000);
 </script>
 
 </body>
