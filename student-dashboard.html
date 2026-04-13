@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zep Swipe — Student Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500,600&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -16,129 +16,165 @@
   --bg:radial-gradient(circle at 30% 10%, #050018, #00000c);
   --glass:rgba(255,255,255,.08);
   --glass-strong:rgba(255,255,255,.12);
-  --text-light:rgba(255,255,255,.85);
-  --verified-green:#39ff14;
-  --wallet-glow:#00ff94;
-  --card-hover-shadow:0 0 20px var(--zep-blue),0 0 30px var(--zep-violet);
+  --green:#00ff94;
+  --text:#ffffff;
 }
 
-*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif;}
-body{background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
 
+body{
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* HEADER */
 header{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px 24px;
-  border-radius:16px;
-  background:linear-gradient(90deg,rgba(0,240,255,.15),rgba(156,77,255,.15));
-  backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,.08);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 20px;
+  background:rgba(255,255,255,0.05);
+  border-bottom:1px solid rgba(255,255,255,0.08);
 }
 
-.brand{display:flex;align-items:center;gap:12px;cursor:pointer;}
-.brand img{width:48px;height:48px;}
-.brand span{
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
   font-family:Orbitron;
-  font-size:1.6rem;
+}
+
+.brand img{width:45px;height:45px;}
+
+.brand span{
   background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  font-size:1.3rem;
 }
 
-.logout-btn{
-  background:rgba(255,255,255,.1);
-  border:none;border-radius:50%;
-  width:40px;height:40px;color:#fff;cursor:pointer;
-}
-
-.dashboard{padding:20px;display:flex;flex-direction:column;gap:24px;max-width:1200px;margin:auto;}
-
-.section{
-  background:var(--glass);
-  border-radius:18px;
+/* LAYOUT */
+.container{
+  max-width:1100px;
+  margin:auto;
   padding:20px;
-  border:1px solid var(--glass-strong);
+  display:flex;
+  flex-direction:column;
+  gap:20px;
 }
 
-.section h3{font-family:Orbitron;margin-bottom:14px;}
-
-.profile-summary{
-  display:flex;align-items:center;gap:18px;
-  background:linear-gradient(90deg,rgba(0,240,255,.1),rgba(156,77,255,.1));
-  padding:18px;border-radius:18px;
+/* CARD */
+.card{
+  background:var(--glass);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:18px;
+  padding:18px;
 }
 
-.profile-summary img{
-  width:88px;height:88px;border-radius:50%;
+/* PROFILE */
+.profile{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  background:linear-gradient(90deg,rgba(0,240,255,0.08),rgba(156,77,255,0.08));
 }
 
-.verified-badge{
-  width:14px;height:14px;background:var(--verified-green);
-  border-radius:50%;display:inline-block;margin-left:6px;
+.profile img{
+  width:80px;
+  height:80px;
+  border-radius:50%;
+  object-fit:cover;
 }
 
-.readiness-meter{height:12px;background:rgba(255,255,255,.1);border-radius:999px;margin-top:6px;}
-.readiness-fill{height:100%;background:var(--wallet-glow);width:0%;}
+.badge{
+  display:inline-block;
+  background:rgba(0,255,148,0.15);
+  color:var(--green);
+  padding:3px 8px;
+  border-radius:20px;
+  font-size:12px;
+  margin-left:6px;
+}
 
-.horizontal-cards{
+/* METERS */
+.meter{
+  height:10px;
+  background:rgba(255,255,255,0.1);
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:6px;
+}
+
+.meter-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+}
+
+/* GRID */
+.grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
   gap:16px;
 }
 
-.card{
-  background:linear-gradient(135deg, rgba(0,240,255,0.15), rgba(156,77,255,0.15));
-  border-radius:18px;
-  padding:16px;
-  transition:.3s;
+.small-card{
+  background:rgba(255,255,255,0.06);
+  padding:14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.08);
 }
 
-.card:hover{transform:translateY(-4px);box-shadow:var(--card-hover-shadow);}
+/* BUTTONS */
+.actions{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px;
+}
 
-.graph-box{
-  height:180px;
+button{
+  border:none;
+  border-radius:14px;
+  padding:14px;
+  cursor:pointer;
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--zep-blue),var(--zep-violet));
+  color:black;
+}
+
+/* GRAPH */
+.graph{
   display:flex;
   align-items:flex-end;
   gap:8px;
-  padding:16px;
+  height:140px;
 }
 
-.graph-bar{
+.bar{
   flex:1;
   background:linear-gradient(180deg,var(--zep-blue),var(--zep-violet));
   border-radius:8px 8px 0 0;
   position:relative;
 }
 
-.graph-bar span{
+.bar span{
   position:absolute;
-  top:-20px;
-  font-size:.7rem;
+  top:-18px;
+  font-size:10px;
   display:none;
 }
 
-.graph-bar:hover span{display:block;}
+.bar:hover span{display:block;}
 
-.actions{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:16px;
-}
-
-.actions button{
-  border:none;
-  border-radius:18px;
-  padding:16px;
-  background:linear-gradient(135deg,var(--zep-blue),var(--zep-violet));
-  font-family:Orbitron;
-  cursor:pointer;
-}
-
-#zepAIButton{
+/* FLOAT AI */
+.ai-btn{
   position:fixed;
-  bottom:20px;right:20px;
-  width:60px;height:60px;
+  bottom:20px;
+  right:20px;
+  width:60px;
+  height:60px;
   border-radius:50%;
-  background:linear-gradient(135deg,var(--zep-blue),var(--zep-violet));
-  border:none;
 }
 </style>
 </head>
@@ -150,35 +186,50 @@ header{
     <img src="https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
     <span>Zep Swipe</span>
   </div>
-  <button class="logout-btn" onclick="logout()">⎋</button>
+  <button onclick="logout()">⎋</button>
 </header>
 
-<div class="dashboard">
+<div class="container">
 
-  <div class="section profile-summary">
+  <!-- PROFILE -->
+  <div class="card profile">
     <img id="profileImg">
     <div>
-      <h3 id="studentName"></h3>
-      <span id="studentLevel"></span><span id="verifiedBadge" class="verified-badge" style="display:none;"></span>
+      <h2 id="name">Loading...</h2>
+      <small id="level"></small>
+      <span id="verified" class="badge" style="display:none;">Verified</span>
+      <br><br>
+      <small id="completion"></small>
+      <div class="meter"><div id="meterFill" class="meter-fill"></div></div>
       <br>
-      <small id="completionText"></small>
-      <div class="readiness-meter"><div id="readinessFill" class="readiness-fill"></div></div>
-      <br>
-      <small id="walletBalance"></small>
+      <small id="wallet"></small>
     </div>
   </div>
 
-  <div class="section">
-    <h3>Courses</h3>
-    <div class="horizontal-cards" id="courses"></div>
+  <!-- STATS -->
+  <div class="card">
+    <h3>Overview</h3>
+    <div class="grid">
+      <div class="small-card" id="xpBox">XP: 0</div>
+      <div class="small-card" id="refBox">Referrals: 0</div>
+      <div class="small-card" id="earnBox">Earnings: $0</div>
+    </div>
   </div>
 
-  <div class="section">
+  <!-- COURSES -->
+  <div class="card">
+    <h3>Learn & Earn Progress</h3>
+    <div class="grid" id="courses"></div>
+  </div>
+
+  <!-- GRAPH -->
+  <div class="card">
     <h3>Weekly Earnings</h3>
-    <div class="graph-box" id="graph"></div>
+    <div class="graph" id="graph"></div>
   </div>
 
-  <div class="section actions">
+  <!-- ACTIONS -->
+  <div class="actions">
     <button onclick="location.href='learn-earn.html'">📚 Learn</button>
     <button onclick="location.href='wallet.html'">💰 Wallet</button>
     <button onclick="location.href='swipe-merchants.html'">💼 Jobs</button>
@@ -187,21 +238,24 @@ header{
 
 </div>
 
-<button id="zepAIButton">🤖</button>
+<button class="ai-btn">🤖</button>
 
 <script>
+/* ================= SUPABASE ================= */
 const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
+const SUPABASE_ANON_KEY = "YOUR_ANON_KEY";
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let userData = null;
 
+/* ================= AUTH GUARD ================= */
 async function loadUser(){
+
   const { data: { user } } = await sb.auth.getUser();
 
   if(!user){
-    location.href = "login.html";
+    window.location.href = "login.html";
     return;
   }
 
@@ -217,61 +271,75 @@ async function loadUser(){
   }
 
   userData = data;
-  renderUI();
+  render();
 }
 
-function renderUI(){
+/* ================= RENDER UI ================= */
+function render(){
 
   document.getElementById("profileImg").src =
     userData.profile_image || "https://via.placeholder.com/80";
 
-  document.getElementById("studentName").innerText =
+  document.getElementById("name").innerText =
     userData.name || "Student";
 
-  document.getElementById("studentLevel").innerText =
+  document.getElementById("level").innerText =
     userData.level || "Beginner";
 
-  if(userData.verified){
-    document.getElementById("verifiedBadge").style.display="inline-block";
-  }
-
-  document.getElementById("completionText").innerText =
+  document.getElementById("completion").innerText =
     `Profile Completion: ${userData.profile_completion || 0}%`;
 
-  document.getElementById("readinessFill").style.width =
+  document.getElementById("meterFill").style.width =
     `${userData.freelancer_readiness || 0}%`;
 
-  document.getElementById("walletBalance").innerText =
-    `Wallet: ${userData.zac_balance || 0} ZAC (~$${(userData.wallet_balance || 0).toFixed(2)})`;
+  document.getElementById("wallet").innerText =
+    `Wallet: $${userData.wallet_balance || 0}`;
 
-  // courses
+  if(userData.verified){
+    document.getElementById("verified").style.display="inline-block";
+  }
+
+  /* XP + REF */
+  document.getElementById("xpBox").innerText =
+    `XP: ${userData.xp || 0}`;
+
+  document.getElementById("refBox").innerText =
+    `Referrals: ${userData.referrals || 0}`;
+
+  document.getElementById("earnBox").innerText =
+    `Earnings: $${userData.wallet_balance || 0}`;
+
+  /* COURSES */
   const courses = userData.learn_earn_progress || {};
-  const container = document.getElementById("courses");
-  container.innerHTML = "";
+  const courseBox = document.getElementById("courses");
+  courseBox.innerHTML = "";
 
-  Object.keys(courses).forEach(c=>{
+  Object.entries(courses).forEach(([name, progress])=>{
     const div = document.createElement("div");
-    div.className="card";
-    div.innerHTML = `<h4>${c}</h4><p>${courses[c]}%</p>`;
-    container.appendChild(div);
+    div.className = "small-card";
+    div.innerHTML = `<strong>${name}</strong><br>${progress}%`;
+    courseBox.appendChild(div);
   });
 
-  // graph
+  /* GRAPH */
   const graph = document.getElementById("graph");
   graph.innerHTML = "";
 
-  (userData.earnings_history || [5,10,8,12,6,15]).forEach(v=>{
+  const earnings = userData.earnings_history || [5,10,8,12,6,15];
+
+  earnings.forEach(v=>{
     const bar = document.createElement("div");
-    bar.className="graph-bar";
-    bar.style.height = (v*5)+"px";
+    bar.className = "bar";
+    bar.style.height = `${v * 5}px`;
     bar.innerHTML = `<span>${v}</span>`;
     graph.appendChild(bar);
   });
 }
 
+/* ================= LOGOUT ================= */
 async function logout(){
   await sb.auth.signOut();
-  location.href = "login.html";
+  window.location.href = "login.html";
 }
 
 loadUser();
