@@ -21,6 +21,7 @@ body{
   min-height:100vh;
 }
 
+/* MAIN CARD */
 .container{
   width:420px;
   background:rgba(255,255,255,0.05);
@@ -28,6 +29,58 @@ body{
   border-radius:18px;
   backdrop-filter:blur(16px);
   border:1px solid rgba(255,255,255,0.1);
+  position:relative;
+  overflow:hidden;
+}
+
+/* LOGO WRAPPER */
+.logo-wrapper{
+  display:flex;
+  justify-content:center;
+  margin-top:10px;
+  margin-bottom:10px;
+  position:relative;
+}
+
+/* GLASS GLOW RING */
+.logo-wrapper::before{
+  content:"";
+  position:absolute;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  background:conic-gradient(#ff4fd8,#9c4dff,#00f0ff,#ff4fd8);
+  animation:spin 4s linear infinite;
+  filter:blur(8px);
+  opacity:0.8;
+}
+
+/* INNER GLOW */
+.logo-wrapper::after{
+  content:"";
+  position:absolute;
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%);
+  box-shadow:0 0 25px rgba(156,77,255,0.6);
+}
+
+/* LOGO IMAGE */
+.logo{
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  z-index:2;
+  object-fit:cover;
+  border:2px solid rgba(255,255,255,0.3);
+  box-shadow:0 0 25px rgba(0,240,255,0.4);
+}
+
+/* ROTATION */
+@keyframes spin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
 }
 
 h2{
@@ -36,6 +89,7 @@ h2{
   background:linear-gradient(90deg,#ff4fd8,#9c4dff,#00f0ff);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
+  margin-top:10px;
 }
 
 input,select{
@@ -74,22 +128,27 @@ button{
 
 <div class="container">
 
-<h2>Zep OS 3.8 Identity</h2>
+  <!-- GLOWING ZEP LOGO -->
+  <div class="logo-wrapper">
+    <img class="logo" src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png" />
+  </div>
 
-<select id="country">
-  <option>South Africa 🇿🇦</option>
-  <option>Ghana 🇬🇭</option>
-  <option>Zambia 🇿🇲</option>
-  <option>Kenya 🇰🇪</option>
-  <option>Nigeria 🇳🇬</option>
-</select>
+  <h2>Zep OS 3.8 Identity</h2>
 
-<input id="name" placeholder="Full Name" style="display:none;">
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
+  <select id="country">
+    <option>South Africa 🇿🇦</option>
+    <option>Ghana 🇬🇭</option>
+    <option>Zambia 🇿🇲</option>
+    <option>Kenya 🇰🇪</option>
+    <option>Nigeria 🇳🇬</option>
+  </select>
 
-<button class="primary" onclick="auth()" id="btn">Login</button>
-<button class="toggle" onclick="toggleMode()">Switch Mode</button>
+  <input id="name" placeholder="Full Name" style="display:none;">
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button class="primary" onclick="auth()" id="btn">Login</button>
+  <button class="toggle" onclick="toggleMode()">Switch Mode</button>
 
 </div>
 
@@ -135,7 +194,6 @@ async function redirect(user){
     user.user_metadata?.country ||
     "South Africa 🇿🇦";
 
-  // sync DB profile (safe upsert fallback)
   await supabase.from("users").upsert({
     id:user.id,
     email:user.email,
