@@ -15,46 +15,51 @@ body {
   font-family: Inter, sans-serif;
   background: radial-gradient(circle at top, #0b0f1a, #05070d);
   color: white;
+  overflow-x: hidden;
 }
 
+/* glow */
 .glow {
   position: absolute;
-  width: 400px;
-  height: 400px;
+  width: 420px;
+  height: 420px;
   background: #00f0ff;
   filter: blur(120px);
-  opacity: 0.15;
-  top: -100px;
-  left: -100px;
+  opacity: 0.12;
+  top: -120px;
+  left: -120px;
 }
 
+/* container */
 .container {
   max-width: 420px;
   margin: auto;
-  padding: 20px;
+  padding: 24px;
 }
 
+/* logo */
 .logo {
   text-align: center;
   margin-top: 30px;
 }
 
 .logo img {
-  width: 85px;
+  width: 88px;
   animation: pulse 2s infinite;
   filter: drop-shadow(0 0 15px #00f0ff);
 }
 
 @keyframes pulse {
   0% {transform: scale(1); opacity: 0.7;}
-  50% {transform: scale(1.05); opacity: 1;}
+  50% {transform: scale(1.06); opacity: 1;}
   100% {transform: scale(1); opacity: 0.7;}
 }
 
+/* text */
 .title {
   text-align: center;
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 800;
   margin-top: 10px;
 }
 
@@ -62,42 +67,68 @@ body {
   text-align: center;
   font-size: 13px;
   opacity: 0.7;
+  margin-bottom: 10px;
 }
 
+/* CARD */
 .card {
+  margin-top: 20px;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(0,255,255,0.2);
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 18px;
-  margin-top: 20px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
+/* badge */
+.badge {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0,255,255,0.1);
+  border: 1px solid rgba(0,255,255,0.25);
+  text-align: center;
+}
+
+/* inputs */
 input, select {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
+  padding: 13px;
   border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.35);
   color: white;
+  outline: none;
+  font-size: 14px;
 }
 
+/* focus glow */
+input:focus, select:focus {
+  border-color: #00f0ff;
+  box-shadow: 0 0 0 2px rgba(0,240,255,0.2);
+}
+
+/* button */
 button {
   width: 100%;
   padding: 14px;
-  margin-top: 15px;
   border-radius: 14px;
   border: none;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
 }
 
+/* primary */
 .btn-primary {
   background: linear-gradient(90deg, #00f0ff, #6a5cff);
   color: black;
 }
 
+/* toggle */
 .btn-toggle {
   background: transparent;
   color: #00f0ff;
@@ -105,14 +136,14 @@ button {
   border: 1px solid rgba(0,255,255,0.3);
 }
 
-.badge {
-  font-size: 12px;
-  margin-top: 10px;
-  padding: 6px 10px;
-  border-radius: 20px;
-  background: rgba(0,255,255,0.1);
-  border: 1px solid rgba(0,255,255,0.3);
-  display: inline-block;
+/* name field spacing */
+#nameField {
+  display: none;
+}
+
+/* mobile polish */
+@media (max-width: 420px) {
+  .container { padding: 16px; }
 }
 </style>
 </head>
@@ -148,7 +179,7 @@ button {
       <option>Tanzania 🇹🇿</option>
     </select>
 
-    <div id="nameField" style="display:none;">
+    <div id="nameField">
       <input type="text" id="name" placeholder="Full Name">
     </div>
 
@@ -164,6 +195,7 @@ button {
     </button>
 
   </div>
+
 </div>
 
 <script type="module">
@@ -180,7 +212,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let isLogin = true;
 
 /* =========================
-   PILOT COUNTRIES
+   COUNTRIES
 ========================= */
 const PILOT_COUNTRIES = [
   "South Africa 🇿🇦",
@@ -189,7 +221,7 @@ const PILOT_COUNTRIES = [
 ];
 
 /* =========================
-   COUNTRY DETECTION
+   DETECT COUNTRY
 ========================= */
 function detectCountry() {
   let locale = navigator.language || "en-ZA";
@@ -202,14 +234,13 @@ function detectCountry() {
     RW: "Rwanda 🇷🇼",
     NA: "Namibia 🇳🇦",
     BW: "Botswana 🇧🇼",
-    MW: "Malawi 🇲🇼",
     KE: "Kenya 🇰🇪",
     NG: "Nigeria 🇳🇬",
     UG: "Uganda 🇺🇬",
     TZ: "Tanzania 🇹🇿"
   };
 
-  let country = map[code] || "South Africa 🇿🇦";
+  const country = map[code] || "South Africa 🇿🇦";
 
   document.getElementById("detected").innerText =
     `We think you're in ${country}`;
@@ -231,7 +262,7 @@ function routeUser(country) {
 }
 
 /* =========================
-   TOGGLE MODE
+   TOGGLE
 ========================= */
 window.toggleMode = function () {
   isLogin = !isLogin;
@@ -244,7 +275,7 @@ window.toggleMode = function () {
 };
 
 /* =========================
-   AUTH FLOW (FULLY FIXED)
+   AUTH
 ========================= */
 window.handleAuth = async function () {
 
@@ -262,20 +293,14 @@ window.handleAuth = async function () {
 
     let user;
 
-    /* ================= LOGIN ================= */
     if (isLogin) {
-
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
-
       if (error) throw error;
       user = data.user;
-    }
-
-    /* ================= SIGNUP ================= */
-    else {
+    } else {
 
       if (!name) {
         alert("Full name required");
@@ -286,19 +311,13 @@ window.handleAuth = async function () {
         email,
         password,
         options: {
-          data: {
-            name,
-            country,
-            role: "student"
-          }
+          data: { name, country, role: "student" }
         }
       });
 
       if (error) throw error;
-
       user = data.user;
 
-      /* CREATE USER PROFILE (SAFE CHECK) */
       const { data: existing } = await supabase
         .from("users")
         .select("id")
@@ -306,7 +325,6 @@ window.handleAuth = async function () {
         .maybeSingle();
 
       if (!existing) {
-
         await supabase.from("users").insert({
           id: user.id,
           full_name: name,
@@ -319,7 +337,6 @@ window.handleAuth = async function () {
           created_at: new Date()
         });
 
-        /* CREATE WALLET */
         await supabase.from("wallets").insert({
           user_id: user.id,
           balance: 0
@@ -327,11 +344,9 @@ window.handleAuth = async function () {
       }
     }
 
-    /* ================= SESSION ================= */
     localStorage.setItem("currentUserId", user.id);
     localStorage.setItem("currentCountry", country);
 
-    /* ================= REDIRECT ================= */
     window.location.href = routeUser(country);
 
   } catch (err) {
@@ -340,14 +355,12 @@ window.handleAuth = async function () {
 };
 
 /* =========================
-   SESSION AUTO CHECK
+   SESSION CHECK
 ========================= */
 async function checkSession() {
-
   const { data } = await supabase.auth.getSession();
 
   if (data.session) {
-
     const user = data.session.user;
 
     const country =
