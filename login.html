@@ -11,15 +11,16 @@
 
 <style>
 :root{
-  --bg: radial-gradient(circle at 20% 10%, #1a0025, #000);
+  --bg: radial-gradient(circle at 20% 10%, #0b0030, #000);
   --glass: rgba(255,255,255,0.06);
   --stroke: rgba(255,255,255,0.12);
 
-  /* 💗 FULL LOVE GRADIENT */
+  /* NEON LOVE GRADIENT */
   --pink:#ff4fd8;
   --purple:#9c4dff;
   --blue:#00f0ff;
 
+  --green:#00ff94;
   --text: rgba(255,255,255,0.85);
 }
 
@@ -37,52 +38,61 @@ body{
   overflow-x:hidden;
 }
 
-/* 💡 GLOW SYSTEM (PINK + BLUE) */
-.glow-pink{
+/* BACK GLOW */
+.glow{
   position:absolute;
   width:500px;
   height:500px;
   background:var(--pink);
-  filter:blur(140px);
+  filter:blur(160px);
   opacity:.15;
   top:-120px;
   left:-120px;
 }
 
-.glow-blue{
-  position:absolute;
-  width:500px;
-  height:500px;
-  background:var(--blue);
-  filter:blur(140px);
-  opacity:.12;
-  bottom:-120px;
-  right:-120px;
-}
-
-/* CONTAINER */
+/* CENTER WRAPPER */
 .container{
   max-width:440px;
   margin:auto;
   padding:26px;
 }
 
-/* LOGO */
+/* =========================
+   🔥 NEW CIRCLE LOGO
+========================= */
 .logo{
-  text-align:center;
-  margin-top:30px;
+  display:flex;
+  justify-content:center;
+  margin-top:40px;
 }
 
-.logo img{
-  width:90px;
-  animation:pulse 2.4s infinite;
-  filter:drop-shadow(0 0 18px var(--pink));
+.logo-circle{
+  width:95px;
+  height:95px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--purple),var(--blue));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Orbitron;
+  font-size:20px;
+  font-weight:700;
+  color:black;
+  letter-spacing:1px;
+
+  /* glow */
+  box-shadow:
+    0 0 25px rgba(255,79,216,0.5),
+    0 0 45px rgba(156,77,255,0.35),
+    0 0 65px rgba(0,240,255,0.25);
+
+  animation:floatGlow 3s ease-in-out infinite;
 }
 
-@keyframes pulse{
-  0%{transform:scale(1);opacity:.7}
+@keyframes floatGlow{
+  0%{transform:scale(1);opacity:.85}
   50%{transform:scale(1.08);opacity:1}
-  100%{transform:scale(1);opacity:.7}
+  100%{transform:scale(1);opacity:.85}
 }
 
 /* TITLE */
@@ -90,9 +100,7 @@ body{
   text-align:center;
   font-size:24px;
   font-family:Orbitron;
-  margin-top:10px;
-
-  /* 🌈 FULL GRADIENT */
+  margin-top:14px;
   background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -108,7 +116,7 @@ body{
 .card{
   margin-top:22px;
   background:var(--glass);
-  border:1px solid rgba(255,79,216,0.25); /* 💗 pink border */
+  border:1px solid rgba(255,79,216,0.25);
   border-radius:18px;
   padding:18px;
   backdrop-filter:blur(14px);
@@ -130,7 +138,7 @@ input,select{
 
 input:focus,select:focus{
   border-color:var(--pink);
-  box-shadow:0 0 0 2px rgba(255,79,216,0.2);
+  box-shadow:0 0 0 2px rgba(255,79,216,0.15);
 }
 
 /* BUTTONS */
@@ -144,18 +152,16 @@ button{
   font-family:Orbitron;
 }
 
-/* 🌈 PRIMARY BUTTON */
 .btn-primary{
   background:linear-gradient(90deg,var(--pink),var(--purple));
   color:black;
 }
 
-/* TOGGLE */
 .btn-toggle{
   background:transparent;
   color:var(--pink);
   font-size:12px;
-  border:1px solid rgba(255,79,216,0.3);
+  border:1px solid rgba(255,79,216,0.25);
 }
 
 /* BADGE */
@@ -168,7 +174,7 @@ button{
   text-align:center;
 }
 
-/* FOOT */
+/* SMALL FOOTNOTE */
 .foot{
   text-align:center;
   font-size:11px;
@@ -180,14 +186,13 @@ button{
 
 <body>
 
-<!-- 💡 GLOWS -->
-<div class="glow-pink"></div>
-<div class="glow-blue"></div>
+<div class="glow"></div>
 
 <div class="container">
 
+  <!-- 🔥 NEW LOGO -->
   <div class="logo">
-    <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
+    <div class="logo-circle">ZEP</div>
   </div>
 
   <div class="title">Zep Swipe Access</div>
@@ -227,12 +232,144 @@ button{
     </button>
 
     <div class="foot">
-      Zep OS 3.2 — Neon Love Gradient Layer 💖
+      Zep OS 3.2 Secure Access Layer
     </div>
 
   </div>
 
 </div>
+
+<!-- ⚡ SCRIPT (UNCHANGED) -->
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let isLogin = true;
+
+const urlParams = new URLSearchParams(window.location.search);
+const referrer = urlParams.get("ref");
+
+const PILOT_COUNTRIES = ["South Africa 🇿🇦","Ghana 🇬🇭","Zambia 🇿🇲"];
+
+function detectCountry(){
+  let locale = navigator.language || "en-ZA";
+  let code = locale.split("-")[1] || "ZA";
+
+  const map = {
+    ZA:"South Africa 🇿🇦", GH:"Ghana 🇬🇭", ZM:"Zambia 🇿🇲",
+    RW:"Rwanda 🇷🇼", NA:"Namibia 🇳🇦", BW:"Botswana 🇧🇼",
+    KE:"Kenya 🇰🇪", NG:"Nigeria 🇳🇬", UG:"Uganda 🇺🇬", TZ:"Tanzania 🇹🇿"
+  };
+
+  const country = map[code] || "South Africa 🇿🇦";
+
+  document.getElementById("detected").innerText =
+    `Zep OS detected: ${country}`;
+
+  document.getElementById("country").value = country;
+
+  return country;
+}
+
+const detectedCountry = detectCountry();
+
+function routeUser(country){
+  return PILOT_COUNTRIES.includes(country)
+    ? "student-dashboard.html"
+    : "waitlist.html";
+}
+
+window.toggleMode = function(){
+  isLogin = !isLogin;
+
+  document.getElementById("actionBtn").innerText =
+    isLogin ? "Login" : "Create Account";
+
+  document.getElementById("nameField").style.display =
+    isLogin ? "none" : "block";
+};
+
+window.handleAuth = async function(){
+
+  const name = document.getElementById("name").value?.trim();
+  const email = document.getElementById("email").value?.trim();
+  const password = document.getElementById("password").value?.trim();
+  const country = document.getElementById("country").value || detectedCountry;
+
+  if(!email || !password){
+    alert("Fill required fields");
+    return;
+  }
+
+  try{
+
+    let user;
+
+    if(isLogin){
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email, password
+      });
+      if(error) throw error;
+      user = data.user;
+    } else {
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options:{ data:{ name, country, role:"student" } }
+      });
+      if(error) throw error;
+      user = data.user;
+
+      await supabase.from("users").upsert({
+        id:user.id,
+        full_name:name,
+        email,
+        country,
+        role:"student",
+        xp:0,
+        wallet_balance:0,
+        referrals:0,
+        referrer:referrer || null,
+        created_at:new Date()
+      });
+
+      await supabase.from("wallets").upsert({
+        user_id:user.id,
+        balance:0
+      });
+    }
+
+    localStorage.setItem("currentUserId", user.id);
+    localStorage.setItem("currentCountry", country);
+
+    window.location.href = routeUser(country);
+
+  } catch(err){
+    alert(err.message);
+  }
+};
+
+async function checkSession(){
+  const { data } = await supabase.auth.getSession();
+
+  if(data.session){
+    const user = data.session.user;
+
+    const country =
+      user.user_metadata?.country ||
+      localStorage.getItem("currentCountry") ||
+      detectedCountry;
+
+    window.location.href = routeUser(country);
+  }
+}
+
+checkSession();
+</script>
 
 </body>
 </html>
