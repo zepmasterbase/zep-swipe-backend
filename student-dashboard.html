@@ -3,29 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe — OS 3.3 AI Layer</title>
+<title>Zep OS 3.8 Student Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500,600&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root{
   --bg: radial-gradient(circle at 20% 10%, #0b0030, #000);
   --glass: rgba(255,255,255,0.06);
-  --stroke: rgba(255,255,255,0.12);
   --blue:#00f0ff;
   --violet:#9c4dff;
   --green:#00ff94;
-  --text:#fff;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Poppins;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
 
 body{
   background:var(--bg);
@@ -38,158 +30,59 @@ header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:14px 18px;
+  padding:14px;
   background:rgba(255,255,255,0.04);
-  border-bottom:1px solid rgba(255,255,255,0.08);
-  backdrop-filter:blur(12px);
 }
 
 .brand{
   display:flex;
-  align-items:center;
   gap:10px;
+  align-items:center;
   font-family:Orbitron;
 }
 
 .brand img{
-  width:44px;
-  height:44px;
-  filter:drop-shadow(0 0 12px var(--blue));
+  width:42px;
+  height:42px;
 }
 
-.brand span{
-  font-size:1.2rem;
-  background:linear-gradient(90deg,var(--blue),var(--violet),var(--green));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-/* AI PANEL (NEW CORE UPGRADE) */
-.ai-panel{
-  margin:16px;
-  padding:14px;
-  border-radius:16px;
-  background:rgba(0,240,255,0.06);
-  border:1px solid rgba(0,240,255,0.25);
-}
-
-.ai-title{
-  font-family:Orbitron;
-  font-size:13px;
-  margin-bottom:6px;
-}
-
-.ai-text{
-  font-size:13px;
-  opacity:0.9;
-}
-
-.ai-next{
-  margin-top:10px;
-  font-size:12px;
-  color:var(--green);
-}
-
-/* LAYOUT */
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:18px;
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
-
-/* CARD */
 .card{
   background:var(--glass);
-  border:1px solid var(--stroke);
-  border-radius:18px;
-  padding:18px;
-  backdrop-filter:blur(14px);
+  margin:16px;
+  padding:16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.1);
 }
 
-/* PROFILE */
-.profile{
-  display:flex;
-  gap:16px;
-  align-items:center;
-  background:linear-gradient(90deg,rgba(0,240,255,0.06),rgba(156,77,255,0.06));
+button{
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  font-weight:700;
 }
 
-.profile img{
-  width:82px;
-  height:82px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid rgba(0,240,255,0.3);
+/* AI */
+.ai{
+  margin:16px;
+  padding:14px;
+  border-radius:14px;
+  background:rgba(0,240,255,0.05);
+  border:1px solid rgba(0,240,255,0.2);
 }
 
-.badge{
-  display:inline-block;
-  background:rgba(0,255,148,0.12);
-  color:var(--green);
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:11px;
-}
-
-/* PROGRESS */
-.meter{
+.progress{
   height:10px;
-  background:rgba(255,255,255,0.08);
+  background:#111;
   border-radius:999px;
   overflow:hidden;
 }
 
-.meter-fill{
+.progress-fill{
   height:100%;
   width:0%;
   background:linear-gradient(90deg,var(--blue),var(--violet));
-}
-
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:14px;
-}
-
-.small-card{
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:14px;
-  padding:14px;
-}
-
-/* BUTTONS */
-.actions{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:12px;
-}
-
-button{
-  border:none;
-  border-radius:14px;
-  padding:14px;
-  cursor:pointer;
-  font-family:Orbitron;
-  background:linear-gradient(90deg,var(--blue),var(--violet));
-  color:black;
-  font-weight:bold;
-}
-
-/* FLOAT AI */
-.ai-btn{
-  position:fixed;
-  bottom:18px;
-  right:18px;
-  width:58px;
-  height:58px;
-  border-radius:50%;
-  background:linear-gradient(90deg,var(--blue),var(--violet));
-  border:none;
 }
 </style>
 </head>
@@ -199,175 +92,160 @@ button{
 <header>
   <div class="brand">
     <img src="https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
-    <span>Zep Swipe</span>
+    <div>Zep OS 3.8</div>
   </div>
-  <button onclick="logout()">⎋</button>
+
+  <button onclick="logout()">Logout</button>
 </header>
 
-<!-- 🧠 AI LAYER 3.3 -->
-<div class="ai-panel">
-  <div class="ai-title">🧠 Zep AI ENGINE</div>
-  <div class="ai-text" id="aiInsight">Analyzing your learning + earning behavior...</div>
-  <div class="ai-next" id="aiNext">Next Action: Loading recommendation...</div>
+<!-- AI PANEL -->
+<div class="ai">
+  <div><b>🧠 AI Engine</b></div>
+  <div id="aiText">Loading intelligence...</div>
 </div>
 
-<div class="container">
+<!-- PROFILE -->
+<div class="card">
+  <h3 id="name">Loading...</h3>
+  <p id="country"></p>
+  <p id="level"></p>
 
-  <!-- PROFILE -->
-  <div class="card profile">
-    <img id="profileImg">
-    <div>
-      <h2 id="name">Loading...</h2>
-      <small id="level"></small>
-      <span id="verified" class="badge" style="display:none;">Verified</span>
+  <br>
 
-      <br><br>
-      <small id="completion"></small>
-      <div class="meter"><div id="meterFill" class="meter-fill"></div></div>
+  <p>XP: <span id="xp"></span></p>
+  <p>Wallet: $<span id="wallet"></span></p>
+  <p>Referrals: <span id="ref"></span></p>
 
-      <br>
-      <small id="wallet"></small>
-    </div>
-  </div>
+  <br>
 
-  <!-- STATS -->
-  <div class="card">
-    <h3>Overview</h3>
-    <div class="grid">
-      <div class="small-card" id="xpBox">XP: 0</div>
-      <div class="small-card" id="refBox">Referrals: 0</div>
-      <div class="small-card" id="earnBox">Earnings: $0</div>
-    </div>
-  </div>
-
-  <!-- COURSES -->
-  <div class="card">
-    <h3>Learn & Earn Progress</h3>
-    <div class="grid" id="courses"></div>
-  </div>
-
-  <!-- ACTIONS -->
-  <div class="actions">
-    <button onclick="location.href='learn-earn.html'">📚 Learn</button>
-    <button onclick="location.href='wallet.html'">💰 Wallet</button>
-    <button onclick="location.href='swipe-merchants.html'">💼 Jobs</button>
-    <button onclick="location.href='profile.html'">👤 Profile</button>
+  <div class="progress">
+    <div class="progress-fill" id="bar"></div>
   </div>
 
 </div>
 
-<button class="ai-btn">🤖</button>
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-<script>
-const SUPABASE_URL = "https://zazbdbkoqjxdzisfszeg.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphemJkYmtvcWp4ZHppc2ZzemVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MTA4MzAsImV4cCI6MjA5MTQ4NjgzMH0.uTqieGXErIpooSUn0TMmYwYYJuo0yHYcAqdampHWRj4";
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+/* 🔥 SUPABASE INIT (FIXED) */
+const supabase = createClient(
+  "https://zazbdbkoqjxdzisfszeg.supabase.co",
+  "YOUR_SUPABASE_ANON_KEY"
+);
 
-let userData = null;
+/* STATE */
+let user = null;
+let profile = null;
 
-/* LOAD */
-async function loadUser(){
+/* ==============================
+   SESSION CHECK (PERSISTENT LOGIN)
+============================== */
+async function loadSession(){
 
-  const { data: { user } } = await sb.auth.getUser();
+  const { data } = await supabase.auth.getSession();
 
-  if(!user){
-    window.location.href = "login.html";
+  if(!data.session){
+    window.location.href = "login-signup.html";
     return;
   }
 
-  const { data } = await sb
+  user = data.session.user;
+
+  await loadProfile();
+}
+
+supabase.auth.onAuthStateChange((_event, session)=>{
+  if(session){
+    user = session.user;
+    loadProfile();
+  } else {
+    window.location.href = "login-signup.html";
+  }
+});
+
+/* ==============================
+   LOAD PROFILE FROM BACKEND
+============================== */
+async function loadProfile(){
+
+  const { data, error } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
 
-  userData = data;
+  if(error || !data){
+    console.log("Profile missing, creating fallback...");
+
+    profile = {
+      name: user.user_metadata?.name || "Student",
+      country: user.user_metadata?.country || "Unknown",
+      level: "Beginner",
+      xp: 0,
+      wallet_balance: 0,
+      referrals: 0,
+      freelancer_readiness: 0
+    };
+
+  } else {
+    profile = data;
+  }
+
   render();
   runAI();
 }
 
-/* 🧠 AI ENGINE 3.3 */
-function runAI(){
-
-  const xp = userData.xp || 0;
-  const earnings = userData.wallet_balance || 0;
-  const referrals = userData.referrals || 0;
-
-  let insight = "";
-  let next = "";
-
-  if(xp < 50){
-    insight = "You are in FOUNDATION stage. Focus on completing daily skills.";
-    next = "👉 Start Learn & Earn module for 15 minutes today.";
-  }
-  else if(earnings < 20){
-    insight = "You are entering EARLY EARNING stage. Skills are forming income potential.";
-    next = "👉 Apply for 1 freelance task or gig today.";
-  }
-  else if(referrals < 3){
-    insight = "You are ready for SCALE stage. Growth is now network-driven.";
-    next = "👉 Invite 3 students to unlock multiplier bonus.";
-  }
-  else{
-    insight = "You are in GROWTH ENGINE mode. Income + learning compounding.";
-    next = "👉 Focus on high-value gigs ($20+ tasks).";
-  }
-
-  document.getElementById("aiInsight").innerText = insight;
-  document.getElementById("aiNext").innerText = next;
-}
-
-/* RENDER */
+/* ==============================
+   RENDER UI
+============================== */
 function render(){
 
-  document.getElementById("profileImg").src =
-    userData.profile_image || "https://via.placeholder.com/80";
+  document.getElementById("name").innerText = profile.name || "Student";
+  document.getElementById("country").innerText = profile.country || "";
+  document.getElementById("level").innerText = profile.level || "Beginner";
 
-  document.getElementById("name").innerText =
-    userData.name || "Student";
+  document.getElementById("xp").innerText = profile.xp || 0;
+  document.getElementById("wallet").innerText = profile.wallet_balance || 0;
+  document.getElementById("ref").innerText = profile.referrals || 0;
 
-  document.getElementById("level").innerText =
-    userData.level || "Beginner";
-
-  document.getElementById("completion").innerText =
-    `Profile Completion: ${userData.profile_completion || 0}%`;
-
-  document.getElementById("meterFill").style.width =
-    `${userData.freelancer_readiness || 0}%`;
-
-  document.getElementById("wallet").innerText =
-    `Wallet: $${userData.wallet_balance || 0}`;
-
-  document.getElementById("xpBox").innerText =
-    `XP: ${userData.xp || 0}`;
-
-  document.getElementById("refBox").innerText =
-    `Referrals: ${userData.referrals || 0}`;
-
-  document.getElementById("earnBox").innerText =
-    `Earnings: $${userData.wallet_balance || 0}`;
-
-  const courses = userData.learn_earn_progress || {};
-  const box = document.getElementById("courses");
-  box.innerHTML = "";
-
-  Object.entries(courses).forEach(([name, progress])=>{
-    const div = document.createElement("div");
-    div.className = "small-card";
-    div.innerHTML = `<strong>${name}</strong><br>${progress}%`;
-    box.appendChild(div);
-  });
+  document.getElementById("bar").style.width =
+    (profile.freelancer_readiness || 0) + "%";
 }
 
+/* ==============================
+   AI ENGINE (OS 3.8 LOGIC)
+============================== */
+function runAI(){
+
+  let msg = "";
+
+  if((profile.xp || 0) < 50){
+    msg = "Foundation stage — complete daily learning tasks.";
+  }
+  else if((profile.wallet_balance || 0) < 20){
+    msg = "Early earning stage — start applying for gigs.";
+  }
+  else if((profile.referrals || 0) < 3){
+    msg = "Growth stage — invite 3 students to scale earnings.";
+  }
+  else {
+    msg = "Elite mode — focus on high value tasks.";
+  }
+
+  document.getElementById("aiText").innerText = msg;
+}
+
+/* ==============================
+   LOGOUT
+============================== */
 async function logout(){
-  await sb.auth.signOut();
-  window.location.href = "login.html";
+  await supabase.auth.signOut();
+  window.location.href = "login-signup.html";
 }
 
-loadUser();
+/* START */
+loadSession();
 
-/* live refresh AI */
-setInterval(runAI, 6000);
 </script>
 
 </body>
