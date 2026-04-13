@@ -14,20 +14,13 @@
   --bg: radial-gradient(circle at 20% 10%, #120018, #000);
   --glass: rgba(255,255,255,0.06);
   --stroke: rgba(255,255,255,0.12);
-
   --pink:#ff4fd8;
   --purple:#9c4dff;
   --blue:#00f0ff;
-
   --text: rgba(255,255,255,0.85);
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Poppins;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
 
 body{
   background:var(--bg);
@@ -36,7 +29,6 @@ body{
   overflow-x:hidden;
 }
 
-/* GLOW */
 .glow{
   position:absolute;
   width:520px;
@@ -46,6 +38,12 @@ body{
   opacity:.14;
   top:-140px;
   left:-140px;
+}
+
+.container{
+  max-width:440px;
+  margin:auto;
+  padding:26px;
 }
 
 /* LOGO */
@@ -62,10 +60,7 @@ body{
   position:relative;
   background:conic-gradient(var(--pink),var(--purple),var(--blue),var(--pink));
   padding:4px;
-  box-shadow:
-    0 0 25px rgba(255,79,216,0.6),
-    0 0 60px rgba(156,77,255,0.35),
-    0 0 90px rgba(0,240,255,0.25);
+  box-shadow:0 0 25px rgba(255,79,216,0.6),0 0 60px rgba(156,77,255,0.35),0 0 90px rgba(0,240,255,0.25);
   animation:spin 6s linear infinite;
 }
 
@@ -79,22 +74,9 @@ body{
   justify-content:center;
 }
 
-.logo-inner img{
-  width:68%;
-  filter:drop-shadow(0 0 10px rgba(255,79,216,0.6));
-}
+.logo-inner img{width:68%;filter:drop-shadow(0 0 10px rgba(255,79,216,0.6));}
 
-@keyframes spin{
-  from{transform:rotate(0deg);}
-  to{transform:rotate(360deg);}
-}
-
-/* UI */
-.container{
-  max-width:440px;
-  margin:auto;
-  padding:26px;
-}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 
 .title{
   text-align:center;
@@ -106,11 +88,7 @@ body{
   -webkit-text-fill-color:transparent;
 }
 
-.subtitle{
-  text-align:center;
-  font-size:13px;
-  opacity:.7;
-}
+.subtitle{text-align:center;font-size:13px;opacity:.7;}
 
 .card{
   margin-top:22px;
@@ -136,7 +114,6 @@ input,select{
 
 input:focus,select:focus{
   border-color:var(--pink);
-  box-shadow:0 0 0 2px rgba(255,79,216,0.2);
 }
 
 button{
@@ -175,128 +152,106 @@ button{
 
 <div class="glow"></div>
 
-<div class="logo">
-  <div class="logo-ring">
-    <div class="logo-inner">
-      <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
+<div class="container">
+
+  <div class="logo">
+    <div class="logo-ring">
+      <div class="logo-inner">
+        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
+      </div>
     </div>
   </div>
-</div>
 
-<div class="title">Zep Swipe Identity</div>
-<div class="subtitle">OS 3.5 Secure Identity Layer</div>
+  <div class="title">Zep Swipe Identity</div>
+  <div class="subtitle">OS 3.5 Secure Identity Layer</div>
 
-<div class="card">
+  <div class="card">
 
-  <div id="detected" class="badge">Detecting identity...</div>
+    <div id="detected" class="badge">Detecting identity...</div>
 
-  <select id="country">
-    <option>South Africa 🇿🇦</option>
-    <option>Ghana 🇬🇭</option>
-    <option>Zambia 🇿🇲</option>
-  </select>
+    <select id="country">
+      <option>South Africa 🇿🇦</option>
+      <option>Ghana 🇬🇭</option>
+      <option>Zambia 🇿🇲</option>
+      <option>Kenya 🇰🇪</option>
+    </select>
 
-  <div id="nameField" style="display:none;">
-    <input id="name" placeholder="Full Name">
+    <div id="nameField" style="display:none;">
+      <input id="name" placeholder="Full Name">
+    </div>
+
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <button class="btn-primary" onclick="handleAuth()" id="btn">
+      Login
+    </button>
+
+    <button class="btn-toggle" onclick="toggleMode()">
+      Switch Mode
+    </button>
+
   </div>
-
-  <input id="email" type="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-
-  <button class="btn-primary" onclick="handleAuth()" id="btn">
-    Login
-  </button>
-
-  <button class="btn-toggle" onclick="toggleMode()">
-    Switch Mode
-  </button>
 
 </div>
 
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-const supabase = createClient("https://zazbdbkoqjxdzisfszeg.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphemJkYmtvcWp4ZHppc2ZzemVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MTA4MzAsImV4cCI6MjA5MTQ4NjgzMH0.uTqieGXErIpooSUn0TMmYwYYJuo0yHYcAqdampHWRj4");
+const supabase = createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");
 
 let isLogin = true;
+let detectedCountry = "South Africa";
 
-/* ================= OS 3.5 IDENTITY ENGINE ================= */
-
-/* 1. REAL IP LOCATION */
-async function getIPCountry(){
+/* detect */
+async function getIP(){
   try{
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
     return data.country_name || "South Africa";
-  } catch {
+  }catch{
     return "South Africa";
   }
 }
 
-/* 2. DEVICE FINGERPRINT */
-function getDeviceId(){
-  let id = localStorage.getItem("zep_device_id");
-
-  if(!id){
-    id = crypto.randomUUID();
-    localStorage.setItem("zep_device_id", id);
-  }
-
-  return id;
-}
-
-/* 3. INIT IDENTITY */
-let detectedCountry = "South Africa";
-
-async function initIdentity(){
-  detectedCountry = await getIPCountry();
-
+async function init(){
+  detectedCountry = await getIP();
   document.getElementById("detected").innerText =
     "Identity locked: " + detectedCountry;
-
-  document.getElementById("country").value = detectedCountry;
 }
+init();
 
-initIdentity();
-
-/* ROUTING */
-function routeUser(country){
+/* routing */
+function route(country){
   return ["South Africa","Ghana","Zambia","Kenya"].includes(country)
     ? "student-dashboard.html"
     : "waitlist.html";
 }
 
-/* SESSION RESTORE */
+/* session restore */
 async function boot(){
   const { data } = await supabase.auth.getSession();
-
-  if(data?.session){
-    redirect(data.session.user);
-  }
+  if(data?.session) redirect(data.session.user);
 }
-
-supabase.auth.onAuthStateChange((_, session)=>{
+supabase.auth.onAuthStateChange((_,session)=>{
   if(session) redirect(session.user);
 });
 
-/* REDIRECT ENGINE */
+/* REDIRECT */
 function redirect(user){
   const country =
-    user.user_metadata?.country ||
-    detectedCountry;
+    user.user_metadata?.country || detectedCountry;
 
   localStorage.setItem("currentCountry", country);
-  localStorage.setItem("device_id", getDeviceId());
 
-  window.location.href = routeUser(country);
+  window.location.href = route(country);
 }
 
-/* TOGGLE */
+/* toggle */
 window.toggleMode = function(){
   isLogin = !isLogin;
   document.getElementById("btn").innerText =
     isLogin ? "Login" : "Create Account";
-
   document.getElementById("nameField").style.display =
     isLogin ? "none" : "block";
 };
@@ -307,7 +262,6 @@ window.handleAuth = async function(){
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-
   const country = detectedCountry;
 
   if(!email || !password){
@@ -315,29 +269,51 @@ window.handleAuth = async function(){
     return;
   }
 
-  if(isLogin){
-    const { error } = await supabase.auth.signInWithPassword({
-      email, password
-    });
-    if(error) return alert(error.message);
-  } else {
+  try{
 
-    const { data, error } = await supabase.auth.signUp({
-      email, password,
-      options:{
-        data:{
-          name,
-          country,
-          device_id:getDeviceId(),
-          role:"student"
+    if(isLogin){
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email,password
+      });
+
+      if(error) throw error;
+
+      // 🔥 FORCE REDIRECT IMMEDIATELY
+      const { data } = await supabase.auth.getSession();
+      redirect(data.session.user);
+
+    } else {
+
+      const { data, error } = await supabase.auth.signUp({
+        email,password,
+        options:{
+          data:{ name, country, role:"student" }
         }
-      }
-    });
+      });
 
-    if(error) return alert(error.message);
+      if(error) throw error;
+
+      const user = data.user;
+
+      await supabase.from("users").upsert({
+        id:user.id,
+        full_name:name,
+        email,
+        country
+      });
+
+      await supabase.from("wallets").upsert({
+        user_id:user.id,
+        balance:0
+      });
+
+      redirect(user);
+    }
+
+  }catch(err){
+    alert(err.message);
   }
-
-  localStorage.setItem("currentCountry", country);
 };
 
 boot();
