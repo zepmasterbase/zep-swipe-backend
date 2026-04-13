@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Admin Access OS 3.5</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{
+  --bg: radial-gradient(circle at 20% 10%, #120018, #000);
+  --glass: rgba(255,255,255,0.06);
+  --stroke: rgba(255,255,255,0.12);
+
+  --pink:#ff4fd8;
+  --purple:#9c4dff;
+  --blue:#00f0ff;
+
+  --text: rgba(255,255,255,0.85);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins;
+}
+
+body{
+  background:var(--bg);
+  color:white;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* GLOW */
+.glow{
+  position:absolute;
+  width:520px;
+  height:520px;
+  background:radial-gradient(circle,var(--pink),transparent);
+  filter:blur(140px);
+  opacity:.12;
+  top:-140px;
+  left:-140px;
+}
+
+/* CONTAINER */
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:26px;
+  margin-top:60px;
+}
+
+/* LOGO */
+.logo{
+  text-align:center;
+  font-family:Orbitron;
+  font-size:20px;
+  background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:10px;
+}
+
+/* CARD */
+.card{
+  background:var(--glass);
+  border:1px solid rgba(255,79,216,0.2);
+  border-radius:18px;
+  padding:18px;
+  backdrop-filter:blur(14px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* INPUT */
+input{
+  width:100%;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(0,0,0,0.35);
+  color:white;
+  outline:none;
+}
+
+input:focus{
+  border-color:var(--pink);
+  box-shadow:0 0 0 2px rgba(255,79,216,0.2);
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  font-weight:800;
+  cursor:pointer;
+  font-family:Orbitron;
+  background:linear-gradient(90deg,var(--pink),var(--purple));
+  color:black;
+}
+
+/* BADGE */
+.badge{
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(255,79,216,0.08);
+  border:1px solid rgba(255,79,216,0.25);
+  text-align:center;
+}
+
+/* FOOT */
+.foot{
+  text-align:center;
+  font-size:11px;
+  opacity:.6;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="glow"></div>
+
+<div class="container">
+
+  <div class="logo">⚡ Zep Admin Access</div>
+
+  <div class="card">
+
+    <div id="status" class="badge">Initializing admin verification...</div>
+
+    <input type="email" id="email" placeholder="Admin Email">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="loginAdmin()">Login to Admin Panel</button>
+
+    <div class="foot">
+      Zep OS 3.5 Secure Admin Gateway
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const supabase = createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");
+
+const ADMIN_DASHBOARD = "admin.html";
+
+/* AUTO SESSION CHECK */
+async function checkSession(){
+  const { data } = await supabase.auth.getSession();
+
+  if(data?.session){
+    const user = data.session.user;
+
+    if(user.user_metadata?.role === "admin"){
+      redirectAdmin(user);
+    }
+  }
+}
+
+checkSession();
+
+/* LOGIN */
+window.loginAdmin = async function(){
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if(!email || !password){
+    alert("Enter credentials");
+    return;
+  }
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  const user = data.user;
+
+  // ROLE CHECK (CRITICAL SECURITY LAYER)
+  if(user.user_metadata?.role !== "admin"){
+    alert("Access denied: Not an admin account");
+    await supabase.auth.signOut();
+    return;
+  }
+
+  redirectAdmin(user);
+};
+
+/* REDIRECT ENGINE */
+function redirectAdmin(user){
+
+  const country =
+    user.user_metadata?.country ||
+    "Unknown";
+
+  localStorage.setItem("admin_country", country);
+  localStorage.setItem("admin_id", user.id);
+
+  document.getElementById("status").innerText =
+    `Access granted: ${country} Admin`;
+
+  setTimeout(()=>{
+    window.location.href = ADMIN_DASHBOARD;
+  }, 800);
+}
+</script>
+
+</body>
+</html>
