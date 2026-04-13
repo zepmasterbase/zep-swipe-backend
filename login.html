@@ -3,283 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Zep OS 3.6 Identity Passport</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<title>Zep OS 3.8 Identity Core</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
-:root{
-  --bg: radial-gradient(circle at 20% 10%, #0a0018, #000);
-  --glass: rgba(255,255,255,0.06);
-
-  --pink:#ff4fd8;
-  --purple:#9c4dff;
-  --blue:#00f0ff;
-
-  --text: rgba(255,255,255,0.85);
-}
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Poppins;
-}
-
 body{
-  background:var(--bg);
+  margin:0;
+  font-family:Poppins;
+  background:#050014;
   color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   min-height:100vh;
 }
 
-/* BACK GLOW */
-.glow{
-  position:absolute;
-  width:520px;
-  height:520px;
-  background:radial-gradient(circle,var(--pink),transparent);
-  filter:blur(140px);
-  opacity:.14;
-  top:-140px;
-  left:-140px;
-}
-
-/* CONTAINER */
 .container{
-  max-width:440px;
-  margin:auto;
-  padding:26px;
+  width:420px;
+  background:rgba(255,255,255,0.05);
+  padding:22px;
+  border-radius:18px;
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.1);
 }
 
-/* WEB3 LOGO */
-.logo{
-  display:flex;
-  justify-content:center;
-  margin-top:45px;
-}
-
-.logo-ring{
-  width:120px;
-  height:120px;
-  border-radius:50%;
-  padding:4px;
-  background:conic-gradient(var(--pink),var(--purple),var(--blue),var(--pink));
-  animation:spin 6s linear infinite;
-  box-shadow:0 0 25px rgba(255,79,216,0.5);
-}
-
-.logo-inner{
-  width:100%;
-  height:100%;
-  border-radius:50%;
-  background:#050014;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.logo-inner img{
-  width:68%;
-  filter:drop-shadow(0 0 10px rgba(255,79,216,0.6));
-}
-
-@keyframes spin{
-  from{transform:rotate(0deg);}
-  to{transform:rotate(360deg);}
-}
-
-/* TEXT */
-.title{
-  text-align:center;
-  font-size:24px;
+h2{
   font-family:Orbitron;
-  margin-top:18px;
-  background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue));
+  text-align:center;
+  background:linear-gradient(90deg,#ff4fd8,#9c4dff,#00f0ff);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-.subtitle{
-  text-align:center;
-  font-size:13px;
-  opacity:.7;
-}
-
-/* CARD */
-.card{
-  margin-top:22px;
-  background:var(--glass);
-  border-radius:18px;
-  padding:18px;
-  backdrop-filter:blur(14px);
-  border:1px solid rgba(255,79,216,0.2);
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-/* INPUTS */
 input,select{
   width:100%;
-  padding:13px;
-  border-radius:12px;
+  padding:12px;
+  margin:6px 0;
+  border-radius:10px;
   border:none;
   background:rgba(0,0,0,0.4);
   color:white;
 }
 
-/* BUTTON */
 button{
   width:100%;
-  padding:14px;
+  padding:12px;
+  margin-top:10px;
   border:none;
-  border-radius:14px;
-  font-family:Orbitron;
-  font-weight:800;
+  border-radius:10px;
+  font-weight:bold;
   cursor:pointer;
 }
 
-.btn{
-  background:linear-gradient(90deg,var(--pink),var(--purple));
-  color:black;
+.primary{
+  background:linear-gradient(90deg,#ff4fd8,#9c4dff);
 }
 
 .toggle{
   background:transparent;
-  border:1px solid rgba(255,79,216,0.3);
-  color:var(--pink);
-}
-
-/* BADGE */
-.badge{
-  font-size:12px;
-  padding:6px 10px;
-  border-radius:999px;
-  background:rgba(255,79,216,0.08);
-  border:1px solid rgba(255,79,216,0.2);
-  text-align:center;
+  border:1px solid #ff4fd8;
+  color:#ff4fd8;
 }
 </style>
 </head>
 
 <body>
 
-<div class="glow"></div>
-
 <div class="container">
 
-  <!-- LOGO -->
-  <div class="logo">
-    <div class="logo-ring">
-      <div class="logo-inner">
-        <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
-      </div>
-    </div>
-  </div>
+<h2>Zep OS 3.8 Identity</h2>
 
-  <div class="title">Zep OS 3.6 Identity</div>
-  <div class="subtitle">Web3 Passport Access Layer</div>
+<select id="country">
+  <option>South Africa 🇿🇦</option>
+  <option>Ghana 🇬🇭</option>
+  <option>Zambia 🇿🇲</option>
+  <option>Kenya 🇰🇪</option>
+  <option>Nigeria 🇳🇬</option>
+</select>
 
-  <div class="card">
+<input id="name" placeholder="Full Name" style="display:none;">
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
 
-    <div id="detect" class="badge">Detecting identity...</div>
+<button class="primary" onclick="auth()" id="btn">Login</button>
+<button class="toggle" onclick="toggleMode()">Switch Mode</button>
 
-    <select id="country">
-      <option>South Africa 🇿🇦</option>
-      <option>Ghana 🇬🇭</option>
-      <option>Zambia 🇿🇲</option>
-      <option>Kenya 🇰🇪</option>
-      <option>Nigeria 🇳🇬</option>
-      <option>UK 🇬🇧</option>
-      <option>USA 🇺🇸</option>
-    </select>
-
-    <div id="nameField" style="display:none;">
-      <input id="name" placeholder="Full Name">
-    </div>
-
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-
-    <button class="btn" onclick="auth()" id="btn">
-      Login
-    </button>
-
-    <button class="toggle" onclick="toggle()">
-      Switch Mode
-    </button>
-
-  </div>
 </div>
 
 <script type="module">
+
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 const supabase = createClient(
-  "https://zazbdbkoqjxdzisfszeg.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphemJkYmtvcWp4ZHppc2ZzemVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MTA4MzAsImV4cCI6MjA5MTQ4NjgzMH0.uTqieGXErIpooSUn0TMmYwYYJuo0yHYcAqdampHWRj4"
+  "YOUR_SUPABASE_URL",
+  "YOUR_SUPABASE_ANON_KEY"
 );
+
+let isLogin = true;
 
 /* PILOT ROUTE */
 const PILOT = ["South Africa 🇿🇦","Ghana 🇬🇭","Zambia 🇿🇲"];
 
-/* STATE */
-let isLogin = true;
-
-/* DETECT COUNTRY */
-function detectCountry(){
-  const code = (navigator.language || "en-ZA").split("-")[1] || "ZA";
-
-  const map = {
-    ZA:"South Africa 🇿🇦",
-    GH:"Ghana 🇬🇭",
-    ZM:"Zambia 🇿🇲",
-    KE:"Kenya 🇰🇪",
-    NG:"Nigeria 🇳🇬",
-    US:"USA 🇺🇸",
-    GB:"UK 🇬🇧"
-  };
-
-  const country = map[code] || "South Africa 🇿🇦";
-
-  document.getElementById("detect").innerText =
-    "Identity detected: " + country;
-
-  document.getElementById("country").value = country;
-
-  return country;
-}
-
-const detectedCountry = detectCountry();
-
-/* ROUTE */
 function route(country){
   return PILOT.includes(country)
     ? "student.html"
     : "waitlist.html";
 }
 
-/* SESSION CHECK (PERSISTENCE) */
-async function sessionCheck(){
+/* SESSION RESTORE (CRITICAL FIX) */
+async function restoreSession(){
   const { data } = await supabase.auth.getSession();
 
-  if(data?.session){
+  if(data.session){
     redirect(data.session.user);
   }
 }
 
-supabase.auth.onAuthStateChange((_, session)=>{
-  if(session) redirect(session.user);
+supabase.auth.onAuthStateChange((event, session)=>{
+  if(session){
+    redirect(session.user);
+  }
 });
 
-/* REDIRECT */
-function redirect(user){
+/* REDIRECT ENGINE */
+async function redirect(user){
+
   const country =
     user.user_metadata?.country ||
-    detectedCountry;
+    "South Africa 🇿🇦";
+
+  // sync DB profile (safe upsert fallback)
+  await supabase.from("users").upsert({
+    id:user.id,
+    email:user.email,
+    country
+  });
 
   localStorage.setItem("country", country);
 
@@ -287,13 +148,12 @@ function redirect(user){
 }
 
 /* TOGGLE */
-window.toggle = function(){
+window.toggleMode = function(){
   isLogin = !isLogin;
-
   document.getElementById("btn").innerText =
     isLogin ? "Login" : "Create Account";
 
-  document.getElementById("nameField").style.display =
+  document.getElementById("name").style.display =
     isLogin ? "none" : "block";
 };
 
@@ -303,10 +163,10 @@ window.auth = async function(){
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-  const country = detectedCountry;
+  const country = document.getElementById("country").value;
 
   if(!email || !password){
-    alert("Fill required fields");
+    alert("Missing fields");
     return;
   }
 
@@ -333,11 +193,9 @@ window.auth = async function(){
 
     if(error) return alert(error.message);
   }
-
-  localStorage.setItem("country", country);
 };
 
-sessionCheck();
+restoreSession();
 </script>
 
 </body>
