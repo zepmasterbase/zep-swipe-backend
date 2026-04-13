@@ -13,7 +13,7 @@
 body{
   margin:0;
   font-family:Poppins;
-  background:#050014;
+  background:radial-gradient(circle at 20% 10%, #0a0018, #000);
   color:white;
   display:flex;
   justify-content:center;
@@ -21,75 +21,47 @@ body{
   min-height:100vh;
 }
 
-/* MAIN CARD */
 .container{
   width:420px;
   background:rgba(255,255,255,0.05);
   padding:22px;
   border-radius:18px;
-  backdrop-filter:blur(16px);
+  backdrop-filter:blur(18px);
   border:1px solid rgba(255,255,255,0.1);
   position:relative;
-  overflow:hidden;
 }
 
-/* LOGO WRAPPER */
-.logo-wrapper{
+/* GLOW */
+.container::before{
+  content:"";
+  position:absolute;
+  inset:-100px;
+  background:radial-gradient(circle, rgba(0,240,255,0.15), transparent 60%);
+  filter:blur(40px);
+  z-index:-1;
+}
+
+/* LOGO */
+.logo{
   display:flex;
   justify-content:center;
-  margin-top:10px;
-  margin-bottom:10px;
-  position:relative;
+  margin:10px 0;
 }
 
-/* GLASS GLOW RING */
-.logo-wrapper::before{
-  content:"";
-  position:absolute;
-  width:120px;
-  height:120px;
-  border-radius:50%;
-  background:conic-gradient(#ff4fd8,#9c4dff,#00f0ff,#ff4fd8);
-  animation:spin 4s linear infinite;
-  filter:blur(8px);
-  opacity:0.8;
-}
-
-/* INNER GLOW */
-.logo-wrapper::after{
-  content:"";
-  position:absolute;
-  width:110px;
-  height:110px;
-  border-radius:50%;
-  background:radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%);
-  box-shadow:0 0 25px rgba(156,77,255,0.6);
-}
-
-/* LOGO IMAGE */
-.logo{
+.logo img{
   width:90px;
   height:90px;
   border-radius:50%;
-  z-index:2;
-  object-fit:cover;
-  border:2px solid rgba(255,255,255,0.3);
+  border:2px solid rgba(255,255,255,0.2);
   box-shadow:0 0 25px rgba(0,240,255,0.4);
 }
 
-/* ROTATION */
-@keyframes spin{
-  from{transform:rotate(0deg);}
-  to{transform:rotate(360deg);}
-}
-
 h2{
-  font-family:Orbitron;
   text-align:center;
+  font-family:Orbitron;
   background:linear-gradient(90deg,#ff4fd8,#9c4dff,#00f0ff);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  margin-top:10px;
 }
 
 input,select{
@@ -100,6 +72,7 @@ input,select{
   border:none;
   background:rgba(0,0,0,0.4);
   color:white;
+  outline:none;
 }
 
 button{
@@ -114,6 +87,7 @@ button{
 
 .primary{
   background:linear-gradient(90deg,#ff4fd8,#9c4dff);
+  color:black;
 }
 
 .toggle{
@@ -128,19 +102,18 @@ button{
 
 <div class="container">
 
-  <!-- GLOWING ZEP LOGO -->
-  <div class="logo-wrapper">
-    <img class="logo" src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png" />
+  <div class="logo">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
   </div>
 
   <h2>Zep OS 3.8 Identity</h2>
 
+  <!-- STRICT DROPDOWN -->
   <select id="country">
     <option>South Africa 🇿🇦</option>
     <option>Ghana 🇬🇭</option>
     <option>Zambia 🇿🇲</option>
-    <option>Kenya 🇰🇪</option>
-    <option>Nigeria 🇳🇬</option>
+    <option value="GLOBAL">🌍 Global (Join Waitlist)</option>
   </select>
 
   <input id="name" placeholder="Full Name" style="display:none;">
@@ -156,31 +129,34 @@ button{
 
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
+/* 🔐 REPLACE THESE */
 const supabase = createClient(
   "YOUR_SUPABASE_URL",
   "YOUR_SUPABASE_ANON_KEY"
 );
 
-let isLogin = true;
-
-/* PILOT ROUTE */
+/* ONLY PILOT COUNTRIES */
 const PILOT = ["South Africa 🇿🇦","Ghana 🇬🇭","Zambia 🇿🇲"];
 
+let isLogin = true;
+
+/* ROUTE ENGINE */
 function route(country){
   return PILOT.includes(country)
     ? "student.html"
     : "waitlist.html";
 }
 
-/* SESSION RESTORE (CRITICAL FIX) */
+/* SESSION RESTORE (FIXED PROPERLY) */
 async function restoreSession(){
   const { data } = await supabase.auth.getSession();
 
-  if(data.session){
+  if(data?.session){
     redirect(data.session.user);
   }
 }
 
+/* AUTH STATE LISTENER */
 supabase.auth.onAuthStateChange((event, session)=>{
   if(session){
     redirect(session.user);
@@ -192,12 +168,14 @@ async function redirect(user){
 
   const country =
     user.user_metadata?.country ||
-    "South Africa 🇿🇦";
+    document.getElementById("country").value;
 
+  /* SAVE USER PROFILE TO DB */
   await supabase.from("users").upsert({
-    id:user.id,
-    email:user.email,
-    country
+    auth_id: user.id,
+    email: user.email,
+    name: user.user_metadata?.name || null,
+    country: country
   });
 
   localStorage.setItem("country", country);
@@ -205,9 +183,10 @@ async function redirect(user){
   window.location.href = route(country);
 }
 
-/* TOGGLE */
+/* TOGGLE MODE */
 window.toggleMode = function(){
   isLogin = !isLogin;
+
   document.getElementById("btn").innerText =
     isLogin ? "Login" : "Create Account";
 
@@ -224,14 +203,20 @@ window.auth = async function(){
   const country = document.getElementById("country").value;
 
   if(!email || !password){
-    alert("Missing fields");
+    alert("Fill required fields");
+    return;
+  }
+
+  /* 🌍 GLOBAL GOES TO WAITLIST ALWAYS */
+  if(country === "GLOBAL"){
+    window.location.href = "waitlist.html";
     return;
   }
 
   if(isLogin){
 
     const { error } = await supabase.auth.signInWithPassword({
-      email,password
+      email, password
     });
 
     if(error) return alert(error.message);
@@ -239,7 +224,8 @@ window.auth = async function(){
   } else {
 
     const { error } = await supabase.auth.signUp({
-      email,password,
+      email,
+      password,
       options:{
         data:{
           name,
