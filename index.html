@@ -31,12 +31,13 @@ header{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:18px 25px;
+  padding:18px 22px;
   position:sticky;
   top:0;
   backdrop-filter:blur(20px);
   background:rgba(5,8,22,0.6);
   border-bottom:1px solid rgba(255,255,255,0.05);
+  z-index:10;
 }
 
 /* LOGO */
@@ -57,7 +58,7 @@ header{
   100%{ box-shadow:0 0 10px rgba(0,255,255,0.3); }
 }
 
-/* BUTTONS */
+/* NAV BUTTONS */
 
 .nav-buttons{
   display:flex;
@@ -68,8 +69,8 @@ header{
   padding:10px 16px;
   border-radius:12px;
   font-weight:700;
-  text-decoration:none;
   font-size:0.9rem;
+  text-decoration:none;
   transition:0.3s;
 }
 
@@ -92,13 +93,13 @@ header{
 
 .hero{
   text-align:center;
-  padding:80px 20px 40px;
+  padding:90px 20px 40px;
   max-width:800px;
   margin:auto;
 }
 
 .hero h1{
-  font-size:2.5rem;
+  font-size:2.6rem;
   font-weight:800;
 }
 
@@ -106,6 +107,7 @@ header{
   margin-top:15px;
   color:#9fb0d5;
   line-height:1.6;
+  font-size:1rem;
 }
 
 /* CTA */
@@ -148,7 +150,7 @@ header{
 }
 
 .card{
-  padding:20px;
+  padding:22px;
   border-radius:20px;
   background:rgba(255,255,255,0.04);
   border:1px solid rgba(255,255,255,0.08);
@@ -158,9 +160,18 @@ header{
 }
 
 .card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 0 30px rgba(0,255,255,0.1);
+  transform:translateY(-6px);
+  box-shadow:0 0 30px rgba(0,255,255,0.12);
 }
+
+.card a{
+  text-decoration:none;
+  color:white;
+  font-weight:700;
+  display:block;
+}
+
+/* FOOTER */
 
 .footer{
   text-align:center;
@@ -174,6 +185,7 @@ header{
 
 <body>
 
+<!-- HEADER -->
 <header>
 
   <img class="logo"
@@ -188,13 +200,14 @@ header{
 
 </header>
 
+<!-- HERO -->
 <section class="hero">
 
   <h1>Build. Earn. Connect.</h1>
 
   <p>
     Zep Swipe is a student economy platform where students offer services,
-    sell food, and earn from their skills in real time.
+    sell food, and earn from their skills in real time across campus communities.
   </p>
 
   <div class="cta">
@@ -204,17 +217,30 @@ header{
 
 </section>
 
+<!-- FEATURES -->
 <section class="features">
 
-  <div class="card">🍔 Food Marketplace</div>
-  <div class="card">🛠 Student Services</div>
-  <div class="card">📱 Digital Skills</div>
-  <div class="card">🚀 Earn in Campus Economy</div>
+  <div class="card">
+    <a href="food.html">🍔 Food Marketplace</a>
+  </div>
+
+  <div class="card">
+    <a href="marketplace.html">🛠 Student Services</a>
+  </div>
+
+  <div class="card">
+    <a href="marketplace.html?category=digital">📱 Digital Skills</a>
+  </div>
+
+  <div class="card">
+    <a href="post-service.html">🚀 Earn in Campus Economy</a>
+  </div>
 
 </section>
 
+<!-- FOOTER -->
 <div class="footer">
-  ⚡ Live in Randfontein — Expanding across Africa
+  ⚡ Live in Randfontein — Expanding across Africa city by city
 </div>
 
 </body>
