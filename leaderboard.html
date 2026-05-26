@@ -1,282 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Leaderboard</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zep Swipe — Leaderboard</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: radial-gradient(circle at top, #0b0f1a, #05070d);
-    color: white;
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
-/* HEADER */
-.header {
-    text-align: center;
-    padding: 20px;
-}
-.logo {
-    font-size: 26px;
-    font-weight: bold;
-    color: #00ffd5;
-}
-.subtitle {
-    font-size: 12px;
-    opacity: 0.7;
+body{
+  font-family:'Inter',sans-serif;
+  background:#050816;
+  color:white;
+  min-height:100vh;
+  padding:20px;
+  background-image:
+  radial-gradient(circle at top left, rgba(0,255,200,0.12), transparent 30%),
+  radial-gradient(circle at bottom right, rgba(0,140,255,0.12), transparent 35%);
 }
 
-/* BACK */
-.nav-bar {
-    display: flex;
-    justify-content: center;
-}
-.back-btn {
-    padding: 10px 16px;
-    border-radius: 20px;
-    border: 1px solid rgba(0,255,213,0.4);
-    background: rgba(0,255,213,0.08);
-    color: #00ffd5;
-    cursor: pointer;
+.container{
+  max-width:900px;
+  margin:auto;
+  padding-bottom:120px;
 }
 
-/* TABS */
-.tabs {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-.tab {
-    padding: 10px 18px;
-    border-radius: 20px;
-    background: #111827;
-    cursor: pointer;
-}
-.tab.active {
-    background: #00ffd5;
-    color: black;
+/* HERO */
+
+.hero{
+  text-align:center;
+  padding:30px 20px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:28px;
+  backdrop-filter:blur(18px);
+  margin-bottom:25px;
 }
 
-/* CONTAINER */
-.container {
-    max-width: 500px;
-    margin: auto;
-    padding: 15px;
+.hero h1{
+  font-size:2rem;
+  font-weight:800;
 }
 
-/* CARD */
-.card {
-    background: linear-gradient(145deg, #0f172a, #0b1220);
-    border: 1px solid rgba(0,255,213,0.15);
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: 0.3s;
+.hero p{
+  margin-top:10px;
+  color:#9fb0d5;
 }
 
-/* TOP 3 GLOW */
-.top1 { box-shadow: 0 0 15px gold; }
-.top2 { box-shadow: 0 0 10px silver; }
-.top3 { box-shadow: 0 0 10px orange; }
-
-.card:hover {
-    transform: scale(1.03);
-    border-color: #00ffd5;
+.badge{
+  display:inline-block;
+  margin-top:12px;
+  padding:8px 14px;
+  border-radius:999px;
+  background:rgba(0,255,170,0.12);
+  border:1px solid rgba(0,255,170,0.25);
+  color:#00ffb2;
+  font-size:0.85rem;
 }
 
-.left {
-    display: flex;
-    gap: 10px;
+/* YOUR CARD */
+
+.your-card{
+  background:rgba(0,255,255,0.06);
+  border:1px solid rgba(0,255,255,0.2);
+  padding:20px;
+  border-radius:22px;
+  margin-bottom:25px;
 }
 
-.rank {
-    color: #00ffd5;
-    font-weight: bold;
+.your-title{
+  font-weight:700;
+  margin-bottom:10px;
 }
 
-.xp {
-    color: #ffd700;
-    font-weight: bold;
+.stats{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
+  color:#c8d3ee;
+  font-size:0.9rem;
 }
 
-/* LIVE */
-.live {
-    text-align: center;
-    font-size: 11px;
-    color: #00ffd5;
-    animation: pulse 1.5s infinite;
+.code{
+  color:#00ffe1;
+  font-weight:800;
+  margin-top:10px;
 }
-@keyframes pulse {
-    0% {opacity: 0.4;}
-    50% {opacity: 1;}
-    100% {opacity: 0.4;}
+
+/* FILTERS */
+
+.filters{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  margin-bottom:20px;
 }
+
+.filter{
+  white-space:nowrap;
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;
+}
+
+/* LIST */
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  padding:14px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.rank{
+  font-weight:800;
+  width:30px;
+}
+
+.name{
+  flex:1;
+}
+
+.score{
+  color:#00ffe1;
+  font-weight:700;
+}
+
+/* CTA */
+
+.cta{
+  margin-top:25px;
+  text-align:center;
+}
+
+.btn{
+  display:inline-block;
+  padding:15px 25px;
+  border-radius:18px;
+  font-weight:800;
+  background:linear-gradient(90deg,#00ffe1,#00a2ff);
+  color:#03111f;
+  text-decoration:none;
+  box-shadow:0 0 25px rgba(0,255,255,0.3);
+}
+
+.footer{
+  margin-top:20px;
+  text-align:center;
+  font-size:0.8rem;
+  color:#7df9ff;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<div class="header">
-    <div class="logo">ZEP SWIPE 🧠</div>
-    <div class="subtitle">Web3 Campus Leaderboard</div>
-
-    <div class="nav-bar">
-        <button class="back-btn" onclick="window.location.href='success.html'">
-            ⬅ Back to Dashboard
-        </button>
-    </div>
-</div>
-
-<div class="tabs">
-    <div class="tab active" onclick="switchTab('global')">🌍 Global</div>
-    <div class="tab" onclick="switchTab('country')">📍 Country</div>
-</div>
-
 <div class="container">
-<div class="live">⚡ Live XP (Real Data)</div>
-<div id="leaderboard"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>🔥 Early Access Leaders</h1>
+  <p>People shaping the student economy before full rollout</p>
+  <div class="badge">🟢 Live: Randfontein</div>
 </div>
 
-<script>
-// ======================
-// SUPABASE INIT
-// ======================
-const SUPABASE_URL = "https://sqlisgobnayfpzamdolf.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbGlzZ29ibmF5ZnB6YW1kb2xmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNDg5ODcsImV4cCI6MjA5MDYyNDk4N30.Ou4IuIGcA2JrVuXlhb8ii2P8aAE-VUuYUI4uZ8_5B28";
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<!-- YOUR POSITION -->
+<div class="your-card">
 
-// ======================
-let currentTab = "global";
-let currentUserCountry = null;
+  <div class="your-title">Your Position</div>
 
-// ======================
-// GET USER COUNTRY
-// ======================
-async function getUserCountry() {
-    let userId = localStorage.getItem("zep_user_id");
+  <div class="stats">
+    <div>Rank: #14</div>
+    <div>Invites: 9</div>
+  </div>
 
-    if (!userId) return;
+  <div class="code">Your Code: ZEP-4821</div>
 
-    const { data } = await client
-        .from("users")
-        .select("country")
-        .eq("id", userId)
-        .single();
+</div>
 
-    if (data) currentUserCountry = data.country;
-}
+<!-- FILTERS -->
+<div class="filters">
+  <div class="filter">All</div>
+  <div class="filter">Randfontein</div>
+  <div class="filter">Johannesburg</div>
+  <div class="filter">Pretoria</div>
+</div>
 
-// ======================
-// FETCH LEADERBOARD
-// ======================
-async function loadLeaderboard() {
+<!-- LIST -->
+<div class="list">
 
-    let query = client
-        .from("users")
-        .select("full_name, country, xp")
-        .order("xp", { ascending: false })
-        .limit(50);
+  <div class="row">
+    <div class="rank">1</div>
+    <div class="name">Thabo (Randfontein)</div>
+    <div class="score">32</div>
+  </div>
 
-    if (currentTab === "country" && currentUserCountry) {
-        query = client
-            .from("users")
-            .select("full_name, country, xp")
-            .eq("country", currentUserCountry)
-            .order("xp", { ascending: false });
-    }
+  <div class="row">
+    <div class="rank">2</div>
+    <div class="name">Amanda (JHB)</div>
+    <div class="score">27</div>
+  </div>
 
-    const { data } = await query;
+  <div class="row">
+    <div class="rank">3</div>
+    <div class="name">Neo (Randfontein)</div>
+    <div class="score">19</div>
+  </div>
 
-    renderLeaderboard(data || []);
-}
+</div>
 
-// ======================
-// RENDER
-// ======================
-function renderLeaderboard(data) {
+<!-- CTA -->
+<div class="cta">
+  <a class="btn" href="#">Invite Friends & Climb</a>
+</div>
 
-    let container = document.getElementById("leaderboard");
-    container.innerHTML = "";
+<div class="footer">
+  ⚡ Top supporters get early access in new cities first
+</div>
 
-    data.forEach((u, index) => {
-
-        let cls = "";
-        if(index===0) cls="top1";
-        if(index===1) cls="top2";
-        if(index===2) cls="top3";
-
-        container.innerHTML += `
-        <div class="card ${cls}">
-            <div class="left">
-                <div class="rank">#${index+1}</div>
-                <div>
-                    <div>${u.full_name || "Anonymous"}</div>
-                    <div style="font-size:11px;opacity:0.6">${u.country}</div>
-                </div>
-            </div>
-            <div class="xp" id="xp-${index}">0</div>
-        </div>
-        `;
-
-        animateXP(`xp-${index}`, u.xp);
-    });
-}
-
-// ======================
-// XP ANIMATION
-// ======================
-function animateXP(id, value) {
-    let el = document.getElementById(id);
-    let count = 0;
-    let step = Math.ceil(value / 20);
-
-    let interval = setInterval(() => {
-        count += step;
-        if(count >= value){
-            count = value;
-            clearInterval(interval);
-        }
-        el.innerText = count + " XP";
-    }, 30);
-}
-
-// ======================
-// TAB SWITCH
-// ======================
-function switchTab(tab){
-    currentTab = tab;
-
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    event.target.classList.add("active");
-
-    loadLeaderboard();
-}
-
-// ======================
-// INIT
-// ======================
-async function init(){
-    await getUserCountry();
-    await loadLeaderboard();
-
-    // 🔥 REALTIME UPDATE
-    client.channel('leaderboard')
-      .on('postgres_changes',
-        { event: '*', schema: 'public', table: 'users' },
-        () => loadLeaderboard()
-      )
-      .subscribe();
-}
-
-init();
-</script>
+</div>
 
 </body>
 </html>
