@@ -1,483 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zep Swipe — Browse Services</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zep Swipe — Browse Marketplace</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+<style>
 
-    body{
-      font-family:'Inter',sans-serif;
-      background:#050816;
-      color:white;
-      min-height:100vh;
-      background-image:
-      radial-gradient(circle at top left, rgba(0,255,200,0.12), transparent 25%),
-      radial-gradient(circle at bottom right, rgba(0,140,255,0.12), transparent 30%);
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    a{ text-decoration:none; color:inherit; }
+body{
+  font-family:'Inter',sans-serif;
+  background:#050816;
+  color:white;
+  min-height:100vh;
+  background-image:
+  radial-gradient(circle at top left, rgba(0,255,200,0.12), transparent 30%),
+  radial-gradient(circle at bottom right, rgba(0,140,255,0.12), transparent 35%);
+}
 
-    .container{
-      max-width:1200px;
-      margin:auto;
-      padding:25px 20px 120px;
-    }
+/* HEADER */
 
-    /* TOP BAR */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 22px;
+  position:sticky;
+  top:0;
+  backdrop-filter:blur(20px);
+  background:rgba(5,8,22,0.6);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
 
-    .navbar{
-      display:flex;
-      gap:15px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      margin-bottom:25px;
-    }
+.logo{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:2px solid rgba(0,255,255,0.6);
+  box-shadow:0 0 18px rgba(0,255,255,0.4);
+}
 
-    .logo{
-      width:55px;
-      filter:drop-shadow(0 0 18px rgba(0,255,255,0.4));
-    }
+/* CATEGORY BAR */
 
-    .search{
-      flex:1;
-      min-width:220px;
-    }
+.categories{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:15px 20px;
+}
 
-    .search input{
-      width:100%;
-      padding:15px 16px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,0.08);
-      background:rgba(255,255,255,0.05);
-      color:white;
-      outline:none;
-      backdrop-filter:blur(12px);
-    }
+.cat{
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer;
+  white-space:nowrap;
+  transition:0.3s;
+  font-size:0.85rem;
+}
 
-    .location{
-      padding:12px 16px;
-      border-radius:999px;
-      background:rgba(0,255,255,0.08);
-      border:1px solid rgba(0,255,255,0.15);
-      color:#7df9ff;
-      font-size:0.9rem;
-    }
+.cat.active{
+  background:linear-gradient(90deg,#00ffe1,#00a2ff);
+  color:#03111f;
+  font-weight:800;
+}
 
-    /* HERO */
+/* GRID */
 
-    .hero{
-      text-align:center;
-      margin:30px 0;
-    }
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:15px;
+  padding:20px;
+}
 
-    .hero h1{
-      font-size:clamp(1.8rem,4vw,3rem);
-      font-weight:800;
-      margin-bottom:10px;
-    }
+.card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;
+  padding:18px;
+  backdrop-filter:blur(15px);
+  transition:0.3s;
+}
 
-    .hero p{
-      color:#a8b7d6;
-      max-width:650px;
-      margin:auto;
-      line-height:1.7;
-      font-size:1rem;
-    }
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 0 30px rgba(0,255,255,0.1);
+}
 
-    .gradient{
-      background:linear-gradient(90deg,#00ffe1,#00a2ff,#7b61ff);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
+.title{
+  font-weight:800;
+  margin-bottom:5px;
+}
 
-    /* CATEGORY GRID */
+.meta{
+  font-size:0.85rem;
+  color:#9fb0d5;
+  margin-bottom:10px;
+}
 
-    .categories{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-      gap:15px;
-      margin-top:35px;
-      margin-bottom:40px;
-    }
+.tag{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:0.75rem;
+  background:rgba(0,255,255,0.08);
+  border:1px solid rgba(0,255,255,0.15);
+  margin-bottom:10px;
+}
 
-    .cat{
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.08);
-      padding:18px;
-      border-radius:22px;
-      text-align:center;
-      cursor:pointer;
-      transition:0.3s;
-      backdrop-filter:blur(16px);
-    }
+.btn{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 14px;
+  border-radius:12px;
+  font-weight:700;
+  background:linear-gradient(90deg,#00ffe1,#00a2ff);
+  color:#03111f;
+  text-decoration:none;
+}
 
-    .cat:hover{
-      transform:translateY(-5px);
-      border-color:rgba(0,255,255,0.35);
-      box-shadow:0 0 25px rgba(0,255,255,0.12);
-    }
+/* HIDE */
 
-    .cat span{
-      display:block;
-      font-size:1.5rem;
-      margin-bottom:8px;
-    }
+.hidden{
+  display:none;
+}
 
-    /* FILTERS */
-
-    .filters{
-      display:flex;
-      gap:12px;
-      overflow-x:auto;
-      margin-bottom:25px;
-      padding-bottom:10px;
-    }
-
-    .filter{
-      white-space:nowrap;
-      padding:12px 16px;
-      border-radius:999px;
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(255,255,255,0.08);
-      font-size:0.9rem;
-      cursor:pointer;
-    }
-
-    .filter:hover{
-      border-color:#00ffe1;
-      background:rgba(0,255,255,0.1);
-    }
-
-    /* LISTINGS */
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:22px;
-    }
-
-    .card{
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:26px;
-      overflow:hidden;
-      backdrop-filter:blur(18px);
-      transition:0.35s;
-    }
-
-    .card:hover{
-      transform:translateY(-6px);
-      box-shadow:0 0 35px rgba(0,255,255,0.12);
-    }
-
-    .img{
-      height:180px;
-      background-size:cover;
-      background-position:center;
-      position:relative;
-    }
-
-    .tag{
-      position:absolute;
-      top:12px;
-      left:12px;
-      background:rgba(0,0,0,0.6);
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:0.75rem;
-    }
-
-    .content{
-      padding:20px;
-    }
-
-    .title{
-      font-size:1.2rem;
-      font-weight:700;
-      margin-bottom:8px;
-    }
-
-    .provider{
-      color:#9fb0d5;
-      font-size:0.9rem;
-      margin-bottom:10px;
-    }
-
-    .desc{
-      color:#c8d3ee;
-      font-size:0.9rem;
-      line-height:1.6;
-      margin-bottom:15px;
-    }
-
-    .meta{
-      display:flex;
-      justify-content:space-between;
-      margin-bottom:15px;
-      font-size:0.9rem;
-    }
-
-    .price{
-      color:#00ffe1;
-      font-weight:700;
-    }
-
-    .distance{
-      color:#93a4c7;
-    }
-
-    .btns{
-      display:flex;
-      gap:10px;
-    }
-
-    .btn{
-      flex:1;
-      padding:12px;
-      text-align:center;
-      border-radius:14px;
-      font-weight:600;
-      font-size:0.9rem;
-      transition:0.3s;
-    }
-
-    .primary{
-      background:linear-gradient(90deg,#00ffe1,#00a2ff);
-      color:#03111f;
-    }
-
-    .secondary{
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(255,255,255,0.08);
-    }
-
-    .btn:hover{
-      transform:scale(1.03);
-    }
-
-    /* FLOAT BUTTON */
-
-    .float{
-      position:fixed;
-      bottom:25px;
-      right:25px;
-      width:65px;
-      height:65px;
-      border-radius:50%;
-      background:linear-gradient(135deg,#00ffe1,#00a2ff);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:2rem;
-      color:#03111f;
-      box-shadow:0 0 35px rgba(0,255,255,0.4);
-    }
-
-  </style>
+</style>
 </head>
 
 <body>
 
-<div class="container">
+<header>
 
-  <!-- NAV -->
-
-  <div class="navbar">
-
+  <div style="display:flex;align-items:center;gap:10px;">
     <img class="logo"
       src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png"
       alt="Zep Swipe"
     />
-
-    <div class="search">
-      <input type="text" placeholder="Search tutoring, food, repairs, jobs..." />
-    </div>
-
-    <div class="location">
-      📍 Randfontein
-    </div>
-
+    <strong>Zep Swipe</strong>
   </div>
 
-  <!-- HERO -->
+  <a href="auth.html" style="color:white;text-decoration:none;">Login</a>
 
-  <div class="hero">
+</header>
 
-    <h1>Browse the <span class="gradient">Student Economy</span></h1>
+<!-- CATEGORIES -->
+<div class="categories">
 
-    <p>
-      Discover services, food, tutoring, and local help from students and vendors across Randfontein.
-      Everything you need is one click away.
-    </p>
+  <div class="cat active" onclick="filter('all', this)">All</div>
+  <div class="cat" onclick="filter('food', this)">🍔 Food</div>
+  <div class="cat" onclick="filter('services', this)">🛠 Services</div>
+  <div class="cat" onclick="filter('digital', this)">📱 Digital</div>
 
+</div>
+
+<!-- GRID -->
+<div class="grid">
+
+  <!-- FOOD -->
+  <div class="card food">
+    <div class="tag">Food</div>
+    <div class="title">Kota Meal</div>
+    <div class="meta">R45 • Randfontein • 25 min</div>
+    <a class="btn" href="food.html">View</a>
   </div>
 
-  <!-- CATEGORIES -->
-
-  <div class="categories">
-
-    <div class="cat"><span>🍔</span>Food</div>
-    <div class="cat"><span>📚</span>Tutoring</div>
-    <div class="cat"><span>💻</span>Digital</div>
-    <div class="cat"><span>🚚</span>Errands</div>
-    <div class="cat"><span>📸</span>Photo</div>
-    <div class="cat"><span>🛠</span>Repairs</div>
-
+  <div class="card food">
+    <div class="tag">Food</div>
+    <div class="title">Chicken & Chips</div>
+    <div class="meta">R60 • Local Vendor</div>
+    <a class="btn" href="food.html">View</a>
   </div>
 
-  <!-- FILTERS -->
-
-  <div class="filters">
-
-    <div class="filter">🔥 Trending</div>
-    <div class="filter">📍 Nearest</div>
-    <div class="filter">💰 Cheapest</div>
-    <div class="filter">⚡ Today</div>
-    <div class="filter">🎓 Students</div>
-
+  <!-- SERVICES -->
+  <div class="card services">
+    <div class="tag">Service</div>
+    <div class="title">Plumbing Help</div>
+    <div class="meta">Student Technician • On demand</div>
+    <a class="btn" href="marketplace.html">Request</a>
   </div>
 
-  <!-- LISTINGS -->
+  <div class="card services">
+    <div class="tag">Service</div>
+    <div class="title">Welding Jobs</div>
+    <div class="meta">Local Skilled Student</div>
+    <a class="btn" href="marketplace.html">Request</a>
+  </div>
 
-  <div class="grid">
+  <!-- DIGITAL -->
+  <div class="card digital">
+    <div class="tag">Digital</div>
+    <div class="title">Graphic Design</div>
+    <div class="meta">Logo • Posters • Branding</div>
+    <a class="btn" href="marketplace.html?category=digital">Hire</a>
+  </div>
 
-    <!-- CARD 1 -->
-    <div class="card">
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092');">
-        <div class="tag">🍔 Food</div>
-      </div>
-      <div class="content">
-        <div class="title">Student Kota Delivery</div>
-        <div class="provider">By Neo • Student Vendor</div>
-        <div class="desc">Affordable kotas and lunch meals delivered around Randfontein.</div>
-        <div class="meta">
-          <div class="price">From R45</div>
-          <div class="distance">1.2km</div>
-        </div>
-        <div class="btns">
-          <div class="btn primary">WhatsApp</div>
-          <div class="btn secondary">View</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CARD 2 -->
-    <div class="card">
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f');">
-        <div class="tag">📚 Tutoring</div>
-      </div>
-      <div class="content">
-        <div class="title">Maths Tutoring Help</div>
-        <div class="provider">By Amanda • Tutor</div>
-        <div class="desc">Assignment help, exam prep and reading support for students.</div>
-        <div class="meta">
-          <div class="price">From R80</div>
-          <div class="distance">2.3km</div>
-        </div>
-        <div class="btns">
-          <div class="btn primary">WhatsApp</div>
-          <div class="btn secondary">View</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CARD 3 -->
-    <div class="card">
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1498050108023-c5249f4df085');">
-        <div class="tag">💻 Digital</div>
-      </div>
-      <div class="content">
-        <div class="title">CV & Graphic Design</div>
-        <div class="provider">By Kay • Freelancer</div>
-        <div class="desc">Logos, CV upgrades, posters and social media content.</div>
-        <div class="meta">
-          <div class="price">From R120</div>
-          <div class="distance">Remote</div>
-        </div>
-        <div class="btns">
-          <div class="btn primary">WhatsApp</div>
-          <div class="btn secondary">View</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CARD 4 -->
-    <div class="card">
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1556740749-887f6717d7e4');">
-        <div class="tag">🚚 Errands</div>
-      </div>
-      <div class="content">
-        <div class="title">Quick Errands & Delivery</div>
-        <div class="provider">By Sipho • Student Helper</div>
-        <div class="desc">Deliveries, queue help, moving assistance and small tasks.</div>
-        <div class="meta">
-          <div class="price">From R50</div>
-          <div class="distance">3km</div>
-        </div>
-        <div class="btns">
-          <div class="btn primary">WhatsApp</div>
-          <div class="btn secondary">View</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CARD 5 -->
-    <div class="card">
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32');">
-        <div class="tag">📸 Photo</div>
-      </div>
-      <div class="content">
-        <div class="title">Event Photography</div>
-        <div class="provider">By Lisa • Creative</div>
-        <div class="desc">Birthday shoots, portraits, events and content creation.</div>
-        <div class="meta">
-          <div class="price">From R250</div>
-          <div class="distance">CBD</div>
-        </div>
-        <div class="btns">
-          <div class="btn primary">WhatsApp</div>
-          <div class="btn secondary">View</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CARD 6 -->
-    <div class="card">
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1581578731548-c64695cc6952');">
-        <div class="tag">🛠 Repairs</div>
-      </div>
-      <div class="content">
-        <div class="title">Home Repairs Help</div>
-        <div class="provider">By Daniel • Technician</div>
-        <div class="desc">Plumbing, electrical help, appliance repairs and painting.</div>
-        <div class="meta">
-          <div class="price">From R150</div>
-          <div class="distance">4km</div>
-        </div>
-        <div class="btns">
-          <div class="btn primary">WhatsApp</div>
-          <div class="btn secondary">View</div>
-        </div>
-      </div>
-    </div>
-
+  <div class="card digital">
+    <div class="tag">Digital</div>
+    <div class="title">Virtual Assistant</div>
+    <div class="meta">Admin • Online support</div>
+    <a class="btn" href="marketplace.html?category=digital">Hire</a>
   </div>
 
 </div>
 
-<!-- FLOAT BUTTON -->
+<script>
 
-<a class="float" href="#">+</a>
+function filter(category, el){
+
+  const cards = document.querySelectorAll('.card');
+  const buttons = document.querySelectorAll('.cat');
+
+  buttons.forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+
+  cards.forEach(card => {
+
+    if(category === 'all'){
+      card.classList.remove('hidden');
+    }
+    else{
+      if(card.classList.contains(category)){
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    }
+
+  });
+
+}
+
+</script>
 
 </body>
 </html>
