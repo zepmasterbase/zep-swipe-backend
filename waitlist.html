@@ -1,248 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Waitlist</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zep Swipe — Waitlist</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
 
-<style>
-body {
-  margin: 0;
-  font-family: Inter, sans-serif;
-  background: radial-gradient(circle at top, #0b0f1a, #05070d);
-  color: white;
-}
+    body{
+      font-family:'Inter',sans-serif;
+      background:#050816;
+      color:white;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background-image:
+      radial-gradient(circle at top left, rgba(0,255,200,0.14), transparent 30%),
+      radial-gradient(circle at bottom right, rgba(0,140,255,0.14), transparent 35%);
+    }
 
-.glow {
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  background: #00f0ff;
-  filter: blur(120px);
-  opacity: 0.15;
-  top: -100px;
-  left: -100px;
-}
+    .card{
+      width:100%;
+      max-width:620px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:30px;
+      padding:35px 25px;
+      backdrop-filter:blur(18px);
+      box-shadow:0 0 60px rgba(0,255,255,0.08);
+      text-align:center;
+    }
 
-.container {
-  max-width: 430px;
-  margin: auto;
-  padding: 20px;
-  position: relative;
-}
+    .logo{
+      width:70px;
+      margin-bottom:15px;
+      filter:drop-shadow(0 0 18px rgba(0,255,255,0.4));
+    }
 
-.logo {
-  text-align: center;
-  margin-top: 20px;
-}
+    h1{
+      font-size:2rem;
+      font-weight:800;
+      margin-bottom:10px;
+    }
 
-.logo img {
-  width: 85px;
-  animation: pulse 2s infinite;
-  filter: drop-shadow(0 0 15px #00f0ff);
-}
+    .gradient{
+      background:linear-gradient(90deg,#00ffe1,#00a2ff,#7b61ff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
 
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.7; }
-  50% { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.7; }
-}
+    .subtitle{
+      color:#a8b7d6;
+      font-size:0.95rem;
+      line-height:1.6;
+      margin-bottom:25px;
+    }
 
-.title {
-  text-align: center;
-  font-size: 22px;
-  font-weight: 700;
-  margin-top: 10px;
-}
+    /* INFO STRIP */
 
-.subtitle {
-  text-align: center;
-  font-size: 13px;
-  opacity: 0.7;
-  margin-bottom: 15px;
-}
+    .live{
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(0,255,170,0.12);
+      border:1px solid rgba(0,255,170,0.25);
+      color:#00ffb2;
+      font-size:0.85rem;
+      margin-bottom:20px;
+    }
 
-.card {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(0,255,255,0.2);
-  border-radius: 16px;
-  padding: 18px;
-  backdrop-filter: blur(10px);
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+    /* FORM */
 
-input, select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(0,0,0,0.4);
-  color: white;
-  outline: none;
-}
+    label{
+      display:block;
+      text-align:left;
+      margin-top:12px;
+      font-size:0.85rem;
+      color:#9fb0d5;
+    }
 
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
+    input, select{
+      width:100%;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.05);
+      color:white;
+      margin-top:6px;
+      outline:none;
+    }
 
-.btn-primary {
-  background: linear-gradient(90deg, #00f0ff, #6a5cff);
-  color: black;
-}
+    .btn{
+      width:100%;
+      margin-top:18px;
+      padding:15px;
+      border:none;
+      border-radius:18px;
+      font-weight:800;
+      font-size:1rem;
+      cursor:pointer;
+      background:linear-gradient(90deg,#00ffe1,#00a2ff);
+      color:#03111f;
+      box-shadow:0 0 25px rgba(0,255,255,0.3);
+      transition:0.3s;
+    }
 
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+    .btn:hover{
+      transform:scale(1.03);
+    }
 
-.badge {
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 20px;
-  background: rgba(0,255,255,0.1);
-  border: 1px solid rgba(0,255,255,0.3);
-  font-size: 11px;
-  margin-top: 10px;
-}
+    /* REFERRAL BOX */
 
-.loading {
-  display: none;
-  font-size: 12px;
-  color: #00f0ff;
-}
-</style>
+    .referral{
+      margin-top:25px;
+      padding:18px;
+      border-radius:20px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    .ref-title{
+      font-weight:700;
+      margin-bottom:8px;
+    }
+
+    .ref-code{
+      font-size:1.2rem;
+      font-weight:800;
+      color:#00ffe1;
+      margin-bottom:8px;
+    }
+
+    .ref-text{
+      font-size:0.85rem;
+      color:#9fb0d5;
+      line-height:1.5;
+    }
+
+    /* LEADERBOARD */
+
+    .leaderboard{
+      margin-top:25px;
+      text-align:left;
+    }
+
+    .lb-title{
+      font-weight:700;
+      margin-bottom:12px;
+      text-align:center;
+    }
+
+    .user{
+      display:flex;
+      justify-content:space-between;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+      margin-bottom:10px;
+      font-size:0.9rem;
+    }
+
+    .score{
+      color:#00ffe1;
+      font-weight:700;
+    }
+
+    /* FOOTNOTE */
+
+    .note{
+      margin-top:20px;
+      font-size:0.8rem;
+      color:#7df9ff;
+    }
+
+  </style>
 </head>
 
 <body>
 
-<div class="glow"></div>
+<div class="card">
 
-<div class="container">
+  <!-- LOGO -->
+  <img class="logo"
+    src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png"
+    alt="Zep Swipe"
+  />
 
-  <div class="logo">
-    <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jhp2503i1gm41unj1tlt1me117of15.png">
+  <!-- HEADER -->
+  <div class="live">🚀 Currently Live: Randfontein</div>
+
+  <h1>
+    Zep Swipe is <span class="gradient">Expanding</span>
+  </h1>
+
+  <div class="subtitle">
+    We are building the student economy city by city across South Africa.  
+    Join the waitlist to unlock early access in your area.
   </div>
 
-  <div class="title">Zep Swipe Waitlist</div>
-  <div class="subtitle">Learn • Earn • Work remotely in 21 days</div>
+  <!-- FORM -->
 
-  <div class="card">
+  <label>Full Name</label>
+  <input type="text" placeholder="e.g. Neo Dlamini" />
 
-    <input type="text" id="name" placeholder="Full Name">
-    <input type="email" id="email" placeholder="Email Address">
+  <label>Phone Number / Email</label>
+  <input type="text" placeholder="+27 or email" />
 
-    <select id="country">
-      <option value="">Select Country</option>
-      <option>South Africa 🇿🇦</option>
-      <option>Ghana 🇬🇭</option>
-      <option>Zambia 🇿🇲</option>
-      <option>Rwanda 🇷🇼</option>
-      <option>Namibia 🇳🇦</option>
-      <option>Botswana 🇧🇼</option>
-      <option>Malawi 🇲🇼</option>
-      <option>Kenya 🇰🇪</option>
-      <option>Nigeria 🇳🇬</option>
-      <option>Uganda 🇺🇬</option>
-      <option>Tanzania 🇹🇿</option>
-    </select>
+  <label>Select Your City</label>
+  <select>
+    <option>Johannesburg</option>
+    <option>Pretoria</option>
+    <option>Soweto</option>
+    <option>Durban</option>
+    <option>Cape Town</option>
+    <option>Other</option>
+  </select>
 
-    <select id="status">
-      <option value="">Are you?</option>
-      <option>University Student 🎓</option>
-      <option>Free User 💻</option>
-      <option>Graduate 👨‍🎓</option>
-    </select>
+  <button class="btn">
+    🚀 Join Waitlist
+  </button>
 
-    <select id="withdraw">
-      <option value="">Withdrawal Method</option>
-      <option>MTN Mobile Money 📱</option>
-      <option>Airtel Money 📲</option>
-      <option>M-Pesa 💰</option>
-      <option>Bank Transfer 🏦</option>
-      <option>Crypto Wallet ₿</option>
-    </select>
+  <!-- REFERRAL SYSTEM -->
 
-    <input type="text" id="ref" placeholder="Referral Code (optional)">
+  <div class="referral">
 
-    <button class="btn-primary" id="submitBtn" onclick="join()">Join Waitlist</button>
+    <div class="ref-title">Your Early Access Code</div>
 
-    <div class="loading" id="loading">Submitting...</div>
+    <div class="ref-code">ZEP-4821</div>
 
-    <div class="badge">🔥 Early access + XP rewards enabled</div>
+    <div class="ref-text">
+      Invite friends to join.  
+      The more people you bring, the higher you rank on the early access list.
+    </div>
 
+  </div>
+
+  <!-- LEADERBOARD -->
+
+  <div class="leaderboard">
+
+    <div class="lb-title">🔥 Top Early Supporters</div>
+
+    <div class="user">
+      <div>1. Thabo</div>
+      <div class="score">32 invites</div>
+    </div>
+
+    <div class="user">
+      <div>2. Amanda</div>
+      <div class="score">27 invites</div>
+    </div>
+
+    <div class="user">
+      <div>3. Neo</div>
+      <div class="score">19 invites</div>
+    </div>
+
+  </div>
+
+  <div class="note">
+    ⚡ Early supporters get priority access when their city launches
   </div>
 
 </div>
-
-<script>
-/* ================= SUPABASE INIT (FIXED) ================= */
-const SUPABASE_URL = "https://zazbdbkoqjxdzisfszeg.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphemJkYmtvcWp4ZHppc2ZzemVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MTA4MzAsImV4cCI6MjA5MTQ4NjgzMH0.uTqieGXErIpooSUn0TMmYwYYJuo0yHYcAqdampHWRj4";
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-/* ================= JOIN FUNCTION ================= */
-async function join() {
-
-  const btn = document.getElementById("submitBtn");
-  const loading = document.getElementById("loading");
-
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const country = document.getElementById("country").value;
-  const status = document.getElementById("status").value;
-  const withdraw = document.getElementById("withdraw").value;
-  const ref = document.getElementById("ref").value.trim();
-
-  if (!name || !email || !country) {
-    alert("Please fill required fields");
-    return;
-  }
-
-  try {
-
-    btn.disabled = true;
-    loading.style.display = "block";
-
-    const { error } = await supabase
-      .from("waitlist_users")
-      .insert([{
-        name,
-        email,
-        country,
-        status,
-        withdraw_method: withdraw || null,
-        referred_by: ref || null,
-        created_at: new Date()
-      }]);
-
-    if (error) throw error;
-
-    window.location.href = "success.html";
-
-  } catch (err) {
-    console.error(err);
-    alert("Error submitting form");
-  } finally {
-    btn.disabled = false;
-    loading.style.display = "none";
-  }
-}
-</script>
 
 </body>
 </html>
