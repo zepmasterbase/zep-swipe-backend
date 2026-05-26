@@ -1,304 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zep Swipe — Randfontein Student Marketplace</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zep Swipe — Student Economy</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+<style>
 
-    body{
-      font-family:'Inter',sans-serif;
-      background:#050816;
-      color:white;
-      overflow-x:hidden;
-      min-height:100vh;
-      background-image:
-      radial-gradient(circle at top left, rgba(0,255,200,0.12), transparent 25%),
-      radial-gradient(circle at bottom right, rgba(0,140,255,0.12), transparent 30%);
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    .container{
-      width:100%;
-      max-width:1200px;
-      margin:auto;
-      padding:30px 20px 100px;
-    }
+body{
+  font-family:'Inter',sans-serif;
+  background:#050816;
+  color:white;
+  min-height:100vh;
+  background-image:
+  radial-gradient(circle at top left, rgba(0,255,200,0.14), transparent 30%),
+  radial-gradient(circle at bottom right, rgba(0,140,255,0.14), transparent 35%);
+}
 
-    .navbar{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      margin-bottom:60px;
-    }
+/* HEADER */
 
-    .logo{
-      width:90px;
-      filter:drop-shadow(0 0 18px rgba(0,255,255,0.45));
-    }
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 25px;
+  position:sticky;
+  top:0;
+  backdrop-filter:blur(20px);
+  background:rgba(5,8,22,0.6);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
 
-    .hero{
-      text-align:center;
-    }
+/* LOGO */
 
-    .beta-tag{
-      display:inline-block;
-      padding:10px 18px;
-      border:1px solid rgba(0,255,255,0.25);
-      border-radius:999px;
-      color:#7df9ff;
-      background:rgba(0,255,255,0.06);
-      font-size:14px;
-      margin-bottom:30px;
-      backdrop-filter:blur(12px);
-    }
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid rgba(0,255,255,0.6);
+  box-shadow:0 0 18px rgba(0,255,255,0.4);
+  animation:pulse 2.5s infinite;
+}
 
-    .headline{
-      font-size:clamp(2.8rem, 7vw, 5.5rem);
-      font-weight:800;
-      line-height:1.05;
-      margin-bottom:25px;
-      letter-spacing:-2px;
-    }
+@keyframes pulse{
+  0%{ box-shadow:0 0 10px rgba(0,255,255,0.3); }
+  50%{ box-shadow:0 0 25px rgba(0,255,255,0.7); }
+  100%{ box-shadow:0 0 10px rgba(0,255,255,0.3); }
+}
 
-    .gradient-text{
-      background:linear-gradient(90deg,#00ffe1,#00a2ff,#7b61ff);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
+/* BUTTONS */
 
-    .subtext{
-      max-width:700px;
-      margin:auto;
-      font-size:1.1rem;
-      color:#a7b4d6;
-      line-height:1.8;
-      margin-bottom:50px;
-    }
+.nav-buttons{
+  display:flex;
+  gap:10px;
+}
 
-    .main-card{
-      max-width:950px;
-      margin:auto;
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:30px;
-      padding:40px;
-      backdrop-filter:blur(18px);
-      box-shadow:
-      0 0 40px rgba(0,255,255,0.08),
-      0 0 120px rgba(0,100,255,0.06);
-    }
+.btn{
+  padding:10px 16px;
+  border-radius:12px;
+  font-weight:700;
+  text-decoration:none;
+  font-size:0.9rem;
+  transition:0.3s;
+}
 
-    .question{
-      font-size:1.5rem;
-      font-weight:700;
-      margin-bottom:35px;
-    }
+.login{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  color:white;
+}
 
-    .action-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:25px;
-    }
+.signup{
+  background:linear-gradient(90deg,#00ffe1,#00a2ff);
+  color:#03111f;
+}
 
-    .action-card{
-      padding:30px;
-      border-radius:24px;
-      cursor:pointer;
-      transition:0.35s ease;
-      text-decoration:none;
-      position:relative;
-      overflow:hidden;
-    }
+.btn:hover{
+  transform:scale(1.05);
+}
 
-    .action-card:hover{
-      transform:translateY(-6px) scale(1.02);
-    }
+/* HERO */
 
-    .offer{
-      background:linear-gradient(145deg, rgba(0,255,170,0.18), rgba(0,255,170,0.05));
-      border:1px solid rgba(0,255,170,0.25);
-      box-shadow:0 0 30px rgba(0,255,170,0.12);
-    }
+.hero{
+  text-align:center;
+  padding:80px 20px 40px;
+  max-width:800px;
+  margin:auto;
+}
 
-    .find{
-      background:linear-gradient(145deg, rgba(0,140,255,0.18), rgba(0,140,255,0.05));
-      border:1px solid rgba(0,140,255,0.25);
-      box-shadow:0 0 30px rgba(0,140,255,0.12);
-    }
+.hero h1{
+  font-size:2.5rem;
+  font-weight:800;
+}
 
-    .card-title{
-      font-size:1.6rem;
-      font-weight:700;
-      margin-bottom:12px;
-    }
+.hero p{
+  margin-top:15px;
+  color:#9fb0d5;
+  line-height:1.6;
+}
 
-    .card-text{
-      color:#d5def5;
-      line-height:1.7;
-      font-size:0.98rem;
-    }
+/* CTA */
 
-    .chips{
-      display:flex;
-      gap:15px;
-      overflow-x:auto;
-      margin-top:35px;
-      padding-bottom:10px;
-    }
+.cta{
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  flex-wrap:wrap;
+}
 
-    .chip{
-      white-space:nowrap;
-      padding:12px 18px;
-      border-radius:999px;
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(255,255,255,0.08);
-      color:#dfe7ff;
-      font-size:0.92rem;
-    }
+.cta a{
+  padding:14px 22px;
+  border-radius:16px;
+  font-weight:800;
+  text-decoration:none;
+}
 
-    .footer-note{
-      margin-top:35px;
-      color:#8fa2c7;
-      font-size:0.95rem;
-    }
+.primary{
+  background:linear-gradient(90deg,#00ffe1,#00a2ff);
+  color:#03111f;
+}
 
-    .cta{
-      margin-top:50px;
-    }
+.secondary{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  color:white;
+}
 
-    .cta-button{
-      display:inline-block;
-      padding:18px 38px;
-      border-radius:18px;
-      text-decoration:none;
-      font-weight:700;
-      color:#03111f;
-      background:linear-gradient(90deg,#00ffe1,#00a2ff);
-      box-shadow:
-      0 0 30px rgba(0,255,255,0.35);
-      transition:0.3s ease;
-    }
+/* FEATURES */
 
-    .cta-button:hover{
-      transform:scale(1.04);
-    }
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+  padding:40px 25px;
+  max-width:1000px;
+  margin:auto;
+}
 
-    @media(max-width:768px){
+.card{
+  padding:20px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  text-align:center;
+  backdrop-filter:blur(15px);
+  transition:0.3s;
+}
 
-      .headline{
-        font-size:3rem;
-      }
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 0 30px rgba(0,255,255,0.1);
+}
 
-      .main-card{
-        padding:25px;
-      }
+.footer{
+  text-align:center;
+  padding:30px;
+  font-size:0.8rem;
+  color:#7df9ff;
+}
 
-      .card-title{
-        font-size:1.35rem;
-      }
-    }
-
-  </style>
+</style>
 </head>
 
 <body>
 
-  <div class="container">
+<header>
 
-    <div class="navbar">
-      <img
-        src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png"
-        class="logo"
-        alt="Zep Swipe Logo"
-      />
-    </div>
+  <img class="logo"
+    src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png"
+    alt="Zep Swipe"
+  />
 
-    <section class="hero">
-
-      <div class="beta-tag">
-        ⚡ Randfontein Marketplace Beta
-      </div>
-
-      <h1 class="headline">
-        The Student <span class="gradient-text">Economy</span><br>
-        Starts Here.
-      </h1>
-
-      <p class="subtext">
-        Zep Swipe connects students, local vendors, and everyday services
-        into one fast-growing digital marketplace for Randfontein.
-      </p>
-
-      <div class="main-card">
-
-        <div class="question">
-          What do you want to do today?
-        </div>
-
-        <div class="action-grid">
-
-          <a href="#" class="action-card offer">
-
-            <div class="card-title">
-              💸 Offer a Service
-            </div>
-
-            <div class="card-text">
-              Earn money from skills, tutoring, errands, design,
-              delivery, digital work, repairs, and more.
-            </div>
-
-          </a>
-
-          <a href="#" class="action-card find">
-
-            <div class="card-title">
-              🔍 Find a Service
-            </div>
-
-            <div class="card-text">
-              Discover nearby student services, local food vendors,
-              quick help, jobs, and affordable community support.
-            </div>
-
-          </a>
-
-        </div>
-
-        <div class="chips">
-
-          <div class="chip">🍔 Food Near Me</div>
-          <div class="chip">⚡ Urgent Help</div>
-          <div class="chip">💰 Jobs Today</div>
-          <div class="chip">📚 Tutoring</div>
-          <div class="chip">🚚 Deliveries</div>
-          <div class="chip">🎨 Graphic Design</div>
-
-        </div>
-
-        <div class="footer-note">
-          Live in Randfontein • Built for students & local communities
-        </div>
-
-        <div class="cta">
-          <a href="#" class="cta-button">
-            Join The Marketplace
-          </a>
-        </div>
-
-      </div>
-
-    </section>
-
+  <div class="nav-buttons">
+    <a href="auth.html" class="btn login">Login</a>
+    <a href="auth.html" class="btn signup">Sign Up</a>
   </div>
+
+</header>
+
+<section class="hero">
+
+  <h1>Build. Earn. Connect.</h1>
+
+  <p>
+    Zep Swipe is a student economy platform where students offer services,
+    sell food, and earn from their skills in real time.
+  </p>
+
+  <div class="cta">
+    <a href="browse.html" class="primary">Browse Marketplace</a>
+    <a href="waitlist.html" class="secondary">Join Waitlist</a>
+  </div>
+
+</section>
+
+<section class="features">
+
+  <div class="card">🍔 Food Marketplace</div>
+  <div class="card">🛠 Student Services</div>
+  <div class="card">📱 Digital Skills</div>
+  <div class="card">🚀 Earn in Campus Economy</div>
+
+</section>
+
+<div class="footer">
+  ⚡ Live in Randfontein — Expanding across Africa
+</div>
 
 </body>
 </html>
