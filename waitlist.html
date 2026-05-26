@@ -1,276 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zep Swipe — Waitlist</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zep Swipe — Africa Expansion Waitlist</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+<style>
 
-    body{
-      font-family:'Inter',sans-serif;
-      background:#050816;
-      color:white;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      background-image:
-      radial-gradient(circle at top left, rgba(0,255,200,0.14), transparent 30%),
-      radial-gradient(circle at bottom right, rgba(0,140,255,0.14), transparent 35%);
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    .card{
-      width:100%;
-      max-width:620px;
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:30px;
-      padding:35px 25px;
-      backdrop-filter:blur(18px);
-      box-shadow:0 0 60px rgba(0,255,255,0.08);
-      text-align:center;
-    }
+body{
+  font-family:'Inter',sans-serif;
+  background:#050816;
+  color:white;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background-image:
+  radial-gradient(circle at top left, rgba(0,255,200,0.14), transparent 30%),
+  radial-gradient(circle at bottom right, rgba(0,140,255,0.14), transparent 35%);
+}
 
-    .logo{
-      width:70px;
-      margin-bottom:15px;
-      filter:drop-shadow(0 0 18px rgba(0,255,255,0.4));
-    }
+.card{
+  width:100%;
+  max-width:650px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:30px;
+  padding:35px 25px;
+  backdrop-filter:blur(18px);
+  box-shadow:0 0 60px rgba(0,255,255,0.08);
+  text-align:center;
+}
 
-    h1{
-      font-size:2rem;
-      font-weight:800;
-      margin-bottom:10px;
-    }
+.logo{
+  width:70px;
+  margin-bottom:15px;
+  filter:drop-shadow(0 0 18px rgba(0,255,255,0.4));
+}
 
-    .gradient{
-      background:linear-gradient(90deg,#00ffe1,#00a2ff,#7b61ff);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
+h1{
+  font-size:2rem;
+  font-weight:800;
+  margin-bottom:10px;
+}
 
-    .subtitle{
-      color:#a8b7d6;
-      font-size:0.95rem;
-      line-height:1.6;
-      margin-bottom:25px;
-    }
+.gradient{
+  background:linear-gradient(90deg,#00ffe1,#00a2ff,#7b61ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
 
-    /* INFO STRIP */
+.subtitle{
+  color:#a8b7d6;
+  font-size:0.95rem;
+  margin-bottom:20px;
+  line-height:1.6;
+}
 
-    .live{
-      display:inline-block;
-      padding:10px 14px;
-      border-radius:999px;
-      background:rgba(0,255,170,0.12);
-      border:1px solid rgba(0,255,170,0.25);
-      color:#00ffb2;
-      font-size:0.85rem;
-      margin-bottom:20px;
-    }
+.badge{
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(0,255,170,0.12);
+  border:1px solid rgba(0,255,170,0.25);
+  color:#00ffb2;
+  font-size:0.85rem;
+  margin-bottom:20px;
+}
 
-    /* FORM */
+/* FORM */
 
-    label{
-      display:block;
-      text-align:left;
-      margin-top:12px;
-      font-size:0.85rem;
-      color:#9fb0d5;
-    }
+label{
+  display:block;
+  text-align:left;
+  margin-top:12px;
+  font-size:0.85rem;
+  color:#9fb0d5;
+}
 
-    input, select{
-      width:100%;
-      padding:14px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,0.08);
-      background:rgba(255,255,255,0.05);
-      color:white;
-      margin-top:6px;
-      outline:none;
-    }
+input, select{
+  width:100%;
+  padding:14px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.05);
+  color:white;
+  margin-top:6px;
+  outline:none;
+}
 
-    .btn{
-      width:100%;
-      margin-top:18px;
-      padding:15px;
-      border:none;
-      border-radius:18px;
-      font-weight:800;
-      font-size:1rem;
-      cursor:pointer;
-      background:linear-gradient(90deg,#00ffe1,#00a2ff);
-      color:#03111f;
-      box-shadow:0 0 25px rgba(0,255,255,0.3);
-      transition:0.3s;
-    }
+.btn{
+  width:100%;
+  padding:15px;
+  margin-top:18px;
+  border-radius:18px;
+  font-weight:800;
+  background:linear-gradient(90deg,#00ffe1,#00a2ff);
+  color:#03111f;
+  border:none;
+  cursor:pointer;
+  box-shadow:0 0 25px rgba(0,255,255,0.3);
+  transition:0.3s;
+}
 
-    .btn:hover{
-      transform:scale(1.03);
-    }
+.btn:hover{
+  transform:scale(1.03);
+}
 
-    /* REFERRAL BOX */
+/* LEADERBOARD */
 
-    .referral{
-      margin-top:25px;
-      padding:18px;
-      border-radius:20px;
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.08);
-    }
+.board{
+  margin-top:25px;
+  text-align:left;
+}
 
-    .ref-title{
-      font-weight:700;
-      margin-bottom:8px;
-    }
+.title{
+  font-weight:700;
+  text-align:center;
+  margin-bottom:12px;
+}
 
-    .ref-code{
-      font-size:1.2rem;
-      font-weight:800;
-      color:#00ffe1;
-      margin-bottom:8px;
-    }
+.row{
+  display:flex;
+  justify-content:space-between;
+  padding:14px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  margin-bottom:10px;
+}
 
-    .ref-text{
-      font-size:0.85rem;
-      color:#9fb0d5;
-      line-height:1.5;
-    }
+.score{
+  color:#00ffe1;
+  font-weight:700;
+}
 
-    /* LEADERBOARD */
+/* NOTE */
 
-    .leaderboard{
-      margin-top:25px;
-      text-align:left;
-    }
+.note{
+  margin-top:20px;
+  font-size:0.8rem;
+  color:#7df9ff;
+  text-align:center;
+}
 
-    .lb-title{
-      font-weight:700;
-      margin-bottom:12px;
-      text-align:center;
-    }
+</style>
 
-    .user{
-      display:flex;
-      justify-content:space-between;
-      padding:12px;
-      border-radius:14px;
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.08);
-      margin-bottom:10px;
-      font-size:0.9rem;
-    }
-
-    .score{
-      color:#00ffe1;
-      font-weight:700;
-    }
-
-    /* FOOTNOTE */
-
-    .note{
-      margin-top:20px;
-      font-size:0.8rem;
-      color:#7df9ff;
-    }
-
-  </style>
 </head>
 
 <body>
 
 <div class="card">
 
-  <!-- LOGO -->
-  <img class="logo"
-    src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png"
-    alt="Zep Swipe"
-  />
+<img class="logo"
+  src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png"
+  alt="Zep Swipe"
+/>
 
-  <!-- HEADER -->
-  <div class="live">🚀 Currently Live: Randfontein</div>
+<div class="badge">🌍 Africa Expansion Mode</div>
 
-  <h1>
-    Zep Swipe is <span class="gradient">Expanding</span>
-  </h1>
+<h1>
+  Bring <span class="gradient">Zep Swipe</span> to Your Country
+</h1>
 
-  <div class="subtitle">
-    We are building the student economy city by city across South Africa.  
-    Join the waitlist to unlock early access in your area.
+<div class="subtitle">
+  We are currently live in South Africa.  
+  Help unlock your country by joining the demand list.
+</div>
+
+<!-- FORM -->
+
+<label>Full Name</label>
+<input type="text" placeholder="e.g. Ama / Tunde / Kevin" />
+
+<label>Phone or Email</label>
+<input type="text" placeholder="+234 / +233 / email" />
+
+<label>Select Country</label>
+<select>
+  <option>Nigeria</option>
+  <option>Ghana</option>
+  <option>Kenya</option>
+  <option>Uganda</option>
+  <option>Tanzania</option>
+  <option>Ethiopia</option>
+  <option>Zambia</option>
+  <option>Zimbabwe</option>
+  <option>Other</option>
+</select>
+
+<button class="btn">
+  🚀 Request Country Access
+</button>
+
+<!-- COUNTRY DEMAND -->
+
+<div class="board">
+
+  <div class="title">🔥 Country Demand Leaderboard</div>
+
+  <div class="row">
+    <div>Nigeria</div>
+    <div class="score">2,340 requests</div>
   </div>
 
-  <!-- FORM -->
-
-  <label>Full Name</label>
-  <input type="text" placeholder="e.g. Neo Dlamini" />
-
-  <label>Phone Number / Email</label>
-  <input type="text" placeholder="+27 or email" />
-
-  <label>Select Your City</label>
-  <select>
-    <option>Johannesburg</option>
-    <option>Pretoria</option>
-    <option>Soweto</option>
-    <option>Durban</option>
-    <option>Cape Town</option>
-    <option>Other</option>
-  </select>
-
-  <button class="btn">
-    🚀 Join Waitlist
-  </button>
-
-  <!-- REFERRAL SYSTEM -->
-
-  <div class="referral">
-
-    <div class="ref-title">Your Early Access Code</div>
-
-    <div class="ref-code">ZEP-4821</div>
-
-    <div class="ref-text">
-      Invite friends to join.  
-      The more people you bring, the higher you rank on the early access list.
-    </div>
-
+  <div class="row">
+    <div>Ghana</div>
+    <div class="score">1,120 requests</div>
   </div>
 
-  <!-- LEADERBOARD -->
-
-  <div class="leaderboard">
-
-    <div class="lb-title">🔥 Top Early Supporters</div>
-
-    <div class="user">
-      <div>1. Thabo</div>
-      <div class="score">32 invites</div>
-    </div>
-
-    <div class="user">
-      <div>2. Amanda</div>
-      <div class="score">27 invites</div>
-    </div>
-
-    <div class="user">
-      <div>3. Neo</div>
-      <div class="score">19 invites</div>
-    </div>
-
+  <div class="row">
+    <div>Kenya</div>
+    <div class="score">980 requests</div>
   </div>
 
-  <div class="note">
-    ⚡ Early supporters get priority access when their city launches
-  </div>
+</div>
+
+<div class="note">
+⚡ Countries with highest demand get launched first
+</div>
 
 </div>
 
