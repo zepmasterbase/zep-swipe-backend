@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zep Swipe — Join the Student Economy</title>
+  <title>Zep Swipe — Smart Access</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -36,7 +36,7 @@
       border-radius:30px;
       padding:35px 25px;
       backdrop-filter:blur(18px);
-      box-shadow:0 0 50px rgba(0,255,255,0.08);
+      box-shadow:0 0 60px rgba(0,255,255,0.08);
       text-align:center;
     }
 
@@ -56,27 +56,36 @@
       color:#a8b7d6;
       font-size:0.95rem;
       line-height:1.6;
-      margin-bottom:25px;
+      margin-bottom:20px;
     }
 
-    .highlight{
+    .gradient{
       background:linear-gradient(90deg,#00ffe1,#00a2ff,#7b61ff);
       -webkit-background-clip:text;
       -webkit-text-fill-color:transparent;
     }
 
-    /* BUTTONS */
+    .status{
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(0,255,170,0.12);
+      border:1px solid rgba(0,255,170,0.25);
+      color:#00ffb2;
+      font-size:0.85rem;
+      margin-bottom:20px;
+    }
 
     .btn{
       width:100%;
       padding:15px;
       border-radius:18px;
-      font-weight:700;
+      font-weight:800;
       cursor:pointer;
-      margin-bottom:12px;
-      transition:0.3s;
       border:none;
       font-size:1rem;
+      margin-top:10px;
+      transition:0.3s;
     }
 
     .primary{
@@ -95,67 +104,10 @@
       transform:scale(1.03);
     }
 
-    /* FORM */
-
-    .form{
+    .loading{
       margin-top:20px;
-      text-align:left;
-    }
-
-    label{
       font-size:0.85rem;
       color:#9fb0d5;
-      margin-top:12px;
-      display:block;
-    }
-
-    input, select{
-      width:100%;
-      padding:14px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,0.08);
-      background:rgba(255,255,255,0.05);
-      color:white;
-      margin-top:6px;
-      outline:none;
-    }
-
-    /* USER TYPE */
-
-    .types{
-      display:flex;
-      gap:10px;
-      margin:15px 0;
-      flex-wrap:wrap;
-    }
-
-    .chip{
-      flex:1;
-      padding:12px;
-      border-radius:999px;
-      text-align:center;
-      font-size:0.85rem;
-      border:1px solid rgba(255,255,255,0.1);
-      background:rgba(255,255,255,0.04);
-      cursor:pointer;
-      transition:0.3s;
-    }
-
-    .chip:hover{
-      border-color:#00ffe1;
-      background:rgba(0,255,255,0.1);
-    }
-
-    .note{
-      margin-top:18px;
-      font-size:0.8rem;
-      color:#7df9ff;
-    }
-
-    .small{
-      margin-top:10px;
-      font-size:0.75rem;
-      color:#8fa2c7;
     }
 
   </style>
@@ -165,66 +117,114 @@
 
 <div class="card">
 
-  <!-- LOGO -->
   <img class="logo"
     src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png"
     alt="Zep Swipe"
   />
 
-  <!-- TITLE -->
+  <div class="status">⚡ Smart Access System</div>
+
   <h1>
-    Join the <span class="highlight">Student Economy</span>
+    Welcome to <span class="gradient">Zep Swipe</span>
   </h1>
 
   <div class="subtitle">
-    Start offering services or hiring instantly in Randfontein.  
-    No approval. No waiting. Just start.
+    Connecting you to the student economy in your area.
+    Checking availability…
   </div>
 
-  <!-- ACTION BUTTONS -->
-  <button class="btn primary">
-    🚀 Join as Provider
+  <button class="btn primary" onclick="manualStart()">
+    🚀 Enter Marketplace
   </button>
 
-  <button class="btn secondary">
-    👀 Browse First
+  <button class="btn secondary" onclick="window.location.href='waitlist.html'">
+    👀 Join Waitlist Instead
   </button>
 
-  <!-- FORM -->
-  <div class="form">
-
-    <label>First Name</label>
-    <input type="text" placeholder="e.g. Neo" />
-
-    <label>Phone Number</label>
-    <input type="text" placeholder="+27..." />
-
-    <label>User Type</label>
-
-    <div class="types">
-      <div class="chip">🎓 Student</div>
-      <div class="chip">🏪 Vendor</div>
-      <div class="chip">💼 Freelancer</div>
-    </div>
-
-    <label>Location</label>
-    <input type="text" value="Randfontein" />
-
-    <button class="btn primary" style="margin-top:15px;">
-      ⚡ Start Now
-    </button>
-
-    <div class="note">
-      No fees • Instant access • WhatsApp-first marketplace
-    </div>
-
-    <div class="small">
-      You can start receiving customers immediately after joining
-    </div>
-
+  <div class="loading" id="statusText">
+    Detecting your location...
   </div>
 
 </div>
+
+<script>
+async function routeUser() {
+
+  try {
+
+    const res = await fetch("https://ipapi.co/json/");
+    const data = await res.json();
+
+    const country = data.country_name;
+    const city = data.city;
+
+    document.getElementById("statusText").innerText =
+      `Detected: ${city}, ${country}`;
+
+    localStorage.setItem("userCountry", country);
+    localStorage.setItem("userCity", city);
+
+    // 🟢 ACTIVE CITY (FULL ACCESS)
+    if (city === "Randfontein") {
+      setTimeout(() => {
+        window.location.href = "browse.html";
+      }, 1500);
+      return;
+    }
+
+    // 🟡 SOUTH AFRICA OTHER CITIES
+    if (country === "South Africa") {
+      setTimeout(() => {
+        window.location.href = "waitlist.html?region=sa";
+      }, 1500);
+      return;
+    }
+
+    // 🌍 AFRICA EXPANSION COUNTRIES
+    const africanCountries = [
+      "Nigeria",
+      "Ghana",
+      "Kenya",
+      "Uganda",
+      "Tanzania",
+      "Ethiopia",
+      "Zambia",
+      "Zimbabwe",
+      "Botswana",
+      "Namibia",
+      "Malawi"
+    ];
+
+    if (africanCountries.includes(country)) {
+      setTimeout(() => {
+        window.location.href = "waitlist.html?region=africa";
+      }, 1500);
+      return;
+    }
+
+    // 🌐 GLOBAL USERS
+    setTimeout(() => {
+      window.location.href = "waitlist.html?region=global";
+    }, 1500);
+
+  } catch (err) {
+    document.getElementById("statusText").innerText =
+      "Unable to detect location. Redirecting to waitlist...";
+
+    setTimeout(() => {
+      window.location.href = "waitlist.html";
+    }, 2000);
+  }
+}
+
+// AUTO RUN ON LOAD
+routeUser();
+
+// Manual override
+function manualStart(){
+  window.location.href = "browse.html";
+}
+</script>
 
 </body>
 </html>
