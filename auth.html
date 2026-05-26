@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zep Swipe — Join the Student Economy</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:#050816;
+      color:white;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background-image:
+      radial-gradient(circle at top left, rgba(0,255,200,0.14), transparent 30%),
+      radial-gradient(circle at bottom right, rgba(0,140,255,0.14), transparent 35%);
+    }
+
+    .card{
+      width:100%;
+      max-width:520px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:30px;
+      padding:35px 25px;
+      backdrop-filter:blur(18px);
+      box-shadow:0 0 50px rgba(0,255,255,0.08);
+      text-align:center;
+    }
+
+    .logo{
+      width:70px;
+      margin-bottom:15px;
+      filter:drop-shadow(0 0 18px rgba(0,255,255,0.4));
+    }
+
+    h1{
+      font-size:2rem;
+      font-weight:800;
+      margin-bottom:10px;
+    }
+
+    .subtitle{
+      color:#a8b7d6;
+      font-size:0.95rem;
+      line-height:1.6;
+      margin-bottom:25px;
+    }
+
+    .highlight{
+      background:linear-gradient(90deg,#00ffe1,#00a2ff,#7b61ff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    /* BUTTONS */
+
+    .btn{
+      width:100%;
+      padding:15px;
+      border-radius:18px;
+      font-weight:700;
+      cursor:pointer;
+      margin-bottom:12px;
+      transition:0.3s;
+      border:none;
+      font-size:1rem;
+    }
+
+    .primary{
+      background:linear-gradient(90deg,#00ffe1,#00a2ff);
+      color:#03111f;
+      box-shadow:0 0 25px rgba(0,255,255,0.3);
+    }
+
+    .secondary{
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.1);
+      color:white;
+    }
+
+    .btn:hover{
+      transform:scale(1.03);
+    }
+
+    /* FORM */
+
+    .form{
+      margin-top:20px;
+      text-align:left;
+    }
+
+    label{
+      font-size:0.85rem;
+      color:#9fb0d5;
+      margin-top:12px;
+      display:block;
+    }
+
+    input, select{
+      width:100%;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.05);
+      color:white;
+      margin-top:6px;
+      outline:none;
+    }
+
+    /* USER TYPE */
+
+    .types{
+      display:flex;
+      gap:10px;
+      margin:15px 0;
+      flex-wrap:wrap;
+    }
+
+    .chip{
+      flex:1;
+      padding:12px;
+      border-radius:999px;
+      text-align:center;
+      font-size:0.85rem;
+      border:1px solid rgba(255,255,255,0.1);
+      background:rgba(255,255,255,0.04);
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .chip:hover{
+      border-color:#00ffe1;
+      background:rgba(0,255,255,0.1);
+    }
+
+    .note{
+      margin-top:18px;
+      font-size:0.8rem;
+      color:#7df9ff;
+    }
+
+    .small{
+      margin-top:10px;
+      font-size:0.75rem;
+      color:#8fa2c7;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <!-- LOGO -->
+  <img class="logo"
+    src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png"
+    alt="Zep Swipe"
+  />
+
+  <!-- TITLE -->
+  <h1>
+    Join the <span class="highlight">Student Economy</span>
+  </h1>
+
+  <div class="subtitle">
+    Start offering services or hiring instantly in Randfontein.  
+    No approval. No waiting. Just start.
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <button class="btn primary">
+    🚀 Join as Provider
+  </button>
+
+  <button class="btn secondary">
+    👀 Browse First
+  </button>
+
+  <!-- FORM -->
+  <div class="form">
+
+    <label>First Name</label>
+    <input type="text" placeholder="e.g. Neo" />
+
+    <label>Phone Number</label>
+    <input type="text" placeholder="+27..." />
+
+    <label>User Type</label>
+
+    <div class="types">
+      <div class="chip">🎓 Student</div>
+      <div class="chip">🏪 Vendor</div>
+      <div class="chip">💼 Freelancer</div>
+    </div>
+
+    <label>Location</label>
+    <input type="text" value="Randfontein" />
+
+    <button class="btn primary" style="margin-top:15px;">
+      ⚡ Start Now
+    </button>
+
+    <div class="note">
+      No fees • Instant access • WhatsApp-first marketplace
+    </div>
+
+    <div class="small">
+      You can start receiving customers immediately after joining
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
