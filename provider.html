@@ -3,131 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Provider Dashboard V4</title>
+<title>Zep Swipe Provider Dashboard V5</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
+
+/* GLOBAL */
 body {
   margin: 0;
-  font-family: Arial;
-  background: #050607;
+  font-family: system-ui, Arial;
+  background: #070b09;
   color: white;
 }
 
 /* HEADER */
 header {
-  display:flex;
-  justify-content:space-between;
-  padding:15px;
-  background:rgba(0,0,0,0.85);
-  border-bottom:1px solid rgba(0,255,140,0.2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(10,15,12,0.92);
+  border-bottom: 1px solid rgba(0,255,140,0.15);
+  backdrop-filter: blur(10px);
 }
 
-h2 {
-  color:#00ff8c;
+.logo {
+  font-weight: 700;
+  color: #00ff8c;
+  font-size: 15px;
 }
+
+/* ONLINE TOGGLE */
+.toggle {
+  background: rgba(255,255,255,0.08);
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.online { color: #00ff8c; }
+.offline { color: orange; }
+
+/* CONTAINER */
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 12px;
+}
+
+/* STATS GRID */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.card {
+  background: #101814;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+/* HEADINGS */
+h3 {
+  margin: 0 0 8px 0;
+  color: #00ff8c;
+  font-size: 14px;
+}
+
+/* JOB CARD */
+.job {
+  background: #0f1412;
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.meta {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: 5px;
+}
+
+/* BUTTONS */
+button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+.accept { background: #00ff8c; color: black; }
+.decline { background: #222; color: white; }
+
+/* RANK BADGE */
+.rank {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+}
+
+.bronze { background:#cd7f32; color:black; }
+.silver { background:#c0c0c0; color:black; }
+.gold { background:#ffd700; color:black; }
+.founder { background:#00ff8c; color:black; }
 
 /* GRID */
-.container {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-  padding:20px;
+.jobs {
+  margin-top: 10px;
 }
 
-/* CARD */
-.card {
-  background:#0b120e;
-  border:1px solid rgba(0,255,140,0.15);
-  border-radius:12px;
-  padding:15px;
+/* WALLET */
+.wallet {
+  font-size: 13px;
 }
 
-/* BUTTON */
-button {
-  width:100%;
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
-  margin-top:8px;
+/* MOBILE */
+@media(max-width:600px){
+  .stats { grid-template-columns: 1fr 1fr; }
 }
 
-.primary { background:#00ff8c; }
-.dark { background:#222; color:white; }
-
-/* STATUS */
-.badge {
-  padding:4px 8px;
-  border-radius:6px;
-  font-size:12px;
-  display:inline-block;
-}
-
-.open { background:orange; }
-.accepted { background:#2196f3; }
-.completed { background:gray; }
-
-/* PROFILE */
-.profile {
-  text-align:center;
-}
-
-.avatar {
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  background:linear-gradient(45deg,#00ff8c,#0066ff);
-  margin:auto;
-}
-
-/* LIST */
-.job {
-  padding:10px;
-  border-bottom:1px solid rgba(255,255,255,0.1);
-}
 </style>
 </head>
 
 <body>
 
 <header>
-  <h2>🧑‍💻 Provider Dashboard V4</h2>
-  <button onclick="loadJobs()">Refresh</button>
+  <div class="logo">🧑‍💻 Provider Dashboard V5</div>
+  <div class="toggle" onclick="toggleOnline()">
+    Status: <span id="status" class="offline">OFFLINE</span>
+  </div>
 </header>
 
 <div class="container">
 
-  <!-- PROFILE -->
-  <div class="card profile">
+  <!-- STATS -->
+  <div class="stats">
 
-    <div class="avatar"></div>
+    <div class="card">
+      <h3>💰 Earnings</h3>
+      <p>R 0.00</p>
+    </div>
 
-    <h3 id="name">Provider</h3>
+    <div class="card">
+      <h3>⭐ Rank</h3>
+      <p id="rank" class="rank bronze">BRONZE</p>
+    </div>
 
-    <p id="points">Zep Points: 0</p>
-    <p id="level">Level: 1</p>
+    <div class="card">
+      <h3>⚡ Zep Points</h3>
+      <p id="points">0</p>
+    </div>
 
-    <button class="primary" onclick="toggleAvailability()">
-      Toggle Availability
-    </button>
-
-    <button class="dark" onclick="loadJobs()">
-      Refresh Jobs
-    </button>
-
-  </div>
-
-  <!-- JOB FEED -->
-  <div class="card">
-
-    <h3 style="color:#00ff8c;">⚡ Available Jobs</h3>
-
-    <div id="jobs"></div>
+    <div class="card">
+      <h3>📦 Jobs Done</h3>
+      <p id="jobsDone">0</p>
+    </div>
 
   </div>
+
+  <!-- WALLET -->
+  <div class="card wallet">
+    <h3>💳 Zep Wallet</h3>
+    <p>Earn 10 points per job</p>
+    <p>Bonus: Fast accept +5 pts</p>
+  </div>
+
+  <!-- LIVE JOBS -->
+  <h3>⚡ Live Jobs</h3>
+  <div id="jobs" class="jobs"></div>
 
 </div>
 
@@ -139,38 +195,46 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let provider = {
-  id: null,
-  name: "Demo Provider",
+  online: false,
   points: 0,
-  available: true
+  jobsDone: 0
 };
 
-/* INIT DEMO PROFILE */
-function initProvider(){
-
-  provider.id = "demo-1";
-  provider.name = "Student Provider";
-
-  document.getElementById("name").innerText = provider.name;
-  updateStats();
+/* RANK SYSTEM */
+function getRank(points){
+  if(points >= 150) return "founder";
+  if(points >= 80) return "gold";
+  if(points >= 30) return "silver";
+  return "bronze";
 }
 
-/* UPDATE STATS */
-function updateStats(){
+/* UPDATE UI */
+function updateUI(){
 
-  document.getElementById("points").innerText =
-    "Zep Points: " + provider.points;
+  document.getElementById("points").innerText = provider.points;
+  document.getElementById("jobsDone").innerText = provider.jobsDone;
 
-  document.getElementById("level").innerText =
-    "Level: " + Math.floor(provider.points / 50 + 1);
+  let rank = getRank(provider.points);
+  let el = document.getElementById("rank");
+
+  el.className = "rank " + rank;
+  el.innerText = rank.toUpperCase();
 }
 
-/* TOGGLE AVAILABILITY */
-function toggleAvailability(){
+/* ONLINE TOGGLE */
+function toggleOnline(){
 
-  provider.available = !provider.available;
+  provider.online = !provider.online;
 
-  alert(provider.available ? "You are ONLINE" : "You are OFFLINE");
+  const status = document.getElementById("status");
+
+  if(provider.online){
+    status.innerText = "ONLINE";
+    status.className = "online";
+  } else {
+    status.innerText = "OFFLINE";
+    status.className = "offline";
+  }
 }
 
 /* LOAD JOBS */
@@ -202,17 +266,16 @@ function renderJobs(jobs){
       <div class="job">
 
         <b>${job.category}</b>
-        <span class="badge open">${job.status}</span>
-
         <p>${job.description}</p>
-        <small>📍 ${job.location}</small>
 
-        <button class="primary" onclick="acceptJob('${job.id}')">
+        <div class="meta">📍 ${job.location}</div>
+
+        <button class="accept" onclick="acceptJob('${job.id}')">
           Accept Job
         </button>
 
-        <button class="dark" onclick="notify('${job.matched_phone}','${job.description}')">
-          WhatsApp Alert
+        <button class="decline" onclick="declineJob('${job.id}')">
+          Decline
         </button>
 
       </div>
@@ -223,39 +286,30 @@ function renderJobs(jobs){
 /* ACCEPT JOB */
 async function acceptJob(id){
 
-  const { error } = await client
+  await client
     .from("service_requests")
     .update({
-      status: "accepted",
-      matched_provider: provider.name
+      status: "accepted"
     })
     .eq("id", id);
 
-  if(!error){
+  provider.points += 10;
+  provider.jobsDone += 1;
 
-    provider.points += 10;
-    updateStats();
+  updateUI();
+  loadJobs();
 
-    alert("Job accepted +10 Zep Points!");
-    loadJobs();
-  }
+  alert("Job accepted +10 points!");
 }
 
-/* WHATSAPP */
-function notify(phone, job){
-
-  if(!phone) return;
-
-  const msg = encodeURIComponent(
-    "🚨 Zep Swipe Job:\n\n" + job
-  );
-
-  window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
+/* DECLINE */
+function declineJob(id){
+  alert("Job skipped");
 }
 
 /* START */
-initProvider();
 loadJobs();
+updateUI();
 
 </script>
 
