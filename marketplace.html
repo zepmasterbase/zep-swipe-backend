@@ -10,7 +10,7 @@
 <style>
 body {
   margin: 0;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   background: #050607;
   color: white;
 }
@@ -21,21 +21,40 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.85);
   border-bottom: 1px solid rgba(0,255,140,0.2);
+  position: sticky;
+  top: 0;
 }
 
-h2 {
+header h2 {
   color: #00ff8c;
 }
 
 button {
   background: #00ff8c;
   border: none;
-  padding: 10px 15px;
-  font-weight: bold;
+  padding: 10px 14px;
   border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
+}
+
+/* FILTERS */
+.filters {
+  display: flex;
+  gap: 10px;
+  padding: 15px;
+  overflow-x: auto;
+}
+
+.filters button {
+  background: transparent;
+  border: 1px solid #00ff8c;
+  color: #00ff8c;
+  padding: 8px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
 }
 
 /* GRID */
@@ -48,13 +67,39 @@ button {
 
 .card {
   background: #0b120e;
-  border-radius: 12px;
   border: 1px solid rgba(0,255,140,0.15);
-  padding: 15px;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: #00ff8c;
+}
+
+.card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 12px;
+}
+
+.category {
+  color: #00ff8c;
+  font-size: 12px;
+}
+
+.price {
+  margin-top: 5px;
+  font-weight: bold;
 }
 
 /* REQUEST BUTTON */
-.request-btn {
+.fab {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -64,7 +109,7 @@ button {
   border-radius: 50px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 0 20px rgba(0,255,140,0.3);
+  box-shadow: 0 0 20px rgba(0,255,140,0.4);
 }
 
 /* MODAL */
@@ -75,7 +120,7 @@ button {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.85);
   justify-content: center;
   align-items: center;
 }
@@ -84,15 +129,15 @@ button {
   background: #0b120e;
   padding: 20px;
   width: 90%;
-  max-width: 400px;
+  max-width: 420px;
   border-radius: 12px;
   border: 1px solid rgba(0,255,140,0.2);
 }
 
 input, select, textarea {
   width: 100%;
-  margin: 8px 0;
   padding: 10px;
+  margin: 8px 0;
   border-radius: 8px;
   border: none;
   outline: none;
@@ -100,6 +145,19 @@ input, select, textarea {
 
 textarea {
   height: 80px;
+}
+
+/* ACTION BUTTONS */
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.small-btn {
+  flex: 1;
+  padding: 8px;
+  font-size: 12px;
 }
 </style>
 </head>
@@ -111,11 +169,21 @@ textarea {
   <button onclick="loadServices()">Refresh</button>
 </header>
 
+<!-- FILTERS -->
+<div class="filters">
+  <button onclick="filter('all')">All</button>
+  <button onclick="filter('Academic')">Academic</button>
+  <button onclick="filter('Digital')">Digital</button>
+  <button onclick="filter('Technical')">Technical</button>
+  button onclick="filter('Creative')">Creative</button>
+  <button onclick="filter('Community')">Community</button>
+</div>
+
 <!-- SERVICES -->
 <div class="grid" id="services"></div>
 
-<!-- REQUEST BUTTON -->
-<div class="request-btn" onclick="openModal()">
+<!-- FLOAT BUTTON -->
+<div class="fab" onclick="openModal()">
   + Request Service
 </div>
 
@@ -135,23 +203,61 @@ textarea {
       <option>Community</option>
     </select>
 
-    <textarea id="description" placeholder="Describe what you need"></textarea>
+    <textarea id="description" placeholder="What do you need?"></textarea>
 
-    <input id="location" placeholder="Location (Randfontein etc)">
+    <input id="location" placeholder="Location (default Randfontein)">
     <input id="budget" placeholder="Budget (optional)">
 
-    <button onclick="submitRequest()">Submit Request</button>
-    <button onclick="closeModal()" style="background:red;margin-top:10px;">Close</button>
+    <div class="actions">
+      <button class="small-btn" onclick="submitRequest()">Submit</button>
+      <button class="small-btn" style="background:red;color:white;" onclick="closeModal()">Close</button>
+    </div>
   </div>
 </div>
 
 <script>
+/* ================= SUPABASE ================= */
 const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* OPEN / CLOSE MODAL */
+let allServices = [];
+
+/* LOAD SERVICES */
+async function loadServices() {
+  const { data } = await client.from("services").select("*");
+  allServices = data || [];
+  render(allServices);
+}
+
+/* RENDER */
+function render(data) {
+  const box = document.getElementById("services");
+  box.innerHTML = "";
+
+  data.forEach(s => {
+    box.innerHTML += `
+      <div class="card">
+        <img src="${s.image_url || 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d'}">
+        <div class="card-content">
+          <div class="category">${s.category}</div>
+          <h3>${s.title}</h3>
+          <p>${s.description}</p>
+          <div class="price">${s.price}</div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+/* FILTER */
+function filter(cat) {
+  if (cat === "all") render(allServices);
+  else render(allServices.filter(s => s.category === cat));
+}
+
+/* MODAL */
 function openModal() {
   document.getElementById("modal").style.display = "flex";
 }
@@ -162,12 +268,13 @@ function closeModal() {
 
 /* SUBMIT REQUEST */
 async function submitRequest() {
+
   const request = {
     name: document.getElementById("name").value,
     phone: document.getElementById("phone").value,
     category: document.getElementById("category").value,
     description: document.getElementById("description").value,
-    location: document.getElementById("location").value,
+    location: document.getElementById("location").value || "Randfontein",
     budget: document.getElementById("budget").value,
     status: "open"
   };
@@ -183,16 +290,6 @@ async function submitRequest() {
     alert("Request submitted successfully!");
     closeModal();
   }
-}
-
-/* LOAD SERVICES (placeholder if you connect later) */
-function loadServices() {
-  document.getElementById("services").innerHTML = `
-    <div class="card">
-      <h3 style="color:#00ff8c;">Live Marketplace Ready</h3>
-      <p>Services will load from Supabase 'services' table.</p>
-    </div>
-  `;
 }
 
 loadServices();
