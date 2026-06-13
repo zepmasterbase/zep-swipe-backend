@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Provider Dashboard V4</title>
+<title>Zep Swipe Provider - Unified V4</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -15,36 +15,41 @@
 body {
   margin: 0;
   font-family: system-ui;
-  background: #070a09;
+  background: radial-gradient(circle at top, #0b1a14, #070a09);
   color: white;
 }
 
 /* =========================
-   HEADER
+   GLOW BACKGROUND
 ========================= */
-header {
-  position: sticky;
-  top: 0;
-  padding: 12px;
-  background: rgba(10,14,12,0.95);
-  border-bottom: 1px solid rgba(0,255,140,0.12);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.glow {
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  background: #00ff8c;
+  filter: blur(120px);
+  opacity: 0.12;
+  border-radius: 50%;
+  animation: float 8s ease-in-out infinite;
 }
 
-.logo {
-  color:#00ff8c;
-  font-weight:700;
+.glow:nth-child(1){ top:-100px; left:-80px; }
+.glow:nth-child(2){ bottom:-120px; right:-100px; background:#00bfff; }
+
+@keyframes float {
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(40px)}
 }
 
 /* =========================
    CONTAINER
 ========================= */
 .container {
-  max-width: 900px;
+  max-width: 520px;
   margin:auto;
-  padding: 14px;
+  padding: 18px;
+  position: relative;
+  z-index: 2;
 }
 
 /* =========================
@@ -54,8 +59,23 @@ header {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
-  padding: 14px;
+  padding: 16px;
+  backdrop-filter: blur(12px);
   margin-top: 12px;
+}
+
+/* =========================
+   INPUTS
+========================= */
+input, select {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(0,0,0,0.4);
+  color: white;
+  outline: none;
 }
 
 /* =========================
@@ -63,8 +83,8 @@ header {
 ========================= */
 button {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
+  margin-top: 12px;
+  padding: 14px;
   border-radius: 12px;
   border: none;
   font-weight: 700;
@@ -72,103 +92,125 @@ button {
 }
 
 .primary {
-  background: #00ff8c;
-  color: black;
+  background: linear-gradient(90deg,#00ff8c,#00c2ff);
+  color:black;
 }
 
 .danger {
   background: rgba(255,0,0,0.2);
-  color: white;
+  color:white;
 }
 
 /* =========================
-   GRID
+   DASHBOARD
 ========================= */
-.grid {
-  display:grid;
-  grid-template-columns: repeat(2,1fr);
-  gap:10px;
+.hidden { display:none; }
+
+.header {
+  text-align:center;
+  margin-top:10px;
 }
 
-/* =========================
-   METRICS
-========================= */
-.metric {
-  background: rgba(0,255,140,0.05);
-  border: 1px solid rgba(0,255,140,0.1);
-  border-radius: 12px;
-  padding: 12px;
-}
-
-.metric h2 {
-  margin: 0;
-  color: #00ff8c;
-}
-
-/* =========================
-   STATUS
-========================= */
-.status-online {
+.earn {
   color:#00ff8c;
+  font-size:18px;
   font-weight:700;
-}
-
-.status-offline {
-  color:#ff4d4d;
-  font-weight:700;
-}
-
-/* =========================
-   JOB LIST
-========================= */
-.job {
-  padding: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .small {
-  font-size: 12px;
-  opacity: 0.7;
+  font-size:12px;
+  opacity:0.7;
 }
+
+.grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.metric {
+  background: rgba(0,255,140,0.05);
+  border:1px solid rgba(0,255,140,0.1);
+  padding:12px;
+  border-radius:12px;
+}
+
+.metric h2 {
+  margin:0;
+  color:#00ff8c;
+}
+
+.status-online { color:#00ff8c; font-weight:700; }
+.status-offline { color:#ff4d4d; font-weight:700; }
 
 </style>
 </head>
 
 <body>
 
-<header>
-  <div class="logo">⚡ Provider Dashboard V4</div>
-  <div id="statusText" class="status-online">ONLINE</div>
-</header>
+<div class="glow"></div>
+<div class="glow"></div>
 
 <div class="container">
 
-  <!-- =========================
-       SUMMARY
-  ========================== -->
-  <div class="card">
+<!-- =========================
+     SIGNUP SECTION
+========================= -->
+<div id="signupBox" class="card">
 
-    <h3>💰 Earnings Overview</h3>
+  <h2>🚀 Become a Provider</h2>
+  <p class="small">Activate your earning profile in seconds</p>
+
+  <input id="category" placeholder="Service (e.g Tutoring)">
+  <input id="description" placeholder="What you do">
+  
+  <select id="price">
+    <option>R50</option>
+    <option>R100</option>
+    <option>R200</option>
+    <option>Negotiable</option>
+  </select>
+
+  <input id="location" placeholder="Location">
+  <input id="phone" placeholder="WhatsApp Number">
+
+  <button class="primary" onclick="activateProvider()">
+    🚀 Go Live & Start Earning
+  </button>
+
+</div>
+
+<!-- =========================
+     DASHBOARD SECTION
+========================= -->
+<div id="dashboardBox" class="hidden">
+
+  <div class="header">
+    <h2>🟢 Provider Dashboard</h2>
+    <div id="statusText" class="status-online">ONLINE</div>
+  </div>
+
+  <!-- WALLET -->
+  <div class="card">
+    <h3>💰 Earnings Wallet</h3>
 
     <div class="grid">
 
       <div class="metric">
-        <h2>R0</h2>
-        <p class="small">Today</p>
+        <h2 id="total">R0</h2>
+        <p class="small">Total</p>
       </div>
 
       <div class="metric">
-        <h2>R0</h2>
-        <p class="small">This Week</p>
+        <h2 id="pending">R0</h2>
+        <p class="small">Pending</p>
       </div>
 
     </div>
 
   </div>
 
-  <!-- =========================
-       ONLINE/OFFLINE
-  ========================== -->
+  <!-- TOGGLE -->
   <div class="card">
 
     <h3>🟢 Availability</h3>
@@ -177,31 +219,15 @@ button {
       Go Offline
     </button>
 
-    <p class="small">
-      When offline, you will not receive jobs.
-    </p>
-
   </div>
 
-  <!-- =========================
-       ACTIVE JOBS
-  ========================== -->
+  <!-- JOBS -->
   <div class="card">
-
-    <h3>📦 Active Jobs</h3>
-    <div id="activeJobs" class="small">No active jobs</div>
-
+    <h3>📦 Jobs</h3>
+    <p class="small">No jobs yet (waiting for dispatch system)</p>
   </div>
 
-  <!-- =========================
-       COMPLETED JOBS
-  ========================== -->
-  <div class="card">
-
-    <h3>✅ Completed Jobs</h3>
-    <div id="completedJobs" class="small">No completed jobs yet</div>
-
-  </div>
+</div>
 
 </div>
 
@@ -215,6 +241,32 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let isOnline = true;
 
 /* =========================
+   ACTIVATE PROVIDER
+========================= */
+async function activateProvider(){
+
+  const data = {
+    category: category.value,
+    description: description.value,
+    price: price.value,
+    location: location.value,
+    phone: phone.value,
+    online: true,
+    created_at: new Date()
+  };
+
+  await client.from("service_profiles").insert([data]);
+
+  localStorage.setItem("provider_phone", data.phone);
+
+  // SWITCH UI
+  signupBox.classList.add("hidden");
+  dashboardBox.classList.remove("hidden");
+
+  loadWallet();
+}
+
+/* =========================
    TOGGLE STATUS
 ========================= */
 async function toggleStatus(){
@@ -225,94 +277,32 @@ async function toggleStatus(){
   const btn = document.getElementById("toggleBtn");
 
   if(isOnline){
-
     statusText.innerText = "ONLINE";
     statusText.className = "status-online";
-
     btn.innerText = "Go Offline";
     btn.className = "primary";
-
   } else {
-
     statusText.innerText = "OFFLINE";
     statusText.className = "status-offline";
-
     btn.innerText = "Go Online";
     btn.className = "danger";
   }
 
-  // Update DB (optional)
   await client
     .from("service_profiles")
     .update({ online: isOnline })
-    .eq("phone", getPhone());
+    .eq("phone", localStorage.getItem("provider_phone"));
 }
 
 /* =========================
-   GET PHONE (TEMP ID)
+   WALLET (PLACEHOLDER)
 ========================= */
-function getPhone(){
-  return localStorage.getItem("provider_phone") || "";
+function loadWallet(){
+
+  // placeholder logic until real jobs exist
+  document.getElementById("total").innerText = "R0";
+  document.getElementById("pending").innerText = "R0";
 }
-
-/* =========================
-   LOAD JOBS
-========================= */
-async function loadJobs(){
-
-  const phone = getPhone();
-
-  const { data } = await client
-    .from("service_requests")
-    .select("*")
-    .eq("matched_provider", phone);
-
-  const active = data?.filter(j => j.status !== "completed") || [];
-  const completed = data?.filter(j => j.status === "completed") || [];
-
-  renderJobs(active, completed);
-}
-
-/* =========================
-   RENDER
-========================= */
-function renderJobs(active, completed){
-
-  const activeBox = document.getElementById("activeJobs");
-  const completedBox = document.getElementById("completedJobs");
-
-  activeBox.innerHTML = active.length
-    ? active.map(j => `
-      <div class="job">
-        <b>${j.category}</b><br>
-        ${j.description}<br>
-        <span class="small">${j.location}</span>
-      </div>
-    `).join("")
-    : "No active jobs";
-
-  completedBox.innerHTML = completed.length
-    ? completed.map(j => `
-      <div class="job">
-        <b>${j.category}</b> - Completed
-      </div>
-    `).join("")
-    : "No completed jobs yet";
-}
-
-/* =========================
-   REAL TIME UPDATE
-========================= */
-client
-  .channel('service_requests')
-  .on('postgres_changes',
-    { event: '*', schema: 'public', table: 'service_requests' },
-    () => loadJobs()
-  )
-  .subscribe();
-
-/* INIT */
-loadJobs();
 
 </script>
 
