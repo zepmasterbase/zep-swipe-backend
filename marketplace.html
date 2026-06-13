@@ -17,6 +17,7 @@ body {
   font-family: system-ui;
   background: radial-gradient(circle at top, #070a09, #050807);
   color: white;
+  padding-bottom:90px;
 }
 
 /* =========================
@@ -31,6 +32,7 @@ header {
   display:flex;
   justify-content:space-between;
   align-items:center;
+  z-index:10;
 }
 
 .logo {
@@ -38,9 +40,11 @@ header {
   color:#00ff8c;
 }
 
+
 /* =========================
    TABS
 ========================= */
+
 .tabs {
   display:flex;
   justify-content:space-around;
@@ -51,7 +55,7 @@ header {
 .tab {
   flex:1;
   text-align:center;
-  padding: 12px;
+  padding:12px;
   cursor:pointer;
   font-weight:600;
   opacity:0.6;
@@ -59,231 +63,512 @@ header {
 
 .tab.active {
   opacity:1;
-  border-bottom: 2px solid #00ff8c;
+  border-bottom:2px solid #00ff8c;
   color:#00ff8c;
 }
+
 
 /* =========================
    CONTAINER
 ========================= */
+
 .container {
-  max-width: 520px;
-  margin:auto;
-  padding: 12px;
+ max-width:520px;
+ margin:auto;
+ padding:12px;
 }
 
+
 /* =========================
-   CARD
+ CARD
 ========================= */
+
 .card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 12px;
-  margin-top: 10px;
+ background:rgba(255,255,255,0.03);
+ border:1px solid rgba(255,255,255,0.08);
+ border-radius:14px;
+ padding:12px;
+ margin-top:10px;
 }
 
-/* =========================
-   BADGES
-========================= */
+
+/* BADGE */
+
 .badge {
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 10px;
-  background: rgba(0,255,140,0.15);
-  color:#00ff8c;
+ font-size:11px;
+ padding:3px 8px;
+ border-radius:10px;
+ background:rgba(0,255,140,0.15);
+ color:#00ff8c;
 }
 
-/* =========================
-   BUTTONS
-========================= */
+
+/* BUTTONS */
+
 button {
-  width:100%;
-  padding: 12px;
-  margin-top: 10px;
-  border:none;
-  border-radius: 10px;
-  font-weight:700;
-  cursor:pointer;
+ width:100%;
+ padding:12px;
+ margin-top:10px;
+ border:none;
+ border-radius:10px;
+ font-weight:700;
+ cursor:pointer;
 }
+
 
 .primary {
-  background: linear-gradient(90deg,#00ff8c,#00c2ff);
-  color:black;
+ background:linear-gradient(90deg,#00ff8c,#00c2ff);
+ color:black;
 }
 
-/* =========================
-   DEAL CARD STYLE
-========================= */
+
+/* DEAL */
+
 .deal {
-  border-left: 3px solid #00ff8c;
+ border-left:3px solid #00ff8c;
 }
 
-/* =========================
-   SMALL TEXT
-========================= */
+
 .small {
-  font-size: 12px;
-  opacity: 0.7;
+ font-size:12px;
+ opacity:.7;
 }
 
-/* =========================
-   HIDDEN
-========================= */
+
 .hidden {
-  display:none;
+ display:none;
+}
+
+
+
+/* =========================
+   FOOTER NAVIGATION UPGRADE
+========================= */
+
+.bottom-nav {
+
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+
+ height:75px;
+
+ background:rgba(5,8,7,.95);
+ backdrop-filter:blur(12px);
+
+ border-top:1px solid rgba(0,255,140,.15);
+
+ display:flex;
+ justify-content:space-around;
+ align-items:center;
+
+ z-index:20;
+
+}
+
+
+.nav-item {
+
+ color:white;
+ text-decoration:none;
+
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+
+ font-size:12px;
+ opacity:.75;
+
+ transition:.2s;
+
+}
+
+
+.nav-item span {
+
+ font-size:24px;
+ margin-bottom:3px;
+
+}
+
+
+.nav-item:hover {
+
+ color:#00ff8c;
+ opacity:1;
+ transform:translateY(-3px);
+
+}
+
+
+.nav-main {
+
+ background:linear-gradient(90deg,#00ff8c,#00c2ff);
+
+ color:black!important;
+
+ width:65px;
+ height:65px;
+
+ border-radius:50%;
+
+ justify-content:center;
+
+ margin-top:-35px;
+
+ box-shadow:0 0 25px rgba(0,255,140,.4);
+
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <header>
-  <div class="logo">⚡ Zep Market 🛒</div>
-  <div class="small">Live</div>
+
+<div class="logo">
+⚡ Zep Market 🛒
+</div>
+
+<div class="small">
+Live
+</div>
+
 </header>
 
-<!-- =========================
-     TABS
-========================= -->
+
+
 <div class="tabs">
-  <div class="tab active" onclick="showTab('earn')">💼 Hire a Student</div>
-  <div class="tab" onclick="showTab('deals')">🏷️ Student Deals</div>
+
+<div class="tab active" onclick="showTab('earn')">
+💼 Hire a Student
 </div>
+
+
+<div class="tab" onclick="showTab('deals')">
+🏷️ Student Deals
+</div>
+
+</div>
+
+
 
 <div class="container">
 
-<!-- =========================
-     EARN TAB
-========================= -->
+
+
 <div id="earnTab">
 
-  <h3>💼 Hire Student Services</h3>
-  <p class="small">Find students offering skills near you</p>
 
-  <div id="services"></div>
+<h3>
+💼 Hire Student Services
+</h3>
+
+
+<p class="small">
+Find students offering skills near you
+</p>
+
+
+<div id="services"></div>
+
 
 </div>
 
-<!-- =========================
-     DEALS TAB
-========================= -->
+
+
+
+
 <div id="dealTab" class="hidden">
 
-  <h3>🏷️ Student Deals Near You</h3>
-  <p class="small">Exclusive discounts from businesses</p>
 
-  <div id="deals"></div>
+<h3>
+🏷️ Student Deals Near You
+</h3>
+
+
+<p class="small">
+Exclusive discounts from businesses
+</p>
+
+
+<div id="deals"></div>
+
 
 </div>
 
+
+
 </div>
+
+
+
+<!-- =========================
+FOOTER NAV
+========================= -->
+
+
+<nav class="bottom-nav">
+
+
+<a href="index.html" class="nav-item">
+
+<span>🏠</span>
+
+Home
+
+</a>
+
+
+
+<a href="waitlist.html" class="nav-item">
+
+<span>⚡</span>
+
+Join
+
+</a>
+
+
+
+
+<a href="business-deala.html" class="nav-item nav-main">
+
+<span>➕</span>
+
+Deal
+
+</a>
+
+
+
+</nav>
+
+
+
+
 
 <script>
 
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL="YOUR_SUPABASE_URL";
 
-/* =========================
-   TAB SWITCH
-========================= */
+const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
+
+
+const client=supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+
+
 function showTab(tab){
 
-  document.getElementById("earnTab").classList.add("hidden");
-  document.getElementById("dealTab").classList.add("hidden");
 
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+document.getElementById("earnTab")
+.classList.add("hidden");
 
-  if(tab === "earn"){
-    document.getElementById("earnTab").classList.remove("hidden");
-    document.querySelectorAll(".tab")[0].classList.add("active");
-  }
 
-  if(tab === "deals"){
-    document.getElementById("dealTab").classList.remove("hidden");
-    document.querySelectorAll(".tab")[1].classList.add("active");
-  }
+document.getElementById("dealTab")
+.classList.add("hidden");
+
+
+document.querySelectorAll(".tab")
+.forEach(t=>t.classList.remove("active"));
+
+
+
+if(tab==="earn"){
+
+document.getElementById("earnTab")
+.classList.remove("hidden");
+
+document.querySelectorAll(".tab")[0]
+.classList.add("active");
+
 }
 
-/* =========================
-   LOAD SERVICES (EARN TAB)
-========================= */
+
+
+if(tab==="deals"){
+
+document.getElementById("dealTab")
+.classList.remove("hidden");
+
+document.querySelectorAll(".tab")[1]
+.classList.add("active");
+
+}
+
+
+}
+
+
+
 async function loadServices(){
 
-  const { data } = await client
-    .from("service_profiles")
-    .select("*")
-    .eq("online", true);
 
-  document.getElementById("services").innerHTML =
-    data?.map(s => `
-      <div class="card">
-        <span class="badge">${s.category}</span>
-        <h4>${s.description}</h4>
-        <p class="small">${s.location}</p>
-        <p class="small">💰 ${s.price}</p>
+const {data}=await client
+.from("service_profiles")
+.select("*")
+.eq("online",true);
 
-        <button class="primary" onclick="contact('${s.phone}')">
-          💬 Hire via WhatsApp
-        </button>
-      </div>
-    `).join("") || "<p class='small'>No providers online</p>";
+
+
+document.getElementById("services")
+.innerHTML=data?.map(s=>`
+
+<div class="card">
+
+<span class="badge">
+${s.category}
+</span>
+
+
+<h4>
+${s.description}
+</h4>
+
+
+<p class="small">
+${s.location}
+</p>
+
+
+<p class="small">
+💰 ${s.price}
+</p>
+
+
+
+<button class="primary"
+onclick="contact('${s.phone}')">
+
+💬 Hire via WhatsApp
+
+</button>
+
+
+</div>
+
+
+`).join("") || 
+"<p class='small'>No providers online</p>";
+
+
 }
 
-/* =========================
-   LOAD DEALS (DEALS TAB)
-========================= */
+
+
+
+
 async function loadDeals(){
 
-  const { data } = await client
-    .from("deals")
-    .select("*");
 
-  document.getElementById("deals").innerHTML =
-    data?.map(d => `
-      <div class="card deal">
-        <span class="badge">🔥 Deal</span>
-        <h4>${d.title}</h4>
-        <p class="small">${d.description}</p>
-        <p class="small">📍 ${d.location}</p>
-        <p class="small">⏰ ${d.valid_until || "Limited time"}</p>
+const {data}=await client
+.from("deals")
+.select("*");
 
-        <button class="primary" onclick="contact('${d.phone}')">
-          📲 Claim Deal
-        </button>
-      </div>
-    `).join("") || "<p class='small'>No deals available</p>";
+
+
+document.getElementById("deals")
+.innerHTML=data?.map(d=>`
+
+<div class="card deal">
+
+
+<span class="badge">
+🔥 Deal
+</span>
+
+
+<h4>
+${d.title}
+</h4>
+
+
+<p class="small">
+${d.description}
+</p>
+
+
+<p class="small">
+📍 ${d.location}
+</p>
+
+
+<p class="small">
+⏰ ${d.valid_until || "Limited time"}
+</p>
+
+
+
+<button class="primary"
+onclick="contact('${d.phone}')">
+
+📲 Claim Deal
+
+</button>
+
+
+</div>
+
+
+`).join("") || 
+"<p class='small'>No deals available</p>";
+
 }
 
-/* =========================
-   WHATSAPP CONTACT
-========================= */
+
+
 function contact(phone){
-  window.open(`https://wa.me/${phone}`, "_blank");
+
+window.open(
+`https://wa.me/${phone}`,
+"_blank"
+);
+
 }
 
-/* =========================
-   REALTIME (optional upgrade)
-========================= */
-client
-  .channel('marketplace')
-  .on('postgres_changes',
-    { event: '*', schema: 'public', tables: ['service_profiles','deals'] },
-    () => {
-      loadServices();
-      loadDeals();
-    }
-  )
-  .subscribe();
 
-/* INIT */
+
+client
+.channel('marketplace')
+.on(
+'postgres_changes',
+{
+event:'*',
+schema:'public',
+tables:[
+'service_profiles',
+'deals'
+]
+},
+
+()=>{
+
 loadServices();
 loadDeals();
 
+})
+
+.subscribe();
+
+
+
+loadServices();
+
+loadDeals();
+
+
 </script>
+
 
 </body>
 </html>
