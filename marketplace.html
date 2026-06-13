@@ -1,225 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Zep Swipe Marketplace V11</title>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
+<script src="https://unpkg.com/lucide@latest"></script>
+
+
 <style>
 
-/* =========================
-   BASE
-========================= */
+
 body {
-  margin: 0;
-  font-family: system-ui;
-  background: radial-gradient(circle at top, #070a09, #050807);
-  color: white;
-  padding-bottom:90px;
+
+margin:0;
+font-family:system-ui;
+background:radial-gradient(circle at top,#070a09,#050807);
+color:white;
+padding-bottom:90px;
+
 }
 
-/* =========================
-   HEADER
-========================= */
+
+
 header {
-  position: sticky;
-  top: 0;
-  background: rgba(10,14,12,0.95);
-  border-bottom: 1px solid rgba(0,255,140,0.12);
-  padding: 12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  z-index:10;
+
+position:sticky;
+top:0;
+background:rgba(10,14,12,.95);
+border-bottom:1px solid rgba(0,255,140,.12);
+padding:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:10;
+
 }
+
+
 
 .logo {
-  font-weight: 700;
-  color:#00ff8c;
+
+font-weight:700;
+color:#00ff8c;
+
 }
 
 
-/* =========================
-   TABS
-========================= */
 
 .tabs {
-  display:flex;
-  justify-content:space-around;
-  background: rgba(255,255,255,0.02);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+
+display:flex;
+justify-content:space-around;
+background:rgba(255,255,255,.02);
+border-bottom:1px solid rgba(255,255,255,.05);
+
 }
+
+
 
 .tab {
-  flex:1;
-  text-align:center;
-  padding:12px;
-  cursor:pointer;
-  font-weight:600;
-  opacity:0.6;
+
+flex:1;
+text-align:center;
+padding:12px;
+cursor:pointer;
+font-weight:600;
+opacity:.6;
+
 }
+
+
 
 .tab.active {
-  opacity:1;
-  border-bottom:2px solid #00ff8c;
-  color:#00ff8c;
+
+opacity:1;
+border-bottom:2px solid #00ff8c;
+color:#00ff8c;
+
 }
 
 
-/* =========================
-   CONTAINER
-========================= */
 
 .container {
- max-width:520px;
- margin:auto;
- padding:12px;
+
+max-width:520px;
+margin:auto;
+padding:12px;
+
 }
 
 
-/* =========================
- CARD
-========================= */
 
 .card {
- background:rgba(255,255,255,0.03);
- border:1px solid rgba(255,255,255,0.08);
- border-radius:14px;
- padding:12px;
- margin-top:10px;
+
+background:rgba(255,255,255,.03);
+border:1px solid rgba(255,255,255,.08);
+border-radius:14px;
+padding:12px;
+margin-top:10px;
+
 }
 
 
-/* BADGE */
 
 .badge {
- font-size:11px;
- padding:3px 8px;
- border-radius:10px;
- background:rgba(0,255,140,0.15);
- color:#00ff8c;
+
+font-size:11px;
+padding:3px 8px;
+border-radius:10px;
+background:rgba(0,255,140,.15);
+color:#00ff8c;
+
 }
 
 
-/* BUTTONS */
 
 button {
- width:100%;
- padding:12px;
- margin-top:10px;
- border:none;
- border-radius:10px;
- font-weight:700;
- cursor:pointer;
+
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:10px;
+font-weight:700;
+cursor:pointer;
+
 }
+
 
 
 .primary {
- background:linear-gradient(90deg,#00ff8c,#00c2ff);
- color:black;
+
+background:linear-gradient(90deg,#00ff8c,#00c2ff);
+color:black;
+
 }
 
 
-/* DEAL */
 
 .deal {
- border-left:3px solid #00ff8c;
+
+border-left:3px solid #00ff8c;
+
 }
+
 
 
 .small {
- font-size:12px;
- opacity:.7;
+
+font-size:12px;
+opacity:.7;
+
 }
 
 
+
 .hidden {
- display:none;
+
+display:none;
+
 }
 
 
 
 /* =========================
-   FOOTER NAVIGATION UPGRADE
+FOOTER NAV
 ========================= */
+
 
 .bottom-nav {
 
- position:fixed;
- bottom:0;
- left:0;
- right:0;
+position:fixed;
+bottom:0;
+left:0;
+right:0;
 
- height:75px;
+height:75px;
 
- background:rgba(5,8,7,.95);
- backdrop-filter:blur(12px);
+background:rgba(5,8,7,.95);
+backdrop-filter:blur(12px);
 
- border-top:1px solid rgba(0,255,140,.15);
+border-top:1px solid rgba(0,255,140,.15);
 
- display:flex;
- justify-content:space-around;
- align-items:center;
+display:flex;
+justify-content:space-around;
+align-items:center;
 
- z-index:20;
+z-index:20;
 
 }
+
 
 
 .nav-item {
 
- color:white;
- text-decoration:none;
+color:white;
+text-decoration:none;
 
- display:flex;
- flex-direction:column;
- align-items:center;
+display:flex;
+flex-direction:column;
+align-items:center;
 
- font-size:12px;
- opacity:.75;
+font-size:12px;
+opacity:.75;
 
- transition:.2s;
+transition:.2s;
+
+}
+
+
+
+.nav-item svg {
+
+width:24px;
+height:24px;
+
+margin-bottom:5px;
+
+stroke-width:2;
 
 }
 
-
-.nav-item span {
-
- font-size:24px;
- margin-bottom:3px;
-
-}
 
 
 .nav-item:hover {
 
- color:#00ff8c;
- opacity:1;
- transform:translateY(-3px);
+color:#00ff8c;
+opacity:1;
+transform:translateY(-3px);
 
 }
+
 
 
 .nav-main {
 
- background:linear-gradient(90deg,#00ff8c,#00c2ff);
+background:linear-gradient(90deg,#00ff8c,#00c2ff);
 
- color:black!important;
+color:black!important;
 
- width:65px;
- height:65px;
+width:65px;
+height:65px;
 
- border-radius:50%;
+border-radius:50%;
 
- justify-content:center;
+justify-content:center;
 
- margin-top:-35px;
+margin-top:-35px;
 
- box-shadow:0 0 25px rgba(0,255,140,.4);
+box-shadow:0 0 25px rgba(0,255,140,.4);
 
 }
+
+
+
+.nav-main svg {
+
+width:30px;
+height:30px;
+
+}
+
+
+
+.nav-main span {
+
+font-size:11px;
+
+}
+
+
 
 </style>
 
@@ -229,32 +287,45 @@ button {
 <body>
 
 
+
 <header>
 
 <div class="logo">
 ⚡ Zep Market 🛒
 </div>
 
+
 <div class="small">
 Live
 </div>
+
 
 </header>
 
 
 
+
 <div class="tabs">
 
+
 <div class="tab active" onclick="showTab('earn')">
+
 💼 Hire a Student
+
 </div>
+
 
 
 <div class="tab" onclick="showTab('deals')">
+
 🏷️ Student Deals
-</div>
 
 </div>
+
+
+</div>
+
+
 
 
 
@@ -284,6 +355,7 @@ Find students offering skills near you
 
 
 
+
 <div id="dealTab" class="hidden">
 
 
@@ -303,14 +375,12 @@ Exclusive discounts from businesses
 </div>
 
 
-
 </div>
 
 
 
-<!-- =========================
-FOOTER NAV
-========================= -->
+
+
 
 
 <nav class="bottom-nav">
@@ -318,9 +388,11 @@ FOOTER NAV
 
 <a href="index.html" class="nav-item">
 
-<span>🏠</span>
+<i data-lucide="home"></i>
 
+<span>
 Home
+</span>
 
 </a>
 
@@ -328,9 +400,11 @@ Home
 
 <a href="waitlist.html" class="nav-item">
 
-<span>⚡</span>
+<i data-lucide="zap"></i>
 
+<span>
 Join
+</span>
 
 </a>
 
@@ -339,15 +413,19 @@ Join
 
 <a href="business-deala.html" class="nav-item nav-main">
 
-<span>➕</span>
+<i data-lucide="plus"></i>
 
+<span>
 Deal
+</span>
 
 </a>
 
 
 
 </nav>
+
+
 
 
 
@@ -368,6 +446,7 @@ SUPABASE_KEY
 
 
 
+
 function showTab(tab){
 
 
@@ -379,6 +458,7 @@ document.getElementById("dealTab")
 .classList.add("hidden");
 
 
+
 document.querySelectorAll(".tab")
 .forEach(t=>t.classList.remove("active"));
 
@@ -388,6 +468,7 @@ if(tab==="earn"){
 
 document.getElementById("earnTab")
 .classList.remove("hidden");
+
 
 document.querySelectorAll(".tab")[0]
 .classList.add("active");
@@ -401,6 +482,7 @@ if(tab==="deals"){
 document.getElementById("dealTab")
 .classList.remove("hidden");
 
+
 document.querySelectorAll(".tab")[1]
 .classList.add("active");
 
@@ -411,60 +493,85 @@ document.querySelectorAll(".tab")[1]
 
 
 
+
+
+
 async function loadServices(){
 
 
 const {data}=await client
+
 .from("service_profiles")
+
 .select("*")
+
 .eq("online",true);
 
 
 
+
 document.getElementById("services")
+
 .innerHTML=data?.map(s=>`
+
 
 <div class="card">
 
+
 <span class="badge">
+
 ${s.category}
+
 </span>
 
 
+
 <h4>
+
 ${s.description}
+
 </h4>
 
 
+
 <p class="small">
+
 ${s.location}
+
 </p>
+
 
 
 <p class="small">
+
 💰 ${s.price}
+
 </p>
+
 
 
 
 <button class="primary"
+
 onclick="contact('${s.phone}')">
+
 
 💬 Hire via WhatsApp
 
+
 </button>
+
 
 
 </div>
 
 
+
 `).join("") || 
+
 "<p class='small'>No providers online</p>";
 
-
 }
-
-
 
 
 
@@ -472,47 +579,69 @@ async function loadDeals(){
 
 
 const {data}=await client
+
 .from("deals")
+
 .select("*");
 
 
 
 document.getElementById("deals")
+
 .innerHTML=data?.map(d=>`
+
 
 <div class="card deal">
 
 
 <span class="badge">
+
 🔥 Deal
+
 </span>
 
 
+
 <h4>
+
 ${d.title}
+
 </h4>
 
 
+
 <p class="small">
+
 ${d.description}
+
 </p>
 
 
+
 <p class="small">
+
 📍 ${d.location}
+
 </p>
+
 
 
 <p class="small">
+
 ⏰ ${d.valid_until || "Limited time"}
+
 </p>
+
 
 
 
 <button class="primary"
+
 onclick="contact('${d.phone}')">
 
+
 📲 Claim Deal
+
 
 </button>
 
@@ -520,55 +649,86 @@ onclick="contact('${d.phone}')">
 </div>
 
 
+
 `).join("") || 
+
 "<p class='small'>No deals available</p>";
 
 }
 
 
 
+
+
 function contact(phone){
 
 window.open(
+
 `https://wa.me/${phone}`,
+
 "_blank"
+
 );
 
 }
 
 
 
+
+
 client
+
 .channel('marketplace')
+
 .on(
+
 'postgres_changes',
+
 {
+
 event:'*',
+
 schema:'public',
+
 tables:[
+
 'service_profiles',
+
 'deals'
+
 ]
+
 },
+
 
 ()=>{
 
 loadServices();
+
 loadDeals();
 
 })
+
 
 .subscribe();
 
 
 
+
+
 loadServices();
 
 loadDeals();
 
 
+
+lucide.createIcons();
+
+
 </script>
 
 
+
 </body>
+
 </html>
