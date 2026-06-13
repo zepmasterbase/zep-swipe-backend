@@ -3,209 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace</title>
+<title>Zep Swipe Marketplace V7</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
 
 /* =========================
-   BASE SYSTEM
+   BASE
 ========================= */
-
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, Arial;
+  font-family: system-ui, Arial;
   background: #0b0f0d;
-  color: #ffffff;
-}
-
-/* subtle animated background dots (clean instead of icons) */
-.bg {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 0;
-}
-
-.dot {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: rgba(0,255,140,0.12);
-  border-radius: 50%;
-  animation: float 12s infinite linear;
-}
-
-@keyframes float {
-  0% { transform: translateY(100vh); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: translateY(-10vh); opacity: 0; }
+  color: white;
 }
 
 /* =========================
-   HEADER (SLEEK)
+   HEADER
 ========================= */
-
 header {
   position: sticky;
   top: 0;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: rgba(10, 14, 12, 0.85);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(0,255,140,0.12);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px;
+  background: rgba(10,14,12,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,255,140,0.15);
 }
 
 .logo {
-  font-weight: 700;
-  font-size: 15px;
-  color: #00ff8c;
-  letter-spacing: 0.3px;
+  font-weight:700;
+  color:#00ff8c;
 }
-
-/* =========================
-   BUTTONS
-========================= */
 
 .btn {
-  border: none;
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
+  padding:8px 12px;
+  border:none;
+  border-radius:10px;
+  font-size:12px;
+  cursor:pointer;
 }
 
-.primary {
-  background: #00ff8c;
-  color: #0b0f0d;
-}
-
-.secondary {
-  background: rgba(255,255,255,0.08);
-  color: white;
-}
+.primary { background:#00ff8c; color:black; }
+.dark { background:rgba(255,255,255,0.08); color:white; }
 
 /* =========================
    LAYOUT
 ========================= */
-
 .container {
-  position: relative;
-  z-index: 2;
-  max-width: 920px;
-  margin: auto;
-  padding: 14px;
+  max-width:900px;
+  margin:auto;
+  padding:12px;
 }
 
 /* =========================
-   REQUEST BOX (MAIN CTA)
+   REQUEST BOX
 ========================= */
-
-.request {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(0,255,140,0.12);
-  border-radius: 14px;
-  padding: 14px;
-  margin-top: 14px;
+.request-box {
+  background:rgba(255,255,255,0.03);
+  padding:14px;
+  border-radius:14px;
+  border:1px solid rgba(0,255,140,0.12);
 }
 
-.request h3 {
-  margin: 0;
-  font-size: 14px;
-  color: #00ff8c;
-  font-weight: 600;
+input {
+  width:100%;
+  margin-top:8px;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  background:#0b0f0d;
+  color:white;
 }
 
-.request input {
-  width: 100%;
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(0,0,0,0.3);
-  color: white;
-  outline: none;
-}
-
-.request button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: #00ff8c;
-  font-weight: 700;
-  color: #0b0f0d;
-  cursor: pointer;
+button.request {
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#00ff8c;
+  font-weight:700;
 }
 
 /* =========================
-   LIVE STRIP
+   SECTIONS
 ========================= */
-
-.live {
-  margin-top: 12px;
-  padding: 10px 12px;
-  font-size: 12px;
-  border-radius: 12px;
-  background: rgba(0,255,140,0.06);
-  border: 1px solid rgba(0,255,140,0.12);
-  color: rgba(255,255,255,0.85);
+h3 {
+  margin-top:16px;
+  color:#00ff8c;
+  font-size:14px;
 }
 
 /* =========================
-   JOB CARDS
+   PROVIDER CARD
 ========================= */
-
 .card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 14px;
-  padding: 14px;
-  margin-top: 12px;
-  transition: 0.2s ease;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:14px;
+  padding:12px;
+  margin-top:10px;
 }
 
-.card:hover {
-  border-color: rgba(0,255,140,0.25);
+.small {
+  font-size:12px;
+  opacity:0.7;
 }
 
 .badge {
-  font-size: 11px;
-  padding: 4px 8px;
-  border-radius: 20px;
-  background: rgba(0,255,140,0.12);
-  color: #00ff8c;
-}
-
-.meta {
-  margin-top: 6px;
-  font-size: 12px;
-  opacity: 0.7;
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:20px;
+  background:rgba(0,255,140,0.12);
+  color:#00ff8c;
 }
 
 /* =========================
-   FLOAT CTA
+   PROVIDERS GRID
 ========================= */
+.grid {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
 
+/* =========================
+   FLOAT BUTTON
+========================= */
 .fab {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  background: #00ff8c;
-  color: #0b0f0d;
-  padding: 14px 16px;
-  border-radius: 50px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 8px 25px rgba(0,255,140,0.25);
+  position:fixed;
+  bottom:16px;
+  right:16px;
+  background:#00ff8c;
+  color:black;
+  padding:14px 16px;
+  border-radius:50px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 0 20px rgba(0,255,140,0.3);
 }
 
 </style>
@@ -213,62 +152,44 @@ header {
 
 <body>
 
-<!-- subtle background -->
-<div class="bg">
-  <div class="dot" style="left:10%; animation-delay:0s;"></div>
-  <div class="dot" style="left:25%; animation-delay:2s;"></div>
-  <div class="dot" style="left:40%; animation-delay:4s;"></div>
-  <div class="dot" style="left:60%; animation-delay:1s;"></div>
-  <div class="dot" style="left:80%; animation-delay:3s;"></div>
-</div>
-
-<!-- HEADER -->
 <header>
-  <div class="logo">Zep Swipe</div>
+  <div class="logo">⚡ Zep Marketplace</div>
 
   <div>
-    <!-- PROVIDER BUTTON (KEPT INTTACT) -->
-    <button class="btn secondary"
-      onclick="window.location.href='provider.html'">
-      Provider
-    </button>
-
-    <!-- UPDATED JOIN BUTTON -->
-    <button class="btn primary"
-      onclick="window.location.href='waitlists.html'">
-      Join Waitlist
+    <button class="btn dark" onclick="window.location.href='provider.html'">
+      Become Provider
     </button>
   </div>
 </header>
 
-<!-- MAIN -->
 <div class="container">
 
-  <!-- REQUEST CTA -->
-  <div class="request">
+  <!-- REQUEST -->
+  <div class="request-box">
 
-    <h3>What do you need?</h3>
+    <h3>What service do you need?</h3>
 
-    <input id="request" placeholder="e.g. Cleaning, Tutoring, Barber...">
+    <input id="category" placeholder="e.g. Cleaning, Hair, Tutoring">
+    <input id="desc" placeholder="Describe what you need">
     <input id="location" placeholder="Your location">
 
-    <button onclick="createRequest()">
+    <button class="request" onclick="createRequest()">
       Request Service
     </button>
 
   </div>
 
-  <!-- LIVE STATUS -->
-  <div class="live">
-    ⚡ Live: Providers available in your area • Avg response time: 5–8 mins
-  </div>
+  <!-- PROVIDERS -->
+  <h3>🛠 Available Providers Near You</h3>
+  <div id="providers" class="grid"></div>
 
-  <!-- JOB FEED -->
-  <div id="jobs"></div>
+  <!-- LIVE REQUESTS -->
+  <h3>📍 Recent Requests</h3>
+  <div id="requests"></div>
 
 </div>
 
-<!-- FLOAT CTA -->
+<!-- FLOAT -->
 <div class="fab" onclick="window.location.href='waitlists.html'">
   Join Waitlist
 </div>
@@ -280,54 +201,97 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* CREATE REQUEST */
+/* =========================
+   CREATE REQUEST
+========================= */
 async function createRequest(){
 
-  const req = document.getElementById("request").value;
-  const loc = document.getElementById("location").value;
-
-  if(!req) return alert("Please enter a request");
-
   await client.from("service_requests").insert([{
-    category: "General",
-    description: req,
-    location: loc,
+    category: document.getElementById("category").value,
+    description: document.getElementById("desc").value,
+    location: document.getElementById("location").value,
     status: "open"
   }]);
 
-  loadJobs();
+  loadRequests();
 }
 
-/* LOAD JOBS */
-async function loadJobs(){
+/* =========================
+   LOAD PROVIDERS
+========================= */
+async function loadProviders(){
+
+  const { data } = await client
+    .from("service_profiles")
+    .select("*");
+
+  renderProviders(data || []);
+}
+
+/* =========================
+   LOAD REQUESTS
+========================= */
+async function loadRequests(){
 
   const { data } = await client
     .from("service_requests")
     .select("*")
     .order("created_at",{ascending:false});
 
-  render(data || []);
+  renderRequests(data || []);
 }
 
-/* RENDER */
-function render(jobs){
+/* =========================
+   RENDER PROVIDERS
+========================= */
+function renderProviders(list){
 
-  const box = document.getElementById("jobs");
+  const box = document.getElementById("providers");
   box.innerHTML = "";
 
-  jobs.forEach(job => {
+  list.forEach(p => {
 
     box.innerHTML += `
       <div class="card">
 
-        <span class="badge">${job.category}</span>
+        <span class="badge">${p.category}</span>
 
-        <p style="margin-top:8px;">
-          ${job.description}
-        </p>
+        <p><b>${p.description}</b></p>
 
-        <div class="meta">
-          📍 ${job.location || "Unknown"}
+        <div class="small">
+          📍 ${p.location || "Nearby"}<br>
+          💰 ${p.price_range || "Negotiable"}
+        </div>
+
+        <button class="request"
+          onclick="contact('${p.phone}')">
+          Contact Provider
+        </button>
+
+      </div>
+    `;
+  });
+}
+
+/* =========================
+   RENDER REQUESTS
+========================= */
+function renderRequests(list){
+
+  const box = document.getElementById("requests");
+  box.innerHTML = "";
+
+  list.forEach(r => {
+
+    box.innerHTML += `
+      <div class="card">
+
+        <span class="badge">${r.category}</span>
+
+        <p>${r.description}</p>
+
+        <div class="small">
+          📍 ${r.location}
         </div>
 
       </div>
@@ -335,8 +299,17 @@ function render(jobs){
   });
 }
 
+/* =========================
+   CONTACT (MVP WHATSAPP)
+========================= */
+function contact(phone){
+
+  window.open(`https://wa.me/${phone}`, "_blank");
+}
+
 /* INIT */
-loadJobs();
+loadProviders();
+loadRequests();
 
 </script>
 
