@@ -3,21 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Provider Dashboard V5</title>
+<title>Zep Swipe Provider Dashboard V6</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
 
-/* GLOBAL */
+/* =========================
+   BASE
+========================= */
 body {
   margin: 0;
   font-family: system-ui, Arial;
-  background: #070b09;
+  background: #0b0f0d;
   color: white;
 }
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 header {
   position: sticky;
   top: 0;
@@ -25,38 +29,43 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 14px;
-  background: rgba(10,15,12,0.92);
+  padding: 12px 14px;
+  background: rgba(10,14,12,0.92);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0,255,140,0.15);
-  backdrop-filter: blur(10px);
 }
 
 .logo {
   font-weight: 700;
   color: #00ff8c;
-  font-size: 15px;
 }
 
-/* ONLINE TOGGLE */
+/* =========================
+   ONLINE TOGGLE
+========================= */
 .toggle {
-  background: rgba(255,255,255,0.08);
+  font-size: 12px;
   padding: 6px 10px;
   border-radius: 20px;
-  font-size: 12px;
   cursor: pointer;
+  background: rgba(255,255,255,0.08);
 }
 
 .online { color: #00ff8c; }
 .offline { color: orange; }
 
-/* CONTAINER */
+/* =========================
+   CONTAINER
+========================= */
 .container {
   max-width: 900px;
   margin: auto;
   padding: 12px;
 }
 
-/* STATS GRID */
+/* =========================
+   STATS
+========================= */
 .stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -65,54 +74,68 @@ header {
 }
 
 .card {
-  background: #101814;
+  background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 14px;
   padding: 12px;
 }
 
-/* HEADINGS */
+/* =========================
+   HEADINGS
+========================= */
 h3 {
-  margin: 0 0 8px 0;
-  color: #00ff8c;
+  margin: 14px 0 8px;
   font-size: 14px;
+  color: #00ff8c;
 }
 
-/* JOB CARD */
+/* =========================
+   JOB CARD
+========================= */
 .job {
-  background: #0f1412;
-  border: 1px solid rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.03);
+  border-radius: 14px;
   padding: 12px;
-  border-radius: 12px;
-  margin-bottom: 10px;
+  margin-top: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
 }
 
 .meta {
   font-size: 12px;
   opacity: 0.7;
-  margin-top: 5px;
 }
 
-/* BUTTONS */
+/* =========================
+   BUTTONS
+========================= */
 button {
   width: 100%;
+  margin-top: 8px;
   padding: 10px;
   border-radius: 10px;
   border: none;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  margin-top: 6px;
 }
 
-.accept { background: #00ff8c; color: black; }
-.decline { background: #222; color: white; }
+.accept {
+  background: #00ff8c;
+  color: black;
+}
 
-/* RANK BADGE */
+.decline {
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+
+/* =========================
+   RANK SYSTEM
+========================= */
 .rank {
-  display: inline-block;
+  font-size: 12px;
   padding: 4px 8px;
   border-radius: 20px;
-  font-size: 11px;
+  display: inline-block;
 }
 
 .bronze { background:#cd7f32; color:black; }
@@ -120,17 +143,9 @@ button {
 .gold { background:#ffd700; color:black; }
 .founder { background:#00ff8c; color:black; }
 
-/* GRID */
-.jobs {
-  margin-top: 10px;
-}
-
-/* WALLET */
-.wallet {
-  font-size: 13px;
-}
-
-/* MOBILE */
+/* =========================
+   MOBILE
+========================= */
 @media(max-width:600px){
   .stats { grid-template-columns: 1fr 1fr; }
 }
@@ -141,7 +156,8 @@ button {
 <body>
 
 <header>
-  <div class="logo">🧑‍💻 Provider Dashboard V5</div>
+  <div class="logo">🧑‍💻 Provider Dashboard V6</div>
+
   <div class="toggle" onclick="toggleOnline()">
     Status: <span id="status" class="offline">OFFLINE</span>
   </div>
@@ -163,27 +179,24 @@ button {
     </div>
 
     <div class="card">
-      <h3>⚡ Zep Points</h3>
+      <h3>⚡ Points</h3>
       <p id="points">0</p>
     </div>
 
     <div class="card">
-      <h3>📦 Jobs Done</h3>
+      <h3>📦 Jobs</h3>
       <p id="jobsDone">0</p>
     </div>
 
   </div>
 
-  <!-- WALLET -->
-  <div class="card wallet">
-    <h3>💳 Zep Wallet</h3>
-    <p>Earn 10 points per job</p>
-    <p>Bonus: Fast accept +5 pts</p>
-  </div>
-
   <!-- LIVE JOBS -->
   <h3>⚡ Live Jobs</h3>
-  <div id="jobs" class="jobs"></div>
+  <div id="jobs"></div>
+
+  <!-- MATCHED JOBS -->
+  <h3>📍 Matched Jobs</h3>
+  <div id="matched"></div>
 
 </div>
 
@@ -195,40 +208,27 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let provider = {
-  online: false,
+  id: "demo",
+  available: false,
   points: 0,
   jobsDone: 0
 };
 
-/* RANK SYSTEM */
-function getRank(points){
-  if(points >= 150) return "founder";
-  if(points >= 80) return "gold";
-  if(points >= 30) return "silver";
-  return "bronze";
-}
+/* =========================
+   ONLINE/OFFLINE TOGGLE
+========================= */
+async function toggleOnline(){
 
-/* UPDATE UI */
-function updateUI(){
+  provider.available = !provider.available;
 
-  document.getElementById("points").innerText = provider.points;
-  document.getElementById("jobsDone").innerText = provider.jobsDone;
-
-  let rank = getRank(provider.points);
-  let el = document.getElementById("rank");
-
-  el.className = "rank " + rank;
-  el.innerText = rank.toUpperCase();
-}
-
-/* ONLINE TOGGLE */
-function toggleOnline(){
-
-  provider.online = !provider.online;
+  await client
+    .from("providers")
+    .update({ available: provider.available })
+    .eq("id", provider.id);
 
   const status = document.getElementById("status");
 
-  if(provider.online){
+  if(provider.available){
     status.innerText = "ONLINE";
     status.className = "online";
   } else {
@@ -237,7 +237,9 @@ function toggleOnline(){
   }
 }
 
-/* LOAD JOBS */
+/* =========================
+   LOAD JOBS
+========================= */
 async function loadJobs(){
 
   const { data } = await client
@@ -249,16 +251,27 @@ async function loadJobs(){
   renderJobs(data || []);
 }
 
-/* RENDER JOBS */
+/* =========================
+   LOAD MATCHED JOBS
+========================= */
+async function loadMatched(){
+
+  const { data } = await client
+    .from("service_requests")
+    .select("*")
+    .eq("status","accepted")
+    .eq("matched_provider", provider.id);
+
+  renderMatched(data || []);
+}
+
+/* =========================
+   RENDER JOBS
+========================= */
 function renderJobs(jobs){
 
   const box = document.getElementById("jobs");
   box.innerHTML = "";
-
-  if(jobs.length === 0){
-    box.innerHTML = "<p>No jobs available</p>";
-    return;
-  }
 
   jobs.forEach(job => {
 
@@ -274,8 +287,31 @@ function renderJobs(jobs){
           Accept Job
         </button>
 
-        <button class="decline" onclick="declineJob('${job.id}')">
-          Decline
+      </div>
+    `;
+  });
+}
+
+/* =========================
+   RENDER MATCHED
+========================= */
+function renderMatched(jobs){
+
+  const box = document.getElementById("matched");
+  box.innerHTML = "";
+
+  jobs.forEach(job => {
+
+    box.innerHTML += `
+      <div class="job">
+
+        <b>${job.category}</b>
+        <p>${job.description}</p>
+
+        <div class="meta">📍 ${job.location}</div>
+
+        <button class="decline" onclick="completeJob('${job.id}')">
+          Mark Completed
         </button>
 
       </div>
@@ -283,13 +319,16 @@ function renderJobs(jobs){
   });
 }
 
-/* ACCEPT JOB */
+/* =========================
+   ACCEPT JOB
+========================= */
 async function acceptJob(id){
 
   await client
     .from("service_requests")
     .update({
-      status: "accepted"
+      status: "accepted",
+      matched_provider: provider.id
     })
     .eq("id", id);
 
@@ -298,17 +337,54 @@ async function acceptJob(id){
 
   updateUI();
   loadJobs();
-
-  alert("Job accepted +10 points!");
+  loadMatched();
 }
 
-/* DECLINE */
-function declineJob(id){
-  alert("Job skipped");
+/* =========================
+   COMPLETE JOB
+========================= */
+async function completeJob(id){
+
+  await client
+    .from("service_requests")
+    .update({
+      status: "completed"
+    })
+    .eq("id", id);
+
+  loadMatched();
 }
 
-/* START */
+/* =========================
+   RANK SYSTEM
+========================= */
+function getRank(points){
+  if(points >= 150) return "founder";
+  if(points >= 80) return "gold";
+  if(points >= 30) return "silver";
+  return "bronze";
+}
+
+/* =========================
+   UI UPDATE
+========================= */
+function updateUI(){
+
+  document.getElementById("points").innerText = provider.points;
+  document.getElementById("jobsDone").innerText = provider.jobsDone;
+
+  let rank = getRank(provider.points);
+  let el = document.getElementById("rank");
+
+  el.className = "rank " + rank;
+  el.innerText = rank.toUpperCase();
+}
+
+/* =========================
+   INIT
+========================= */
 loadJobs();
+loadMatched();
 updateUI();
 
 </script>
