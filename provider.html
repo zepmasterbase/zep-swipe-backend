@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Provider System v2</title>
+<title>Zep Swipe Provider V3</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -46,6 +46,7 @@ button {
   padding: 15px;
 }
 
+/* CARD */
 .card {
   background: #0b120e;
   border: 1px solid rgba(0,255,140,0.15);
@@ -53,12 +54,17 @@ button {
   padding: 15px;
 }
 
-/* JOB CARDS */
+/* JOB */
 .job {
   border: 1px solid rgba(0,255,140,0.2);
   padding: 12px;
   border-radius: 10px;
   margin-bottom: 10px;
+}
+
+/* PROFILE */
+.profile-box p {
+  margin: 5px 0;
 }
 
 /* MODAL */
@@ -91,6 +97,7 @@ input, select, textarea {
   border: none;
 }
 
+/* BUTTONS */
 .small-btn {
   width: 100%;
   margin-top: 10px;
@@ -101,7 +108,7 @@ input, select, textarea {
 <body>
 
 <header>
-  <h2>Provider Dashboard</h2>
+  <h2>Provider Dashboard V3</h2>
   <button onclick="openModal()">+ Become Provider</button>
 </header>
 
@@ -109,15 +116,15 @@ input, select, textarea {
 
   <!-- JOB FEED -->
   <div class="card">
-    <h3 style="color:#00ff8c;">Available Jobs</h3>
+    <h3 style="color:#00ff8c;">Matched Jobs</h3>
     <div id="jobs"></div>
   </div>
 
-  <!-- PROVIDER INFO -->
-  <div class="card">
+  <!-- PROFILE -->
+  <div class="card profile-box">
     <h3 style="color:#00ff8c;">My Profile</h3>
     <div id="profile">
-      <p>No provider registered yet.</p>
+      <p>No provider registered.</p>
     </div>
   </div>
 
@@ -126,7 +133,7 @@ input, select, textarea {
 <!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-content">
-    <h3 style="color:#00ff8c;">Become a Provider</h3>
+    <h3 style="color:#00ff8c;">Provider Registration</h3>
 
     <input id="name" placeholder="Full Name">
     <input id="phone" placeholder="Phone Number">
@@ -140,7 +147,7 @@ input, select, textarea {
     </select>
 
     <input id="location" placeholder="Location (Randfontein)">
-    <textarea id="skills" placeholder="Your skills"></textarea>
+    <textarea id="skills" placeholder="Skills / Services"></textarea>
 
     <button class="small-btn" onclick="registerProvider()">Register</button>
     <button class="small-btn" style="background:red;color:white;" onclick="closeModal()">Close</button>
@@ -156,7 +163,9 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentProvider = null;
 
-/* MODAL */
+/* =========================
+   MODAL
+========================= */
 function openModal() {
   document.getElementById("modal").style.display = "flex";
 }
@@ -165,7 +174,9 @@ function closeModal() {
   document.getElementById("modal").style.display = "none";
 }
 
-/* REGISTER PROVIDER */
+/* =========================
+   REGISTER PROVIDER
+========================= */
 async function registerProvider() {
 
   const provider = {
@@ -174,7 +185,9 @@ async function registerProvider() {
     category: document.getElementById("category").value,
     location: document.getElementById("location").value || "Randfontein",
     skills: document.getElementById("skills").value,
-    zep_points: 0
+    zep_points: 0,
+    accepted_jobs: 0,
+    completed_jobs: 0
   };
 
   const { data, error } = await client
@@ -184,25 +197,40 @@ async function registerProvider() {
     .single();
 
   if (error) {
-    alert("Error registering provider");
+    alert("Registration failed");
     console.log(error);
     return;
   }
 
   currentProvider = data;
 
+  localStorage.setItem("provider", JSON.stringify(data));
+
   alert("Provider registered successfully!");
   closeModal();
+
   loadJobs();
   loadProfile();
 }
 
-/* LOAD JOBS (AUTO MATCHING) */
+/* =========================
+   LOAD SESSION
+========================= */
+function loadSession() {
+  const saved = localStorage.getItem("provider");
+  if (saved) {
+    currentProvider = JSON.parse(saved);
+  }
+}
+
+/* =========================
+   LOAD JOBS (AUTO MATCH)
+========================= */
 async function loadJobs() {
 
   if (!currentProvider) {
     document.getElementById("jobs").innerHTML =
-      "<p>Register as a provider to see jobs.</p>";
+      "<p>Register to see matched jobs</p>";
     return;
   }
 
@@ -215,10 +243,18 @@ async function loadJobs() {
   renderJobs(data || []);
 }
 
-/* RENDER JOBS */
+/* =========================
+   RENDER JOBS
+========================= */
 function renderJobs(jobs) {
+
   const box = document.getElementById("jobs");
   box.innerHTML = "";
+
+  if (jobs.length === 0) {
+    box.innerHTML = "<p>No jobs available</p>";
+    return;
+  }
 
   jobs.forEach(job => {
     box.innerHTML += `
@@ -230,15 +266,19 @@ function renderJobs(jobs) {
         <button onclick="acceptJob('${job.id}')">
           Accept Job
         </button>
+
+        <button style="background:#333;color:white;margin-top:5px;" onclick="completeJob('${job.id}')">
+          Complete Job
+        </button>
       </div>
     `;
   });
 }
 
-/* ACCEPT JOB */
+/* =========================
+   ACCEPT JOB (+2 POINTS)
+========================= */
 async function acceptJob(jobId) {
-
-  if (!currentProvider) return;
 
   await client
     .from("service_requests")
@@ -249,24 +289,87 @@ async function acceptJob(jobId) {
     })
     .eq("id", jobId);
 
-  alert("Job accepted!");
+  await updatePoints(2, "Job Accepted", jobId);
+
+  currentProvider.accepted_jobs += 1;
+
+  alert("Job accepted +2 points!");
 
   loadJobs();
+  loadProfile();
 }
 
-/* PROFILE */
+/* =========================
+   COMPLETE JOB (+10 POINTS)
+========================= */
+async function completeJob(jobId) {
+
+  await client
+    .from("service_requests")
+    .update({
+      status: "completed"
+    })
+    .eq("id", jobId);
+
+  await updatePoints(10, "Job Completed", jobId);
+
+  currentProvider.completed_jobs += 1;
+
+  alert("Job completed +10 points!");
+
+  loadJobs();
+  loadProfile();
+}
+
+/* =========================
+   ZEP POINT ENGINE
+========================= */
+async function updatePoints(points, reason, jobId) {
+
+  currentProvider.zep_points += points;
+
+  await client
+    .from("providers")
+    .update({
+      zep_points: currentProvider.zep_points,
+      accepted_jobs: currentProvider.accepted_jobs,
+      completed_jobs: currentProvider.completed_jobs
+    })
+    .eq("id", currentProvider.id);
+
+  await client
+    .from("zep_transactions")
+    .insert([{
+      provider_id: currentProvider.id,
+      points,
+      reason,
+      job_id: jobId
+    }]);
+
+  localStorage.setItem("provider", JSON.stringify(currentProvider));
+}
+
+/* =========================
+   PROFILE
+========================= */
 function loadProfile() {
-  const profile = document.getElementById("profile");
 
   if (!currentProvider) return;
 
-  profile.innerHTML = `
+  document.getElementById("profile").innerHTML = `
     <p><b>Name:</b> ${currentProvider.name}</p>
     <p><b>Category:</b> ${currentProvider.category}</p>
     <p><b>Location:</b> ${currentProvider.location}</p>
     <p><b>Zep Points:</b> ${currentProvider.zep_points}</p>
+    <p><b>Accepted Jobs:</b> ${currentProvider.accepted_jobs}</p>
+    <p><b>Completed Jobs:</b> ${currentProvider.completed_jobs}</p>
   `;
 }
+
+/* INIT */
+loadSession();
+loadJobs();
+loadProfile();
 
 </script>
 
