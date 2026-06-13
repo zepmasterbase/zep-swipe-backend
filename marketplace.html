@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V3</title>
+<title>Zep Swipe Marketplace V4</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -15,11 +15,9 @@ body {
   color: white;
 }
 
-/* HEADER */
 header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 15px;
   background: rgba(0,0,0,0.85);
   border-bottom: 1px solid rgba(0,255,140,0.2);
@@ -27,9 +25,7 @@ header {
   top: 0;
 }
 
-h2 {
-  color: #00ff8c;
-}
+h2 { color: #00ff8c; }
 
 button {
   background: #00ff8c;
@@ -55,7 +51,7 @@ button {
   padding: 15px;
 }
 
-/* REQUEST BUTTON */
+/* FLOAT BUTTON */
 .fab {
   position: fixed;
   bottom: 20px;
@@ -99,19 +95,18 @@ input, select, textarea {
   border: none;
 }
 
-/* STATUS BADGES */
+/* STATUS */
 .badge {
   padding: 4px 8px;
   font-size: 12px;
   border-radius: 6px;
-  display: inline-block;
 }
 
 .open { background: orange; }
 .matched { background: #00ff8c; color: black; }
 .completed { background: gray; }
 
-/* MATCH CARD */
+/* MATCH BOX */
 .match-box {
   margin-top: 10px;
   padding: 10px;
@@ -125,11 +120,11 @@ input, select, textarea {
 <body>
 
 <header>
-  <h2>Marketplace V3</h2>
-  <button onclick="loadServices()">Refresh</button>
+  <h2>Marketplace V4</h2>
+  <button onclick="loadRequests()">Refresh</button>
 </header>
 
-<div class="grid" id="services"></div>
+<div class="grid" id="list"></div>
 
 <!-- FLOAT BUTTON -->
 <div class="fab" onclick="openModal()">
@@ -169,70 +164,65 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let services = [];
-
-/* LOAD SERVICES */
-async function loadServices() {
+/* LOAD */
+async function loadRequests() {
 
   const { data } = await client
     .from("service_requests")
     .select("*")
     .order("created_at", { ascending: false });
 
-  services = data || [];
-  render(services);
+  render(data || []);
 }
 
 /* RENDER */
-function render(list) {
+function render(items) {
 
-  const box = document.getElementById("services");
+  const box = document.getElementById("list");
   box.innerHTML = "";
 
-  list.forEach(s => {
+  items.forEach(i => {
 
     box.innerHTML += `
       <div class="card">
 
-        <b>${s.category}</b>
-        <span class="badge ${s.status}">${s.status}</span>
+        <b>${i.category}</b>
+        <span class="badge ${i.status}">${i.status}</span>
 
-        <p>${s.description}</p>
+        <p>${i.description}</p>
 
-        <small>📍 ${s.location}</small>
+        <small>📍 ${i.location}</small>
 
-        ${s.matched_provider ? `
+        ${i.matched_provider ? `
           <div class="match-box">
             <b>Matched Provider:</b><br>
-            ${s.matched_provider}<br>
-            ${s.matched_phone}
+            ${i.matched_provider}<br>
+            ${i.matched_phone}
+
+            <button style="margin-top:10px;" onclick="notifyWhatsApp('${i.matched_phone}','${i.description}')">
+              Notify Provider (WhatsApp)
+            </button>
           </div>
         ` : ""}
-
       </div>
     `;
   });
 }
 
 /* MODAL */
-function openModal() {
-  document.getElementById("modal").style.display = "flex";
-}
-
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-}
+function openModal(){ modal.style.display="flex"; }
+function closeModal(){ modal.style.display="none"; }
 
 /* SUBMIT REQUEST */
-async function submitRequest() {
+async function submitRequest(){
 
   const request = {
-    name: document.getElementById("name").value,
-    phone: document.getElementById("phone").value,
-    category: document.getElementById("category").value,
-    description: document.getElementById("description").value,
-    location: document.getElementById("location").value || "Randfontein",
-    budget: document.getElementById("budget").value,
+    name: name.value,
+    phone: phone.value,
+    category: category.value,
+    description: description.value,
+    location: location.value || "Randfontein",
+    budget: budget.value,
     status: "open"
   };
 
@@ -240,17 +230,33 @@ async function submitRequest() {
     .from("service_requests")
     .insert([request]);
 
-  if (error) {
+  if(error){
     alert("Error submitting request");
     return;
   }
 
-  alert("Request submitted successfully!");
+  alert("Request submitted!");
   closeModal();
-  loadServices();
+  loadRequests();
+
+  // OPTIONAL: global alert system hook (future upgrade)
 }
 
-loadServices();
+/* WHATSAPP NOTIFICATION */
+function notifyWhatsApp(phone, jobDescription){
+
+  const message = encodeURIComponent(
+    "🚨 New Zep Swipe Job Alert!\n\n" +
+    "Job: " + jobDescription + "\n\n" +
+    "Please open your Provider Dashboard to accept."
+  );
+
+  const url = `https://wa.me/${phone}?text=${message}`;
+
+  window.open(url, "_blank");
+}
+
+loadRequests();
 
 </script>
 
