@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V6</title>
+<title>Zep Swipe Marketplace V4</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -17,81 +17,87 @@ body {
 
 /* HEADER */
 header {
-  display: flex;
-  justify-content: space-between;
-  padding: 15px;
-  background: rgba(0,0,0,0.85);
-  border-bottom: 1px solid rgba(0,255,140,0.2);
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  background:rgba(0,0,0,0.85);
+  border-bottom:1px solid rgba(0,255,140,0.2);
 }
 
-h2 { color: #00ff8c; }
-
-button {
-  background: #00ff8c;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
+h2 {
+  color:#00ff8c;
 }
 
 /* GRID */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 15px;
-  padding: 20px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:15px;
+  padding:20px;
 }
 
 /* CARD */
 .card {
-  background: #0b120e;
-  border: 1px solid rgba(0,255,140,0.15);
-  border-radius: 12px;
-  padding: 15px;
+  background:#0b120e;
+  border:1px solid rgba(0,255,140,0.15);
+  border-radius:12px;
+  padding:15px;
 }
 
-/* STATUS */
+/* BUTTON */
+button {
+  background:#00ff8c;
+  border:none;
+  padding:10px 12px;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  width:100%;
+  margin-top:8px;
+}
+
+/* STATUS BADGE */
 .badge {
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 12px;
+  padding:4px 8px;
+  border-radius:6px;
+  font-size:12px;
 }
 
-.open { background: orange; }
-.matched { background: #00ff8c; color: black; }
-.completed { background: gray; }
+.open { background:orange; }
+.matched { background:#00ff8c; color:black; }
+.accepted { background:#2196f3; }
+.completed { background:gray; }
 
 /* FLOAT CTA */
 .fab {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #00ff8c;
-  color: black;
-  padding: 15px 18px;
-  border-radius: 50px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 0 20px rgba(0,255,140,0.4);
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#00ff8c;
+  color:black;
+  padding:14px 18px;
+  border-radius:50px;
+  font-weight:bold;
+  cursor:pointer;
+  box-shadow:0 0 20px rgba(0,255,140,0.4);
 }
 
-/* GATE SCREEN */
+/* GATE */
 .gate {
-  text-align: center;
-  padding: 80px 20px;
+  text-align:center;
+  padding:80px 20px;
 }
 
 .gate h1 {
-  color: #00ff8c;
+  color:#00ff8c;
 }
 
 .lock {
-  background: rgba(255, 165, 0, 0.1);
-  border: 1px solid orange;
-  padding: 15px;
-  border-radius: 10px;
-  margin-top: 20px;
+  background:rgba(255,165,0,0.1);
+  border:1px solid orange;
+  padding:15px;
+  border-radius:10px;
+  margin-top:20px;
 }
 </style>
 </head>
@@ -99,14 +105,12 @@ button {
 <body>
 
 <header>
-  <h2>Zep Swipe Marketplace V6</h2>
+  <h2>⚡ Zep Swipe Marketplace V4</h2>
   <button onclick="loadJobs()">Refresh</button>
 </header>
 
-<!-- MAIN -->
 <div id="app"></div>
 
-<!-- FLOAT BUTTON -->
 <div class="fab" onclick="window.location.href='waitlists.html'">
   Join Waitlist
 </div>
@@ -118,14 +122,13 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* DETECT LOCATION (simple version) */
+/* DETECT LOCATION */
 async function detectLocation(){
-
   try {
     const res = await fetch("https://ipapi.co/json/");
     const data = await res.json();
     return data.city || "Unknown";
-  } catch(e) {
+  } catch(e){
     return "Unknown";
   }
 }
@@ -138,36 +141,37 @@ async function init(){
   if(location.toLowerCase().includes("randfontein")){
     renderMarketplace();
     loadJobs();
+    listenRealtime();
   } else {
     renderGate(location);
   }
 }
 
-/* GATE VIEW (NON-RANDFONTEIN USERS) */
+/* GATE FOR NON-RANDFONTEIN */
 function renderGate(location){
 
   document.getElementById("app").innerHTML = `
     <div class="gate">
 
-      <h1>🚀 Zep Swipe is not fully live in your area yet</h1>
+      <h1>🚀 Zep Swipe is not live in your area yet</h1>
 
       <p>Your location: <b>${location}</b></p>
 
       <div class="lock">
-        🟡 You can join early access and become a Founder before launch in your community.
+        🟡 You can still join early access and become a Founding user before rollout.
       </div>
 
       <br>
 
       <button onclick="window.location.href='waitlists.html'">
-        Join Global Waitlist
+        Join Waitlist
       </button>
 
     </div>
   `;
 }
 
-/* MARKETPLACE VIEW (RANDFONTEIN LIVE) */
+/* MARKETPLACE VIEW */
 function renderMarketplace(){
 
   document.getElementById("app").innerHTML = `
@@ -180,8 +184,8 @@ function renderMarketplace(){
       </div>
 
       <div class="card">
-        <h3 style="color:#00ff8c;">⚡ Provider Match</h3>
-        <p>Jobs are auto-matched to verified providers</p>
+        <h3 style="color:#00ff8c;">⚡ Live Dispatch</h3>
+        <p>Jobs are automatically matched to providers in real-time.</p>
       </div>
 
     </div>
@@ -195,7 +199,6 @@ async function loadJobs(){
   const { data } = await client
     .from("service_requests")
     .select("*")
-    .eq("status","open")
     .order("created_at",{ascending:false});
 
   renderJobs(data || []);
@@ -220,14 +223,13 @@ function renderJobs(jobs){
         <p>${job.description}</p>
         <small>📍 ${job.location}</small>
 
-        <br><br>
-
         <button onclick="acceptJob('${job.id}')">
           Accept Job
         </button>
 
-        <button style="margin-top:8px;background:#333;color:white;" onclick="notify('${job.phone}','${job.description}')">
-          WhatsApp Alert
+        <button onclick="whatsappNotify('${job.matched_phone}','${job.description}')"
+                style="background:#222;color:white;">
+          WhatsApp Notify
         </button>
 
       </div>
@@ -238,23 +240,46 @@ function renderJobs(jobs){
 /* ACCEPT JOB */
 async function acceptJob(id){
 
-  await client
+  const { error } = await client
     .from("service_requests")
-    .update({ status:"matched" })
+    .update({ status:"accepted" })
     .eq("id", id);
 
-  alert("Job accepted!");
-  loadJobs();
+  if(!error){
+    alert("Job accepted!");
+    loadJobs();
+  }
 }
 
-/* WHATSAPP ALERT */
-function notify(phone, job){
+/* WHATSAPP */
+function whatsappNotify(phone, desc){
+
+  if(!phone) return;
 
   const msg = encodeURIComponent(
-    "🚨 Zep Swipe Job Alert:\n\n" + job
+    "🚨 Zep Swipe Update:\n\n" + desc
   );
 
   window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
+}
+
+/* REAL-TIME LISTENER */
+function listenRealtime(){
+
+  client
+    .channel('service_requests')
+    .on('postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'service_requests'
+      },
+      (payload) => {
+        console.log("Realtime update:", payload);
+        loadJobs();
+      }
+    )
+    .subscribe();
 }
 
 /* START */
