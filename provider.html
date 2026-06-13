@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Provider V4</title>
+<title>Zep Swipe Provider Dashboard V4</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -15,84 +15,78 @@ body {
   color: white;
 }
 
+/* HEADER */
 header {
-  display: flex;
-  justify-content: space-between;
-  padding: 15px;
-  background: rgba(0,0,0,0.85);
-  border-bottom: 1px solid rgba(0,255,140,0.2);
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  background:rgba(0,0,0,0.85);
+  border-bottom:1px solid rgba(0,255,140,0.2);
 }
 
-h2 { color: #00ff8c; }
-
-button {
-  background: #00ff8c;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
+h2 {
+  color:#00ff8c;
 }
 
+/* GRID */
 .container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  padding: 15px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+  padding:20px;
 }
 
+/* CARD */
 .card {
-  background: #0b120e;
-  border: 1px solid rgba(0,255,140,0.15);
-  border-radius: 12px;
-  padding: 15px;
+  background:#0b120e;
+  border:1px solid rgba(0,255,140,0.15);
+  border-radius:12px;
+  padding:15px;
 }
 
-.job {
-  border: 1px solid rgba(0,255,140,0.2);
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 10px;
+/* BUTTON */
+button {
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:8px;
 }
 
-/* MODAL */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.85);
-  justify-content: center;
-  align-items: center;
-}
+.primary { background:#00ff8c; }
+.dark { background:#222; color:white; }
 
-.modal-content {
-  background: #0b120e;
-  padding: 20px;
-  width: 90%;
-  max-width: 420px;
-  border-radius: 12px;
-  border: 1px solid rgba(0,255,140,0.2);
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 8px;
-  border: none;
-}
-
-/* BADGE */
+/* STATUS */
 .badge {
-  display: inline-block;
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 6px;
-  background: #00ff8c;
-  color: black;
+  padding:4px 8px;
+  border-radius:6px;
+  font-size:12px;
+  display:inline-block;
+}
+
+.open { background:orange; }
+.accepted { background:#2196f3; }
+.completed { background:gray; }
+
+/* PROFILE */
+.profile {
+  text-align:center;
+}
+
+.avatar {
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:linear-gradient(45deg,#00ff8c,#0066ff);
+  margin:auto;
+}
+
+/* LIST */
+.job {
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
 }
 </style>
 </head>
@@ -100,49 +94,41 @@ input, select, textarea {
 <body>
 
 <header>
-  <h2>Provider V4 Dashboard</h2>
-  <button onclick="openModal()">+ Join</button>
+  <h2>🧑‍💻 Provider Dashboard V4</h2>
+  <button onclick="loadJobs()">Refresh</button>
 </header>
 
 <div class="container">
 
+  <!-- PROFILE -->
+  <div class="card profile">
+
+    <div class="avatar"></div>
+
+    <h3 id="name">Provider</h3>
+
+    <p id="points">Zep Points: 0</p>
+    <p id="level">Level: 1</p>
+
+    <button class="primary" onclick="toggleAvailability()">
+      Toggle Availability
+    </button>
+
+    <button class="dark" onclick="loadJobs()">
+      Refresh Jobs
+    </button>
+
+  </div>
+
   <!-- JOB FEED -->
   <div class="card">
-    <h3 style="color:#00ff8c;">Matched Jobs</h3>
+
+    <h3 style="color:#00ff8c;">⚡ Available Jobs</h3>
+
     <div id="jobs"></div>
+
   </div>
 
-  <!-- PROFILE -->
-  <div class="card">
-    <h3 style="color:#00ff8c;">My Profile</h3>
-    <div id="profile"></div>
-    <div id="unlock"></div>
-  </div>
-
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <h3 style="color:#00ff8c;">Become Provider</h3>
-
-    <input id="name" placeholder="Name">
-    <input id="phone" placeholder="Phone">
-
-    <select id="category">
-      <option>Academic</option>
-      <option>Digital</option>
-      <option>Technical</option>
-      <option>Creative</option>
-      <option>Community</option>
-    </select>
-
-    <input id="location" placeholder="Location (Randfontein)">
-    <textarea id="skills" placeholder="Skills"></textarea>
-
-    <button onclick="register()">Register</button>
-    <button style="background:red;color:white;margin-top:10px;" onclick="closeModal()">Close</button>
-  </div>
 </div>
 
 <script>
@@ -152,181 +138,124 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let provider = null;
+let provider = {
+  id: null,
+  name: "Demo Provider",
+  points: 0,
+  available: true
+};
 
-/* ================= MODAL ================= */
-function openModal(){ document.getElementById("modal").style.display="flex"; }
-function closeModal(){ document.getElementById("modal").style.display="none"; }
+/* INIT DEMO PROFILE */
+function initProvider(){
 
-/* ================= REGISTER ================= */
-async function register() {
+  provider.id = "demo-1";
+  provider.name = "Student Provider";
 
-  const data = {
-    name: name.value,
-    phone: phone.value,
-    category: category.value,
-    location: location.value || "Randfontein",
-    skills: skills.value,
-    zep_points: 0,
-    completed_jobs: 0,
-    level: 1
-  };
-
-  const { data: res, error } = await client
-    .from("providers")
-    .insert([data])
-    .select()
-    .single();
-
-  if (error) return alert("Error registering");
-
-  provider = res;
-  localStorage.setItem("provider", JSON.stringify(res));
-
-  closeModal();
-  loadJobs();
-  renderProfile();
+  document.getElementById("name").innerText = provider.name;
+  updateStats();
 }
 
-/* ================= SESSION ================= */
-function loadSession(){
-  const saved = localStorage.getItem("provider");
-  if(saved) provider = JSON.parse(saved);
+/* UPDATE STATS */
+function updateStats(){
+
+  document.getElementById("points").innerText =
+    "Zep Points: " + provider.points;
+
+  document.getElementById("level").innerText =
+    "Level: " + Math.floor(provider.points / 50 + 1);
 }
 
-/* ================= LEVEL ENGINE ================= */
-function getLevel(jobs){
-  if(jobs >= 10) return 3;
-  if(jobs >= 3) return 2;
-  return 1;
+/* TOGGLE AVAILABILITY */
+function toggleAvailability(){
+
+  provider.available = !provider.available;
+
+  alert(provider.available ? "You are ONLINE" : "You are OFFLINE");
 }
 
-/* ================= JOBS ================= */
+/* LOAD JOBS */
 async function loadJobs(){
-
-  if(!provider){
-    document.getElementById("jobs").innerHTML =
-      "<p>Join to see jobs</p>";
-    return;
-  }
 
   const { data } = await client
     .from("service_requests")
     .select("*")
-    .eq("category", provider.category)
-    .eq("status", "open");
+    .eq("status","open")
+    .order("created_at",{ascending:false});
 
   renderJobs(data || []);
 }
 
+/* RENDER JOBS */
 function renderJobs(jobs){
 
   const box = document.getElementById("jobs");
   box.innerHTML = "";
 
+  if(jobs.length === 0){
+    box.innerHTML = "<p>No jobs available</p>";
+    return;
+  }
+
   jobs.forEach(job => {
+
     box.innerHTML += `
       <div class="job">
-        <b>${job.category}</b>
-        <p>${job.description}</p>
 
-        <button onclick="acceptJob('${job.id}')">Accept</button>
-        <button onclick="completeJob('${job.id}')" style="background:#333;color:white;margin-top:5px;">
-          Complete
+        <b>${job.category}</b>
+        <span class="badge open">${job.status}</span>
+
+        <p>${job.description}</p>
+        <small>📍 ${job.location}</small>
+
+        <button class="primary" onclick="acceptJob('${job.id}')">
+          Accept Job
         </button>
+
+        <button class="dark" onclick="notify('${job.matched_phone}','${job.description}')">
+          WhatsApp Alert
+        </button>
+
       </div>
     `;
   });
 }
 
-/* ================= ACCEPT ================= */
+/* ACCEPT JOB */
 async function acceptJob(id){
 
-  await client.from("service_requests")
+  const { error } = await client
+    .from("service_requests")
     .update({
-      status:"matched",
-      matched_provider: provider.name,
-      matched_phone: provider.phone
+      status: "accepted",
+      matched_provider: provider.name
     })
     .eq("id", id);
 
-  await updatePoints(2, "Accepted Job", id);
+  if(!error){
 
-  provider.completed_jobs += 0;
-  renderProfile();
-  loadJobs();
+    provider.points += 10;
+    updateStats();
+
+    alert("Job accepted +10 Zep Points!");
+    loadJobs();
+  }
 }
 
-/* ================= COMPLETE ================= */
-async function completeJob(id){
+/* WHATSAPP */
+function notify(phone, job){
 
-  await client.from("service_requests")
-    .update({ status:"completed" })
-    .eq("id", id);
+  if(!phone) return;
 
-  provider.completed_jobs += 1;
+  const msg = encodeURIComponent(
+    "🚨 Zep Swipe Job:\n\n" + job
+  );
 
-  await updatePoints(10, "Completed Job", id);
-
-  provider.level = getLevel(provider.completed_jobs);
-
-  await client.from("providers")
-    .update({
-      completed_jobs: provider.completed_jobs,
-      level: provider.level,
-      zep_points: provider.zep_points
-    })
-    .eq("id", provider.id);
-
-  renderProfile();
-  loadJobs();
+  window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
 }
 
-/* ================= ZEP ENGINE ================= */
-async function updatePoints(points, reason, jobId){
-
-  provider.zep_points += points;
-
-  await client.from("zep_transactions")
-    .insert([{
-      provider_id: provider.id,
-      points,
-      reason,
-      job_id: jobId
-    }]);
-
-  await client.from("providers")
-    .update({ zep_points: provider.zep_points })
-    .eq("id", provider.id);
-}
-
-/* ================= PROFILE ================= */
-function renderProfile(){
-
-  if(!provider) return;
-
-  const unlockPhoto = provider.completed_jobs >= 3;
-
-  document.getElementById("profile").innerHTML = `
-    <p><b>${provider.name}</b></p>
-    <p>${provider.category}</p>
-    <p>⭐ Zep Points: ${provider.zep_points}</p>
-    <p>🏆 Level: ${provider.level}</p>
-    <p>📦 Completed Jobs: ${provider.completed_jobs}</p>
-
-    ${provider.level >= 2 ? `<p class="badge">Verified Provider</p>` : ""}
-  `;
-
-  document.getElementById("unlock").innerHTML = `
-    <h4>Unlock Progress</h4>
-    <p>${unlockPhoto ? "📸 Photo & Portfolio Unlocked" : "🔒 Unlock at 3 jobs"}</p>
-  `;
-}
-
-/* ================= INIT ================= */
-loadSession();
+/* START */
+initProvider();
 loadJobs();
-renderProfile();
 
 </script>
 
