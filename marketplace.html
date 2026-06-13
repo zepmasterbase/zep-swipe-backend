@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V8</title>
+<title>Zep Swipe Marketplace V9</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -14,40 +14,10 @@
 ========================= */
 body {
   margin: 0;
-  font-family: system-ui, Arial;
+  font-family: system-ui;
   background: #0b0f0d;
   color: white;
-  overflow-x: hidden;
 }
-
-/* =========================
-   FLOATING BACKGROUND ICONS
-========================= */
-.bg-icons {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.icon {
-  position: absolute;
-  font-size: 38px;
-  opacity: 0.04;
-  animation: float 20s linear infinite;
-}
-
-@keyframes float {
-  0% { transform: translateY(100vh); }
-  100% { transform: translateY(-10vh); }
-}
-
-.i1 { left: 10%; animation-duration: 18s; }
-.i2 { left: 30%; animation-duration: 25s; }
-.i3 { left: 50%; animation-duration: 20s; }
-.i4 { left: 70%; animation-duration: 22s; }
-.i5 { left: 85%; animation-duration: 19s; }
 
 /* =========================
    HEADER
@@ -55,70 +25,43 @@ body {
 header {
   position: sticky;
   top: 0;
-  z-index: 10;
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:12px;
-  background: rgba(10,14,12,0.8);
-  backdrop-filter: blur(14px);
+  background: rgba(10,14,12,0.85);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0,255,140,0.12);
 }
 
 .logo {
-  font-weight:700;
   color:#00ff8c;
-}
-
-.btn {
-  padding:8px 12px;
-  border:none;
-  border-radius:10px;
-  font-size:12px;
-  cursor:pointer;
-}
-
-.primary {
-  background:#00ff8c;
-  color:black;
+  font-weight:700;
 }
 
 /* =========================
    LAYOUT
 ========================= */
 .container {
-  position: relative;
-  z-index: 2;
   max-width: 900px;
-  margin: auto;
-  padding: 14px;
+  margin:auto;
+  padding:14px;
 }
 
 /* =========================
-   HERO REQUEST
+   CARD (UBER STYLE)
 ========================= */
-.hero {
+.card {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 16px;
+  border-radius: 14px;
   padding: 14px;
+  margin-top: 10px;
 }
 
-.hero h2 {
-  margin: 0;
-  font-size: 18px;
-}
-
-input {
-  width:100%;
-  margin-top:8px;
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  background:#0b0f0d;
-  color:white;
-}
-
+/* =========================
+   BUTTONS
+========================= */
 button {
   width:100%;
   margin-top:10px;
@@ -129,103 +72,49 @@ button {
   cursor:pointer;
 }
 
+.primary {
+  background:#00ff8c;
+  color:black;
+}
+
+.secondary {
+  background:rgba(255,255,255,0.08);
+  color:white;
+}
+
 /* =========================
-   PROVIDERS
+   BADGE
 ========================= */
-h3 {
-  margin-top:16px;
-  color:#00ff8c;
-  font-size:14px;
-}
-
-.card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 14px;
-  padding: 12px;
-  margin-top: 10px;
-}
-
 .badge {
-  font-size:11px;
+  display:inline-block;
   padding:4px 8px;
   border-radius:20px;
   background:rgba(0,255,140,0.1);
   color:#00ff8c;
-}
-
-.small {
-  font-size:12px;
-  opacity:0.7;
+  font-size:11px;
 }
 
 /* =========================
-   FLOAT BUTTON
+   STATUS
 ========================= */
-.fab {
-  position:fixed;
-  bottom:16px;
-  right:16px;
-  background:#00ff8c;
-  color:black;
-  padding:14px 16px;
-  border-radius:50px;
-  font-weight:700;
-  box-shadow:0 0 20px rgba(0,255,140,0.3);
-  cursor:pointer;
-}
+.status-open { color: #ffcc00; }
+.status-progress { color: #00ff8c; }
+.status-done { color: #aaa; }
 
 </style>
 </head>
 
 <body>
 
-<!-- FLOATING BACKGROUND ICONS -->
-<div class="bg-icons">
-  <div class="icon i1">💇</div>
-  <div class="icon i2">🔧</div>
-  <div class="icon i3">📚</div>
-  <div class="icon i4">🧼</div>
-  <div class="icon i5">🚚</div>
-</div>
-
 <header>
-  <div class="logo">⚡ Zep Marketplace V8</div>
-  <button class="btn primary" onclick="window.location.href='provider.html'">
-    Become Provider
-  </button>
+  <div class="logo">⚡ Zep Marketplace V9</div>
 </header>
 
 <div class="container">
 
-  <!-- REQUEST -->
-  <div class="hero">
+  <h3>🚀 Live Jobs (Uber Feed)</h3>
+  <div id="jobs"></div>
 
-    <h2>What do you need done?</h2>
-
-    <input id="category" placeholder="Service (e.g Hair, Cleaning, Tutoring)">
-    <input id="desc" placeholder="Describe your request">
-    <input id="location" placeholder="Your location">
-
-    <button class="primary" onclick="createRequest()">
-      Request Service
-    </button>
-
-  </div>
-
-  <!-- PROVIDERS -->
-  <h3>🛠 Available Services Near You</h3>
-  <div id="providers"></div>
-
-  <!-- REQUESTS -->
-  <h3>📍 Recent Requests</h3>
-  <div id="requests"></div>
-
-</div>
-
-<!-- FLOAT -->
-<div class="fab" onclick="window.location.href='waitlists.html'">
-  Join Waitlist
 </div>
 
 <script>
@@ -236,70 +125,52 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* =========================
-   CREATE REQUEST
+   LOAD JOBS
 ========================= */
-async function createRequest(){
-
-  await client.from("service_requests").insert([{
-    category: document.getElementById("category").value,
-    description: document.getElementById("desc").value,
-    location: document.getElementById("location").value,
-    status: "open"
-  }]);
-
-  loadRequests();
-}
-
-/* =========================
-   LOAD PROVIDERS
-========================= */
-async function loadProviders(){
-
-  const { data } = await client
-    .from("service_profiles")
-    .select("*");
-
-  renderProviders(data || []);
-}
-
-/* =========================
-   LOAD REQUESTS
-========================= */
-async function loadRequests(){
+async function loadJobs(){
 
   const { data } = await client
     .from("service_requests")
     .select("*")
-    .order("created_at",{ascending:false});
+    .order("created_at", { ascending: false });
 
-  renderRequests(data || []);
+  renderJobs(data || []);
 }
 
 /* =========================
-   RENDER PROVIDERS
+   RENDER JOBS
 ========================= */
-function renderProviders(list){
+function renderJobs(jobs){
 
-  const box = document.getElementById("providers");
+  const box = document.getElementById("jobs");
   box.innerHTML = "";
 
-  list.forEach(p => {
+  jobs.forEach(j => {
 
     box.innerHTML += `
       <div class="card">
 
-        <span class="badge">${p.category}</span>
+        <span class="badge">${j.category}</span>
 
-        <p><b>${p.description}</b></p>
+        <h4>${j.description}</h4>
 
-        <div class="small">
-          📍 ${p.location || "Nearby"}<br>
-          💰 ${p.price_range || "Negotiable"}
-        </div>
+        <p>📍 ${j.location}</p>
 
-        <button class="primary" onclick="contact('${p.phone}')">
-          Contact Provider
-        </button>
+        <p class="status-${j.status}">
+          Status: ${j.status}
+        </p>
+
+        ${j.status === "matched" ? `
+          <button class="primary" onclick="completeJob('${j.id}')">
+            Mark Completed
+          </button>
+        ` : ""}
+
+        ${j.status === "completed" ? `
+          <button class="secondary" onclick="confirmJob('${j.id}')">
+            Confirm Payment
+          </button>
+        ` : ""}
 
       </div>
     `;
@@ -307,39 +178,28 @@ function renderProviders(list){
 }
 
 /* =========================
-   RENDER REQUESTS
+   COMPLETE JOB
 ========================= */
-function renderRequests(list){
+async function completeJob(id){
 
-  const box = document.getElementById("requests");
-  box.innerHTML = "";
+  await client
+    .from("service_requests")
+    .update({ status: "completed" })
+    .eq("id", id);
 
-  list.forEach(r => {
-
-    box.innerHTML += `
-      <div class="card">
-
-        <span class="badge">${r.category}</span>
-
-        <p>${r.description}</p>
-
-        <div class="small">📍 ${r.location}</div>
-
-      </div>
-    `;
-  });
+  loadJobs();
 }
 
 /* =========================
-   WHATSAPP CONTACT
+   CONFIRM JOB
 ========================= */
-function contact(phone){
-  window.open(`https://wa.me/${phone}`, "_blank");
+async function confirmJob(id){
+
+  alert("Payment confirmed (manual MVP flow)");
 }
 
 /* INIT */
-loadProviders();
-loadRequests();
+loadJobs();
 
 </script>
 
