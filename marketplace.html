@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V4</title>
+<title>Zep Swipe Marketplace V6</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -15,14 +15,13 @@ body {
   color: white;
 }
 
+/* HEADER */
 header {
   display: flex;
   justify-content: space-between;
   padding: 15px;
   background: rgba(0,0,0,0.85);
   border-bottom: 1px solid rgba(0,255,140,0.2);
-  position: sticky;
-  top: 0;
 }
 
 h2 { color: #00ff8c; }
@@ -44,6 +43,7 @@ button {
   padding: 20px;
 }
 
+/* CARD */
 .card {
   background: #0b120e;
   border: 1px solid rgba(0,255,140,0.15);
@@ -51,7 +51,18 @@ button {
   padding: 15px;
 }
 
-/* FLOAT BUTTON */
+/* STATUS */
+.badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.open { background: orange; }
+.matched { background: #00ff8c; color: black; }
+.completed { background: gray; }
+
+/* FLOAT CTA */
 .fab {
   position: fixed;
   bottom: 20px;
@@ -65,54 +76,22 @@ button {
   box-shadow: 0 0 20px rgba(0,255,140,0.4);
 }
 
-/* MODAL */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.85);
-  justify-content: center;
-  align-items: center;
+/* GATE SCREEN */
+.gate {
+  text-align: center;
+  padding: 80px 20px;
 }
 
-.modal-content {
-  background: #0b120e;
-  padding: 20px;
-  width: 90%;
-  max-width: 420px;
-  border-radius: 12px;
-  border: 1px solid rgba(0,255,140,0.2);
+.gate h1 {
+  color: #00ff8c;
 }
 
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 8px;
-  border: none;
-}
-
-/* STATUS */
-.badge {
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 6px;
-}
-
-.open { background: orange; }
-.matched { background: #00ff8c; color: black; }
-.completed { background: gray; }
-
-/* MATCH BOX */
-.match-box {
-  margin-top: 10px;
-  padding: 10px;
-  border: 1px solid rgba(0,255,140,0.2);
+.lock {
+  background: rgba(255, 165, 0, 0.1);
+  border: 1px solid orange;
+  padding: 15px;
   border-radius: 10px;
-  background: rgba(0,255,140,0.05);
+  margin-top: 20px;
 }
 </style>
 </head>
@@ -120,41 +99,16 @@ input, select, textarea {
 <body>
 
 <header>
-  <h2>Marketplace V4</h2>
-  <button onclick="loadRequests()">Refresh</button>
+  <h2>Zep Swipe Marketplace V6</h2>
+  <button onclick="loadJobs()">Refresh</button>
 </header>
 
-<div class="grid" id="list"></div>
+<!-- MAIN -->
+<div id="app"></div>
 
 <!-- FLOAT BUTTON -->
-<div class="fab" onclick="openModal()">
-  + Request Service
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <h3 style="color:#00ff8c;">Request Service</h3>
-
-    <input id="name" placeholder="Your Name">
-    <input id="phone" placeholder="Phone Number">
-
-    <select id="category">
-      <option>Academic</option>
-      <option>Digital</option>
-      <option>Technical</option>
-      <option>Creative</option>
-      <option>Community</option>
-    </select>
-
-    <textarea id="description" placeholder="What do you need?"></textarea>
-
-    <input id="location" placeholder="Location (Randfontein default)">
-    <input id="budget" placeholder="Budget (optional)">
-
-    <button onclick="submitRequest()">Submit Request</button>
-    <button style="background:red;color:white;margin-top:10px;" onclick="closeModal()">Close</button>
-  </div>
+<div class="fab" onclick="window.location.href='waitlists.html'">
+  Join Waitlist
 </div>
 
 <script>
@@ -164,99 +118,147 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* LOAD */
-async function loadRequests() {
+/* DETECT LOCATION (simple version) */
+async function detectLocation(){
+
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    const data = await res.json();
+    return data.city || "Unknown";
+  } catch(e) {
+    return "Unknown";
+  }
+}
+
+/* INIT */
+async function init(){
+
+  const location = await detectLocation();
+
+  if(location.toLowerCase().includes("randfontein")){
+    renderMarketplace();
+    loadJobs();
+  } else {
+    renderGate(location);
+  }
+}
+
+/* GATE VIEW (NON-RANDFONTEIN USERS) */
+function renderGate(location){
+
+  document.getElementById("app").innerHTML = `
+    <div class="gate">
+
+      <h1>🚀 Zep Swipe is not fully live in your area yet</h1>
+
+      <p>Your location: <b>${location}</b></p>
+
+      <div class="lock">
+        🟡 You can join early access and become a Founder before launch in your community.
+      </div>
+
+      <br>
+
+      <button onclick="window.location.href='waitlists.html'">
+        Join Global Waitlist
+      </button>
+
+    </div>
+  `;
+}
+
+/* MARKETPLACE VIEW (RANDFONTEIN LIVE) */
+function renderMarketplace(){
+
+  document.getElementById("app").innerHTML = `
+
+    <div class="grid">
+
+      <div class="card">
+        <h3 style="color:#00ff8c;">📍 Live Jobs (Randfontein)</h3>
+        <div id="jobs"></div>
+      </div>
+
+      <div class="card">
+        <h3 style="color:#00ff8c;">⚡ Provider Match</h3>
+        <p>Jobs are auto-matched to verified providers</p>
+      </div>
+
+    </div>
+
+  `;
+}
+
+/* LOAD JOBS */
+async function loadJobs(){
 
   const { data } = await client
     .from("service_requests")
     .select("*")
-    .order("created_at", { ascending: false });
+    .eq("status","open")
+    .order("created_at",{ascending:false});
 
-  render(data || []);
+  renderJobs(data || []);
 }
 
-/* RENDER */
-function render(items) {
+/* RENDER JOBS */
+function renderJobs(jobs){
 
-  const box = document.getElementById("list");
+  const box = document.getElementById("jobs");
+  if(!box) return;
+
   box.innerHTML = "";
 
-  items.forEach(i => {
+  jobs.forEach(job => {
 
     box.innerHTML += `
       <div class="card">
 
-        <b>${i.category}</b>
-        <span class="badge ${i.status}">${i.status}</span>
+        <b>${job.category}</b>
+        <span class="badge ${job.status}">${job.status}</span>
 
-        <p>${i.description}</p>
+        <p>${job.description}</p>
+        <small>📍 ${job.location}</small>
 
-        <small>📍 ${i.location}</small>
+        <br><br>
 
-        ${i.matched_provider ? `
-          <div class="match-box">
-            <b>Matched Provider:</b><br>
-            ${i.matched_provider}<br>
-            ${i.matched_phone}
+        <button onclick="acceptJob('${job.id}')">
+          Accept Job
+        </button>
 
-            <button style="margin-top:10px;" onclick="notifyWhatsApp('${i.matched_phone}','${i.description}')">
-              Notify Provider (WhatsApp)
-            </button>
-          </div>
-        ` : ""}
+        <button style="margin-top:8px;background:#333;color:white;" onclick="notify('${job.phone}','${job.description}')">
+          WhatsApp Alert
+        </button>
+
       </div>
     `;
   });
 }
 
-/* MODAL */
-function openModal(){ modal.style.display="flex"; }
-function closeModal(){ modal.style.display="none"; }
+/* ACCEPT JOB */
+async function acceptJob(id){
 
-/* SUBMIT REQUEST */
-async function submitRequest(){
-
-  const request = {
-    name: name.value,
-    phone: phone.value,
-    category: category.value,
-    description: description.value,
-    location: location.value || "Randfontein",
-    budget: budget.value,
-    status: "open"
-  };
-
-  const { error } = await client
+  await client
     .from("service_requests")
-    .insert([request]);
+    .update({ status:"matched" })
+    .eq("id", id);
 
-  if(error){
-    alert("Error submitting request");
-    return;
-  }
-
-  alert("Request submitted!");
-  closeModal();
-  loadRequests();
-
-  // OPTIONAL: global alert system hook (future upgrade)
+  alert("Job accepted!");
+  loadJobs();
 }
 
-/* WHATSAPP NOTIFICATION */
-function notifyWhatsApp(phone, jobDescription){
+/* WHATSAPP ALERT */
+function notify(phone, job){
 
-  const message = encodeURIComponent(
-    "🚨 New Zep Swipe Job Alert!\n\n" +
-    "Job: " + jobDescription + "\n\n" +
-    "Please open your Provider Dashboard to accept."
+  const msg = encodeURIComponent(
+    "🚨 Zep Swipe Job Alert:\n\n" + job
   );
 
-  const url = `https://wa.me/${phone}?text=${message}`;
-
-  window.open(url, "_blank");
+  window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
 }
 
-loadRequests();
+/* START */
+init();
 
 </script>
 
