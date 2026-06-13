@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Unified Dashboard V3</title>
+<title>Zep Swipe Dashboard V4</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -25,6 +25,7 @@ body {
 header {
   position: sticky;
   top: 0;
+  z-index: 10;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -32,7 +33,6 @@ header {
   background: rgba(10,14,12,0.85);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0,255,140,0.12);
-  z-index:10;
 }
 
 .logo {
@@ -40,12 +40,13 @@ header {
   font-weight:700;
 }
 
-.tab {
+.tabs span {
   font-size:12px;
   padding:6px 10px;
   border-radius:10px;
   background:rgba(255,255,255,0.06);
   cursor:pointer;
+  margin-left:6px;
 }
 
 /* =========================
@@ -124,11 +125,11 @@ button {
 <body>
 
 <header>
-  <div class="logo">⚡ Zep Swipe V3</div>
+  <div class="logo">⚡ Zep Swipe V4</div>
 
-  <div>
-    <span class="tab" onclick="show('dashboard')">Dashboard</span>
-    <span class="tab" onclick="show('market')">Market</span>
+  <div class="tabs">
+    <span onclick="show('dashboard')">Dashboard</span>
+    <span onclick="show('market')">Market</span>
   </div>
 </header>
 
@@ -167,8 +168,12 @@ button {
   <div id="dashboard" class="hidden">
 
     <div class="card">
-      <h3>💰 Your Status</h3>
-      <p><span class="badge" id="status">OFFLINE</span></p>
+      <h3>💰 Provider Status</h3>
+
+      <p>
+        Status:
+        <span class="badge" id="status">OFFLINE</span>
+      </p>
 
       <button class="primary" onclick="toggleOnline()">
         Toggle Online / Offline
@@ -188,10 +193,10 @@ button {
   ========================== -->
   <div id="market" class="hidden">
 
-    <h3>🛠 Live Requests</h3>
+    <h3>⚡ Live Requests</h3>
     <div id="requests"></div>
 
-    <h3>👥 Active Providers</h3>
+    <h3>🛠 Active Providers</h3>
     <div id="providers"></div>
 
   </div>
@@ -310,7 +315,16 @@ async function loadMarket(){
 }
 
 /* =========================
-   RENDER MARKET
+   AUTO MATCH HOOK (V8 ENGINE READY)
+========================= */
+async function autoMatchTrigger(request){
+
+  // Placeholder hook for V8 engine
+  console.log("Auto matching triggered for:", request.id);
+}
+
+/* =========================
+   RENDER
 ========================= */
 function render(requests, providers){
 
