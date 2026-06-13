@@ -3,31 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Provider Activation V5</title>
+<title>Zep Swipe Producer Activation V7</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
 
 /* =========================
-   BASE
+   BASE THEME
 ========================= */
 body {
   margin: 0;
   font-family: system-ui;
-  background: #0b0f0d;
+  background: radial-gradient(circle at top, #0b1a14, #070a09);
   color: white;
+  overflow-x: hidden;
 }
 
 /* =========================
-   HEADER
+   FLOATING GLOW BACKGROUND
 ========================= */
-header {
-  text-align: center;
-  padding: 16px;
-  font-weight: 700;
-  color: #00ff8c;
-  border-bottom: 1px solid rgba(0,255,140,0.12);
+.glow {
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  background: #00ff8c;
+  filter: blur(120px);
+  opacity: 0.12;
+  border-radius: 50%;
+  animation: float 8s ease-in-out infinite;
+}
+
+.glow:nth-child(1){ top: -100px; left: -80px; }
+.glow:nth-child(2){ bottom: -120px; right: -100px; background:#00bfff; }
+
+@keyframes float {
+  0%,100% { transform: translateY(0px); }
+  50% { transform: translateY(40px); }
 }
 
 /* =========================
@@ -36,17 +48,57 @@ header {
 .container {
   max-width: 520px;
   margin: auto;
-  padding: 16px;
+  padding: 18px;
+  position: relative;
+  z-index: 2;
 }
 
 /* =========================
-   CARD
+   HERO
+========================= */
+.hero {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.hero p {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* =========================
+   EARNINGS CARD
+========================= */
+.earn-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(0,255,140,0.2);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 15px;
+  backdrop-filter: blur(10px);
+}
+
+.earn {
+  font-size: 18px;
+  font-weight: 700;
+  color: #00ff8c;
+}
+
+/* =========================
+   FORM CARD
 ========================= */
 .card {
   background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
   padding: 16px;
+  backdrop-filter: blur(12px);
 }
 
 /* =========================
@@ -56,14 +108,15 @@ input, select {
   width: 100%;
   margin-top: 10px;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: none;
-  background: #0b0f0d;
+  background: rgba(0,0,0,0.4);
   color: white;
+  outline: none;
 }
 
 /* =========================
-   BUTTON
+   BUTTONS
 ========================= */
 button {
   width: 100%;
@@ -73,24 +126,29 @@ button {
   border: none;
   font-weight: 700;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .primary {
-  background: #00ff8c;
+  background: linear-gradient(90deg, #00ff8c, #00c2ff);
   color: black;
 }
 
+.primary:hover {
+  transform: scale(1.02);
+}
+
 /* =========================
-   STEP LABEL
+   ICON LABELS
 ========================= */
-.step {
+.label {
   font-size: 12px;
-  opacity: 0.6;
+  opacity: 0.7;
   margin-top: 10px;
 }
 
 /* =========================
-   SUCCESS
+   SUCCESS SCREEN
 ========================= */
 .success {
   display: none;
@@ -98,9 +156,7 @@ button {
   padding: 40px 20px;
 }
 
-.big {
-  font-size: 22px;
-  font-weight: 700;
+.success h2 {
   color: #00ff8c;
 }
 
@@ -110,47 +166,64 @@ button {
 }
 
 /* =========================
-   HIDE
+   FLOAT ANIMATION TEXT
 ========================= */
-.hidden { display:none; }
+.float-text {
+  font-size: 12px;
+  opacity: 0.6;
+}
 
 </style>
 </head>
 
 <body>
 
-<header>
-  🚀 Start Earning in 90 Seconds
-</header>
+<!-- BACKGROUND GLOW -->
+<div class="glow"></div>
+<div class="glow"></div>
 
 <div class="container">
+
+  <!-- =========================
+       HERO
+  ========================== -->
+  <div class="hero">
+    <h1>🚀 Activate Your Income Engine</h1>
+    <p>Turn your skills into real money in your community</p>
+  </div>
+
+  <!-- =========================
+       EARNINGS CARD
+  ========================== -->
+  <div class="earn-card">
+    <div class="float-text">Average earnings in your area</div>
+    <div class="earn">💰 R300 – R1,500 per week</div>
+    <div class="float-text">Based on active providers</div>
+  </div>
 
   <!-- =========================
        FORM
   ========================== -->
   <div id="formCard" class="card">
 
-    <h3>Become a Provider</h3>
-    <p class="small">Set your service and start receiving clients instantly.</p>
-
-    <div class="step">Step 1: Skill</div>
+    <div class="label">💼 What service do you offer?</div>
     <input id="category" placeholder="e.g Tutoring, Design, Cleaning">
 
-    <div class="step">Step 2: What you offer</div>
-    <input id="description" placeholder="e.g I design logos, I tutor maths">
+    <div class="label">🧠 Describe your service</div>
+    <input id="description" placeholder="I help with...">
 
-    <div class="step">Step 3: Your price</div>
+    <div class="label">💰 Set your price</div>
     <select id="price">
-      <option>R50 - Basic</option>
+      <option>R50 - Starter</option>
       <option>R100 - Standard</option>
-      <option>R200 - Premium</option>
+      <option>R200 - Pro</option>
       <option>Negotiable</option>
     </select>
 
-    <div class="step">Step 4: Location</div>
-    <input id="location" placeholder="Your area">
+    <div class="label">📍 Your location</div>
+    <input id="location" placeholder="City / Area">
 
-    <div class="step">Step 5: WhatsApp</div>
+    <div class="label">📱 WhatsApp contact</div>
     <input id="phone" placeholder="WhatsApp Number">
 
     <button class="primary" onclick="goLive()">
@@ -158,22 +231,21 @@ button {
     </button>
 
     <p class="small">
-      Your profile will appear instantly in the marketplace.
+      Your profile will be visible instantly in the marketplace
     </p>
 
   </div>
 
   <!-- =========================
-       SUCCESS SCREEN
+       SUCCESS
   ========================== -->
   <div id="success" class="success">
 
-    <div class="big">🟢 YOU ARE LIVE!</div>
-
-    <p>Your service is now visible to customers nearby.</p>
+    <h2>🟢 YOU ARE LIVE!</h2>
+    <p class="small">Your income profile is now active in Zep Swipe Marketplace</p>
 
     <button class="primary" onclick="window.location.href='marketplace.html'">
-      View Marketplace
+      View Live Jobs
     </button>
 
   </div>
@@ -200,7 +272,8 @@ async function goLive(){
     phone: document.getElementById("phone").value,
     online: true,
     rating: 5,
-    completed_jobs: 0
+    completed_jobs: 0,
+    created_at: new Date()
   };
 
   await client.from("service_profiles").insert([data]);
