@@ -1,235 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Zep Swipe — Africa Expansion Waitlist</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe Waitlist V3</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #050607;
+  color: white;
 }
 
-body{
-  font-family:'Inter',sans-serif;
-  background:#050816;
-  color:white;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background-image:
-  radial-gradient(circle at top left, rgba(0,255,200,0.14), transparent 30%),
-  radial-gradient(circle at bottom right, rgba(0,140,255,0.14), transparent 35%);
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 60px 20px;
+  background: radial-gradient(circle at top, rgba(0,255,140,0.2), transparent);
 }
 
-.card{
-  width:100%;
-  max-width:650px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:30px;
-  padding:35px 25px;
-  backdrop-filter:blur(18px);
-  box-shadow:0 0 60px rgba(0,255,255,0.08);
-  text-align:center;
+.hero h1 {
+  color: #00ff8c;
+  font-size: 32px;
 }
 
-.logo{
-  width:70px;
-  margin-bottom:15px;
-  filter:drop-shadow(0 0 18px rgba(0,255,255,0.4));
-}
-
-h1{
-  font-size:2rem;
-  font-weight:800;
-  margin-bottom:10px;
-}
-
-.gradient{
-  background:linear-gradient(90deg,#00ffe1,#00a2ff,#7b61ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-.subtitle{
-  color:#a8b7d6;
-  font-size:0.95rem;
-  margin-bottom:20px;
-  line-height:1.6;
-}
-
-.badge{
-  display:inline-block;
-  padding:10px 14px;
-  border-radius:999px;
-  background:rgba(0,255,170,0.12);
-  border:1px solid rgba(0,255,170,0.25);
-  color:#00ffb2;
-  font-size:0.85rem;
-  margin-bottom:20px;
+.hero p {
+  opacity: 0.8;
 }
 
 /* FORM */
-
-label{
-  display:block;
-  text-align:left;
-  margin-top:12px;
-  font-size:0.85rem;
-  color:#9fb0d5;
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
 }
 
-input, select{
-  width:100%;
-  padding:14px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.05);
-  color:white;
-  margin-top:6px;
-  outline:none;
+.card {
+  background: #0b120e;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,255,140,0.15);
 }
 
-.btn{
-  width:100%;
-  padding:15px;
-  margin-top:18px;
-  border-radius:18px;
-  font-weight:800;
-  background:linear-gradient(90deg,#00ffe1,#00a2ff);
-  color:#03111f;
-  border:none;
-  cursor:pointer;
-  box-shadow:0 0 25px rgba(0,255,255,0.3);
-  transition:0.3s;
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: none;
 }
 
-.btn:hover{
-  transform:scale(1.03);
+button {
+  width: 100%;
+  padding: 12px;
+  background: #00ff8c;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-/* LEADERBOARD */
-
-.board{
-  margin-top:25px;
-  text-align:left;
+/* SUCCESS */
+.success {
+  display: none;
+  text-align: center;
+  padding: 20px;
+  color: #00ff8c;
 }
-
-.title{
-  font-weight:700;
-  text-align:center;
-  margin-bottom:12px;
-}
-
-.row{
-  display:flex;
-  justify-content:space-between;
-  padding:14px;
-  border-radius:16px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
-  margin-bottom:10px;
-}
-
-.score{
-  color:#00ffe1;
-  font-weight:700;
-}
-
-/* NOTE */
-
-.note{
-  margin-top:20px;
-  font-size:0.8rem;
-  color:#7df9ff;
-  text-align:center;
-}
-
 </style>
-
 </head>
 
 <body>
 
-<div class="card">
-
-<img class="logo"
-  src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png"
-  alt="Zep Swipe"
-/>
-
-<div class="badge">🌍 Africa Expansion Mode</div>
-
-<h1>
-  Bring <span class="gradient">Zep Swipe</span> to Your Country
-</h1>
-
-<div class="subtitle">
-  We are currently live in South Africa.  
-  Help unlock your country by joining the demand list.
+<div class="hero">
+  <h1>Zep Swipe is Coming to Your Area</h1>
+  <p>Join the waitlist. Be first when we launch in your city.</p>
 </div>
 
-<!-- FORM -->
+<div class="container">
 
-<label>Full Name</label>
-<input type="text" placeholder="e.g. Ama / Tunde / Kevin" />
+  <div class="card">
 
-<label>Phone or Email</label>
-<input type="text" placeholder="+234 / +233 / email" />
+    <input id="name" placeholder="Full Name">
+    <input id="phone" placeholder="Phone Number">
+    <input id="email" placeholder="Email">
 
-<label>Select Country</label>
-<select>
-  <option>Nigeria</option>
-  <option>Ghana</option>
-  <option>Kenya</option>
-  <option>Uganda</option>
-  <option>Tanzania</option>
-  <option>Ethiopia</option>
-  <option>Zambia</option>
-  <option>Zimbabwe</option>
-  <option>Other</option>
-</select>
+    <input id="location" placeholder="City / Town">
 
-<button class="btn">
-  🚀 Request Country Access
-</button>
+    <select id="role">
+      <option value="student">Student</option>
+      <option value="provider">Freelancer / Provider</option>
+      <option value="customer">Customer</option>
+    </select>
 
-<!-- COUNTRY DEMAND -->
+    <select id="interest">
+      <option>Academic Services</option>
+      <option>Digital Services</option>
+      <option>Technical Services</option>
+      <option>Creative Services</option>
+      <option>Local Jobs</option>
+    </select>
 
-<div class="board">
+    <button onclick="joinWaitlist()">Join Waitlist</button>
 
-  <div class="title">🔥 Country Demand Leaderboard</div>
-
-  <div class="row">
-    <div>Nigeria</div>
-    <div class="score">2,340 requests</div>
   </div>
 
-  <div class="row">
-    <div>Ghana</div>
-    <div class="score">1,120 requests</div>
-  </div>
-
-  <div class="row">
-    <div>Kenya</div>
-    <div class="score">980 requests</div>
+  <div class="success" id="success">
+    🎉 You’re on the waitlist!<br>
+    We’ll notify you when Zep Swipe launches in your area.
   </div>
 
 </div>
 
-<div class="note">
-⚡ Countries with highest demand get launched first
-</div>
+<script>
 
-</div>
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function joinWaitlist() {
+
+  const entry = {
+    name: document.getElementById("name").value,
+    phone: document.getElementById("phone").value,
+    email: document.getElementById("email").value,
+    location: document.getElementById("location").value,
+    role: document.getElementById("role").value,
+    interest: document.getElementById("interest").value,
+    status: "waiting"
+  };
+
+  const { error } = await client
+    .from("waitlist")
+    .insert([entry]);
+
+  if (error) {
+    alert("Error joining waitlist");
+    console.log(error);
+    return;
+  }
+
+  document.querySelector(".card").style.display = "none";
+  document.getElementById("success").style.display = "block";
+}
+
+</script>
 
 </body>
 </html>
