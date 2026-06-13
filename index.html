@@ -10,7 +10,6 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   color: white;
-  background: black;
   overflow-x: hidden;
 }
 
@@ -21,7 +20,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png") no-repeat center center/cover;
+  background: url("https://pe56d.s3.amazonaws.com/o_1jr0pbtbh1rqd1k6qlpsl5318uh15.png") no-repeat center center/cover;
   filter: brightness(0.35);
   z-index: -1;
 }
@@ -32,6 +31,7 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -41,8 +41,8 @@ header {
 }
 
 .logo img {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 8px;
 }
 
@@ -53,50 +53,19 @@ header {
   letter-spacing: 1px;
 }
 
-.nav-btn {
-  background: #00ff8c;
-  border: none;
+.nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
   padding: 10px 14px;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
-}
-
-/* HERO */
-.hero {
-  text-align: center;
-  padding: 100px 20px 60px;
-}
-
-.hero h1 {
-  font-size: 42px;
-  margin-bottom: 10px;
-  color: #00ff8c;
-}
-
-.hero p {
-  font-size: 16px;
-  opacity: 0.85;
-  max-width: 600px;
-  margin: auto;
-}
-
-/* CTA */
-.cta {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-top: 30px;
-}
-
-.cta button {
-  padding: 14px 18px;
   border: none;
-  border-radius: 10px;
-  font-weight: bold;
-  cursor: pointer;
-  min-width: 160px;
+  font-size: 14px;
 }
 
 .primary {
@@ -110,22 +79,50 @@ header {
   color: #00ff8c;
 }
 
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 90px 20px 50px;
+}
+
+.hero h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+  color: #00ff8c;
+}
+
+.hero p {
+  font-size: 16px;
+  opacity: 0.85;
+  max-width: 650px;
+  margin: auto;
+}
+
+/* CTA */
+.cta {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 25px;
+}
+
 /* FEATURES */
 .features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 15px;
   padding: 40px 20px;
-  max-width: 900px;
+  max-width: 1000px;
   margin: auto;
 }
 
 .card {
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.55);
   border: 1px solid rgba(0,255,140,0.2);
   padding: 15px;
   border-radius: 12px;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
 }
 
 .card h3 {
@@ -135,7 +132,7 @@ header {
 /* FOOTER */
 footer {
   text-align: center;
-  padding: 30px;
+  padding: 25px;
   font-size: 12px;
   opacity: 0.6;
 }
@@ -149,61 +146,81 @@ footer {
 
 <!-- HEADER -->
 <header>
+
+  <!-- LOGO -->
   <div class="logo">
     <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png">
     <div class="logo-text">Zep Swipe</div>
   </div>
 
-  <button class="nav-btn" onclick="window.location.href='marketplace.html'">
-    Enter App
-  </button>
+  <!-- NAV -->
+  <div class="nav">
+    <button class="btn secondary" onclick="window.location.href='marketplace.html'">
+      Marketplace
+    </button>
+
+    <button class="btn secondary" onclick="window.location.href='provider.html'">
+      Provider
+    </button>
+
+    <button class="btn primary" onclick="window.location.href='waitlists.html'">
+      Join Waitlist
+    </button>
+  </div>
+
 </header>
 
 <!-- HERO -->
 <section class="hero">
+
   <h1>Earn. Learn. Get Hired.</h1>
+
   <p>
-    Zep Swipe connects students and local communities to real services, real jobs, and real income opportunities in Randfontein and beyond.
+    Zep Swipe connects students and local communities to real services, real jobs, and real income opportunities.
+    Start small in Randfontein — scale globally.
   </p>
 
   <div class="cta">
-    <button class="primary" onclick="window.location.href='marketplace.html'">
-      Browse Marketplace
+
+    <button class="btn primary" onclick="window.location.href='marketplace.html'">
+      Enter Marketplace
     </button>
 
-    <button class="secondary" onclick="window.location.href='provider.html'">
+    <button class="btn secondary" onclick="window.location.href='provider.html'">
       Become a Provider
     </button>
 
-    <button class="secondary" onclick="window.location.href='waitlists.html'">
+    <button class="btn secondary" onclick="window.location.href='waitlists.html'">
       Join Waitlist
     </button>
+
   </div>
+
 </section>
 
 <!-- FEATURES -->
 <section class="features">
 
   <div class="card">
-    <h3>🎓 Student Jobs</h3>
-    <p>Earn income while studying through real local gigs.</p>
+    <h3>🎓 Student Economy</h3>
+    <p>Students earn real income from local gigs while studying.</p>
   </div>
 
   <div class="card">
     <h3>⚡ Instant Matching</h3>
-    <p>Get connected to service providers automatically.</p>
+    <p>Requests automatically connect to nearby providers.</p>
   </div>
 
   <div class="card">
-    <h3>💰 Zep Points</h3>
-    <p>Build reputation and unlock more opportunities.</p>
+    <h3>💰 Zep Points System</h3>
+    <p>Build reputation and unlock higher earning opportunities.</p>
   </div>
 
 </section>
 
 <!-- FOOTER -->
 <footer>
-  © 2026 Zep Swipe. Built for student economies in Africa.
+  © 2026 Zep Swipe. Built for African & global student economies.
 </footer>
 
 </body>
