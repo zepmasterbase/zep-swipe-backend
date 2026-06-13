@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe | Provider Dashboard</title>
+<title>Zep Swipe Provider System v2</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -15,9 +15,13 @@ body {
   color: white;
 }
 
+/* HEADER */
 header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 15px;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.85);
   border-bottom: 1px solid rgba(0,255,140,0.2);
 }
 
@@ -25,28 +29,70 @@ h2 {
   color: #00ff8c;
 }
 
-.grid {
+button {
+  background: #00ff8c;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* LAYOUT */
+.container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 15px;
-  padding: 20px;
+  padding: 15px;
 }
 
 .card {
   background: #0b120e;
-  padding: 15px;
-  border-radius: 12px;
   border: 1px solid rgba(0,255,140,0.15);
+  border-radius: 12px;
+  padding: 15px;
 }
 
-button {
-  background: #00ff8c;
-  border: none;
-  padding: 10px;
+/* JOB CARDS */
+.job {
+  border: 1px solid rgba(0,255,140,0.2);
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #0b120e;
+  padding: 20px;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,255,140,0.2);
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
   border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
+  border: none;
+}
+
+.small-btn {
+  width: 100%;
   margin-top: 10px;
 }
 </style>
@@ -56,45 +102,130 @@ button {
 
 <header>
   <h2>Provider Dashboard</h2>
-  <p>Find and accept student jobs in your category</p>
+  <button onclick="openModal()">+ Become Provider</button>
 </header>
 
-<div class="grid" id="jobs"></div>
+<div class="container">
+
+  <!-- JOB FEED -->
+  <div class="card">
+    <h3 style="color:#00ff8c;">Available Jobs</h3>
+    <div id="jobs"></div>
+  </div>
+
+  <!-- PROVIDER INFO -->
+  <div class="card">
+    <h3 style="color:#00ff8c;">My Profile</h3>
+    <div id="profile">
+      <p>No provider registered yet.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3 style="color:#00ff8c;">Become a Provider</h3>
+
+    <input id="name" placeholder="Full Name">
+    <input id="phone" placeholder="Phone Number">
+
+    <select id="category">
+      <option>Academic</option>
+      <option>Digital</option>
+      <option>Technical</option>
+      <option>Creative</option>
+      <option>Community</option>
+    </select>
+
+    <input id="location" placeholder="Location (Randfontein)">
+    <textarea id="skills" placeholder="Your skills"></textarea>
+
+    <button class="small-btn" onclick="registerProvider()">Register</button>
+    <button class="small-btn" style="background:red;color:white;" onclick="closeModal()">Close</button>
+  </div>
+</div>
 
 <script>
+
 const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* LOAD JOBS */
-async function loadJobs() {
+let currentProvider = null;
+
+/* MODAL */
+function openModal() {
+  document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
+/* REGISTER PROVIDER */
+async function registerProvider() {
+
+  const provider = {
+    name: document.getElementById("name").value,
+    phone: document.getElementById("phone").value,
+    category: document.getElementById("category").value,
+    location: document.getElementById("location").value || "Randfontein",
+    skills: document.getElementById("skills").value,
+    zep_points: 0
+  };
+
   const { data, error } = await client
-    .from("service_requests")
-    .select("*")
-    .eq("status", "open")
-    .order("created_at", { ascending: false });
+    .from("providers")
+    .insert([provider])
+    .select()
+    .single();
 
   if (error) {
+    alert("Error registering provider");
     console.log(error);
     return;
   }
 
-  renderJobs(data);
+  currentProvider = data;
+
+  alert("Provider registered successfully!");
+  closeModal();
+  loadJobs();
+  loadProfile();
+}
+
+/* LOAD JOBS (AUTO MATCHING) */
+async function loadJobs() {
+
+  if (!currentProvider) {
+    document.getElementById("jobs").innerHTML =
+      "<p>Register as a provider to see jobs.</p>";
+    return;
+  }
+
+  const { data } = await client
+    .from("service_requests")
+    .select("*")
+    .eq("category", currentProvider.category)
+    .eq("status", "open");
+
+  renderJobs(data || []);
 }
 
 /* RENDER JOBS */
 function renderJobs(jobs) {
-  const container = document.getElementById("jobs");
-  container.innerHTML = "";
+  const box = document.getElementById("jobs");
+  box.innerHTML = "";
 
   jobs.forEach(job => {
-    container.innerHTML += `
-      <div class="card">
-        <h3 style="color:#00ff8c;">${job.category}</h3>
-        <p><b>Request:</b> ${job.description}</p>
-        <p><b>Location:</b> ${job.location}</p>
-        <p><b>Budget:</b> ${job.budget || "Not set"}</p>
+    box.innerHTML += `
+      <div class="job">
+        <b>${job.category}</b>
+        <p>${job.description}</p>
+        <small>${job.location}</small>
 
         <button onclick="acceptJob('${job.id}')">
           Accept Job
@@ -105,36 +236,38 @@ function renderJobs(jobs) {
 }
 
 /* ACCEPT JOB */
-async function acceptJob(requestId) {
+async function acceptJob(jobId) {
 
-  const provider_name = prompt("Your Name");
-  const provider_phone = prompt("Your Phone");
-
-  const { error } = await client
-    .from("service_offers")
-    .insert([{
-      request_id: requestId,
-      provider_name,
-      provider_phone,
-      status: "accepted"
-    }]);
-
-  if (error) {
-    alert("Error accepting job");
-    console.log(error);
-    return;
-  }
+  if (!currentProvider) return;
 
   await client
     .from("service_requests")
-    .update({ status: "matched" })
-    .eq("id", requestId);
+    .update({
+      status: "matched",
+      matched_provider: currentProvider.name,
+      matched_phone: currentProvider.phone
+    })
+    .eq("id", jobId);
 
-  alert("Job accepted successfully!");
+  alert("Job accepted!");
+
   loadJobs();
 }
 
-loadJobs();
+/* PROFILE */
+function loadProfile() {
+  const profile = document.getElementById("profile");
+
+  if (!currentProvider) return;
+
+  profile.innerHTML = `
+    <p><b>Name:</b> ${currentProvider.name}</p>
+    <p><b>Category:</b> ${currentProvider.category}</p>
+    <p><b>Location:</b> ${currentProvider.location}</p>
+    <p><b>Zep Points:</b> ${currentProvider.zep_points}</p>
+  `;
+}
+
 </script>
 
 </body>
