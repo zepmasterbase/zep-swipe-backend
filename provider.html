@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Provider Activation V4</title>
+<title>Provider Activation V5</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -23,8 +23,8 @@ body {
    HEADER
 ========================= */
 header {
-  padding: 14px;
   text-align: center;
+  padding: 16px;
   font-weight: 700;
   color: #00ff8c;
   border-bottom: 1px solid rgba(0,255,140,0.12);
@@ -34,13 +34,13 @@ header {
    CONTAINER
 ========================= */
 .container {
-  max-width: 500px;
+  max-width: 520px;
   margin: auto;
   padding: 16px;
 }
 
 /* =========================
-   CARD STYLE
+   CARD
 ========================= */
 .card {
   background: rgba(255,255,255,0.03);
@@ -69,8 +69,8 @@ button {
   width: 100%;
   margin-top: 12px;
   padding: 14px;
-  border: none;
   border-radius: 12px;
+  border: none;
   font-weight: 700;
   cursor: pointer;
 }
@@ -81,7 +81,16 @@ button {
 }
 
 /* =========================
-   SUCCESS SCREEN
+   STEP LABEL
+========================= */
+.step {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 10px;
+}
+
+/* =========================
+   SUCCESS
 ========================= */
 .success {
   display: none;
@@ -95,16 +104,15 @@ button {
   color: #00ff8c;
 }
 
+.small {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
 /* =========================
    HIDE
 ========================= */
 .hidden { display:none; }
-
-.small {
-  font-size: 12px;
-  opacity: 0.7;
-  margin-top: 6px;
-}
 
 </style>
 </head>
@@ -112,7 +120,7 @@ button {
 <body>
 
 <header>
-  ⚡ Become a Provider in 60 Seconds
+  🚀 Start Earning in 90 Seconds
 </header>
 
 <div class="container">
@@ -122,44 +130,47 @@ button {
   ========================== -->
   <div id="formCard" class="card">
 
-    <h3>Start Earning in Your Community</h3>
+    <h3>Become a Provider</h3>
+    <p class="small">Set your service and start receiving clients instantly.</p>
+
+    <div class="step">Step 1: Skill</div>
+    <input id="category" placeholder="e.g Tutoring, Design, Cleaning">
+
+    <div class="step">Step 2: What you offer</div>
+    <input id="description" placeholder="e.g I design logos, I tutor maths">
+
+    <div class="step">Step 3: Your price</div>
+    <select id="price">
+      <option>R50 - Basic</option>
+      <option>R100 - Standard</option>
+      <option>R200 - Premium</option>
+      <option>Negotiable</option>
+    </select>
+
+    <div class="step">Step 4: Location</div>
+    <input id="location" placeholder="Your area">
+
+    <div class="step">Step 5: WhatsApp</div>
+    <input id="phone" placeholder="WhatsApp Number">
+
+    <button class="primary" onclick="goLive()">
+      🚀 Go Live & Start Earning
+    </button>
 
     <p class="small">
       Your profile will appear instantly in the marketplace.
     </p>
 
-    <input id="name" placeholder="Full Name">
-    <input id="phone" placeholder="WhatsApp Number">
-    <input id="location" placeholder="Location">
-
-    <select id="category">
-      <option>Academic Services</option>
-      <option>Digital Services</option>
-      <option>Creative Services</option>
-      <option>Technical Services</option>
-      <option>Community Services</option>
-    </select>
-
-    <input id="bio" placeholder="What can you do? (e.g Logo design, tutoring)">
-
-    <button class="primary" onclick="goLive()">
-      🚀 Go Live Now
-    </button>
-
-    <p class="small">
-      No approval needed — you go live instantly.
-    </p>
-
   </div>
 
   <!-- =========================
-       SUCCESS
+       SUCCESS SCREEN
   ========================== -->
   <div id="success" class="success">
 
     <div class="big">🟢 YOU ARE LIVE!</div>
 
-    <p>Your services are now visible in the marketplace.</p>
+    <p>Your service is now visible to customers nearby.</p>
 
     <button class="primary" onclick="window.location.href='marketplace.html'">
       View Marketplace
@@ -182,30 +193,26 @@ const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 async function goLive(){
 
   const data = {
-    name: document.getElementById("name").value,
-    phone: document.getElementById("phone").value,
-    location: document.getElementById("location").value,
     category: document.getElementById("category").value,
-    description: document.getElementById("bio").value,
+    description: document.getElementById("description").value,
+    price: document.getElementById("price").value,
+    location: document.getElementById("location").value,
+    phone: document.getElementById("phone").value,
     online: true,
     rating: 5,
     completed_jobs: 0
   };
 
-  /* SAVE PROFILE */
   await client.from("service_profiles").insert([data]);
 
-  /* SAVE USER PROFILE (optional tracking) */
   await client.from("student_profiles").insert([{
-    name: data.name,
     phone: data.phone,
-    location: data.location,
     category: data.category,
+    location: data.location,
     bio: data.description,
     online: true
   }]);
 
-  /* SHOW SUCCESS SCREEN */
   document.getElementById("formCard").style.display = "none";
   document.getElementById("success").style.display = "block";
 }
