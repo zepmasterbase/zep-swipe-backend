@@ -8,342 +8,296 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
+
+/* =========================
+   BASE
+========================= */
 body {
   margin: 0;
-  font-family: Arial;
-  background: #050607;
+  font-family: system-ui, Arial;
+  background: #0b0f0d;
   color: white;
 }
 
-/* HERO */
-.hero {
-  text-align: center;
-  padding: 40px 20px;
-  background: radial-gradient(circle at top, rgba(0,255,140,0.25), transparent);
+/* =========================
+   HEADER
+========================= */
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 14px;
+  position: sticky;
+  top:0;
+  background: rgba(10,14,12,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,255,140,0.12);
 }
 
-.hero h1 {
-  color: #00ff8c;
+.logo {
+  color:#00ff8c;
+  font-weight:700;
 }
 
-.progress {
-  width: 80%;
-  height: 10px;
-  background: #111;
-  margin: 10px auto;
-  border-radius: 20px;
-  overflow: hidden;
+.small {
+  font-size:12px;
+  opacity:0.7;
 }
 
-.bar {
-  width: 70%;
-  height: 100%;
-  background: #00ff8c;
-}
-
-/* GRID */
+/* =========================
+   CONTAINER
+========================= */
 .container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  padding: 15px;
+  max-width: 900px;
+  margin:auto;
+  padding:14px;
 }
 
-/* CARD */
-.card {
-  background: #0b120e;
+/* =========================
+   PROGRESS SECTION
+========================= */
+.progress-box {
+  background: rgba(255,255,255,0.03);
   border: 1px solid rgba(0,255,140,0.15);
-  border-radius: 12px;
-  padding: 15px;
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 14px;
+  text-align:center;
 }
 
-/* INPUT */
-input, select {
-  width: 100%;
-  padding: 10px;
-  margin: 6px 0;
-  border-radius: 8px;
-  border: none;
+.circle {
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  margin:auto;
+  border: 6px solid rgba(0,255,140,0.2);
+  position: relative;
 }
 
-/* BUTTON */
-button {
-  width: 100%;
+.circle-inner {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  text-align:center;
+}
+
+.big {
+  font-size:22px;
+  font-weight:700;
+  color:#00ff8c;
+}
+
+/* =========================
+   EARNINGS PANEL
+========================= */
+.earnings {
+  margin-top: 12px;
+  background: rgba(0,255,140,0.06);
+  border: 1px solid rgba(0,255,140,0.15);
   padding: 12px;
-  background: #00ff8c;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
+  border-radius: 14px;
+  font-size: 13px;
 }
 
-/* LEADERBOARD */
-.rank {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+/* =========================
+   INVITE BOX
+========================= */
+.invite {
+  margin-top: 12px;
+  background: rgba(255,255,255,0.03);
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
 }
 
-.top {
-  color: #00ff8c;
-  font-weight: bold;
+.invite input {
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  margin-top:8px;
+  background:#0b0f0d;
+  color:white;
 }
 
-/* BADGE */
-.badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 6px;
-  background: #00ff8c;
-  color: black;
-  font-size: 12px;
+.btn {
+  width:100%;
+  margin-top:8px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
 }
 
-/* ALERT */
-.lock {
-  background: rgba(255, 165, 0, 0.1);
-  border: 1px solid orange;
-  padding: 10px;
-  border-radius: 8px;
-  margin-top: 10px;
+.primary {
+  background:#00ff8c;
+  color:black;
 }
+
+.secondary {
+  background:rgba(255,255,255,0.08);
+  color:white;
+}
+
+/* =========================
+   LEADERBOARD
+========================= */
+.leaderboard {
+  margin-top: 14px;
+}
+
+.card {
+  background: rgba(255,255,255,0.03);
+  padding:12px;
+  border-radius:14px;
+  margin-top:10px;
+  border:1px solid rgba(255,255,255,0.06);
+  display:flex;
+  justify-content:space-between;
+}
+
+/* =========================
+   TIERS
+========================= */
+.tiers {
+  margin-top: 14px;
+  font-size: 13px;
+  opacity:0.85;
+  line-height:1.6;
+}
+
+/* =========================
+   FLOAT CTA
+========================= */
+.fab {
+  position:fixed;
+  bottom:16px;
+  right:16px;
+  background:#00ff8c;
+  color:black;
+  padding:14px 16px;
+  border-radius:50px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 0 20px rgba(0,255,140,0.3);
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- HERO -->
-<div class="hero">
-  <h1>🚀 Zep Swipe Global Waitlist V6</h1>
-  <p>Earn rank. Invite friends. Unlock early access.</p>
-
-  <div class="progress">
-    <div class="bar"></div>
-  </div>
-  <small>Launch Progress: 70%</small>
-</div>
+<header>
+  <div class="logo">⚡ Zep Swipe Waitlist</div>
+  <div class="small">Unlock Access System</div>
+</header>
 
 <div class="container">
 
-  <!-- SIGNUP -->
-  <div class="card">
+  <!-- PROGRESS -->
+  <div class="progress-box">
 
-    <input id="name" placeholder="Full Name">
-    <input id="phone" placeholder="Phone">
-    <input id="email" placeholder="Email">
-    <input id="location" placeholder="City">
+    <div class="circle">
+      <div class="circle-inner">
+        <div class="big" id="count">2 / 5</div>
+        <div class="small">Invites</div>
+      </div>
+    </div>
 
-    <input id="country" placeholder="Country">
-
-    <select id="role">
-      <option>Student</option>
-      <option>Provider</option>
-      <option>Customer</option>
-    </select>
-
-    <select id="interest">
-      <option>Academic</option>
-      <option>Digital</option>
-      <option>Technical</option>
-      <option>Creative</option>
-      <option>Local Jobs</option>
-    </select>
-
-    <input id="ref" placeholder="Referral Code (optional)">
-
-    <button onclick="join()">Join Waitlist</button>
-
-    <p id="mycode" style="color:#00ff8c;"></p>
-
-    <div id="accessMsg" class="lock"></div>
+    <p style="margin-top:10px;">
+      Invite 3 more friends to unlock Zep Swipe Marketplace
+    </p>
 
   </div>
 
-  <!-- PROFILE -->
-  <div class="card">
-    <h3 style="color:#00ff8c;">👤 Player Profile</h3>
-
-    <p id="pname">Guest</p>
-    <p id="points">Points: 0</p>
-    <p id="tier">Tier: Bronze</p>
-    <p id="refcount">Referrals: 0</p>
+  <!-- EARNINGS -->
+  <div class="earnings">
+    💰 Potential Earnings After Unlock:<br>
+    <b>R0 → R250/day</b><br><br>
+    ✔ Become a provider<br>
+    ✔ Access real jobs<br>
+    ✔ Earn Zep Points
   </div>
 
-  <!-- MISSIONS -->
-  <div class="card">
-    <h3 style="color:#00ff8c;">🎯 Missions</h3>
+  <!-- INVITE -->
+  <div class="invite">
 
-    <p>Invite 1 friend → +5 pts</p>
-    <p>Invite 3 friends → +20 bonus</p>
-    <p>Share link → +3 pts</p>
-    <p>Join provider list → +10 pts</p>
+    <b>Your Invite Link</b>
+
+    <input id="link" value="https://zepswipe.com/invite/abc123" readonly>
+
+    <button class="btn primary" onclick="copyLink()">
+      Copy Link
+    </button>
+
+    <button class="btn secondary" onclick="shareWA()">
+      Share on WhatsApp
+    </button>
+
   </div>
 
   <!-- LEADERBOARD -->
-  <div class="card">
-    <h3 style="color:#00ff8c;">🔥 Leaderboard</h3>
-    <div id="board"></div>
+  <div class="leaderboard">
+
+    <h3 style="color:#00ff8c;">🏆 Leaderboard</h3>
+
+    <div class="card">
+      <span>🥇 Thabo</span>
+      <span>12 invites</span>
+    </div>
+
+    <div class="card">
+      <span>🥈 Amina</span>
+      <span>9 invites</span>
+    </div>
+
+    <div class="card">
+      <span>🥉 Sipho</span>
+      <span>6 invites</span>
+    </div>
+
   </div>
 
+  <!-- TIERS -->
+  <div class="tiers">
+    🎁 Reward Tiers:<br>
+    • 1 Invite → Starter Badge<br>
+    • 3 Invites → Growth Badge<br>
+    • 5 Invites → Unlock Access<br>
+    • 10 Invites → Bonus Zep Points<br>
+  </div>
+
+</div>
+
+<!-- FLOAT -->
+<div class="fab" onclick="alert('Keep inviting to unlock!')">
+  Unlock in Progress
 </div>
 
 <script>
 
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
-
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let myPoints = 0;
-let myRef = "";
-
-/* TIER SYSTEM */
-function getTier(p){
-  if(p >= 150) return "FOUNDER";
-  if(p >= 50) return "GOLD";
-  if(p >= 10) return "SILVER";
-  return "BRONZE";
+/* COPY LINK */
+function copyLink(){
+  const input = document.getElementById("link");
+  input.select();
+  document.execCommand("copy");
+  alert("Invite link copied!");
 }
 
-/* REF CODE */
-function genCode(){
-  return "ZEP-" + Math.random().toString(36).substring(2,7).toUpperCase();
+/* WHATSAPP SHARE */
+function shareWA(){
+  const link = document.getElementById("link").value;
+  window.open(
+    `https://wa.me/?text=Join%20Zep%20Swipe%20Waitlist:%20${link}`,
+    "_blank"
+  );
 }
 
-/* JOIN SYSTEM */
-async function join(){
-
-  const ref = new URLSearchParams(window.location.search).get("ref");
-  const code = genCode();
-
-  const countryStatus = getCountryStatus(country.value);
-
-  const user = {
-    name: name.value,
-    phone: phone.value,
-    email: email.value,
-    location: location.value,
-    country: country.value,
-
-    role: role.value,
-    interest: interest.value,
-
-    ref_code: code,
-    referred_by: ref || null,
-
-    points: ref ? 6 : 1,
-    ref_count: 0,
-
-    tier: "BRONZE",
-    country_status: countryStatus
-  };
-
-  const { error } = await client.from("waitlist").insert([user]);
-
-  if(error){
-    alert("Error joining");
-    return;
-  }
-
-  myPoints = user.points;
-  myRef = code;
-
-  document.getElementById("mycode").innerHTML =
-    "Your Code: " + code;
-
-  updateProfile(user.name, myPoints, 0);
-  loadBoard();
-
-  if(ref) updateReferrer(ref);
-}
-
-/* COUNTRY LOGIC */
-function getCountryStatus(country){
-
-  const active = ["South Africa"];
-  const waitlist = ["Ghana", "Nigeria", "Kenya"];
-
-  if(active.includes(country)) return "ACTIVE";
-  if(waitlist.includes(country)) return "WAITLIST";
-  return "COMING_SOON";
-}
-
-/* REF ENGINE */
-async function updateReferrer(refCode){
-
-  const { data } = await client
-    .from("waitlist")
-    .select("*")
-    .eq("ref_code", refCode)
-    .single();
-
-  if(!data) return;
-
-  const newPoints = (data.points || 0) + 5;
-  const newRefs = (data.ref_count || 0) + 1;
-
-  await client
-    .from("waitlist")
-    .update({
-      points: newPoints,
-      ref_count: newRefs
-    })
-    .eq("ref_code", refCode);
-}
-
-/* PROFILE */
-function updateProfile(name, pts, refs){
-
-  pname.innerText = name;
-  points.innerText = "Points: " + pts;
-  tier.innerText = "Tier: " + getTier(pts);
-  refcount.innerText = "Referrals: " + refs;
-}
-
-/* LEADERBOARD */
-async function loadBoard(){
-
-  const { data } = await client
-    .from("waitlist")
-    .select("*")
-    .order("points",{ascending:false})
-    .limit(10);
-
-  const board = document.getElementById("board");
-  board.innerHTML = "";
-
-  (data || []).forEach((u,i)=>{
-
-    board.innerHTML += `
-      <div class="rank ${i===0?'top':''}">
-        <span>#${i+1} ${u.name} [${u.tier || "BRONZE"}]</span>
-        <span>${u.points} pts</span>
-      </div>
-    `;
-  });
-}
-
-/* ACCESS MESSAGE */
-function showAccess(countryStatus){
-
-  let msg = "";
-
-  if(countryStatus === "ACTIVE"){
-    msg = "🟢 Your country is ACTIVE. Full access will be available on launch.";
-  }
-  else if(countryStatus === "WAITLIST"){
-    msg = "🟡 Your country is in WAITLIST phase. You can earn rank, but no jobs yet.";
-  }
-  else {
-    msg = "🔵 Coming soon to your country. Join early to become a Founder.";
-  }
-
-  document.getElementById("accessMsg").innerText = msg;
-}
-
-/* INIT */
-loadBoard();
+/* FAKE PROGRESS (replace with Supabase later) */
+let invites = 2;
+document.getElementById("count").innerText = invites + " / 5";
 
 </script>
 
