@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V7</title>
+<title>Zep Swipe Marketplace V8</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -17,7 +17,37 @@ body {
   font-family: system-ui, Arial;
   background: #0b0f0d;
   color: white;
+  overflow-x: hidden;
 }
+
+/* =========================
+   FLOATING BACKGROUND ICONS
+========================= */
+.bg-icons {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.icon {
+  position: absolute;
+  font-size: 38px;
+  opacity: 0.04;
+  animation: float 20s linear infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(100vh); }
+  100% { transform: translateY(-10vh); }
+}
+
+.i1 { left: 10%; animation-duration: 18s; }
+.i2 { left: 30%; animation-duration: 25s; }
+.i3 { left: 50%; animation-duration: 20s; }
+.i4 { left: 70%; animation-duration: 22s; }
+.i5 { left: 85%; animation-duration: 19s; }
 
 /* =========================
    HEADER
@@ -25,13 +55,14 @@ body {
 header {
   position: sticky;
   top: 0;
+  z-index: 10;
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:12px;
-  background: rgba(10,14,12,0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0,255,140,0.15);
+  background: rgba(10,14,12,0.8);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(0,255,140,0.12);
 }
 
 .logo {
@@ -47,26 +78,35 @@ header {
   cursor:pointer;
 }
 
-.primary { background:#00ff8c; color:black; }
-.dark { background:rgba(255,255,255,0.08); color:white; }
+.primary {
+  background:#00ff8c;
+  color:black;
+}
 
 /* =========================
    LAYOUT
 ========================= */
 .container {
-  max-width:900px;
-  margin:auto;
-  padding:12px;
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: auto;
+  padding: 14px;
 }
 
 /* =========================
-   REQUEST BOX
+   HERO REQUEST
 ========================= */
-.request-box {
-  background:rgba(255,255,255,0.03);
-  padding:14px;
-  border-radius:14px;
-  border:1px solid rgba(0,255,140,0.12);
+.hero {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.hero h2 {
+  margin: 0;
+  font-size: 18px;
 }
 
 input {
@@ -79,18 +119,18 @@ input {
   color:white;
 }
 
-button.request {
+button {
   width:100%;
   margin-top:10px;
   padding:12px;
   border:none;
   border-radius:10px;
-  background:#00ff8c;
   font-weight:700;
+  cursor:pointer;
 }
 
 /* =========================
-   SECTIONS
+   PROVIDERS
 ========================= */
 h3 {
   margin-top:16px;
@@ -98,37 +138,25 @@ h3 {
   font-size:14px;
 }
 
-/* =========================
-   PROVIDER CARD
-========================= */
 .card {
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.06);
-  border-radius:14px;
-  padding:12px;
-  margin-top:10px;
-}
-
-.small {
-  font-size:12px;
-  opacity:0.7;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 12px;
+  margin-top: 10px;
 }
 
 .badge {
   font-size:11px;
   padding:4px 8px;
   border-radius:20px;
-  background:rgba(0,255,140,0.12);
+  background:rgba(0,255,140,0.1);
   color:#00ff8c;
 }
 
-/* =========================
-   PROVIDERS GRID
-========================= */
-.grid {
-  display:grid;
-  grid-template-columns:1fr;
-  gap:10px;
+.small {
+  font-size:12px;
+  opacity:0.7;
 }
 
 /* =========================
@@ -143,8 +171,8 @@ h3 {
   padding:14px 16px;
   border-radius:50px;
   font-weight:700;
-  cursor:pointer;
   box-shadow:0 0 20px rgba(0,255,140,0.3);
+  cursor:pointer;
 }
 
 </style>
@@ -152,38 +180,44 @@ h3 {
 
 <body>
 
-<header>
-  <div class="logo">⚡ Zep Marketplace</div>
+<!-- FLOATING BACKGROUND ICONS -->
+<div class="bg-icons">
+  <div class="icon i1">💇</div>
+  <div class="icon i2">🔧</div>
+  <div class="icon i3">📚</div>
+  <div class="icon i4">🧼</div>
+  <div class="icon i5">🚚</div>
+</div>
 
-  <div>
-    <button class="btn dark" onclick="window.location.href='provider.html'">
-      Become Provider
-    </button>
-  </div>
+<header>
+  <div class="logo">⚡ Zep Marketplace V8</div>
+  <button class="btn primary" onclick="window.location.href='provider.html'">
+    Become Provider
+  </button>
 </header>
 
 <div class="container">
 
   <!-- REQUEST -->
-  <div class="request-box">
+  <div class="hero">
 
-    <h3>What service do you need?</h3>
+    <h2>What do you need done?</h2>
 
-    <input id="category" placeholder="e.g. Cleaning, Hair, Tutoring">
-    <input id="desc" placeholder="Describe what you need">
+    <input id="category" placeholder="Service (e.g Hair, Cleaning, Tutoring)">
+    <input id="desc" placeholder="Describe your request">
     <input id="location" placeholder="Your location">
 
-    <button class="request" onclick="createRequest()">
+    <button class="primary" onclick="createRequest()">
       Request Service
     </button>
 
   </div>
 
   <!-- PROVIDERS -->
-  <h3>🛠 Available Providers Near You</h3>
-  <div id="providers" class="grid"></div>
+  <h3>🛠 Available Services Near You</h3>
+  <div id="providers"></div>
 
-  <!-- LIVE REQUESTS -->
+  <!-- REQUESTS -->
   <h3>📍 Recent Requests</h3>
   <div id="requests"></div>
 
@@ -263,8 +297,7 @@ function renderProviders(list){
           💰 ${p.price_range || "Negotiable"}
         </div>
 
-        <button class="request"
-          onclick="contact('${p.phone}')">
+        <button class="primary" onclick="contact('${p.phone}')">
           Contact Provider
         </button>
 
@@ -290,9 +323,7 @@ function renderRequests(list){
 
         <p>${r.description}</p>
 
-        <div class="small">
-          📍 ${r.location}
-        </div>
+        <div class="small">📍 ${r.location}</div>
 
       </div>
     `;
@@ -300,10 +331,9 @@ function renderRequests(list){
 }
 
 /* =========================
-   CONTACT (MVP WHATSAPP)
+   WHATSAPP CONTACT
 ========================= */
 function contact(phone){
-
   window.open(`https://wa.me/${phone}`, "_blank");
 }
 
