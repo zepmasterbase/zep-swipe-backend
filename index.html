@@ -1,288 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Zep Swipe | Student Economy Marketplace</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe | Student Gig Economy</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
 body {
+  margin: 0;
+  font-family: Arial;
   background: #050607;
   color: white;
 }
 
 /* HEADER */
 header {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: rgba(10, 15, 12, 0.85);
-  backdrop-filter: blur(10px);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 25px;
-  border-bottom: 1px solid rgba(0,255,140,0.15);
-  z-index: 999;
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(0,255,140,0.2);
+  background: rgba(0,0,0,0.85);
+  position: sticky;
+  top: 0;
 }
 
 .logo {
-  width: 110px;
-  cursor: pointer;
-}
-
-.header-btn {
-  padding: 10px 16px;
-  background: #00ff8c;
-  color: #000;
+  color: #00ff8c;
   font-weight: bold;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: 0.3s;
-  font-size: 13px;
+  font-size: 18px;
 }
 
-.header-btn:hover {
-  background: #00cc6f;
-  transform: scale(1.05);
+.btn {
+  background: #00ff8c;
+  color: black;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 /* HERO */
 .hero {
-  height: 100vh;
-  padding-top: 80px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   text-align: center;
-
-  background:
-    linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)),
-    url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d') center/cover;
+  padding: 70px 20px;
+  background: radial-gradient(circle at top, rgba(0,255,140,0.15), transparent);
 }
 
 .hero h1 {
-  font-size: 46px;
+  font-size: 34px;
   color: #00ff8c;
-  margin-bottom: 12px;
-  text-shadow: 0 0 20px rgba(0,255,140,0.25);
 }
 
 .hero p {
-  max-width: 650px;
-  opacity: 0.85;
-  margin-bottom: 25px;
-  font-size: 15px;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: auto;
 }
 
-.cta {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.btn {
-  padding: 12px 20px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: 0.25s;
-}
-
-.primary {
-  background: #00ff8c;
-  color: #000;
-}
-
-.secondary {
-  border: 1px solid #00ff8c;
-  color: #00ff8c;
-}
-
-.btn:hover {
-  transform: scale(1.05);
-}
-
-/* PILOT BANNER */
-.banner {
-  background: #0c1410;
-  text-align: center;
-  padding: 15px;
-  border-top: 1px solid rgba(0,255,140,0.2);
-  border-bottom: 1px solid rgba(0,255,140,0.2);
-  color: #00ff8c;
-  font-weight: bold;
-}
-
-/* SECTIONS */
-.section {
-  padding: 70px 20px;
-  text-align: center;
-}
-
-.section h2 {
-  color: #00ff8c;
-  margin-bottom: 25px;
-}
-
-/* GRID */
+/* CTA GRID */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
-  max-width: 1050px;
-  margin: auto;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 15px;
+  padding: 30px 20px;
 }
 
 .card {
   background: #0b120e;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid rgba(0,255,140,0.1);
+  border: 1px solid rgba(0,255,140,0.15);
+  border-radius: 12px;
+  padding: 20px;
   transition: 0.3s;
 }
 
 .card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px);
   border-color: #00ff8c;
-  box-shadow: 0 0 20px rgba(0,255,140,0.2);
-}
-
-.card img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-}
-
-.card-content {
-  padding: 15px;
 }
 
 .card h3 {
-  font-size: 15px;
-  margin-bottom: 6px;
-}
-
-.card p {
-  font-size: 13px;
-  opacity: 0.7;
+  color: #00ff8c;
 }
 
 /* FOOTER */
 footer {
   text-align: center;
-  padding: 35px;
-  font-size: 12px;
+  padding: 20px;
   opacity: 0.6;
-  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 12px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header>
-  <img class="logo"
-       src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png"
-       alt="Zep Swipe Logo">
-
-  <a class="header-btn" href="waitlists.html">
-    Become a Student Freelancer
-  </a>
+  <div class="logo">Zep Swipe</div>
+  <a class="btn" href="provider.html">Become Freelancer</a>
 </header>
 
-<!-- HERO -->
-<div class="hero">
-  <h1>Earn Money. Find Services. Build Your Future.</h1>
+<section class="hero">
+  <h1>Work. Earn. Learn. In Your Community.</h1>
   <p>
-    Zep Swipe is a student-powered marketplace connecting local people to trusted services while helping students earn real income.
+    Zep Swipe connects students and locals to real services like tutoring, design, repairs, food, and freelance work — starting in Randfontein.
   </p>
+</section>
 
-  <div class="cta">
-    <a class="btn primary" href="marketplace.html">Enter Marketplace</a>
-    <a class="btn secondary" href="waitlists.html">Join Waitlist</a>
+<section class="grid">
+
+  <div class="card" onclick="location.href='marketplace.html'">
+    <h3>Marketplace</h3>
+    <p>Find and request services instantly from students & freelancers.</p>
   </div>
-</div>
 
-<!-- PILOT BANNER -->
-<div class="banner">
-🚀 LIVE PILOT — Randfontein Student Economy Network
-</div>
-
-<!-- CATEGORIES -->
-<div class="section">
-  <h2>Find Services Instantly</h2>
-
-  <div class="grid">
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092">
-      <div class="card-content">
-        <h3>🎓 Academic Services</h3>
-        <p>Tutoring, CV writing, exam prep</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1551434678-e076c223a692">
-      <div class="card-content">
-        <h3>💻 Digital Services</h3>
-        <p>Design, social media, AI help</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952">
-      <div class="card-content">
-        <h3>🔧 Technical & Repairs</h3>
-        <p>Phones, laptops, home fixes</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1520975916090-3105956dac38">
-      <div class="card-content">
-        <h3>📸 Creative Services</h3>
-        <p>Photography, video, branding</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba">
-      <div class="card-content">
-        <h3>🏠 Community Services</h3>
-        <p>Cleaning, errands, home help</p>
-      </div>
-    </div>
-
+  <div class="card" onclick="location.href='provider.html'">
+    <h3>Become a Provider</h3>
+    <p>Earn money by offering your skills and completing local jobs.</p>
   </div>
-</div>
 
-<!-- HOW IT WORKS -->
-<div class="section">
-  <h2>How It Works</h2>
-  <p style="max-width:700px;margin:auto;opacity:0.8;line-height:1.6;">
-    1. Browse services<br>
-    2. Request or offer help<br>
-    3. Complete jobs locally<br>
-    4. Earn trust & Zep Points<br>
-    5. Unlock verified access
-  </p>
-</div>
+  <div class="card" onclick="location.href='waitlists.html'">
+    <h3>Join Waitlist</h3>
+    <p>Be the first when Zep Swipe launches in your city.</p>
+  </div>
 
-<!-- FOOTER -->
+  <div class="card">
+    <h3>Student Economy</h3>
+    <p>Built for students to earn while studying — not after graduation.</p>
+  </div>
+
+</section>
+
 <footer>
-  © 2026 Zep Swipe — Building the student economy across Africa
+  © 2026 Zep Swipe — Built for Africa’s student economy
 </footer>
 
 </body>
