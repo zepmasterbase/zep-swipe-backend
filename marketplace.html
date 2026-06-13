@@ -3,15 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V9</title>
+<title>Zep Swipe Marketplace V4</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
 
-/* =========================
-   BASE
-========================= */
 body {
   margin: 0;
   font-family: system-ui;
@@ -19,17 +16,13 @@ body {
   color: white;
 }
 
-/* =========================
-   HEADER
-========================= */
 header {
   position: sticky;
   top: 0;
+  padding: 12px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  padding:12px;
-  background: rgba(10,14,12,0.85);
+  background: rgba(10,14,12,0.9);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0,255,140,0.12);
 }
@@ -39,47 +32,44 @@ header {
   font-weight:700;
 }
 
-/* =========================
-   LAYOUT
-========================= */
 .container {
   max-width: 900px;
   margin:auto;
-  padding:14px;
+  padding: 14px;
 }
 
 /* =========================
-   CARD (UBER STYLE)
+   CARD
 ========================= */
 .card {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 14px;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 /* =========================
    BUTTONS
 ========================= */
 button {
-  width:100%;
-  margin-top:10px;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  font-weight:700;
-  cursor:pointer;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-.primary {
-  background:#00ff8c;
-  color:black;
+.accept {
+  background: #00ff8c;
+  color: black;
 }
 
-.secondary {
-  background:rgba(255,255,255,0.08);
-  color:white;
+.skip {
+  background: rgba(255,255,255,0.08);
+  color: white;
 }
 
 /* =========================
@@ -94,12 +84,15 @@ button {
   font-size:11px;
 }
 
-/* =========================
-   STATUS
-========================= */
+/* STATUS */
 .status-open { color: #ffcc00; }
-.status-progress { color: #00ff8c; }
-.status-done { color: #aaa; }
+.status-broadcast { color: #00bfff; }
+.status-matched { color: #00ff8c; }
+
+.small {
+  font-size: 12px;
+  opacity: 0.7;
+}
 
 </style>
 </head>
@@ -107,13 +100,14 @@ button {
 <body>
 
 <header>
-  <div class="logo">⚡ Zep Marketplace V9</div>
+  <div class="logo">⚡ Marketplace V4 Live</div>
 </header>
 
 <div class="container">
 
-  <h3>🚀 Live Jobs (Uber Feed)</h3>
-  <div id="jobs"></div>
+  <h3>🔥 Live Job Feed</h3>
+
+  <div id="feed"></div>
 
 </div>
 
@@ -134,42 +128,48 @@ async function loadJobs(){
     .select("*")
     .order("created_at", { ascending: false });
 
-  renderJobs(data || []);
+  render(data || []);
 }
 
 /* =========================
-   RENDER JOBS
+   RENDER
 ========================= */
-function renderJobs(jobs){
+function render(jobs){
 
-  const box = document.getElementById("jobs");
-  box.innerHTML = "";
+  const feed = document.getElementById("feed");
+  feed.innerHTML = "";
 
-  jobs.forEach(j => {
+  jobs.forEach(job => {
 
-    box.innerHTML += `
+    feed.innerHTML += `
       <div class="card">
 
-        <span class="badge">${j.category}</span>
+        <span class="badge">${job.category}</span>
 
-        <h4>${j.description}</h4>
+        <h3>${job.description}</h3>
 
-        <p>📍 ${j.location}</p>
+        <p class="small">📍 ${job.location}</p>
 
-        <p class="status-${j.status}">
-          Status: ${j.status}
+        <p class="status-${job.status}">
+          Status: ${job.status}
         </p>
 
-        ${j.status === "matched" ? `
-          <button class="primary" onclick="completeJob('${j.id}')">
-            Mark Completed
+        ${job.status === "open" ? `
+          <button class="accept" onclick="acceptJob('${job.id}')">
+            ⚡ Accept Job
+          </button>
+
+          <button class="skip" onclick="skipJob()">
+            Skip
           </button>
         ` : ""}
 
-        ${j.status === "completed" ? `
-          <button class="secondary" onclick="confirmJob('${j.id}')">
-            Confirm Payment
-          </button>
+        ${job.status === "broadcast" ? `
+          <p class="small">📡 Broadcasting to providers...</p>
+        ` : ""}
+
+        ${job.status === "matched" ? `
+          <p class="small">👤 Assigned: ${job.matched_provider}</p>
         ` : ""}
 
       </div>
@@ -178,25 +178,87 @@ function renderJobs(jobs){
 }
 
 /* =========================
-   COMPLETE JOB
+   ACCEPT JOB
 ========================= */
-async function completeJob(id){
+async function acceptJob(jobId){
+
+  const phone = prompt("Enter your provider WhatsApp number");
+
+  const { data: job } = await client
+    .from("service_requests")
+    .select("*")
+    .eq("id", jobId)
+    .single();
+
+  if(job.status === "matched"){
+    return alert("Job already taken");
+  }
 
   await client
     .from("service_requests")
-    .update({ status: "completed" })
-    .eq("id", id);
+    .update({
+      status: "matched",
+      matched_provider: phone
+    })
+    .eq("id", jobId);
 
   loadJobs();
 }
 
 /* =========================
-   CONFIRM JOB
+   SKIP
 ========================= */
-async function confirmJob(id){
-
-  alert("Payment confirmed (manual MVP flow)");
+function skipJob(){
+  alert("Skipped");
 }
+
+/* =========================
+   AUTO RE-DISPATCH ENGINE V4
+========================= */
+async function retryUnmatchedJobs(){
+
+  const { data: jobs } = await client
+    .from("service_requests")
+    .select("*")
+    .eq("status", "broadcast");
+
+  if(!jobs) return;
+
+  jobs.forEach(async (job) => {
+
+    const created = new Date(job.created_at);
+    const now = new Date();
+
+    const diff = (now - created) / 1000;
+
+    // if 45 seconds passed → retry dispatch
+    if(diff > 45){
+
+      console.log("Retrying job:", job.id);
+
+      await client
+        .from("service_requests")
+        .update({ status: "open" })
+        .eq("id", job.id);
+    }
+  });
+}
+
+/* =========================
+   REAL-TIME ENGINE
+========================= */
+client
+  .channel('service_requests')
+  .on('postgres_changes',
+    { event: '*', schema: 'public', table: 'service_requests' },
+    () => {
+      loadJobs();
+    }
+  )
+  .subscribe();
+
+/* LOOP */
+setInterval(retryUnmatchedJobs, 15000);
 
 /* INIT */
 loadJobs();
