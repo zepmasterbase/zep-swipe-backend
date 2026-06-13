@@ -9,49 +9,26 @@
 
 <style>
 
-/* GLOBAL */
+/* BASE */
 body {
   margin: 0;
   font-family: system-ui, Arial;
-  background: #070b09;
+  background: #0b0f0d;
   color: white;
-  overflow-x: hidden;
 }
 
-/* FLOATING BACKGROUND ICONS */
-.bg-icons {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 0;
-}
-
-.icon {
-  position: absolute;
-  font-size: 24px;
-  opacity: 0.08;
-  animation: float 12s infinite linear;
-  color: #00ff8c;
-}
-
-@keyframes float {
-  0% { transform: translateY(100vh) rotate(0deg); }
-  100% { transform: translateY(-10vh) rotate(360deg); }
-}
-
-/* HEADER */
+/* HEADER (ULTRA CLEAN) */
 header {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 14px;
-  background: rgba(10,15,12,0.9);
-  border-bottom: 1px solid rgba(0,255,140,0.15);
+  background: rgba(10, 14, 12, 0.92);
   backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,255,140,0.15);
 }
 
 .logo {
@@ -59,41 +36,80 @@ header {
   color: #00ff8c;
 }
 
-/* BUTTONS */
-.btn {
+.header-actions button {
+  margin-left: 6px;
   padding: 8px 10px;
-  border-radius: 10px;
   border: none;
-  font-weight: 600;
-  cursor: pointer;
+  border-radius: 10px;
   font-size: 12px;
+  cursor: pointer;
 }
 
 .primary { background:#00ff8c; color:black; }
 .dark { background:rgba(255,255,255,0.08); color:white; }
 
-/* CONTAINER */
+/* MAIN WRAPPER */
 .container {
-  position: relative;
-  z-index: 2;
-  padding: 14px;
   max-width: 900px;
   margin: auto;
+  padding: 12px;
+}
+
+/* HERO REQUEST BAR (CONVERSION CORE) */
+.request-box {
+  background: #111715;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,255,140,0.15);
+  margin-top: 12px;
+}
+
+.request-box input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  margin-top: 8px;
+  background: #0b0f0d;
+  color: white;
+}
+
+.request-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  background: #00ff8c;
+  color: black;
+  cursor: pointer;
+}
+
+/* LIVE NEAR YOU */
+.live-strip {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(0,255,140,0.08);
+  border: 1px solid rgba(0,255,140,0.2);
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+/* SECTION TITLE */
+h3 {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #00ff8c;
 }
 
 /* JOB CARD */
 .card {
   background: #101814;
-  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 12px;
-  transition: 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(0,255,140,0.3);
+  padding: 12px;
+  margin-top: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
 }
 
 /* TOP ROW */
@@ -103,88 +119,64 @@ header {
   align-items:center;
 }
 
-/* BADGES */
-.category {
-  font-size:11px;
-  background:rgba(0,255,140,0.15);
-  color:#00ff8c;
-  padding:4px 8px;
-  border-radius:20px;
-}
-
-/* STATUS */
-.status {
-  font-size:11px;
-  padding:4px 8px;
-  border-radius:20px;
-}
-
-.open { background:orange; color:black; }
-.accepted { background:#2b6fff; }
-.completed { background:gray; }
-
-/* PROVIDER RANK BADGE */
-.rank {
+.badge {
   font-size: 11px;
   padding: 4px 8px;
   border-radius: 20px;
-  font-weight: 700;
+  background: rgba(0,255,140,0.15);
+  color: #00ff8c;
 }
 
-.bronze { background:#cd7f32; color:black; }
-.silver { background:#c0c0c0; color:black; }
-.gold { background:#ffd700; color:black; }
-.founder { background:#00ff8c; color:black; }
-
-/* DESCRIPTION */
-.desc {
-  margin-top: 8px;
-  font-size: 14px;
-  opacity: 0.9;
+/* TRUST */
+.trust {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 20px;
 }
 
-/* META */
-.meta {
-  font-size: 12px;
-  opacity: 0.6;
-  margin-top: 6px;
-}
+.verified { background:#00ff8c; color:black; }
 
-/* ACTIONS */
-.actions {
+/* PROVIDER STRIP */
+.provider-strip {
   display:flex;
   gap:8px;
-  margin-top:10px;
+  overflow-x:auto;
+  padding:10px 0;
 }
 
-.actions button {
-  flex:1;
+.provider {
+  min-width: 120px;
+  background:#111715;
   padding:10px;
-  border:none;
-  border-radius:10px;
-  font-weight:600;
-  cursor:pointer;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.06);
+  font-size:12px;
 }
-
-.accept { background:#00ff8c; color:black; }
-.wa { background:#222; color:white; }
 
 /* FLOAT BUTTON */
 .fab {
-  position:fixed;
-  bottom:18px;
-  right:18px;
-  background:#00ff8c;
-  color:black;
-  padding:14px 16px;
-  border-radius:50px;
-  font-weight:700;
-  box-shadow:0 0 20px rgba(0,255,140,0.3);
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  background: #00ff8c;
+  color: black;
+  padding: 14px 16px;
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0,255,140,0.3);
+}
+
+/* HOW IT WORKS */
+.steps {
+  margin-top: 16px;
+  font-size: 13px;
+  opacity: 0.8;
 }
 
 /* MOBILE */
 @media(max-width:600px){
-  .btn { font-size:11px; }
+  .container { padding: 10px; }
 }
 
 </style>
@@ -192,40 +184,74 @@ header {
 
 <body>
 
-<!-- BACKGROUND ICONS -->
-<div class="bg-icons">
-  <div class="icon" style="left:10%; animation-delay:0s;">💼</div>
-  <div class="icon" style="left:20%; animation-delay:2s;">📱</div>
-  <div class="icon" style="left:40%; animation-delay:4s;">🔧</div>
-  <div class="icon" style="left:60%; animation-delay:1s;">🎓</div>
-  <div class="icon" style="left:80%; animation-delay:3s;">🚚</div>
-</div>
-
 <!-- HEADER -->
 <header>
   <div class="logo">⚡ Zep Swipe</div>
 
-  <div style="display:flex;gap:6px;">
-    <button class="btn dark" onclick="window.location.href='provider.html'">
-      Join Provider
-    </button>
-
-    <button class="btn primary" onclick="window.location.href='waitlists.html'">
-      Join Waitlist
-    </button>
+  <div class="header-actions">
+    <button class="dark" onclick="window.location.href='provider.html'">Provider</button>
+    <button class="primary" onclick="window.location.href='waitlists.html'">Join</button>
   </div>
 </header>
 
-<!-- MAIN -->
 <div class="container">
 
-  <h3 style="color:#00ff8c;">📍 Live Jobs (Randfontein)</h3>
+  <!-- REQUEST ENGINE -->
+  <div class="request-box">
 
+    <h3>What do you need today?</h3>
+
+    <input id="request" placeholder="e.g. Cleaning, Tutoring, Barber...">
+    <input id="location" placeholder="Your location">
+
+    <button class="request-btn" onclick="createRequest()">
+      Request Service Instantly
+    </button>
+
+  </div>
+
+  <!-- LIVE NEAR YOU -->
+  <div class="live-strip">
+    🔥 3 providers available near Randfontein • Avg response: 6 mins
+  </div>
+
+  <!-- PROVIDERS -->
+  <h3>⚡ Top Providers Near You</h3>
+
+  <div class="provider-strip">
+
+    <div class="provider">
+      🧑‍💻 Thabo<br>
+      ⭐ Gold Provider<br>
+      🟢 Online
+    </div>
+
+    <div class="provider">
+      💇 Amina<br>
+      ⭐ Silver Provider<br>
+      🟢 Online
+    </div>
+
+    <div class="provider">
+      🔧 John<br>
+      ⭐ Bronze Provider<br>
+      🟢 Online
+    </div>
+
+  </div>
+
+  <!-- LIVE JOBS -->
+  <h3>📍 Live Requests</h3>
   <div id="jobs"></div>
+
+  <!-- HOW IT WORKS -->
+  <div class="steps">
+    1. Request service → 2. Get matched → 3. Job completed
+  </div>
 
 </div>
 
-<!-- FLOAT -->
+<!-- FLOAT CTA -->
 <div class="fab" onclick="window.location.href='waitlists.html'">
   Join Now
 </div>
@@ -236,6 +262,25 @@ const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* CREATE REQUEST */
+async function createRequest(){
+
+  const req = document.getElementById("request").value;
+  const loc = document.getElementById("location").value;
+
+  if(!req) return alert("Enter request");
+
+  await client.from("service_requests").insert([{
+    category: "General",
+    description: req,
+    location: loc,
+    status: "open"
+  }]);
+
+  alert("Request sent! You will be matched instantly.");
+  loadJobs();
+}
 
 /* LOAD JOBS */
 async function loadJobs(){
@@ -248,15 +293,6 @@ async function loadJobs(){
   render(data || []);
 }
 
-/* RANK SYSTEM */
-function getRank(points){
-
-  if(points >= 150) return "founder";
-  if(points >= 80) return "gold";
-  if(points >= 30) return "silver";
-  return "bronze";
-}
-
 /* RENDER */
 function render(jobs){
 
@@ -265,68 +301,21 @@ function render(jobs){
 
   jobs.forEach(job => {
 
-    // fake provider rank (replace later with real provider table)
-    const rank = getRank(Math.floor(Math.random()*200));
-
     box.innerHTML += `
       <div class="card">
 
         <div class="top">
-          <span class="category">${job.category}</span>
-          <span class="status ${job.status}">${job.status}</span>
+          <span class="badge">${job.category}</span>
+          <span class="trust verified">Verified System</span>
         </div>
 
-        <div class="desc">
-          ${job.description}
-        </div>
+        <p>${job.description}</p>
 
-        <div class="meta">
-          📍 ${job.location}
-        </div>
-
-        <div style="margin-top:8px;">
-          <span class="rank ${rank}">
-            Provider Rank: ${rank.toUpperCase()}
-          </span>
-        </div>
-
-        <div class="actions">
-
-          <button class="accept" onclick="acceptJob('${job.id}')">
-            Accept
-          </button>
-
-          <button class="wa" onclick="wa('${job.matched_phone}','${job.description}')">
-            WhatsApp
-          </button>
-
-        </div>
+        <small>📍 ${job.location}</small>
 
       </div>
     `;
   });
-}
-
-/* ACCEPT */
-async function acceptJob(id){
-
-  await client
-    .from("service_requests")
-    .update({ status:"accepted" })
-    .eq("id", id);
-
-  loadJobs();
-}
-
-/* WHATSAPP */
-function wa(phone, msg){
-
-  if(!phone) return;
-
-  window.open(
-    `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,
-    "_blank"
-  );
 }
 
 /* INIT */
