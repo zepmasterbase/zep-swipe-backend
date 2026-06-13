@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Waitlist V5</title>
+<title>Zep Swipe Waitlist V6</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -13,32 +13,30 @@ body {
   font-family: Arial;
   background: #050607;
   color: white;
-  overflow-x: hidden;
 }
 
 /* HERO */
 .hero {
   text-align: center;
   padding: 40px 20px;
-  background: radial-gradient(circle at top, rgba(0,255,140,0.2), transparent);
+  background: radial-gradient(circle at top, rgba(0,255,140,0.25), transparent);
 }
 
 .hero h1 {
   color: #00ff8c;
-  font-size: 28px;
 }
 
 .progress {
   width: 80%;
   height: 10px;
   background: #111;
-  margin: 15px auto;
+  margin: 10px auto;
   border-radius: 20px;
   overflow: hidden;
 }
 
 .bar {
-  width: 65%;
+  width: 70%;
   height: 100%;
   background: #00ff8c;
 }
@@ -51,7 +49,7 @@ body {
   padding: 15px;
 }
 
-/* CARDS */
+/* CARD */
 .card {
   background: #0b120e;
   border: 1px solid rgba(0,255,140,0.15);
@@ -59,11 +57,11 @@ body {
   padding: 15px;
 }
 
-/* INPUTS */
+/* INPUT */
 input, select {
   width: 100%;
   padding: 10px;
-  margin: 8px 0;
+  margin: 6px 0;
   border-radius: 8px;
   border: none;
 }
@@ -79,20 +77,6 @@ button {
   cursor: pointer;
 }
 
-/* PROFILE CARD */
-.profile {
-  text-align: center;
-}
-
-.avatar {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background: linear-gradient(45deg,#00ff8c,#0066ff);
-  margin: auto;
-  margin-bottom: 10px;
-}
-
 /* LEADERBOARD */
 .rank {
   display: flex;
@@ -106,22 +90,23 @@ button {
   font-weight: bold;
 }
 
-/* MISSIONS */
-.mission {
-  padding: 10px;
-  margin: 5px 0;
-  border: 1px solid rgba(0,255,140,0.2);
-  border-radius: 8px;
-}
-
 /* BADGE */
 .badge {
   display: inline-block;
   padding: 4px 8px;
-  font-size: 12px;
   border-radius: 6px;
   background: #00ff8c;
   color: black;
+  font-size: 12px;
+}
+
+/* ALERT */
+.lock {
+  background: rgba(255, 165, 0, 0.1);
+  border: 1px solid orange;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
 }
 </style>
 </head>
@@ -130,16 +115,15 @@ button {
 
 <!-- HERO -->
 <div class="hero">
-  <h1>🚀 Zep Swipe Early Access</h1>
-  <p>Compete. Earn. Get Founder Status Before Launch.</p>
+  <h1>🚀 Zep Swipe Global Waitlist V6</h1>
+  <p>Earn rank. Invite friends. Unlock early access.</p>
 
   <div class="progress">
     <div class="bar"></div>
   </div>
-  <small>Launch progress: 65%</small>
+  <small>Launch Progress: 70%</small>
 </div>
 
-<!-- GRID -->
 <div class="container">
 
   <!-- SIGNUP -->
@@ -148,19 +132,21 @@ button {
     <input id="name" placeholder="Full Name">
     <input id="phone" placeholder="Phone">
     <input id="email" placeholder="Email">
-    <input id="location" placeholder="City / Town">
+    <input id="location" placeholder="City">
+
+    <input id="country" placeholder="Country">
 
     <select id="role">
-      <option value="student">Student</option>
-      <option value="provider">Provider</option>
-      <option value="customer">Customer</option>
+      <option>Student</option>
+      <option>Provider</option>
+      <option>Customer</option>
     </select>
 
     <select id="interest">
-      <option>Academic Services</option>
-      <option>Digital Services</option>
-      <option>Technical Services</option>
-      <option>Creative Services</option>
+      <option>Academic</option>
+      <option>Digital</option>
+      <option>Technical</option>
+      <option>Creative</option>
       <option>Local Jobs</option>
     </select>
 
@@ -168,25 +154,30 @@ button {
 
     <button onclick="join()">Join Waitlist</button>
 
-    <p id="code" style="color:#00ff8c;margin-top:10px;"></p>
+    <p id="mycode" style="color:#00ff8c;"></p>
+
+    <div id="accessMsg" class="lock"></div>
+
   </div>
 
   <!-- PROFILE -->
-  <div class="card profile">
-    <div class="avatar"></div>
-    <h3 id="pname">Guest Player</h3>
+  <div class="card">
+    <h3 style="color:#00ff8c;">👤 Player Profile</h3>
+
+    <p id="pname">Guest</p>
     <p id="points">Points: 0</p>
-    <p id="rank">Rank: Unranked</p>
-    <span class="badge" id="tier">Bronze</span>
+    <p id="tier">Tier: Bronze</p>
+    <p id="refcount">Referrals: 0</p>
   </div>
 
   <!-- MISSIONS -->
   <div class="card">
     <h3 style="color:#00ff8c;">🎯 Missions</h3>
 
-    <div class="mission">Invite 1 Friend → +5 pts</div>
-    <div class="mission">Share on WhatsApp → +3 pts</div>
-    <div class="mission">Join Provider List → +10 pts</div>
+    <p>Invite 1 friend → +5 pts</p>
+    <p>Invite 3 friends → +20 bonus</p>
+    <p>Share link → +3 pts</p>
+    <p>Join provider list → +10 pts</p>
   </div>
 
   <!-- LEADERBOARD -->
@@ -205,59 +196,109 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let myPoints = 0;
+let myRef = "";
 
-/* CODE */
+/* TIER SYSTEM */
+function getTier(p){
+  if(p >= 150) return "FOUNDER";
+  if(p >= 50) return "GOLD";
+  if(p >= 10) return "SILVER";
+  return "BRONZE";
+}
+
+/* REF CODE */
 function genCode(){
   return "ZEP-" + Math.random().toString(36).substring(2,7).toUpperCase();
 }
 
-/* TIER */
-function getTier(p){
-  if(p >= 150) return "Founder";
-  if(p >= 50) return "Gold";
-  if(p >= 10) return "Silver";
-  return "Bronze";
-}
-
-/* JOIN */
+/* JOIN SYSTEM */
 async function join(){
 
+  const ref = new URLSearchParams(window.location.search).get("ref");
   const code = genCode();
 
-  const entry = {
+  const countryStatus = getCountryStatus(country.value);
+
+  const user = {
     name: name.value,
     phone: phone.value,
     email: email.value,
     location: location.value,
+    country: country.value,
+
     role: role.value,
     interest: interest.value,
+
     ref_code: code,
-    referred_by: ref.value || null,
-    points: 1
+    referred_by: ref || null,
+
+    points: ref ? 6 : 1,
+    ref_count: 0,
+
+    tier: "BRONZE",
+    country_status: countryStatus
   };
 
-  const { error } = await client.from("waitlist").insert([entry]);
+  const { error } = await client.from("waitlist").insert([user]);
 
   if(error){
     alert("Error joining");
     return;
   }
 
-  myPoints += 1;
+  myPoints = user.points;
+  myRef = code;
 
-  document.getElementById("code").innerHTML =
+  document.getElementById("mycode").innerHTML =
     "Your Code: " + code;
 
-  updateProfile(name.value, myPoints);
+  updateProfile(user.name, myPoints, 0);
   loadBoard();
+
+  if(ref) updateReferrer(ref);
+}
+
+/* COUNTRY LOGIC */
+function getCountryStatus(country){
+
+  const active = ["South Africa"];
+  const waitlist = ["Ghana", "Nigeria", "Kenya"];
+
+  if(active.includes(country)) return "ACTIVE";
+  if(waitlist.includes(country)) return "WAITLIST";
+  return "COMING_SOON";
+}
+
+/* REF ENGINE */
+async function updateReferrer(refCode){
+
+  const { data } = await client
+    .from("waitlist")
+    .select("*")
+    .eq("ref_code", refCode)
+    .single();
+
+  if(!data) return;
+
+  const newPoints = (data.points || 0) + 5;
+  const newRefs = (data.ref_count || 0) + 1;
+
+  await client
+    .from("waitlist")
+    .update({
+      points: newPoints,
+      ref_count: newRefs
+    })
+    .eq("ref_code", refCode);
 }
 
 /* PROFILE */
-function updateProfile(n,p){
-  pname.innerText = n;
-  points.innerText = "Points: " + p;
-  rank.innerText = "Rank: #" + Math.floor(Math.random()*100);
-  tier.innerText = getTier(p);
+function updateProfile(name, pts, refs){
+
+  pname.innerText = name;
+  points.innerText = "Points: " + pts;
+  tier.innerText = "Tier: " + getTier(pts);
+  refcount.innerText = "Referrals: " + refs;
 }
 
 /* LEADERBOARD */
@@ -273,13 +314,32 @@ async function loadBoard(){
   board.innerHTML = "";
 
   (data || []).forEach((u,i)=>{
+
     board.innerHTML += `
       <div class="rank ${i===0?'top':''}">
-        <span>#${i+1} ${u.name}</span>
+        <span>#${i+1} ${u.name} [${u.tier || "BRONZE"}]</span>
         <span>${u.points} pts</span>
       </div>
     `;
   });
+}
+
+/* ACCESS MESSAGE */
+function showAccess(countryStatus){
+
+  let msg = "";
+
+  if(countryStatus === "ACTIVE"){
+    msg = "🟢 Your country is ACTIVE. Full access will be available on launch.";
+  }
+  else if(countryStatus === "WAITLIST"){
+    msg = "🟡 Your country is in WAITLIST phase. You can earn rank, but no jobs yet.";
+  }
+  else {
+    msg = "🔵 Coming soon to your country. Join early to become a Founder.";
+  }
+
+  document.getElementById("accessMsg").innerText = msg;
 }
 
 /* INIT */
