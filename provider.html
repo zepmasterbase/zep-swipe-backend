@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe | Provider Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #050607;
+  color: white;
+}
+
+header {
+  padding: 15px;
+  background: rgba(0,0,0,0.8);
+  border-bottom: 1px solid rgba(0,255,140,0.2);
+}
+
+h2 {
+  color: #00ff8c;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+.card {
+  background: #0b120e;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,255,140,0.15);
+}
+
+button {
+  background: #00ff8c;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>Provider Dashboard</h2>
+  <p>Find and accept student jobs in your category</p>
+</header>
+
+<div class="grid" id="jobs"></div>
+
+<script>
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* LOAD JOBS */
+async function loadJobs() {
+  const { data, error } = await client
+    .from("service_requests")
+    .select("*")
+    .eq("status", "open")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  renderJobs(data);
+}
+
+/* RENDER JOBS */
+function renderJobs(jobs) {
+  const container = document.getElementById("jobs");
+  container.innerHTML = "";
+
+  jobs.forEach(job => {
+    container.innerHTML += `
+      <div class="card">
+        <h3 style="color:#00ff8c;">${job.category}</h3>
+        <p><b>Request:</b> ${job.description}</p>
+        <p><b>Location:</b> ${job.location}</p>
+        <p><b>Budget:</b> ${job.budget || "Not set"}</p>
+
+        <button onclick="acceptJob('${job.id}')">
+          Accept Job
+        </button>
+      </div>
+    `;
+  });
+}
+
+/* ACCEPT JOB */
+async function acceptJob(requestId) {
+
+  const provider_name = prompt("Your Name");
+  const provider_phone = prompt("Your Phone");
+
+  const { error } = await client
+    .from("service_offers")
+    .insert([{
+      request_id: requestId,
+      provider_name,
+      provider_phone,
+      status: "accepted"
+    }]);
+
+  if (error) {
+    alert("Error accepting job");
+    console.log(error);
+    return;
+  }
+
+  await client
+    .from("service_requests")
+    .update({ status: "matched" })
+    .eq("id", requestId);
+
+  alert("Job accepted successfully!");
+  loadJobs();
+}
+
+loadJobs();
+</script>
+
+</body>
+</html>
