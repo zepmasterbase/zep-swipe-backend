@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Waitlist V4</title>
+<title>Zep Swipe Waitlist V5</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -13,34 +13,50 @@ body {
   font-family: Arial;
   background: #050607;
   color: white;
+  overflow-x: hidden;
 }
 
+/* HERO */
 .hero {
   text-align: center;
-  padding: 50px 20px;
+  padding: 40px 20px;
   background: radial-gradient(circle at top, rgba(0,255,140,0.2), transparent);
 }
 
 .hero h1 {
   color: #00ff8c;
+  font-size: 28px;
 }
 
-/* LAYOUT */
+.progress {
+  width: 80%;
+  height: 10px;
+  background: #111;
+  margin: 15px auto;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.bar {
+  width: 65%;
+  height: 100%;
+  background: #00ff8c;
+}
+
+/* GRID */
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
-  max-width: 1000px;
-  margin: auto;
-  padding: 20px;
+  padding: 15px;
 }
 
-/* CARD */
+/* CARDS */
 .card {
   background: #0b120e;
-  padding: 20px;
-  border-radius: 12px;
   border: 1px solid rgba(0,255,140,0.15);
+  border-radius: 12px;
+  padding: 15px;
 }
 
 /* INPUTS */
@@ -63,33 +79,67 @@ button {
   cursor: pointer;
 }
 
-/* LEADERBOARD */
-.leaderboard {
-  max-height: 400px;
-  overflow-y: auto;
+/* PROFILE CARD */
+.profile {
+  text-align: center;
 }
 
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(45deg,#00ff8c,#0066ff);
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+/* LEADERBOARD */
 .rank {
-  padding: 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
   display: flex;
   justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .top {
   color: #00ff8c;
   font-weight: bold;
 }
+
+/* MISSIONS */
+.mission {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid rgba(0,255,140,0.2);
+  border-radius: 8px;
+}
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  background: #00ff8c;
+  color: black;
+}
 </style>
 </head>
 
 <body>
 
+<!-- HERO -->
 <div class="hero">
-  <h1>Zep Swipe Waitlist V4</h1>
-  <p>Join. Invite. Rank up. Get early access.</p>
+  <h1>🚀 Zep Swipe Early Access</h1>
+  <p>Compete. Earn. Get Founder Status Before Launch.</p>
+
+  <div class="progress">
+    <div class="bar"></div>
+  </div>
+  <small>Launch progress: 65%</small>
 </div>
 
+<!-- GRID -->
 <div class="container">
 
   <!-- SIGNUP -->
@@ -118,17 +168,31 @@ button {
 
     <button onclick="join()">Join Waitlist</button>
 
-    <p id="mycode" style="margin-top:10px;color:#00ff8c;"></p>
+    <p id="code" style="color:#00ff8c;margin-top:10px;"></p>
+  </div>
 
+  <!-- PROFILE -->
+  <div class="card profile">
+    <div class="avatar"></div>
+    <h3 id="pname">Guest Player</h3>
+    <p id="points">Points: 0</p>
+    <p id="rank">Rank: Unranked</p>
+    <span class="badge" id="tier">Bronze</span>
+  </div>
+
+  <!-- MISSIONS -->
+  <div class="card">
+    <h3 style="color:#00ff8c;">🎯 Missions</h3>
+
+    <div class="mission">Invite 1 Friend → +5 pts</div>
+    <div class="mission">Share on WhatsApp → +3 pts</div>
+    <div class="mission">Join Provider List → +10 pts</div>
   </div>
 
   <!-- LEADERBOARD -->
-  <div class="card leaderboard">
-
-    <h3 style="color:#00ff8c;">🔥 Waitlist Leaderboard</h3>
-
+  <div class="card">
+    <h3 style="color:#00ff8c;">🔥 Leaderboard</h3>
     <div id="board"></div>
-
   </div>
 
 </div>
@@ -140,17 +204,27 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* RANDOM REF CODE */
-function generateCode(){
+let myPoints = 0;
+
+/* CODE */
+function genCode(){
   return "ZEP-" + Math.random().toString(36).substring(2,7).toUpperCase();
+}
+
+/* TIER */
+function getTier(p){
+  if(p >= 150) return "Founder";
+  if(p >= 50) return "Gold";
+  if(p >= 10) return "Silver";
+  return "Bronze";
 }
 
 /* JOIN */
 async function join(){
 
-  const code = generateCode();
+  const code = genCode();
 
-  const data = {
+  const entry = {
     name: name.value,
     phone: phone.value,
     email: email.value,
@@ -162,21 +236,28 @@ async function join(){
     points: 1
   };
 
-  const { error } = await client
-    .from("waitlist")
-    .insert([data]);
+  const { error } = await client.from("waitlist").insert([entry]);
 
   if(error){
-    alert("Error joining waitlist");
-    console.log(error);
+    alert("Error joining");
     return;
   }
 
-  document.getElementById("mycode").innerHTML =
-    "Your Referral Code: " + code;
+  myPoints += 1;
 
-  alert("Joined successfully!");
+  document.getElementById("code").innerHTML =
+    "Your Code: " + code;
+
+  updateProfile(name.value, myPoints);
   loadBoard();
+}
+
+/* PROFILE */
+function updateProfile(n,p){
+  pname.innerText = n;
+  points.innerText = "Points: " + p;
+  rank.innerText = "Rank: #" + Math.floor(Math.random()*100);
+  tier.innerText = getTier(p);
 }
 
 /* LEADERBOARD */
@@ -185,16 +266,15 @@ async function loadBoard(){
   const { data } = await client
     .from("waitlist")
     .select("*")
-    .order("points", { ascending: false })
+    .order("points",{ascending:false})
     .limit(10);
 
   const board = document.getElementById("board");
   board.innerHTML = "";
 
-  (data || []).forEach((u, i) => {
-
+  (data || []).forEach((u,i)=>{
     board.innerHTML += `
-      <div class="rank ${i===0 ? 'top' : ''}">
+      <div class="rank ${i===0?'top':''}">
         <span>#${i+1} ${u.name}</span>
         <span>${u.points} pts</span>
       </div>
