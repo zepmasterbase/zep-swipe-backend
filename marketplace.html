@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V5</title>
+<title>Zep Swipe Marketplace V6</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -12,76 +12,78 @@
 /* GLOBAL */
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, Arial;
-  background: #0b0f0d;
-  color: #fff;
+  font-family: system-ui, Arial;
+  background: #070b09;
+  color: white;
+  overflow-x: hidden;
 }
 
-/* HEADER (UBER STYLE) */
+/* FLOATING BACKGROUND ICONS */
+.bg-icons {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.icon {
+  position: absolute;
+  font-size: 24px;
+  opacity: 0.08;
+  animation: float 12s infinite linear;
+  color: #00ff8c;
+}
+
+@keyframes float {
+  0% { transform: translateY(100vh) rotate(0deg); }
+  100% { transform: translateY(-10vh) rotate(360deg); }
+}
+
+/* HEADER */
 header {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 10;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 16px;
-  background: rgba(10, 14, 12, 0.92);
-  backdrop-filter: blur(10px);
+  padding: 10px 14px;
+  background: rgba(10,15,12,0.9);
   border-bottom: 1px solid rgba(0,255,140,0.15);
+  backdrop-filter: blur(10px);
 }
 
-/* LOGO AREA */
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   font-weight: 700;
   color: #00ff8c;
-  font-size: 16px;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  background: #00ff8c;
-  border-radius: 50%;
-  box-shadow: 0 0 10px #00ff8c;
 }
 
 /* BUTTONS */
 .btn {
-  background: #00ff8c;
-  border: none;
-  padding: 8px 12px;
+  padding: 8px 10px;
   border-radius: 10px;
+  border: none;
   font-weight: 600;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
 }
 
-.btn.dark {
-  background: rgba(255,255,255,0.08);
-  color: white;
-}
+.primary { background:#00ff8c; color:black; }
+.dark { background:rgba(255,255,255,0.08); color:white; }
 
-/* PAGE WRAPPER */
+/* CONTAINER */
 .container {
+  position: relative;
+  z-index: 2;
   padding: 14px;
   max-width: 900px;
   margin: auto;
 }
 
-/* SECTION TITLE */
-h2 {
-  font-size: 16px;
-  margin: 10px 0;
-  color: #00ff8c;
-}
-
-/* JOB CARD (UBER STYLE) */
+/* JOB CARD */
 .card {
-  background: #111715;
+  background: #101814;
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 14px;
   padding: 14px;
@@ -94,40 +96,54 @@ h2 {
   border-color: rgba(0,255,140,0.3);
 }
 
-/* JOB HEADER */
-.job-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* TOP ROW */
+.top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-/* CATEGORY BADGE */
-.badge {
-  font-size: 11px;
-  padding: 4px 8px;
-  border-radius: 20px;
-  background: rgba(0,255,140,0.15);
-  color: #00ff8c;
+/* BADGES */
+.category {
+  font-size:11px;
+  background:rgba(0,255,140,0.15);
+  color:#00ff8c;
+  padding:4px 8px;
+  border-radius:20px;
 }
 
 /* STATUS */
 .status {
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:20px;
+}
+
+.open { background:orange; color:black; }
+.accepted { background:#2b6fff; }
+.completed { background:gray; }
+
+/* PROVIDER RANK BADGE */
+.rank {
   font-size: 11px;
   padding: 4px 8px;
   border-radius: 20px;
+  font-weight: 700;
 }
 
-.open { background: orange; color: black; }
-.matched { background: #00ff8c; color: black; }
-.accepted { background: #2b6fff; color: white; }
+.bronze { background:#cd7f32; color:black; }
+.silver { background:#c0c0c0; color:black; }
+.gold { background:#ffd700; color:black; }
+.founder { background:#00ff8c; color:black; }
 
-/* JOB INFO */
-.job-desc {
+/* DESCRIPTION */
+.desc {
   margin-top: 8px;
   font-size: 14px;
   opacity: 0.9;
 }
 
+/* META */
 .meta {
   font-size: 12px;
   opacity: 0.6;
@@ -136,49 +152,39 @@ h2 {
 
 /* ACTIONS */
 .actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
+  display:flex;
+  gap:8px;
+  margin-top:10px;
 }
 
 .actions button {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  font-weight:600;
+  cursor:pointer;
 }
 
-.accept {
-  background: #00ff8c;
-  color: black;
-}
+.accept { background:#00ff8c; color:black; }
+.wa { background:#222; color:white; }
 
-.whatsapp {
-  background: rgba(255,255,255,0.08);
-  color: white;
-}
-
-/* FLOAT WAITLIST */
+/* FLOAT BUTTON */
 .fab {
-  position: fixed;
-  bottom: 18px;
-  right: 18px;
-  background: #00ff8c;
-  color: black;
-  padding: 14px 16px;
-  border-radius: 50px;
-  font-weight: 700;
-  box-shadow: 0 0 20px rgba(0,255,140,0.3);
-  cursor: pointer;
+  position:fixed;
+  bottom:18px;
+  right:18px;
+  background:#00ff8c;
+  color:black;
+  padding:14px 16px;
+  border-radius:50px;
+  font-weight:700;
+  box-shadow:0 0 20px rgba(0,255,140,0.3);
 }
 
-/* MOBILE OPTIMIZATION */
+/* MOBILE */
 @media(max-width:600px){
-  .container { padding: 10px; }
-  header { padding: 10px; }
-  .btn { font-size: 12px; padding: 7px 10px; }
+  .btn { font-size:11px; }
 }
 
 </style>
@@ -186,30 +192,42 @@ h2 {
 
 <body>
 
+<!-- BACKGROUND ICONS -->
+<div class="bg-icons">
+  <div class="icon" style="left:10%; animation-delay:0s;">💼</div>
+  <div class="icon" style="left:20%; animation-delay:2s;">📱</div>
+  <div class="icon" style="left:40%; animation-delay:4s;">🔧</div>
+  <div class="icon" style="left:60%; animation-delay:1s;">🎓</div>
+  <div class="icon" style="left:80%; animation-delay:3s;">🚚</div>
+</div>
+
+<!-- HEADER -->
 <header>
+  <div class="logo">⚡ Zep Swipe</div>
 
-  <div class="logo">
-    <div class="dot"></div>
-    Zep Swipe
+  <div style="display:flex;gap:6px;">
+    <button class="btn dark" onclick="window.location.href='provider.html'">
+      Join Provider
+    </button>
+
+    <button class="btn primary" onclick="window.location.href='waitlists.html'">
+      Join Waitlist
+    </button>
   </div>
-
-  <div style="display:flex;gap:8px;">
-    <button class="btn dark" onclick="loadJobs()">Refresh</button>
-    <button class="btn" onclick="window.location.href='waitlists.html'">Join</button>
-  </div>
-
 </header>
 
+<!-- MAIN -->
 <div class="container">
 
-  <h2>⚡ Live Jobs (Randfontein)</h2>
+  <h3 style="color:#00ff8c;">📍 Live Jobs (Randfontein)</h3>
 
   <div id="jobs"></div>
 
 </div>
 
+<!-- FLOAT -->
 <div class="fab" onclick="window.location.href='waitlists.html'">
-  Join Waitlist
+  Join Now
 </div>
 
 <script>
@@ -230,6 +248,15 @@ async function loadJobs(){
   render(data || []);
 }
 
+/* RANK SYSTEM */
+function getRank(points){
+
+  if(points >= 150) return "founder";
+  if(points >= 80) return "gold";
+  if(points >= 30) return "silver";
+  return "bronze";
+}
+
 /* RENDER */
 function render(jobs){
 
@@ -238,20 +265,29 @@ function render(jobs){
 
   jobs.forEach(job => {
 
+    // fake provider rank (replace later with real provider table)
+    const rank = getRank(Math.floor(Math.random()*200));
+
     box.innerHTML += `
       <div class="card">
 
-        <div class="job-top">
-          <span class="badge">${job.category}</span>
+        <div class="top">
+          <span class="category">${job.category}</span>
           <span class="status ${job.status}">${job.status}</span>
         </div>
 
-        <div class="job-desc">
+        <div class="desc">
           ${job.description}
         </div>
 
         <div class="meta">
           📍 ${job.location}
+        </div>
+
+        <div style="margin-top:8px;">
+          <span class="rank ${rank}">
+            Provider Rank: ${rank.toUpperCase()}
+          </span>
         </div>
 
         <div class="actions">
@@ -260,7 +296,7 @@ function render(jobs){
             Accept
           </button>
 
-          <button class="whatsapp" onclick="wa('${job.matched_phone}','${job.description}')">
+          <button class="wa" onclick="wa('${job.matched_phone}','${job.description}')">
             WhatsApp
           </button>
 
