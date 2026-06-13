@@ -3,39 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V4</title>
+<title>Zep Swipe Marketplace V11</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
 
+/* =========================
+   BASE
+========================= */
 body {
   margin: 0;
   font-family: system-ui;
-  background: #0b0f0d;
+  background: radial-gradient(circle at top, #070a09, #050807);
   color: white;
 }
 
+/* =========================
+   HEADER
+========================= */
 header {
   position: sticky;
   top: 0;
+  background: rgba(10,14,12,0.95);
+  border-bottom: 1px solid rgba(0,255,140,0.12);
   padding: 12px;
   display:flex;
   justify-content:space-between;
-  background: rgba(10,14,12,0.9);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0,255,140,0.12);
+  align-items:center;
 }
 
 .logo {
+  font-weight: 700;
   color:#00ff8c;
-  font-weight:700;
 }
 
+/* =========================
+   TABS
+========================= */
+.tabs {
+  display:flex;
+  justify-content:space-around;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.tab {
+  flex:1;
+  text-align:center;
+  padding: 12px;
+  cursor:pointer;
+  font-weight:600;
+  opacity:0.6;
+}
+
+.tab.active {
+  opacity:1;
+  border-bottom: 2px solid #00ff8c;
+  color:#00ff8c;
+}
+
+/* =========================
+   CONTAINER
+========================= */
 .container {
-  max-width: 900px;
+  max-width: 520px;
   margin:auto;
-  padding: 14px;
+  padding: 12px;
 }
 
 /* =========================
@@ -43,55 +77,61 @@ header {
 ========================= */
 .card {
   background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 16px;
-  padding: 14px;
-  margin-top: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 12px;
+  margin-top: 10px;
+}
+
+/* =========================
+   BADGES
+========================= */
+.badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: rgba(0,255,140,0.15);
+  color:#00ff8c;
 }
 
 /* =========================
    BUTTONS
 ========================= */
 button {
-  width: 100%;
+  width:100%;
   padding: 12px;
   margin-top: 10px;
-  border: none;
-  border-radius: 12px;
-  font-weight: 700;
-  cursor: pointer;
+  border:none;
+  border-radius: 10px;
+  font-weight:700;
+  cursor:pointer;
 }
 
-.accept {
-  background: #00ff8c;
-  color: black;
-}
-
-.skip {
-  background: rgba(255,255,255,0.08);
-  color: white;
+.primary {
+  background: linear-gradient(90deg,#00ff8c,#00c2ff);
+  color:black;
 }
 
 /* =========================
-   BADGE
+   DEAL CARD STYLE
 ========================= */
-.badge {
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:20px;
-  background:rgba(0,255,140,0.1);
-  color:#00ff8c;
-  font-size:11px;
+.deal {
+  border-left: 3px solid #00ff8c;
 }
 
-/* STATUS */
-.status-open { color: #ffcc00; }
-.status-broadcast { color: #00bfff; }
-.status-matched { color: #00ff8c; }
-
+/* =========================
+   SMALL TEXT
+========================= */
 .small {
   font-size: 12px;
   opacity: 0.7;
+}
+
+/* =========================
+   HIDDEN
+========================= */
+.hidden {
+  display:none;
 }
 
 </style>
@@ -100,14 +140,43 @@ button {
 <body>
 
 <header>
-  <div class="logo">⚡ Marketplace V4 Live</div>
+  <div class="logo">⚡ Zep Swipe V11 Hub</div>
+  <div class="small">Live</div>
 </header>
+
+<!-- =========================
+     TABS
+========================= -->
+<div class="tabs">
+  <div class="tab active" onclick="showTab('earn')">💼 Earn</div>
+  <div class="tab" onclick="showTab('deals')">🏷️ Deals</div>
+</div>
 
 <div class="container">
 
-  <h3>🔥 Live Job Feed</h3>
+<!-- =========================
+     EARN TAB
+========================= -->
+<div id="earnTab">
 
-  <div id="feed"></div>
+  <h3>💼 Hire Student Services</h3>
+  <p class="small">Find students offering skills near you</p>
+
+  <div id="services"></div>
+
+</div>
+
+<!-- =========================
+     DEALS TAB
+========================= -->
+<div id="dealTab" class="hidden">
+
+  <h3>🏷️ Student Deals Near You</h3>
+  <p class="small">Exclusive discounts from businesses</p>
+
+  <div id="deals"></div>
+
+</div>
 
 </div>
 
@@ -119,149 +188,100 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* =========================
-   LOAD JOBS
+   TAB SWITCH
 ========================= */
-async function loadJobs(){
+function showTab(tab){
 
-  const { data } = await client
-    .from("service_requests")
-    .select("*")
-    .order("created_at", { ascending: false });
+  document.getElementById("earnTab").classList.add("hidden");
+  document.getElementById("dealTab").classList.add("hidden");
 
-  render(data || []);
-}
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
 
-/* =========================
-   RENDER
-========================= */
-function render(jobs){
-
-  const feed = document.getElementById("feed");
-  feed.innerHTML = "";
-
-  jobs.forEach(job => {
-
-    feed.innerHTML += `
-      <div class="card">
-
-        <span class="badge">${job.category}</span>
-
-        <h3>${job.description}</h3>
-
-        <p class="small">📍 ${job.location}</p>
-
-        <p class="status-${job.status}">
-          Status: ${job.status}
-        </p>
-
-        ${job.status === "open" ? `
-          <button class="accept" onclick="acceptJob('${job.id}')">
-            ⚡ Accept Job
-          </button>
-
-          <button class="skip" onclick="skipJob()">
-            Skip
-          </button>
-        ` : ""}
-
-        ${job.status === "broadcast" ? `
-          <p class="small">📡 Broadcasting to providers...</p>
-        ` : ""}
-
-        ${job.status === "matched" ? `
-          <p class="small">👤 Assigned: ${job.matched_provider}</p>
-        ` : ""}
-
-      </div>
-    `;
-  });
-}
-
-/* =========================
-   ACCEPT JOB
-========================= */
-async function acceptJob(jobId){
-
-  const phone = prompt("Enter your provider WhatsApp number");
-
-  const { data: job } = await client
-    .from("service_requests")
-    .select("*")
-    .eq("id", jobId)
-    .single();
-
-  if(job.status === "matched"){
-    return alert("Job already taken");
+  if(tab === "earn"){
+    document.getElementById("earnTab").classList.remove("hidden");
+    document.querySelectorAll(".tab")[0].classList.add("active");
   }
 
-  await client
-    .from("service_requests")
-    .update({
-      status: "matched",
-      matched_provider: phone
-    })
-    .eq("id", jobId);
-
-  loadJobs();
+  if(tab === "deals"){
+    document.getElementById("dealTab").classList.remove("hidden");
+    document.querySelectorAll(".tab")[1].classList.add("active");
+  }
 }
 
 /* =========================
-   SKIP
+   LOAD SERVICES (EARN TAB)
 ========================= */
-function skipJob(){
-  alert("Skipped");
-}
+async function loadServices(){
 
-/* =========================
-   AUTO RE-DISPATCH ENGINE V4
-========================= */
-async function retryUnmatchedJobs(){
-
-  const { data: jobs } = await client
-    .from("service_requests")
+  const { data } = await client
+    .from("service_profiles")
     .select("*")
-    .eq("status", "broadcast");
+    .eq("online", true);
 
-  if(!jobs) return;
+  document.getElementById("services").innerHTML =
+    data?.map(s => `
+      <div class="card">
+        <span class="badge">${s.category}</span>
+        <h4>${s.description}</h4>
+        <p class="small">${s.location}</p>
+        <p class="small">💰 ${s.price}</p>
 
-  jobs.forEach(async (job) => {
-
-    const created = new Date(job.created_at);
-    const now = new Date();
-
-    const diff = (now - created) / 1000;
-
-    // if 45 seconds passed → retry dispatch
-    if(diff > 45){
-
-      console.log("Retrying job:", job.id);
-
-      await client
-        .from("service_requests")
-        .update({ status: "open" })
-        .eq("id", job.id);
-    }
-  });
+        <button class="primary" onclick="contact('${s.phone}')">
+          💬 Hire via WhatsApp
+        </button>
+      </div>
+    `).join("") || "<p class='small'>No providers online</p>";
 }
 
 /* =========================
-   REAL-TIME ENGINE
+   LOAD DEALS (DEALS TAB)
+========================= */
+async function loadDeals(){
+
+  const { data } = await client
+    .from("deals")
+    .select("*");
+
+  document.getElementById("deals").innerHTML =
+    data?.map(d => `
+      <div class="card deal">
+        <span class="badge">🔥 Deal</span>
+        <h4>${d.title}</h4>
+        <p class="small">${d.description}</p>
+        <p class="small">📍 ${d.location}</p>
+        <p class="small">⏰ ${d.valid_until || "Limited time"}</p>
+
+        <button class="primary" onclick="contact('${d.phone}')">
+          📲 Claim Deal
+        </button>
+      </div>
+    `).join("") || "<p class='small'>No deals available</p>";
+}
+
+/* =========================
+   WHATSAPP CONTACT
+========================= */
+function contact(phone){
+  window.open(`https://wa.me/${phone}`, "_blank");
+}
+
+/* =========================
+   REALTIME (optional upgrade)
 ========================= */
 client
-  .channel('service_requests')
+  .channel('marketplace')
   .on('postgres_changes',
-    { event: '*', schema: 'public', table: 'service_requests' },
+    { event: '*', schema: 'public', tables: ['service_profiles','deals'] },
     () => {
-      loadJobs();
+      loadServices();
+      loadDeals();
     }
   )
   .subscribe();
 
-/* LOOP */
-setInterval(retryUnmatchedJobs, 15000);
-
 /* INIT */
-loadJobs();
+loadServices();
+loadDeals();
 
 </script>
 
