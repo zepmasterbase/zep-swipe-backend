@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Waitlist V3</title>
+<title>Zep Swipe Waitlist V4</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -15,29 +15,27 @@ body {
   color: white;
 }
 
-/* HERO */
 .hero {
   text-align: center;
-  padding: 60px 20px;
+  padding: 50px 20px;
   background: radial-gradient(circle at top, rgba(0,255,140,0.2), transparent);
 }
 
 .hero h1 {
   color: #00ff8c;
-  font-size: 32px;
 }
 
-.hero p {
-  opacity: 0.8;
-}
-
-/* FORM */
+/* LAYOUT */
 .container {
-  max-width: 500px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  max-width: 1000px;
   margin: auto;
   padding: 20px;
 }
 
+/* CARD */
 .card {
   background: #0b120e;
   padding: 20px;
@@ -45,6 +43,7 @@ body {
   border: 1px solid rgba(0,255,140,0.15);
 }
 
+/* INPUTS */
 input, select {
   width: 100%;
   padding: 10px;
@@ -53,6 +52,7 @@ input, select {
   border: none;
 }
 
+/* BUTTON */
 button {
   width: 100%;
   padding: 12px;
@@ -63,12 +63,22 @@ button {
   cursor: pointer;
 }
 
-/* SUCCESS */
-.success {
-  display: none;
-  text-align: center;
-  padding: 20px;
+/* LEADERBOARD */
+.leaderboard {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.rank {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: space-between;
+}
+
+.top {
   color: #00ff8c;
+  font-weight: bold;
 }
 </style>
 </head>
@@ -76,23 +86,23 @@ button {
 <body>
 
 <div class="hero">
-  <h1>Zep Swipe is Coming to Your Area</h1>
-  <p>Join the waitlist. Be first when we launch in your city.</p>
+  <h1>Zep Swipe Waitlist V4</h1>
+  <p>Join. Invite. Rank up. Get early access.</p>
 </div>
 
 <div class="container">
 
+  <!-- SIGNUP -->
   <div class="card">
 
     <input id="name" placeholder="Full Name">
-    <input id="phone" placeholder="Phone Number">
+    <input id="phone" placeholder="Phone">
     <input id="email" placeholder="Email">
-
     <input id="location" placeholder="City / Town">
 
     <select id="role">
       <option value="student">Student</option>
-      <option value="provider">Freelancer / Provider</option>
+      <option value="provider">Provider</option>
       <option value="customer">Customer</option>
     </select>
 
@@ -104,13 +114,21 @@ button {
       <option>Local Jobs</option>
     </select>
 
-    <button onclick="joinWaitlist()">Join Waitlist</button>
+    <input id="ref" placeholder="Referral Code (optional)">
+
+    <button onclick="join()">Join Waitlist</button>
+
+    <p id="mycode" style="margin-top:10px;color:#00ff8c;"></p>
 
   </div>
 
-  <div class="success" id="success">
-    🎉 You’re on the waitlist!<br>
-    We’ll notify you when Zep Swipe launches in your area.
+  <!-- LEADERBOARD -->
+  <div class="card leaderboard">
+
+    <h3 style="color:#00ff8c;">🔥 Waitlist Leaderboard</h3>
+
+    <div id="board"></div>
+
   </div>
 
 </div>
@@ -122,31 +140,70 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-async function joinWaitlist() {
+/* RANDOM REF CODE */
+function generateCode(){
+  return "ZEP-" + Math.random().toString(36).substring(2,7).toUpperCase();
+}
 
-  const entry = {
-    name: document.getElementById("name").value,
-    phone: document.getElementById("phone").value,
-    email: document.getElementById("email").value,
-    location: document.getElementById("location").value,
-    role: document.getElementById("role").value,
-    interest: document.getElementById("interest").value,
-    status: "waiting"
+/* JOIN */
+async function join(){
+
+  const code = generateCode();
+
+  const data = {
+    name: name.value,
+    phone: phone.value,
+    email: email.value,
+    location: location.value,
+    role: role.value,
+    interest: interest.value,
+    ref_code: code,
+    referred_by: ref.value || null,
+    points: 1
   };
 
   const { error } = await client
     .from("waitlist")
-    .insert([entry]);
+    .insert([data]);
 
-  if (error) {
+  if(error){
     alert("Error joining waitlist");
     console.log(error);
     return;
   }
 
-  document.querySelector(".card").style.display = "none";
-  document.getElementById("success").style.display = "block";
+  document.getElementById("mycode").innerHTML =
+    "Your Referral Code: " + code;
+
+  alert("Joined successfully!");
+  loadBoard();
 }
+
+/* LEADERBOARD */
+async function loadBoard(){
+
+  const { data } = await client
+    .from("waitlist")
+    .select("*")
+    .order("points", { ascending: false })
+    .limit(10);
+
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+
+  (data || []).forEach((u, i) => {
+
+    board.innerHTML += `
+      <div class="rank ${i===0 ? 'top' : ''}">
+        <span>#${i+1} ${u.name}</span>
+        <span>${u.points} pts</span>
+      </div>
+    `;
+  });
+}
+
+/* INIT */
+loadBoard();
 
 </script>
 
