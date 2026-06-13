@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Dashboard V4</title>
+<title>Provider Activation V4</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -23,93 +23,76 @@ body {
    HEADER
 ========================= */
 header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px;
-  background: rgba(10,14,12,0.85);
-  backdrop-filter: blur(12px);
+  padding: 14px;
+  text-align: center;
+  font-weight: 700;
+  color: #00ff8c;
   border-bottom: 1px solid rgba(0,255,140,0.12);
 }
 
-.logo {
-  color:#00ff8c;
-  font-weight:700;
-}
-
-.tabs span {
-  font-size:12px;
-  padding:6px 10px;
-  border-radius:10px;
-  background:rgba(255,255,255,0.06);
-  cursor:pointer;
-  margin-left:6px;
-}
-
 /* =========================
-   LAYOUT
+   CONTAINER
 ========================= */
 .container {
-  max-width: 900px;
-  margin:auto;
-  padding:14px;
+  max-width: 500px;
+  margin: auto;
+  padding: 16px;
 }
 
 /* =========================
-   CARD
+   CARD STYLE
 ========================= */
 .card {
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 14px;
-  padding: 14px;
-  margin-top: 10px;
+  border-radius: 16px;
+  padding: 16px;
 }
 
 /* =========================
    INPUTS
 ========================= */
-input, select, textarea {
-  width:100%;
-  margin-top:8px;
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  background:#0b0f0d;
-  color:white;
+input, select {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #0b0f0d;
+  color: white;
 }
 
 /* =========================
-   BUTTONS
+   BUTTON
 ========================= */
 button {
-  width:100%;
-  margin-top:10px;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  font-weight:700;
-  cursor:pointer;
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .primary {
-  background:#00ff8c;
-  color:black;
+  background: #00ff8c;
+  color: black;
 }
 
 /* =========================
-   BADGE
+   SUCCESS SCREEN
 ========================= */
-.badge {
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:20px;
-  background:rgba(0,255,140,0.1);
-  color:#00ff8c;
-  font-size:11px;
+.success {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.big {
+  font-size: 22px;
+  font-weight: 700;
+  color: #00ff8c;
 }
 
 /* =========================
@@ -117,7 +100,11 @@ button {
 ========================= */
 .hidden { display:none; }
 
-.small { font-size:12px; opacity:0.7; }
+.small {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: 6px;
+}
 
 </style>
 </head>
@@ -125,79 +112,58 @@ button {
 <body>
 
 <header>
-  <div class="logo">⚡ Zep Swipe V4</div>
-
-  <div class="tabs">
-    <span onclick="show('dashboard')">Dashboard</span>
-    <span onclick="show('market')">Market</span>
-  </div>
+  ⚡ Become a Provider in 60 Seconds
 </header>
 
 <div class="container">
 
   <!-- =========================
-       ONBOARDING
+       FORM
   ========================== -->
-  <div id="onboard" class="card hidden">
+  <div id="formCard" class="card">
 
-    <h3>🚀 Join Zep Swipe</h3>
+    <h3>Start Earning in Your Community</h3>
+
+    <p class="small">
+      Your profile will appear instantly in the marketplace.
+    </p>
 
     <input id="name" placeholder="Full Name">
     <input id="phone" placeholder="WhatsApp Number">
     <input id="location" placeholder="Location">
 
     <select id="category">
-      <option>Academic</option>
-      <option>Digital</option>
-      <option>Creative</option>
-      <option>Technical</option>
-      <option>Community</option>
+      <option>Academic Services</option>
+      <option>Digital Services</option>
+      <option>Creative Services</option>
+      <option>Technical Services</option>
+      <option>Community Services</option>
     </select>
 
-    <textarea id="bio" placeholder="What can you do?"></textarea>
+    <input id="bio" placeholder="What can you do? (e.g Logo design, tutoring)">
 
-    <button class="primary" onclick="createUser()">
-      Join Ecosystem
+    <button class="primary" onclick="goLive()">
+      🚀 Go Live Now
     </button>
 
-  </div>
-
-  <!-- =========================
-       DASHBOARD
-  ========================== -->
-  <div id="dashboard" class="hidden">
-
-    <div class="card">
-      <h3>💰 Provider Status</h3>
-
-      <p>
-        Status:
-        <span class="badge" id="status">OFFLINE</span>
-      </p>
-
-      <button class="primary" onclick="toggleOnline()">
-        Toggle Online / Offline
-      </button>
-    </div>
-
-    <div class="card">
-      <h3>📊 Stats</h3>
-      <p>Jobs Completed: <span id="jobs">0</span></p>
-      <p>Points: <span id="points">0</span></p>
-    </div>
+    <p class="small">
+      No approval needed — you go live instantly.
+    </p>
 
   </div>
 
   <!-- =========================
-       MARKET
+       SUCCESS
   ========================== -->
-  <div id="market" class="hidden">
+  <div id="success" class="success">
 
-    <h3>⚡ Live Requests</h3>
-    <div id="requests"></div>
+    <div class="big">🟢 YOU ARE LIVE!</div>
 
-    <h3>🛠 Active Providers</h3>
-    <div id="providers"></div>
+    <p>Your services are now visible in the marketplace.</p>
+
+    <button class="primary" onclick="window.location.href='marketplace.html'">
+      View Marketplace
+    </button>
 
   </div>
 
@@ -210,151 +176,38 @@ const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let user = null;
-let profile = null;
-
 /* =========================
-   INIT
+   GO LIVE FUNCTION
 ========================= */
-async function init(){
-
-  user = localStorage.getItem("zep_user");
-
-  if(!user){
-    show("onboard");
-    return;
-  }
-
-  const { data } = await client
-    .from("student_profiles")
-    .select("*")
-    .eq("phone", user)
-    .single();
-
-  profile = data;
-
-  if(!profile){
-    show("onboard");
-  } else {
-    show("dashboard");
-    loadMarket();
-  }
-}
-
-init();
-
-/* =========================
-   NAV
-========================= */
-function show(view){
-
-  document.getElementById("onboard").classList.add("hidden");
-  document.getElementById("dashboard").classList.add("hidden");
-  document.getElementById("market").classList.add("hidden");
-
-  document.getElementById(view).classList.remove("hidden");
-}
-
-/* =========================
-   CREATE USER
-========================= */
-async function createUser(){
-
-  const phone = document.getElementById("phone").value;
+async function goLive(){
 
   const data = {
     name: document.getElementById("name").value,
-    phone,
+    phone: document.getElementById("phone").value,
     location: document.getElementById("location").value,
     category: document.getElementById("category").value,
-    bio: document.getElementById("bio").value,
-    online: false
+    description: document.getElementById("bio").value,
+    online: true,
+    rating: 5,
+    completed_jobs: 0
   };
 
-  await client.from("student_profiles").insert([data]);
+  /* SAVE PROFILE */
+  await client.from("service_profiles").insert([data]);
 
-  await client.from("service_profiles").insert([{
-    provider_id: phone,
-    category: data.category,
-    description: data.bio,
+  /* SAVE USER PROFILE (optional tracking) */
+  await client.from("student_profiles").insert([{
+    name: data.name,
+    phone: data.phone,
     location: data.location,
-    phone,
-    online: false
+    category: data.category,
+    bio: data.description,
+    online: true
   }]);
 
-  localStorage.setItem("zep_user", phone);
-
-  init();
-}
-
-/* =========================
-   TOGGLE ONLINE
-========================= */
-async function toggleOnline(){
-
-  profile.online = !profile.online;
-
-  await client
-    .from("student_profiles")
-    .update({ online: profile.online })
-    .eq("phone", user);
-
-  document.getElementById("status").innerText =
-    profile.online ? "ONLINE" : "OFFLINE";
-}
-
-/* =========================
-   LOAD MARKET
-========================= */
-async function loadMarket(){
-
-  const req = await client.from("service_requests").select("*");
-  const prov = await client.from("service_profiles").select("*");
-
-  render(req.data || [], prov.data || []);
-}
-
-/* =========================
-   AUTO MATCH HOOK (V8 ENGINE READY)
-========================= */
-async function autoMatchTrigger(request){
-
-  // Placeholder hook for V8 engine
-  console.log("Auto matching triggered for:", request.id);
-}
-
-/* =========================
-   RENDER
-========================= */
-function render(requests, providers){
-
-  const rBox = document.getElementById("requests");
-  const pBox = document.getElementById("providers");
-
-  rBox.innerHTML = "";
-  pBox.innerHTML = "";
-
-  requests.forEach(r => {
-
-    rBox.innerHTML += `
-      <div class="card">
-        <span class="badge">${r.category}</span>
-        <p>${r.description}</p>
-        <small>📍 ${r.location}</small>
-      </div>
-    `;
-  });
-
-  providers.forEach(p => {
-
-    pBox.innerHTML += `
-      <div class="card">
-        <span class="badge">${p.category}</span>
-        <p>${p.description}</p>
-        <small>📍 ${p.location}</small>
-      </div>
-    `;
-  });
+  /* SHOW SUCCESS SCREEN */
+  document.getElementById("formCard").style.display = "none";
+  document.getElementById("success").style.display = "block";
 }
 
 </script>
