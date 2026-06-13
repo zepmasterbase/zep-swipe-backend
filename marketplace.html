@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace</title>
+<title>Zep Swipe Marketplace V3</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background: #050607;
   color: white;
 }
@@ -20,14 +20,14 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 15px;
   background: rgba(0,0,0,0.85);
   border-bottom: 1px solid rgba(0,255,140,0.2);
   position: sticky;
   top: 0;
 }
 
-header h2 {
+h2 {
   color: #00ff8c;
 }
 
@@ -40,27 +40,10 @@ button {
   cursor: pointer;
 }
 
-/* FILTERS */
-.filters {
-  display: flex;
-  gap: 10px;
-  padding: 15px;
-  overflow-x: auto;
-}
-
-.filters button {
-  background: transparent;
-  border: 1px solid #00ff8c;
-  color: #00ff8c;
-  padding: 8px 12px;
-  border-radius: 20px;
-  white-space: nowrap;
-}
-
 /* GRID */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 15px;
   padding: 20px;
 }
@@ -69,33 +52,7 @@ button {
   background: #0b120e;
   border: 1px solid rgba(0,255,140,0.15);
   border-radius: 12px;
-  overflow: hidden;
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  border-color: #00ff8c;
-}
-
-.card img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-}
-
-.card-content {
-  padding: 12px;
-}
-
-.category {
-  color: #00ff8c;
-  font-size: 12px;
-}
-
-.price {
-  margin-top: 5px;
-  font-weight: bold;
+  padding: 15px;
 }
 
 /* REQUEST BUTTON */
@@ -140,24 +97,27 @@ input, select, textarea {
   margin: 8px 0;
   border-radius: 8px;
   border: none;
-  outline: none;
 }
 
-textarea {
-  height: 80px;
-}
-
-/* ACTION BUTTONS */
-.actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.small-btn {
-  flex: 1;
-  padding: 8px;
+/* STATUS BADGES */
+.badge {
+  padding: 4px 8px;
   font-size: 12px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.open { background: orange; }
+.matched { background: #00ff8c; color: black; }
+.completed { background: gray; }
+
+/* MATCH CARD */
+.match-box {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid rgba(0,255,140,0.2);
+  border-radius: 10px;
+  background: rgba(0,255,140,0.05);
 }
 </style>
 </head>
@@ -165,21 +125,10 @@ textarea {
 <body>
 
 <header>
-  <h2>Zep Swipe Marketplace</h2>
+  <h2>Marketplace V3</h2>
   <button onclick="loadServices()">Refresh</button>
 </header>
 
-<!-- FILTERS -->
-<div class="filters">
-  <button onclick="filter('all')">All</button>
-  <button onclick="filter('Academic')">Academic</button>
-  <button onclick="filter('Digital')">Digital</button>
-  <button onclick="filter('Technical')">Technical</button>
-  button onclick="filter('Creative')">Creative</button>
-  <button onclick="filter('Community')">Community</button>
-</div>
-
-<!-- SERVICES -->
 <div class="grid" id="services"></div>
 
 <!-- FLOAT BUTTON -->
@@ -190,7 +139,7 @@ textarea {
 <!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-content">
-    <h3 style="color:#00ff8c;">Request a Service</h3>
+    <h3 style="color:#00ff8c;">Request Service</h3>
 
     <input id="name" placeholder="Your Name">
     <input id="phone" placeholder="Phone Number">
@@ -205,56 +154,64 @@ textarea {
 
     <textarea id="description" placeholder="What do you need?"></textarea>
 
-    <input id="location" placeholder="Location (default Randfontein)">
+    <input id="location" placeholder="Location (Randfontein default)">
     <input id="budget" placeholder="Budget (optional)">
 
-    <div class="actions">
-      <button class="small-btn" onclick="submitRequest()">Submit</button>
-      <button class="small-btn" style="background:red;color:white;" onclick="closeModal()">Close</button>
-    </div>
+    <button onclick="submitRequest()">Submit Request</button>
+    <button style="background:red;color:white;margin-top:10px;" onclick="closeModal()">Close</button>
   </div>
 </div>
 
 <script>
-/* ================= SUPABASE ================= */
+
 const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let allServices = [];
+let services = [];
 
 /* LOAD SERVICES */
 async function loadServices() {
-  const { data } = await client.from("services").select("*");
-  allServices = data || [];
-  render(allServices);
+
+  const { data } = await client
+    .from("service_requests")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  services = data || [];
+  render(services);
 }
 
 /* RENDER */
-function render(data) {
+function render(list) {
+
   const box = document.getElementById("services");
   box.innerHTML = "";
 
-  data.forEach(s => {
+  list.forEach(s => {
+
     box.innerHTML += `
       <div class="card">
-        <img src="${s.image_url || 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d'}">
-        <div class="card-content">
-          <div class="category">${s.category}</div>
-          <h3>${s.title}</h3>
-          <p>${s.description}</p>
-          <div class="price">${s.price}</div>
-        </div>
+
+        <b>${s.category}</b>
+        <span class="badge ${s.status}">${s.status}</span>
+
+        <p>${s.description}</p>
+
+        <small>📍 ${s.location}</small>
+
+        ${s.matched_provider ? `
+          <div class="match-box">
+            <b>Matched Provider:</b><br>
+            ${s.matched_provider}<br>
+            ${s.matched_phone}
+          </div>
+        ` : ""}
+
       </div>
     `;
   });
-}
-
-/* FILTER */
-function filter(cat) {
-  if (cat === "all") render(allServices);
-  else render(allServices.filter(s => s.category === cat));
 }
 
 /* MODAL */
@@ -285,14 +242,16 @@ async function submitRequest() {
 
   if (error) {
     alert("Error submitting request");
-    console.log(error);
-  } else {
-    alert("Request submitted successfully!");
-    closeModal();
+    return;
   }
+
+  alert("Request submitted successfully!");
+  closeModal();
+  loadServices();
 }
 
 loadServices();
+
 </script>
 
 </body>
