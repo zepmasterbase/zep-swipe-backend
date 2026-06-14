@@ -1,734 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Zep Swipe Marketplace V11</title>
-
-
+<title>Zep Swipe Marketplace Pro</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
 <script src="https://unpkg.com/lucide@latest"></script>
-
-
 <style>
-
-
-body {
-
+*{box-sizing:border-box}
+body{
 margin:0;
-font-family:system-ui;
-background:radial-gradient(circle at top,#070a09,#050807);
-color:white;
-padding-bottom:90px;
-
+font-family:Inter,system-ui,sans-serif;
+background:radial-gradient(circle at top,#0a1510,#050807);
+color:#fff;
+padding-bottom:95px;
 }
-
-
-
-header {
-
-position:sticky;
-top:0;
-background:rgba(10,14,12,.95);
+header{
+position:sticky;top:0;z-index:100;
+background:rgba(5,8,7,.92);
+backdrop-filter:blur(20px);
+padding:14px;
 border-bottom:1px solid rgba(0,255,140,.12);
-padding:12px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-z-index:10;
-
+display:flex;justify-content:space-between;align-items:center;
 }
-
-
-
-.logo {
-
-font-weight:700;
-color:#00ff8c;
-
+.logo{font-weight:800;color:#00ff8c}
+.container{max-width:600px;margin:auto;padding:14px}
+.search{
+margin:14px 0;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(0,255,140,.12);
+border-radius:18px;padding:14px
 }
-
-
-
-.tabs {
-
-display:flex;
-justify-content:space-around;
-background:rgba(255,255,255,.02);
-border-bottom:1px solid rgba(255,255,255,.05);
-
+.search input{
+width:100%;background:none;border:none;color:#fff;
+outline:none;font-size:15px
 }
-
-
-
-.tab {
-
-flex:1;
-text-align:center;
-padding:12px;
-cursor:pointer;
-font-weight:600;
-opacity:.6;
-
+.stories{display:flex;gap:12px;overflow:auto;padding-bottom:10px}
+.story{text-align:center;min-width:72px}
+.story img{
+width:62px;height:62px;border-radius:50%;
+border:2px solid #00ff8c;object-fit:cover
 }
-
-
-
-.tab.active {
-
-opacity:1;
-border-bottom:2px solid #00ff8c;
-color:#00ff8c;
-
+.story span{display:block;font-size:11px;margin-top:6px}
+.chips{display:flex;gap:8px;overflow:auto;margin:14px 0}
+.chip{
+padding:10px 14px;border-radius:999px;
+background:rgba(0,255,140,.08);
+border:1px solid rgba(0,255,140,.15);
+white-space:nowrap
 }
-
-
-
-.container {
-
-max-width:520px;
-margin:auto;
-padding:12px;
-
-}
-
-
-
-.card {
-
-background:rgba(255,255,255,.03);
+.card{
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,.08);
-border-radius:14px;
-padding:12px;
-margin-top:10px;
-
+border-radius:22px;
+padding:14px;margin-top:14px
 }
-
-
-
-.badge {
-
-font-size:11px;
-padding:3px 8px;
-border-radius:10px;
-background:rgba(0,255,140,.15);
-color:#00ff8c;
-
+.featured{
+background:linear-gradient(135deg,rgba(0,255,140,.18),rgba(0,194,255,.12));
 }
-
-
-
-button {
-
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:10px;
-font-weight:700;
-cursor:pointer;
-
+.badge{
+display:inline-block;
+padding:5px 10px;border-radius:999px;
+background:rgba(0,255,140,.12);
+color:#00ff8c;font-size:12px
 }
-
-
-
-.primary {
-
+.service-top{display:flex;gap:12px;align-items:center}
+.avatar{
+width:64px;height:64px;border-radius:50%;object-fit:cover
+}
+.meta h3{margin:0}
+.small{opacity:.75;font-size:13px}
+.price{
+color:#00ff8c;font-weight:700;margin-top:6px
+}
+.btn{
+width:100%;border:none;border-radius:14px;
+padding:13px;margin-top:12px;font-weight:700;
 background:linear-gradient(90deg,#00ff8c,#00c2ff);
-color:black;
-
+color:#000;cursor:pointer
 }
-
-
-
-.deal {
-
-border-left:3px solid #00ff8c;
-
+.deal-img{
+width:100%;height:180px;object-fit:cover;
+border-radius:16px;margin-bottom:10px
 }
-
-
-
-.small {
-
-font-size:12px;
-opacity:.7;
-
+.tabs{
+display:flex;margin-top:16px;
+background:rgba(255,255,255,.04);
+border-radius:14px;overflow:hidden
 }
-
-
-
-.hidden {
-
-display:none;
-
+.tab{
+flex:1;padding:12px;text-align:center;cursor:pointer
 }
-
-
-
-/* =========================
-FOOTER NAV
-========================= */
-
-
-.bottom-nav {
-
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-
-height:75px;
-
-background:rgba(5,8,7,.95);
-backdrop-filter:blur(12px);
-
-border-top:1px solid rgba(0,255,140,.15);
-
-display:flex;
-justify-content:space-around;
-align-items:center;
-
-z-index:20;
-
+.active{
+background:rgba(0,255,140,.12);
+color:#00ff8c
 }
-
-
-
-.nav-item {
-
-color:white;
-text-decoration:none;
-
-display:flex;
-flex-direction:column;
-align-items:center;
-
-font-size:12px;
-opacity:.75;
-
-transition:.2s;
-
+.hidden{display:none}
+.bottom-nav{
+position:fixed;bottom:0;left:0;right:0;
+height:78px;background:rgba(5,8,7,.95);
+display:flex;justify-content:space-around;align-items:center;
+border-top:1px solid rgba(0,255,140,.12)
 }
-
-
-
-.nav-item svg {
-
-width:24px;
-height:24px;
-
-margin-bottom:5px;
-
-stroke-width:2;
-
+.nav-item{
+display:flex;flex-direction:column;
+align-items:center;font-size:11px;color:#fff;text-decoration:none
 }
-
-
-
-.nav-item:hover {
-
-color:#00ff8c;
-opacity:1;
-transform:translateY(-3px);
-
-}
-
-
-
-.nav-main {
-
+.nav-main{
+width:62px;height:62px;border-radius:50%;
 background:linear-gradient(90deg,#00ff8c,#00c2ff);
-
-color:black!important;
-
-width:65px;
-height:65px;
-
-border-radius:50%;
-
-justify-content:center;
-
-margin-top:-35px;
-
-box-shadow:0 0 25px rgba(0,255,140,.4);
-
+color:#000;justify-content:center;margin-top:-26px
 }
-
-
-
-.nav-main svg {
-
-width:30px;
-height:30px;
-
-}
-
-
-
-.nav-main span {
-
-font-size:11px;
-
-}
-
-
-
 </style>
-
 </head>
-
-
 <body>
 
-
-
 <header>
-
-<div class="logo">
-⚡ Zep Market 🛒
-</div>
-
-
-<div class="small">
-Live
-</div>
-
-
+<div class="logo">⚡ Zep Swipe</div>
+<div>🟢 Live</div>
 </header>
-
-
-
-
-<div class="tabs">
-
-
-<div class="tab active" onclick="showTab('earn')">
-
-💼 Hire a Student
-
-</div>
-
-
-
-<div class="tab" onclick="showTab('deals')">
-
-🏷️ Student Deals
-
-</div>
-
-
-</div>
-
-
-
-
 
 <div class="container">
 
+<h2>Find Student Talent Near You</h2>
 
+<div class="search">
+<input id="searchInput" placeholder="Search students, skills or deals...">
+</div>
 
-<div id="earnTab">
+<div class="stories">
+<div class="story"><img src="https://picsum.photos/100?1"><span>Tutors</span></div>
+<div class="story"><img src="https://picsum.photos/100?2"><span>Designers</span></div>
+<div class="story"><img src="https://picsum.photos/100?3"><span>Developers</span></div>
+<div class="story"><img src="https://picsum.photos/100?4"><span>Deals</span></div>
+<div class="story"><img src="https://picsum.photos/100?5"><span>Jobs</span></div>
+</div>
 
+<div class="chips">
+<div class="chip">🎨 Design</div>
+<div class="chip">💻 Tech</div>
+<div class="chip">📚 Tutors</div>
+<div class="chip">📸 Media</div>
+<div class="chip">📈 Marketing</div>
+</div>
 
-<h3>
-💼 Hire Student Services
-</h3>
+<div class="card featured">
+<span class="badge">🏆 Student Marketplace</span>
+<h3>Discover • Hire • Earn</h3>
+<p class="small">Premium student-powered marketplace for services and deals.</p>
+</div>
 
-
-<p class="small">
-Find students offering skills near you
-</p>
-
+<div class="tabs">
+<div class="tab active" onclick="showTab('services',this)">Services</div>
+<div class="tab" onclick="showTab('deals',this)">Deals</div>
+</div>
 
 <div id="services"></div>
-
-
-</div>
-
-
-
-
-
-
-<div id="dealTab" class="hidden">
-
-
-<h3>
-🏷️ Student Deals Near You
-</h3>
-
-
-<p class="small">
-Exclusive discounts from businesses
-</p>
-
-
-<div id="deals"></div>
-
+<div id="deals" class="hidden"></div>
 
 </div>
-
-
-</div>
-
-
-
-
-
-
 
 <nav class="bottom-nav">
-
-
-<a href="index.html" class="nav-item">
-
-<i data-lucide="home"></i>
-
-<span>
-Home
-</span>
-
-</a>
-
-
-
-<a href="waitlist.html" class="nav-item">
-
-<i data-lucide="zap"></i>
-
-<span>
-Get Access
-</span>
-
-</a>
-
-
-
-
-<a href="business-deals.html" class="nav-item nav-main">
-
-<i data-lucide="plus"></i>
-
-<span>
-Post a Deal
-</span>
-
-</a>
-
-
-
+<a href="#" class="nav-item"><i data-lucide="home"></i><span>Home</span></a>
+<a href="#" class="nav-item"><i data-lucide="search"></i><span>Discover</span></a>
+<a href="#" class="nav-item nav-main"><i data-lucide="plus"></i></a>
+<a href="#" class="nav-item"><i data-lucide="message-circle"></i><span>Messages</span></a>
+<a href="#" class="nav-item"><i data-lucide="user"></i><span>Profile</span></a>
 </nav>
 
-
-
-
-
-
-
 <script>
-
-
 const SUPABASE_URL="YOUR_SUPABASE_URL";
-
 const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
+const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-
-const client=supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
-
-
-
-
-function showTab(tab){
-
-
-document.getElementById("earnTab")
-.classList.add("hidden");
-
-
-document.getElementById("dealTab")
-.classList.add("hidden");
-
-
-
-document.querySelectorAll(".tab")
-.forEach(t=>t.classList.remove("active"));
-
-
-
-if(tab==="earn"){
-
-document.getElementById("earnTab")
-.classList.remove("hidden");
-
-
-document.querySelectorAll(".tab")[0]
-.classList.add("active");
-
+function showTab(tab,el){
+document.getElementById('services').classList.toggle('hidden',tab!=='services');
+document.getElementById('deals').classList.toggle('hidden',tab!=='deals');
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+el.classList.add('active');
 }
-
-
-
-if(tab==="deals"){
-
-document.getElementById("dealTab")
-.classList.remove("hidden");
-
-
-document.querySelectorAll(".tab")[1]
-.classList.add("active");
-
-}
-
-
-}
-
-
-
-
-
-
-async function loadServices(){
-
-
-const {data}=await client
-
-.from("service_profiles")
-
-.select("*")
-
-.eq("online",true);
-
-
-
-
-document.getElementById("services")
-
-.innerHTML=data?.map(s=>`
-
-
-<div class="card">
-
-
-<span class="badge">
-
-${s.category}
-
-</span>
-
-
-
-<h4>
-
-${s.description}
-
-</h4>
-
-
-
-<p class="small">
-
-${s.location}
-
-</p>
-
-
-
-<p class="small">
-
-💰 ${s.price}
-
-</p>
-
-
-
-
-<button class="primary"
-
-onclick="contact('${s.phone}')">
-
-
-💬 Hire via WhatsApp
-
-
-</button>
-
-
-
-</div>
-
-
-
-`).join("") || 
-
-"<p class='small'>No providers online</p>";
-
-}
-
-
-
-async function loadDeals(){
-
-
-const {data}=await client
-
-.from("deals")
-
-.select("*");
-
-
-
-document.getElementById("deals")
-
-.innerHTML=data?.map(d=>`
-
-
-<div class="card deal">
-
-
-<span class="badge">
-
-🔥 Deal
-
-</span>
-
-
-
-<h4>
-
-${d.title}
-
-</h4>
-
-
-
-<p class="small">
-
-${d.description}
-
-</p>
-
-
-
-<p class="small">
-
-📍 ${d.location}
-
-</p>
-
-
-
-<p class="small">
-
-⏰ ${d.valid_until || "Limited time"}
-
-</p>
-
-
-
-
-<button class="primary"
-
-onclick="contact('${d.phone}')">
-
-
-📲 Claim Deal
-
-
-</button>
-
-
-</div>
-
-
-
-`).join("") || 
-
-"<p class='small'>No deals available</p>";
-
-}
-
-
-
-
 
 function contact(phone){
-
-window.open(
-
-`https://wa.me/${phone}`,
-
-"_blank"
-
-);
-
+window.open(`https://wa.me/${phone}`,'_blank');
 }
 
+async function loadServices(){
+const {data}=await client.from('service_profiles').select('*').eq('online',true);
 
+document.getElementById('services').innerHTML=(data||[]).map(s=>`
+<div class="card service-card">
+<div class="service-top">
+<img class="avatar" src="${s.avatar_url||'https://picsum.photos/100'}">
+<div class="meta">
+<h3>${s.name||'Student'}</h3>
+<div class="small">⭐ ${s.rating||'New'} • ✓ Verified Student</div>
+<div class="small">📍 ${s.location||''}</div>
+</div>
+</div>
+<p>${s.description||''}</p>
+<div class="price">💰 ${s.price||''}</div>
+<button class="btn" onclick="contact('${s.phone||''}')">Hire via WhatsApp</button>
+</div>`).join('');
+}
 
+async function loadDeals(){
+const {data}=await client.from('deals').select('*');
 
+document.getElementById('deals').innerHTML=(data||[]).map(d=>`
+<div class="card">
+<img class="deal-img" src="${d.image_url||'https://picsum.photos/600/300'}">
+<span class="badge">🔥 Deal</span>
+<h3>${d.title||''}</h3>
+<p><strong>${d.business_name||''}</strong></p>
+<p>${d.description||''}</p>
+<p class="small">📍 ${d.location||''}</p>
+<p class="small">⏰ ${d.valid_until||'Limited Time'}</p>
+<button class="btn" onclick="contact('${d.phone||''}')">Claim Deal</button>
+</div>`).join('');
+}
 
-client
-
-.channel('marketplace')
-
-.on(
-
-'postgres_changes',
-
-{
-
-event:'*',
-
-schema:'public',
-
-tables:[
-
-'service_profiles',
-
-'deals'
-
-]
-
-},
-
-
-()=>{
-
-loadServices();
-
-loadDeals();
-
-})
-
-
-.subscribe();
-
-
-
-
+client.channel('marketplace')
+.on('postgres_changes',{event:'*',schema:'public'},()=>{
+loadServices();loadDeals();
+}).subscribe();
 
 loadServices();
-
 loadDeals();
-
-
-
 lucide.createIcons();
-
-
 </script>
-
-
-
 </body>
-
 </html>
