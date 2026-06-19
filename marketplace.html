@@ -3,409 +3,327 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V15.2</title>
+<title>Zep Swipe Marketplace V17 SPA</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
+/* =========================
+   V16 DESIGN SYSTEM
+========================= */
 :root{
---bg:#070707;
---card:#141414;
---accent:#b8ff3b;
---text:#fff;
---muted:#aaa;
---border:#262626;
+  --bg:#070707;
+  --card:#141414;
+  --accent:#b8ff3b;
+  --text:#fff;
+  --muted:#aaa;
+  --border:#262626;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Inter,sans-serif;
+}
 
 body{
-background:var(--bg);
-color:var(--text);
-padding-bottom:90px;
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:80px;
 }
 
+/* HEADER */
 header{
-position:sticky;
-top:0;
-background:rgba(0,0,0,.9);
-backdrop-filter:blur(12px);
-display:flex;
-justify-content:space-between;
-padding:16px 20px;
-border-bottom:1px solid var(--border);
-z-index:100;
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(0,0,0,.9);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:14px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.logo{color:var(--accent);font-weight:800}
-
-.wrap{max-width:1100px;margin:auto;padding:20px}
-
-.hero h1{font-size:42px;font-weight:800}
-.hero span{color:var(--accent)}
-.hero p{color:var(--muted);margin:10px 0 20px}
-
-.searchbox{
-display:flex;
-background:var(--card);
-border:1px solid var(--border);
-border-radius:14px;
-overflow:hidden;
+.logo{
+  color:var(--accent);
+  font-weight:800;
 }
 
-.searchbox input{
-flex:1;
-padding:14px;
-background:none;
-border:none;
-color:#fff;
-outline:none;
+/* TABS */
+.tabs{
+  display:flex;
+  gap:10px;
+  padding:10px 16px;
+  border-bottom:1px solid var(--border);
+  background:#0b0b0b;
+  position:sticky;
+  top:58px;
+  z-index:90;
 }
 
-.searchbox button{
-background:var(--accent);
-border:none;
-width:60px;
-cursor:pointer;
+.tab{
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:#fff;
+  font-size:13px;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.filters{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin:20px 0;
+.tab.active{
+  background:var(--accent);
+  color:#000;
+  font-weight:700;
 }
 
-.filters button{
-padding:8px 12px;
-border-radius:999px;
-border:1px solid var(--border);
-background:var(--card);
-color:#fff;
-cursor:pointer;
-font-size:12px;
+/* LAYOUT */
+.wrap{
+  max-width:1100px;
+  margin:auto;
+  padding:16px;
 }
 
-.filters button.active{
-background:var(--accent);
-color:#000;
-font-weight:700;
-}
-
+/* CARDS */
 .cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:15px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:14px;
+  margin-top:14px;
 }
 
 .card{
-background:var(--card);
-border:1px solid var(--border);
-border-radius:16px;
-overflow:hidden;
-transition:.3s;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  transition:.25s;
 }
 
 .card:hover{
-transform:translateY(-6px);
-border-color:var(--accent);
+  transform:translateY(-6px);
+  border-color:var(--accent);
 }
 
 .card img{
-width:100%;
-height:180px;
-object-fit:cover;
-background:#222;
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  background:#222;
 }
 
 .content{
-padding:14px;
+  padding:14px;
 }
 
 .badge{
-display:inline-block;
-padding:5px 10px;
-font-size:11px;
-background:rgba(184,255,59,.15);
-color:var(--accent);
-border-radius:999px;
-margin-bottom:8px;
+  display:inline-block;
+  padding:5px 10px;
+  font-size:11px;
+  border-radius:999px;
+  background:rgba(184,255,59,.15);
+  color:var(--accent);
+  margin-bottom:8px;
 }
 
 .btn{
-display:inline-block;
-margin-top:10px;
-padding:10px 14px;
-background:var(--accent);
-color:#000;
-text-decoration:none;
-border-radius:10px;
-font-weight:700;
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 14px;
+  border-radius:10px;
+  background:var(--accent);
+  color:#000;
+  font-weight:700;
+  text-decoration:none;
 }
 
-.bottom{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-background:#0d0d0d;
-border-top:1px solid var(--border);
-display:flex;
-justify-content:space-around;
-padding:10px;
-font-size:12px;
-}
+/* HIDE SYSTEM */
+.hidden{display:none;}
 
-.bottom a{
-color:#fff;
-text-decoration:none;
-text-align:center;
-}
 </style>
 </head>
 
 <body>
 
 <header>
-<div class="logo">⚡ Zep Swipe</div>
-<div>🔔</div>
+  <div class="logo">⚡ Zep Swipe</div>
+  <div>🔔</div>
 </header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('home')">🏠 Home</button>
+  <button class="tab" onclick="switchTab('services')">🛠️ Services</button>
+  <button class="tab" onclick="switchTab('deals')">🏷️ Deals</button>
+</div>
 
 <div class="wrap">
 
-<!-- HERO -->
-<section class="hero">
-<h1>Find Talent. <span>Hire Fast.</span></h1>
-<p>Dynamic student marketplace powered by Supabase.</p>
+<!-- HOME TAB -->
+<section id="homeTab">
 
-<div class="searchbox">
-<input id="searchInput" placeholder="Search services...">
-<button onclick="loadData()">🔍</button>
-</div>
+  <h2>🔥 Marketplace Feed</h2>
+
+  <div class="cards" id="homeCards"></div>
+
 </section>
 
-<!-- EARN SECTION -->
-<div class="cards" style="margin-top:20px;">
+<!-- SERVICES TAB -->
+<section id="servicesTab" class="hidden">
 
-<div class="card" style="border:1px solid #b8ff3b;">
-<div class="content">
-<span class="badge">🔥 Earn on the Side</span>
-<h2>Offer your skill. Make money. Help your community.</h2>
-<p style="color:#aaa;">Start earning from your skills today.</p>
-<a class="btn" href="provider.html">Start Earning</a>
-</div>
-</div>
+  <h2>🛠️ Services</h2>
 
-<div class="card">
-<div class="content">
-<span class="badge">⭐ Popular Near You</span>
-<div id="popularList"></div>
-</div>
-</div>
+  <div class="cards" id="servicesCards"></div>
 
-</div>
+</section>
 
-<!-- FILTERS -->
-<div class="filters" id="filters"></div>
+<!-- DEALS TAB -->
+<section id="dealsTab" class="hidden">
 
-<!-- PROVIDERS -->
-<div class="cards" id="cards"></div>
+  <h2>🏷️ Deals</h2>
 
-<!-- DEALS -->
-<h2 style="margin-top:30px;">🏷️ Deals Near You</h2>
-<div class="cards" id="dealsCards"></div>
+  <div class="cards" id="dealsCards"></div>
+
+</section>
 
 </div>
-
-<!-- FOOTER -->
-<nav class="bottom">
-<a href="index.html">🏠<br>Home</a>
-<a href="provider.html">🛠️<br>Services</a>
-<a href="business-deals.html">🏷️<br>Deals</a>
-<a href="business-deals.html">💬<br>List Deal</a>
-<a href="waitlist.html">👤<br>Join Waitlist</a>
-</nav>
 
 <script>
 
-// =====================
-// SUPABASE CONFIG
-// =====================
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+/* =========================
+   SUPABASE
+========================= */
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let allProviders = [];
-let allDeals = [];
-let selectedCategory = "All";
+/* DATA */
+let providers=[];
+let deals=[];
 
-// =====================
-// LOAD ALL DATA
-// =====================
-async function loadData(){
+/* INIT */
+loadAll();
 
-await loadProviders();
-await loadDeals();
+/* =========================
+   LOAD DATA
+========================= */
+async function loadAll(){
+
+const p = await client.from("providers").select("*").eq("approved", true);
+const d = await client.from("deals").select("*").eq("active", true);
+
+providers = p.data || [];
+deals = d.data || [];
+
+renderAll();
 }
 
-// =====================
-// PROVIDERS
-// =====================
-async function loadProviders(){
+/* =========================
+   RENDER ALL TABS
+========================= */
+function renderAll(){
 
-const { data } = await supabaseClient
-.from("providers")
-.select("*")
-.eq("approved", true)
-.order("created_at", { ascending: false });
-
-allProviders = data || [];
-
-renderFilters();
-renderProviders();
-renderPopular();
-}
-
-// =====================
-// DEALS
-// =====================
-async function loadDeals(){
-
-const { data } = await supabaseClient
-.from("deals")
-.select("*")
-.eq("active", true)
-.order("created_at", { ascending: false });
-
-allDeals = data || [];
-
+renderHome();
+renderServices();
 renderDeals();
 }
 
-// =====================
-// RENDER PROVIDERS
-// =====================
-function renderProviders(){
+/* HOME (MIXED FEED) */
+function renderHome(){
 
-const container = document.getElementById("cards");
-const search = document.getElementById("searchInput").value.toLowerCase();
+const container = document.getElementById("homeCards");
 
-container.innerHTML = "";
+const mix = [
+  ...providers.slice(0,3),
+  ...deals.slice(0,3)
+];
 
-allProviders
-.filter(p =>
-(p.service || "").toLowerCase().includes(search) ||
-(p.name || "").toLowerCase().includes(search)
-)
-.filter(p =>
-selectedCategory === "All" || p.category === selectedCategory
-)
-.forEach(p => {
+container.innerHTML = mix.map(item=>{
 
-const card = document.createElement("div");
-card.className = "card";
-
-card.innerHTML = `
-<img src="${p.image_url || 'https://via.placeholder.com/400'}">
+if(item.title){
+return `
+<div class="card">
 <div class="content">
-<span class="badge">${p.category || "Service"}</span>
+<span class="badge">🏷️ Deal</span>
+<h3>${item.title}</h3>
+<p>${item.description||""}</p>
+<a class="btn">Claim</a>
+</div>
+</div>`;
+}
+
+return `
+<div class="card">
+<div class="content">
+<span class="badge">${item.category||"Service"}</span>
+<h3>${item.service}</h3>
+<p>${item.location||""}</p>
+<a class="btn">Hire</a>
+</div>
+</div>`;
+}).join("");
+}
+
+/* SERVICES */
+function renderServices(){
+
+const container = document.getElementById("servicesCards");
+
+container.innerHTML = providers.map(p=>`
+<div class="card">
+<div class="content">
+<span class="badge">${p.category||"Service"}</span>
 <h3>${p.service}</h3>
-<p>${p.name} • ${p.location || ""}</p>
-<p>From ${p.price || "N/A"}</p>
-<a class="btn" target="_blank" href="https://wa.me/${p.whatsapp}">
-Hire via WhatsApp
-</a>
+<p>${p.name||""}</p>
+<a class="btn" href="https://wa.me/${p.whatsapp}" target="_blank">Hire</a>
 </div>
-`;
-
-container.appendChild(card);
-});
-}
-
-// =====================
-// DEALS RENDER
-// =====================
-function renderDeals(){
-
-const container = document.getElementById("dealsCards");
-
-container.innerHTML = "";
-
-allDeals.forEach(d => {
-
-const card = document.createElement("div");
-
-card.className = "card";
-
-card.innerHTML = `
-<div class="content">
-<span class="badge">🔥 Limited Deal</span>
-<h3>${d.title}</h3>
-<p>${d.description || ""}</p>
-<p>⏳ ${d.claims_left || "Limited"} claims left</p>
-<a class="btn" href="${d.link || '#'}">Claim Deal</a>
-</div>
-`;
-
-container.appendChild(card);
-});
-}
-
-// =====================
-// POPULAR
-// =====================
-function renderPopular(){
-
-const container = document.getElementById("popularList");
-
-const top = [...allProviders]
-.sort((a,b)=>(b.hired_count||0)-(a.hired_count||0))
-.slice(0,5);
-
-container.innerHTML = top.map(p => `
-<div style="padding:6px;border:1px solid #262626;margin-bottom:6px;border-radius:10px;">
-<strong>${p.service}</strong><br>
-<span style="color:#aaa">${p.hired_count||0} hires</span>
 </div>
 `).join("");
 }
 
-// =====================
-// FILTERS
-// =====================
-function renderFilters(){
+/* DEALS */
+function renderDeals(){
 
-const container = document.getElementById("filters");
+const container = document.getElementById("dealsCards");
 
-const cats = ["All", ...new Set(allProviders.map(p => p.category).filter(Boolean))];
-
-container.innerHTML = "";
-
-cats.forEach(cat => {
-
-const btn = document.createElement("button");
-btn.textContent = cat;
-
-if(cat === selectedCategory) btn.classList.add("active");
-
-btn.onclick = () => {
-selectedCategory = cat;
-renderFilters();
-renderProviders();
-};
-
-container.appendChild(btn);
-});
+container.innerHTML = deals.map(d=>`
+<div class="card">
+<div class="content">
+<span class="badge">🔥 Deal</span>
+<h3>${d.title}</h3>
+<p>${d.description||""}</p>
+<a class="btn">Claim</a>
+</div>
+</div>
+`).join("");
 }
 
-// SEARCH
-document.getElementById("searchInput").addEventListener("input", renderProviders);
+/* =========================
+   TAB SWITCHER
+========================= */
+function switchTab(tab){
 
-// INIT
-loadData();
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+
+event.target.classList.add("active");
+
+document.getElementById("homeTab").classList.add("hidden");
+document.getElementById("servicesTab").classList.add("hidden");
+document.getElementById("dealsTab").classList.add("hidden");
+
+if(tab==="home") document.getElementById("homeTab").classList.remove("hidden");
+if(tab==="services") document.getElementById("servicesTab").classList.remove("hidden");
+if(tab==="deals") document.getElementById("dealsTab").classList.remove("hidden");
+
+}
 
 </script>
 
