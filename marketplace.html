@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V15</title>
+<title>Zep Swipe Marketplace V15.1</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
@@ -109,7 +109,7 @@ transition:.3s;
 }
 
 .card:hover{
-transform:translateY(-5px);
+transform:translateY(-6px);
 border-color:var(--accent);
 }
 
@@ -175,6 +175,7 @@ text-align:center;
 
 <div class="wrap">
 
+<!-- HERO -->
 <section class="hero">
 <h1>Find Talent. <span>Hire Fast.</span></h1>
 <p>Dynamic student marketplace powered by Supabase.</p>
@@ -185,12 +186,39 @@ text-align:center;
 </div>
 </section>
 
+<!-- ⭐ EARN + POPULAR -->
+<div class="cards" style="margin-top:20px;">
+
+<div class="card" style="border:1px solid #b8ff3b;">
+<div class="content">
+<span class="badge">🔥 Earn on the Side</span>
+<h2 style="margin:10px 0;">
+Offer your skill. Make money. Help your community.
+</h2>
+<p style="color:#aaa;">Become a provider and start earning today.</p>
+<a class="btn" href="provider.html">Start Earning</a>
+</div>
+</div>
+
+<div class="card">
+<div class="content">
+<span class="badge">⭐ Popular Near You</span>
+<h3>Most Hired Services</h3>
+<div id="popularList" style="margin-top:10px;"></div>
+</div>
+</div>
+
+</div>
+
+<!-- FILTERS -->
 <div class="filters" id="filters"></div>
 
+<!-- PROVIDERS -->
 <div class="cards" id="cards"></div>
 
 </div>
 
+<!-- FOOTER -->
 <nav class="bottom">
 <a href="index.html">🏠<br>Home</a>
 <a href="provider.html">🛠️<br>Services</a>
@@ -200,9 +228,10 @@ text-align:center;
 </nav>
 
 <script>
-// ===============================
-// SUPABASE CONFIG (ADD YOUR KEYS LATER)
-// ===============================
+
+// ======================
+// SUPABASE CONFIG
+// ======================
 const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
@@ -211,10 +240,11 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let allProviders = [];
 let selectedCategory = "All";
 
-// ===============================
+// ======================
 // LOAD PROVIDERS
-// ===============================
+// ======================
 async function loadProviders(){
+
 const { data, error } = await supabaseClient
 .from("providers")
 .select("*")
@@ -227,20 +257,23 @@ return;
 }
 
 allProviders = data;
+
 renderFilters();
-renderProviders(data);
+renderProviders();
+renderPopular();
 }
 
-// ===============================
+// ======================
 // RENDER PROVIDERS
-// ===============================
-function renderProviders(data){
+// ======================
+function renderProviders(){
+
 const container = document.getElementById("cards");
 const search = document.getElementById("searchInput").value.toLowerCase();
 
 container.innerHTML = "";
 
-data
+allProviders
 .filter(p =>
 (p.service || "").toLowerCase().includes(search) ||
 (p.name || "").toLowerCase().includes(search)
@@ -260,8 +293,7 @@ card.innerHTML = `
 <h3>${p.service}</h3>
 <p>${p.name} • ${p.location || ""}</p>
 <p>From ${p.price || "N/A"}</p>
-<a class="btn" target="_blank"
-href="https://wa.me/${p.whatsapp}">
+<a class="btn" target="_blank" href="https://wa.me/${p.whatsapp}">
 Hire via WhatsApp
 </a>
 </div>
@@ -271,10 +303,11 @@ container.appendChild(card);
 });
 }
 
-// ===============================
+// ======================
 // FILTERS
-// ===============================
+// ======================
 function renderFilters(){
+
 const container = document.getElementById("filters");
 
 const categories = ["All", ...new Set(allProviders.map(p => p.category).filter(Boolean))];
@@ -282,6 +315,7 @@ const categories = ["All", ...new Set(allProviders.map(p => p.category).filter(B
 container.innerHTML = "";
 
 categories.forEach(cat => {
+
 const btn = document.createElement("button");
 btn.textContent = cat;
 
@@ -289,23 +323,52 @@ if(cat === selectedCategory) btn.classList.add("active");
 
 btn.onclick = () => {
 selectedCategory = cat;
-renderProviders(allProviders);
 renderFilters();
+renderProviders();
 };
 
 container.appendChild(btn);
 });
 }
 
-// ===============================
-// SEARCH LIVE
-// ===============================
-document.getElementById("searchInput").addEventListener("input", () => {
-renderProviders(allProviders);
+// ======================
+// POPULAR SERVICES
+// ======================
+function renderPopular(){
+
+const container = document.getElementById("popularList");
+
+const top = [...allProviders]
+.sort((a,b)=>(b.hired_count||0)-(a.hired_count||0))
+.slice(0,5);
+
+container.innerHTML = "";
+
+top.forEach(p => {
+
+const div = document.createElement("div");
+div.style.cssText = `
+padding:8px;
+margin-bottom:6px;
+border:1px solid #262626;
+border-radius:10px;
+font-size:13px;
+`;
+
+div.innerHTML = `<strong>${p.service}</strong><br><span style="color:#aaa;">${p.hired_count||0} hires</span>`;
+
+container.appendChild(div);
+
 });
+
+}
+
+// SEARCH LIVE
+document.getElementById("searchInput").addEventListener("input", renderProviders);
 
 // INIT
 loadProviders();
+
 </script>
 
 </body>
