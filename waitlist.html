@@ -3,25 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Waitlist V6</title>
+<title>Zep Swipe Growth System</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
 
 /* =========================
-   BASE
+   V16 MARKETPLACE THEME
 ========================= */
+:root{
+  --bg:#070707;
+  --card:#141414;
+  --accent:#b8ff3b;
+  --text:#ffffff;
+  --muted:#aaaaaa;
+  --border:#262626;
+}
+
 body {
   margin: 0;
   font-family: system-ui, Arial;
-  background: #0b0f0d;
-  color: white;
+  background: var(--bg);
+  color: var(--text);
 }
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 header {
   display:flex;
   justify-content:space-between;
@@ -29,36 +36,32 @@ header {
   padding:12px 14px;
   position: sticky;
   top:0;
-  background: rgba(10,14,12,0.9);
+  background: rgba(0,0,0,0.7);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0,255,140,0.12);
+  border-bottom: 1px solid var(--border);
 }
 
 .logo {
-  color:#00ff8c;
+  color: var(--accent);
   font-weight:700;
 }
 
 .small {
   font-size:12px;
-  opacity:0.7;
+  color: var(--muted);
 }
 
-/* =========================
-   CONTAINER
-========================= */
+/* CONTAINER */
 .container {
   max-width: 900px;
   margin:auto;
   padding:14px;
 }
 
-/* =========================
-   PROGRESS SECTION
-========================= */
+/* PROGRESS */
 .progress-box {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(0,255,140,0.15);
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 16px;
   margin-top: 14px;
@@ -70,7 +73,7 @@ header {
   height:120px;
   border-radius:50%;
   margin:auto;
-  border: 6px solid rgba(0,255,140,0.2);
+  border: 6px solid rgba(184,255,59,0.2);
   position: relative;
 }
 
@@ -85,42 +88,40 @@ header {
 .big {
   font-size:22px;
   font-weight:700;
-  color:#00ff8c;
+  color: var(--accent);
 }
 
-/* =========================
-   EARNINGS PANEL
-========================= */
-.earnings {
-  margin-top: 12px;
-  background: rgba(0,255,140,0.06);
-  border: 1px solid rgba(0,255,140,0.15);
-  padding: 12px;
+/* CARDS */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 14px;
-  font-size: 13px;
+  padding: 12px;
+  margin-top: 10px;
+  display:flex;
+  justify-content:space-between;
 }
 
-/* =========================
-   INVITE BOX
-========================= */
+/* INVITE BOX */
 .invite {
   margin-top: 12px;
-  background: rgba(255,255,255,0.03);
+  background: var(--card);
   padding: 14px;
   border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
 }
 
 .invite input {
   width:100%;
   padding:10px;
-  border:none;
+  border:1px solid var(--border);
   border-radius:10px;
   margin-top:8px;
-  background:#0b0f0d;
-  color:white;
+  background:#0d0d0d;
+  color:var(--text);
 }
 
+/* BUTTONS */
 .btn {
   width:100%;
   margin-top:8px;
@@ -132,56 +133,39 @@ header {
 }
 
 .primary {
-  background:#00ff8c;
+  background: var(--accent);
   color:black;
 }
 
 .secondary {
-  background:rgba(255,255,255,0.08);
+  background:#0d0d0d;
   color:white;
+  border:1px solid var(--border);
 }
 
-/* =========================
-   LEADERBOARD
-========================= */
+/* LEADERBOARD */
 .leaderboard {
   margin-top: 14px;
 }
 
-.card {
-  background: rgba(255,255,255,0.03);
-  padding:12px;
-  border-radius:14px;
-  margin-top:10px;
-  border:1px solid rgba(255,255,255,0.06);
-  display:flex;
-  justify-content:space-between;
-}
-
-/* =========================
-   TIERS
-========================= */
+/* TIERS */
 .tiers {
   margin-top: 14px;
   font-size: 13px;
-  opacity:0.85;
+  color: var(--muted);
   line-height:1.6;
 }
 
-/* =========================
-   FLOAT CTA
-========================= */
+/* FLOAT */
 .fab {
   position:fixed;
   bottom:16px;
   right:16px;
-  background:#00ff8c;
+  background: var(--accent);
   color:black;
   padding:14px 16px;
   border-radius:50px;
   font-weight:700;
-  cursor:pointer;
-  box-shadow:0 0 20px rgba(0,255,140,0.3);
 }
 
 </style>
@@ -190,114 +174,153 @@ header {
 <body>
 
 <header>
-  <div class="logo">⚡ Zep Swipe Waitlist</div>
-  <div class="small">Unlock Access System</div>
+  <div class="logo">⚡ Zep Swipe Waitlist V17</div>
+  <div class="small">Growth Engine Active</div>
 </header>
 
 <div class="container">
 
-  <!-- PROGRESS -->
-  <div class="progress-box">
+<!-- PROGRESS -->
+<div class="progress-box">
 
-    <div class="circle">
-      <div class="circle-inner">
-        <div class="big" id="count">2 / 5</div>
-        <div class="small">Invites</div>
-      </div>
+  <div class="circle">
+    <div class="circle-inner">
+      <div class="big" id="count">0 / 5</div>
+      <div class="small">Invites</div>
     </div>
-
-    <p style="margin-top:10px;">
-      Invite 3 more friends to unlock Zep Swipe Marketplace
-    </p>
-
   </div>
 
-  <!-- EARNINGS -->
-  <div class="earnings">
-    💰 Potential Earnings After Unlock:<br>
-    <b>R0 → R250/day</b><br><br>
-    ✔ Become a provider<br>
-    ✔ Access real jobs<br>
-    ✔ Earn Zep Points
-  </div>
-
-  <!-- INVITE -->
-  <div class="invite">
-
-    <b>Your Invite Link</b>
-
-    <input id="link" value="https://zepswipe.com/invite/abc123" readonly>
-
-    <button class="btn primary" onclick="copyLink()">
-      Copy Link
-    </button>
-
-    <button class="btn secondary" onclick="shareWA()">
-      Share on WhatsApp
-    </button>
-
-  </div>
-
-  <!-- LEADERBOARD -->
-  <div class="leaderboard">
-
-    <h3 style="color:#00ff8c;">🏆 Leaderboard</h3>
-
-    <div class="card">
-      <span>🥇 Thabo</span>
-      <span>12 invites</span>
-    </div>
-
-    <div class="card">
-      <span>🥈 Amina</span>
-      <span>9 invites</span>
-    </div>
-
-    <div class="card">
-      <span>🥉 Sipho</span>
-      <span>6 invites</span>
-    </div>
-
-  </div>
-
-  <!-- TIERS -->
-  <div class="tiers">
-    🎁 Reward Tiers:<br>
-    • 1 Invite → Starter Badge<br>
-    • 3 Invites → Growth Badge<br>
-    • 5 Invites → Unlock Access<br>
-    • 10 Invites → Bonus Zep Points<br>
-  </div>
+  <p style="color:var(--muted);margin-top:10px;">
+    Invite friends to unlock marketplace access
+  </p>
 
 </div>
 
-<!-- FLOAT -->
-<div class="fab" onclick="alert('Keep inviting to unlock!')">
-  Unlock in Progress
+<!-- EARNINGS -->
+<div class="invite">
+  <b>Potential Earnings</b><br><br>
+  <span style="color:var(--accent);">R0 → R250/day</span><br><br>
+  ✔ Providers<br>
+  ✔ Jobs<br>
+  ✔ Deals access
+</div>
+
+<!-- INVITE -->
+<div class="invite">
+
+  <b>Your Invite Link</b>
+
+  <input id="link" readonly>
+
+  <button class="btn primary" onclick="copyLink()">Copy Link</button>
+  <button class="btn secondary" onclick="shareWA()">Share WhatsApp</button>
+
+</div>
+
+<!-- LEADERBOARD -->
+<div class="leaderboard">
+
+  <h3 style="color:var(--accent)">🏆 Leaderboard</h3>
+
+  <div id="board"></div>
+
+</div>
+
+<!-- TIERS -->
+<div class="tiers">
+  🎁 Reward Tiers:<br>
+  • 1 Invite → Starter<br>
+  • 3 Invites → Growth<br>
+  • 5 Invites → Unlock Access<br>
+  • 10 Invites → Viral Legend 🔥
+</div>
+
+</div>
+
+<div class="fab" onclick="alert('Keep sharing your invite link!')">
+  Growth Active
 </div>
 
 <script>
 
-/* COPY LINK */
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
+
+const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+/* USER ID */
+let userId = localStorage.getItem("user_id");
+if(!userId){
+  userId = crypto.randomUUID();
+  localStorage.setItem("user_id", userId);
+}
+
+/* REF LINK */
+const base = window.location.origin + window.location.pathname;
+const inviteLink = `${base}?ref=${userId}`;
+document.getElementById("link").value = inviteLink;
+
+/* REF HANDLER */
+const urlParams = new URLSearchParams(window.location.search);
+const ref = urlParams.get("ref");
+
+if(ref && ref !== userId){
+  registerReferral(ref);
+}
+
+/* REGISTER REF */
+async function registerReferral(referrer){
+
+  const phone = localStorage.getItem("phone") || "unknown";
+
+  await client.from("referrals").insert([{
+    referrer_id: referrer,
+    referred_phone: phone,
+    status:"pending"
+  }]);
+
+  await client.from("growth_events").insert([{
+    user_id: referrer,
+    event_type:"invite_received",
+    meta:{from:userId}
+  }]);
+}
+
+/* LOAD LEADERBOARD */
+async function loadBoard(){
+
+  const {data} = await client
+    .from("leaderboard")
+    .select("*")
+    .order("invites",{ascending:false});
+
+  let html="";
+
+  (data||[]).forEach(u=>{
+    html += `
+      <div class="card">
+        <span>👤 User</span>
+        <span>${u.invites || 0} invites</span>
+      </div>
+    `;
+  });
+
+  document.getElementById("board").innerHTML = html;
+}
+
+/* COPY */
 function copyLink(){
-  const input = document.getElementById("link");
-  input.select();
-  document.execCommand("copy");
-  alert("Invite link copied!");
+  navigator.clipboard.writeText(inviteLink);
+  alert("Copied!");
 }
 
-/* WHATSAPP SHARE */
+/* SHARE */
 function shareWA(){
-  const link = document.getElementById("link").value;
-  window.open(
-    `https://wa.me/?text=Join%20Zep%20Swipe%20Waitlist:%20${link}`,
-    "_blank"
-  );
+  window.open(`https://wa.me/?text=Join%20Zep%20Swipe:%20${inviteLink}`);
 }
 
-/* FAKE PROGRESS (replace with Supabase later) */
-let invites = 2;
-document.getElementById("count").innerText = invites + " / 5";
+/* INIT */
+loadBoard();
 
 </script>
 
