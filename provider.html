@@ -3,43 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Provider - Unified V4</title>
+<title>Zep Swipe Provider V6 (Production)</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 
 /* =========================
-   BASE
+   MARKETPLACE MATCH THEME
 ========================= */
+:root{
+  --bg:#070707;
+  --card:#141414;
+  --accent:#b8ff3b;
+  --text:#ffffff;
+  --muted:#aaaaaa;
+  --border:#262626;
+}
+
 body {
   margin: 0;
   font-family: system-ui;
-  background: radial-gradient(circle at top, #0b1a14, #070a09);
-  color: white;
+  background: var(--bg);
+  color: var(--text);
 }
 
 /* =========================
-   GLOW BACKGROUND
+   GLOW EFFECT
 ========================= */
 .glow {
   position: fixed;
-  width: 300px;
-  height: 300px;
-  background: #00ff8c;
-  filter: blur(120px);
-  opacity: 0.12;
+  width: 260px;
+  height: 260px;
+  background: var(--accent);
+  filter: blur(140px);
+  opacity: 0.08;
   border-radius: 50%;
-  animation: float 8s ease-in-out infinite;
+  z-index: 0;
 }
 
-.glow:nth-child(1){ top:-100px; left:-80px; }
-.glow:nth-child(2){ bottom:-120px; right:-100px; background:#00bfff; }
-
-@keyframes float {
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(40px)}
-}
+.glow:nth-child(1){ top:-120px; left:-80px; }
+.glow:nth-child(2){ bottom:-120px; right:-100px; }
 
 /* =========================
    CONTAINER
@@ -56,12 +60,17 @@ body {
    CARD
 ========================= */
 .card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 16px;
-  backdrop-filter: blur(12px);
   margin-top: 12px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  border-color: var(--accent);
+  transform: translateY(-3px);
 }
 
 /* =========================
@@ -72,10 +81,14 @@ input, select {
   margin-top: 10px;
   padding: 12px;
   border-radius: 12px;
-  border: none;
-  background: rgba(0,0,0,0.4);
-  color: white;
+  border: 1px solid var(--border);
+  background: #0d0d0d;
+  color: var(--text);
   outline: none;
+}
+
+input:focus, select:focus {
+  border-color: var(--accent);
 }
 
 /* =========================
@@ -89,59 +102,38 @@ button {
   border: none;
   font-weight: 700;
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .primary {
-  background: linear-gradient(90deg,#00ff8c,#00c2ff);
-  color:black;
+  background: var(--accent);
+  color: black;
+}
+
+.primary:hover {
+  box-shadow: 0 10px 25px rgba(184,255,59,0.15);
+  transform: translateY(-2px);
 }
 
 .danger {
-  background: rgba(255,0,0,0.2);
-  color:white;
+  background: #2a0f0f;
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
 }
 
 /* =========================
-   DASHBOARD
+   HEADER TEXT
 ========================= */
-.hidden { display:none; }
-
-.header {
-  text-align:center;
-  margin-top:10px;
-}
-
-.earn {
-  color:#00ff8c;
-  font-size:18px;
-  font-weight:700;
+h2,h3 {
+  color: var(--accent);
 }
 
 .small {
-  font-size:12px;
-  opacity:0.7;
+  font-size: 12px;
+  color: var(--muted);
 }
 
-.grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.metric {
-  background: rgba(0,255,140,0.05);
-  border:1px solid rgba(0,255,140,0.1);
-  padding:12px;
-  border-radius:12px;
-}
-
-.metric h2 {
-  margin:0;
-  color:#00ff8c;
-}
-
-.status-online { color:#00ff8c; font-weight:700; }
-.status-offline { color:#ff4d4d; font-weight:700; }
+.hidden { display:none; }
 
 </style>
 </head>
@@ -154,16 +146,16 @@ button {
 <div class="container">
 
 <!-- =========================
-     SIGNUP SECTION
+   SIGNUP
 ========================= -->
 <div id="signupBox" class="card">
 
   <h2>🚀 Become a Provider</h2>
-  <p class="small">Activate your earning profile in seconds</p>
+  <p class="small">Production-ready Supabase marketplace onboarding</p>
 
   <input id="category" placeholder="Service (e.g Tutoring)">
-  <input id="description" placeholder="What you do">
-  
+  <input id="description" placeholder="What do you offer?">
+
   <select id="price">
     <option>R50</option>
     <option>R100</option>
@@ -175,57 +167,34 @@ button {
   <input id="phone" placeholder="WhatsApp Number">
 
   <button class="primary" onclick="activateProvider()">
-    🚀 Go Live & Start Earning
+    🚀 Activate Provider Account
   </button>
 
 </div>
 
 <!-- =========================
-     DASHBOARD SECTION
+   DASHBOARD
 ========================= -->
 <div id="dashboardBox" class="hidden">
 
-  <div class="header">
-    <h2>🟢 Provider Dashboard</h2>
-    <div id="statusText" class="status-online">ONLINE</div>
-  </div>
-
-  <!-- WALLET -->
   <div class="card">
-    <h3>💰 Earnings Wallet</h3>
-
-    <div class="grid">
-
-      <div class="metric">
-        <h2 id="total">R0</h2>
-        <p class="small">Total</p>
-      </div>
-
-      <div class="metric">
-        <h2 id="pending">R0</h2>
-        <p class="small">Pending</p>
-      </div>
-
-    </div>
-
+    <h2>🟢 Provider Active</h2>
+    <p class="small">Your service is now live on the marketplace</p>
   </div>
 
-  <!-- TOGGLE -->
   <div class="card">
-
-    <h3>🟢 Availability</h3>
-
-    <button id="toggleBtn" class="primary" onclick="toggleStatus()">
-      Go Offline
-    </button>
-
+    <h3>💰 Earnings (Live later)</h3>
+    <p class="small">Tracking will activate once bookings start</p>
   </div>
 
-  <!-- JOBS -->
   <div class="card">
     <h3>📦 Jobs</h3>
-    <p class="small">No jobs yet (waiting for dispatch system)</p>
+    <p class="small">Waiting for customer requests</p>
   </div>
+
+  <button class="danger" onclick="logout()">
+    Logout Provider
+  </button>
 
 </div>
 
@@ -233,75 +202,67 @@ button {
 
 <script>
 
+// =========================
+// SUPABASE INIT
+// =========================
 const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let isOnline = true;
+// =========================
+// CHECK AUTH
+// =========================
+async function getUser(){
+  const { data } = await client.auth.getUser();
+  return data.user;
+}
 
-/* =========================
-   ACTIVATE PROVIDER
-========================= */
+// =========================
+// ACTIVATE PROVIDER (PRODUCTION)
+// =========================
 async function activateProvider(){
 
-  const data = {
+  const user = await getUser();
+
+  if(!user){
+    alert("⚠️ Please log in first (Supabase Auth required)");
+    return;
+  }
+
+  const payload = {
+    user_id: user.id,
     category: category.value,
     description: description.value,
     price: price.value,
     location: location.value,
-    phone: phone.value,
+    whatsapp: phone.value,
     online: true,
-    created_at: new Date()
+    approved: false
   };
 
-  await client.from("service_profiles").insert([data]);
+  const { error } = await client
+    .from("service_profiles")
+    .insert([payload]);
 
-  localStorage.setItem("provider_phone", data.phone);
-
-  // SWITCH UI
-  signupBox.classList.add("hidden");
-  dashboardBox.classList.remove("hidden");
-
-  loadWallet();
-}
-
-/* =========================
-   TOGGLE STATUS
-========================= */
-async function toggleStatus(){
-
-  isOnline = !isOnline;
-
-  const statusText = document.getElementById("statusText");
-  const btn = document.getElementById("toggleBtn");
-
-  if(isOnline){
-    statusText.innerText = "ONLINE";
-    statusText.className = "status-online";
-    btn.innerText = "Go Offline";
-    btn.className = "primary";
-  } else {
-    statusText.innerText = "OFFLINE";
-    statusText.className = "status-offline";
-    btn.innerText = "Go Online";
-    btn.className = "danger";
+  if(error){
+    alert("Error submitting provider profile");
+    console.log(error);
+    return;
   }
 
-  await client
-    .from("service_profiles")
-    .update({ online: isOnline })
-    .eq("phone", localStorage.getItem("provider_phone"));
+  alert("🚀 Provider submitted for approval!");
+
+  signupBox.classList.add("hidden");
+  dashboardBox.classList.remove("hidden");
 }
 
-/* =========================
-   WALLET (PLACEHOLDER)
-========================= */
-function loadWallet(){
-
-  // placeholder logic until real jobs exist
-  document.getElementById("total").innerText = "R0";
-  document.getElementById("pending").innerText = "R0";
+// =========================
+// LOGOUT
+// =========================
+async function logout(){
+  await client.auth.signOut();
+  location.reload();
 }
 
 </script>
