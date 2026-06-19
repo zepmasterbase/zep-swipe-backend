@@ -3,346 +3,104 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace Pro V2</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-
+<title>Zep Swipe Marketplace V12</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-font-family:Inter,system-ui,sans-serif;
-background:radial-gradient(circle at top,#0d1711,#050807);
-color:#fff;
-padding-bottom:95px;
+:root{
+--bg:#07110d;--card:#101b16;--accent:#00ff8c;--accent2:#00c2ff;--text:#fff;
 }
-header{
-position:sticky;top:0;z-index:100;
-display:flex;justify-content:space-between;align-items:center;
-padding:15px;
-background:rgba(5,8,7,.95);
-backdrop-filter:blur(20px);
-border-bottom:1px solid rgba(0,255,140,.12);
-}
-.logo{font-weight:800;color:#00ff8c}
-.container{max-width:620px;margin:auto;padding:14px}
-.search-box{
-background:rgba(255,255,255,.05);
-border:1px solid rgba(0,255,140,.12);
-border-radius:18px;
-padding:14px;
-margin:15px 0;
-}
-.search-box input{
-width:100%;
-background:none;
-border:none;
-outline:none;
-color:#fff;
-font-size:15px;
-}
-.stories{display:flex;gap:12px;overflow:auto;padding-bottom:10px}
-.story{text-align:center;min-width:75px}
-.story img{
-width:64px;height:64px;border-radius:50%;
-object-fit:cover;border:2px solid #00ff8c;
-}
-.story span{font-size:11px;display:block;margin-top:5px}
-
-.chips{
-display:flex;
-gap:8px;
-overflow:auto;
-margin:15px 0;
-padding-bottom:5px;
-}
-.chip{
-padding:10px 14px;
-border-radius:999px;
-background:rgba(0,255,140,.08);
-border:1px solid rgba(0,255,140,.15);
-white-space:nowrap;
-cursor:pointer;
-}
-.chip.active{
-background:#00ff8c;
-color:black;
-font-weight:700;
-}
-
-.card{
-background:rgba(255,255,255,.05);
-backdrop-filter:blur(20px);
-border:1px solid rgba(255,255,255,.08);
-border-radius:22px;
-padding:15px;
-margin-top:15px;
-}
-.featured{
-background:linear-gradient(135deg,rgba(0,255,140,.18),rgba(0,194,255,.10));
-}
-.badge{
-display:inline-block;
-padding:5px 10px;
-border-radius:999px;
-font-size:12px;
-background:rgba(0,255,140,.12);
-color:#00ff8c;
-}
-.tabs{
-display:flex;
-margin-top:18px;
-border-radius:14px;
-overflow:hidden;
-background:rgba(255,255,255,.04);
-}
-.tab{
-flex:1;
-padding:13px;
-text-align:center;
-cursor:pointer;
-}
-.tab.active{
-background:rgba(0,255,140,.12);
-color:#00ff8c;
-}
-.hidden{display:none}
-
-.service-top{
-display:flex;
-gap:12px;
-align-items:center;
-}
-.avatar{
-width:65px;
-height:65px;
-border-radius:50%;
-object-fit:cover;
-}
-.small{font-size:13px;opacity:.75}
-.price{margin-top:8px;color:#00ff8c;font-weight:700}
-
-.btn{
-width:100%;
-padding:13px;
-border:none;
-border-radius:14px;
-margin-top:12px;
-cursor:pointer;
-font-weight:700;
-background:linear-gradient(90deg,#00ff8c,#00c2ff);
-color:black;
-}
-.deal-img{
-width:100%;
-height:190px;
-object-fit:cover;
-border-radius:16px;
-margin-bottom:12px;
-}
-
-.bottom-nav{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:78px;
-display:flex;
-justify-content:space-around;
-align-items:center;
-background:rgba(5,8,7,.96);
-border-top:1px solid rgba(0,255,140,.12);
-}
-.nav-item{
-display:flex;
-flex-direction:column;
-align-items:center;
-text-decoration:none;
-color:white;
-font-size:11px;
-}
-.nav-main{
-width:62px;
-height:62px;
-border-radius:50%;
-background:linear-gradient(90deg,#00ff8c,#00c2ff);
-color:black;
-justify-content:center;
-margin-top:-25px;
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;background:#0b1511;padding:14px 18px;border-bottom:1px solid #1d3128;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:700;color:var(--accent)}
+.container{max-width:1100px;margin:auto;padding:20px}
+.hero{padding:30px 0;text-align:center}
+.hero h1{font-size:42px;margin:0}
+.hero p{opacity:.8}
+.search{background:#111;padding:12px;border-radius:14px;width:100%;border:1px solid #222;color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.cat,.card,.cta{background:var(--card);padding:16px;border-radius:16px;border:1px solid #1d3128}
+.section{margin-top:30px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.btn{display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#000;padding:12px 16px;border-radius:10px;text-decoration:none;font-weight:bold}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#163326;color:var(--accent);font-size:12px}
+footer{padding:30px;text-align:center;opacity:.7}
 </style>
 </head>
 <body>
-
 <header>
 <div class="logo">⚡ Zep Swipe</div>
-<div>🟢 Live</div>
+<div>Randfontein Live</div>
 </header>
 
 <div class="container">
-
-<h2>Find Student Talent Near You</h2>
-
-<div class="search-box">
-<input id="searchInput" placeholder="Search students, skills or deals...">
+<div class="hero">
+<h1>Hire. Save. Earn.</h1>
+<p>Student services and local deals in one marketplace.</p>
+<input class="search" placeholder="Search student services...">
 </div>
 
-<div class="stories">
-<div class="story"><img src="https://picsum.photos/100?1"><span>Tutors</span></div>
-<div class="story"><img src="https://picsum.photos/100?2"><span>Designers</span></div>
-<div class="story"><img src="https://picsum.photos/100?3"><span>Developers</span></div>
-<div class="story"><img src="https://picsum.photos/100?4"><span>Deals</span></div>
-<div class="story"><img src="https://picsum.photos/100?5"><span>Jobs</span></div>
+<div class="grid">
+<div class="cat">📚 Tutoring</div>
+<div class="cat">🎨 Design</div>
+<div class="cat">📸 Photography</div>
+<div class="cat">🧹 Cleaning</div>
+<div class="cat">💻 Tech Help</div>
+<div class="cat">➕ More</div>
 </div>
 
-<div class="chips">
-<div class="chip active" onclick="filterCategory('all',this)">All</div>
-<div class="chip" onclick="filterCategory('Design',this)">🎨 Design</div>
-<div class="chip" onclick="filterCategory('Tech',this)">💻 Tech</div>
-<div class="chip" onclick="filterCategory('Tutor',this)">📚 Tutors</div>
-<div class="chip" onclick="filterCategory('Photography',this)">📸 Photography</div>
-<div class="chip" onclick="filterCategory('Marketing',this)">📈 Marketing</div>
-<div class="chip" onclick="filterCategory('deals',this)">🔥 Deals</div>
-</div>
-
-<div class="card featured">
-<span class="badge">🏆 Marketplace</span>
-<h3>Discover • Hire • Earn</h3>
-<p class="small">Connect businesses and students instantly.</p>
-</div>
-
-<div class="tabs">
-<div class="tab active" onclick="showTab('services',this)">Services</div>
-<div class="tab" onclick="showTab('deals',this)">Deals</div>
-</div>
-
-<div id="services"></div>
-<div id="deals" class="hidden"></div>
-
-</div>
-
-<nav class="bottom-nav">
-<a href="index.html" class="nav-item"><i data-lucide="home"></i><span>Home</span></a>
-<a href="#" id="discoverBtn" class="nav-item"><i data-lucide="search"></i><span>Discover</span></a>
-<a href="business-deals.html" class="nav-item nav-main"><i data-lucide="plus"></i></a>
-<a href="business-deals.html" class="nav-item"><i data-lucide="badge-dollar-sign"></i><span>List a Deal</span></a>
-<a href="provider.html" class="nav-item"><i data-lucide="user"></i><span>Provider</span></a>
-</nav>
-
-<script>
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-let currentCategory="all";
-
-function showTab(tab,el){
-document.getElementById("services").classList.toggle("hidden",tab!=="services");
-document.getElementById("deals").classList.toggle("hidden",tab!=="deals");
-
-if(el){
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-el.classList.add("active");
-}
-}
-
-function filterCategory(category,chip){
-document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
-chip.classList.add("active");
-
-if(category==="deals"){
-showTab("deals",document.querySelectorAll(".tab")[1]);
-return;
-}
-
-currentCategory=category;
-showTab("services",document.querySelectorAll(".tab")[0]);
-loadServices();
-}
-
-function contact(phone){
-window.open(`https://wa.me/${phone}`,"_blank");
-}
-
-document.getElementById("discoverBtn").addEventListener("click",(e)=>{
-e.preventDefault();
-document.getElementById("searchInput").scrollIntoView({behavior:"smooth"});
-document.getElementById("searchInput").focus();
-});
-
-async function loadServices(){
-const {data}=await client
-.from("service_profiles")
-.select("*")
-.eq("online",true);
-
-let services=data||[];
-
-if(currentCategory!=="all"){
-services=services.filter(s=>
-(s.category||"").toLowerCase().includes(currentCategory.toLowerCase())
-);
-}
-
-document.getElementById("services").innerHTML=services.map(s=>`
+<div class="section">
+<h2>💼 Student Services</h2>
+<div class="cards">
 <div class="card">
-<div class="service-top">
-<img class="avatar" src="${s.avatar_url||'https://picsum.photos/100'}">
-<div>
-<h3>${s.name||'Student'}</h3>
-<div class="small">⭐ ${s.rating||'New'} • ✓ Verified Student</div>
-<div class="small">📍 ${s.location||''}</div>
+<span class="badge">Top Rated</span>
+<h3>Math Tutor</h3>
+<p>From R80 • Randfontein</p>
+<a class="btn" href="#">Hire via WhatsApp</a>
 </div>
-</div>
-
-<p style="margin-top:10px">${s.description||''}</p>
-
-<div class="price">💰 ${s.price||''}</div>
-
-<button class="btn" onclick="contact('${s.phone||''}')">
-Hire via WhatsApp
-</button>
-</div>
-`).join("") || "<p>No providers found.</p>";
-}
-
-async function loadDeals(){
-const {data}=await client.from("deals").select("*");
-
-document.getElementById("deals").innerHTML=(data||[]).map(d=>`
 <div class="card">
-<img class="deal-img" src="${d.image_url||'https://picsum.photos/600/300'}">
-
-<span class="badge">🔥 Deal</span>
-
-<h3 style="margin-top:8px">${d.title||''}</h3>
-
-<p><strong>${d.business_name||''}</strong></p>
-
-<p style="margin-top:8px">${d.description||''}</p>
-
-<div class="small">📍 ${d.location||''}</div>
-<div class="small">⏰ ${d.valid_until||'Limited Time'}</div>
-
-<button class="btn" onclick="contact('${d.phone||''}')">
-Claim Deal
-</button>
+<span class="badge">Rising Star</span>
+<h3>Graphic Designer</h3>
+<p>From R120 • Remote</p>
+<a class="btn" href="#">Hire via WhatsApp</a>
 </div>
-`).join("") || "<p>No deals available.</p>";
-}
+</div>
+</div>
 
-client.channel("marketplace")
-.on("postgres_changes",
-{event:"*",schema:"public"},
-()=>{
-loadServices();
-loadDeals();
-})
-.subscribe();
+<div class="section">
+<h2>🏷️ Student Deals</h2>
+<div class="cards">
+<div class="card">
+<span class="badge">50% OFF</span>
+<h3>Burger Special</h3>
+<p>18 claims left • Ends today</p>
+<a class="btn" href="#">Claim Deal</a>
+</div>
+<div class="card">
+<span class="badge">Student Deal</span>
+<h3>Printing Discount</h3>
+<p>Save 30% this week</p>
+<a class="btn" href="#">Claim Deal</a>
+</div>
+</div>
+</div>
 
-loadServices();
-loadDeals();
+<div class="section cards">
+<div class="cta">
+<h2>🚀 Start Earning</h2>
+<p>Turn your skills into income.</p>
+<a class="btn" href="provider.html">Start Earning</a>
+</div>
 
-lucide.createIcons();
-</script>
+<div class="cta">
+<h2>🏪 Promote Your Business</h2>
+<p>Create student deals instantly.</p>
+<a class="btn" href="business-deals.html">Add Deal</a>
+</div>
+</div>
+</div>
+
+<footer>
+Marketplace V12 • Connect Supabase tables service_profiles and deals.
+</footer>
 </body>
 </html>
