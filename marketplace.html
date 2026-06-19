@@ -2,44 +2,171 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Marketplace V14</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe Marketplace V15</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root{
---bg:#070707;--card:#141414;--accent:#b8ff3b;--text:#fff;--muted:#aaa;--border:#262626;
+--bg:#070707;
+--card:#141414;
+--accent:#b8ff3b;
+--text:#fff;
+--muted:#aaa;
+--border:#262626;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);padding-bottom:90px}
-.money{position:fixed;font-size:36px;opacity:.12;animation:float 14s linear infinite;pointer-events:none}
-.m1{left:10%;bottom:-50px}.m2{left:35%;bottom:-50px;animation-delay:3s}
-.m3{left:70%;bottom:-50px;animation-delay:6s}.m4{left:90%;bottom:-50px;animation-delay:1s}
-@keyframes float{from{transform:translateY(0) rotate(0)}to{transform:translateY(-120vh) rotate(360deg)}}
-header{position:sticky;top:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);display:flex;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border)}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;}
+
+body{
+background:var(--bg);
+color:var(--text);
+padding-bottom:90px;
+}
+
+header{
+position:sticky;
+top:0;
+background:rgba(0,0,0,.9);
+backdrop-filter:blur(12px);
+display:flex;
+justify-content:space-between;
+padding:16px 20px;
+border-bottom:1px solid var(--border);
+z-index:100;
+}
+
 .logo{color:var(--accent);font-weight:800}
+
 .wrap{max-width:1100px;margin:auto;padding:20px}
-.hero h1{font-size:54px;font-weight:800}
+
+.hero h1{font-size:42px;font-weight:800}
 .hero span{color:var(--accent)}
 .hero p{color:var(--muted);margin:10px 0 20px}
-.searchbox{display:flex;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:8px}
-.searchbox input{flex:1;background:none;border:none;color:white;padding:14px}
-.searchbox button{width:54px;border:none;border-radius:14px;background:var(--accent)}
-.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:22px 0}
-.cat,.card,.cta{background:var(--card);border:1px solid var(--border);border-radius:20px}
-.cat{padding:18px;text-align:center}
-.section{margin-top:30px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.card img{width:100%;height:160px;object-fit:cover;background:#222}
-.content{padding:16px}
-.badge{display:inline-block;background:rgba(184,255,59,.15);color:var(--accent);padding:6px 10px;border-radius:999px;font-size:12px}
-.btn{display:inline-block;margin-top:12px;background:var(--accent);color:#000;text-decoration:none;padding:12px 16px;border-radius:12px;font-weight:700}
-.cta{padding:28px;background:linear-gradient(135deg,#151515,#1d2810)}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#0d0d0d;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px}
-.bottom a{color:white;text-decoration:none;text-align:center;font-size:12px}
+
+.searchbox{
+display:flex;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:14px;
+overflow:hidden;
+}
+
+.searchbox input{
+flex:1;
+padding:14px;
+background:none;
+border:none;
+color:#fff;
+outline:none;
+}
+
+.searchbox button{
+background:var(--accent);
+border:none;
+width:60px;
+cursor:pointer;
+}
+
+.filters{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin:20px 0;
+}
+
+.filters button{
+padding:8px 12px;
+border-radius:999px;
+border:1px solid var(--border);
+background:var(--card);
+color:#fff;
+cursor:pointer;
+font-size:12px;
+}
+
+.filters button.active{
+background:var(--accent);
+color:#000;
+font-weight:700;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:15px;
+}
+
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:16px;
+overflow:hidden;
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+border-color:var(--accent);
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+background:#222;
+}
+
+.content{
+padding:14px;
+}
+
+.badge{
+display:inline-block;
+padding:5px 10px;
+font-size:11px;
+background:rgba(184,255,59,.15);
+color:var(--accent);
+border-radius:999px;
+margin-bottom:8px;
+}
+
+.btn{
+display:inline-block;
+margin-top:10px;
+padding:10px 14px;
+background:var(--accent);
+color:#000;
+text-decoration:none;
+border-radius:10px;
+font-weight:700;
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#0d0d0d;
+border-top:1px solid var(--border);
+display:flex;
+justify-content:space-around;
+padding:10px;
+font-size:12px;
+}
+
+.bottom a{
+color:#fff;
+text-decoration:none;
+text-align:center;
+}
 </style>
 </head>
+
 <body>
-<div class="money m1">💵</div><div class="money m2">🪙</div><div class="money m3">💰</div><div class="money m4">💵</div>
 
 <header>
 <div class="logo">⚡ Zep Swipe</div>
@@ -47,89 +174,139 @@ header{position:sticky;top:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12p
 </header>
 
 <div class="wrap">
+
 <section class="hero">
-<h1>Find. Book. <span>Earn.</span></h1>
-<p>Student services and local deals in one marketplace.</p>
+<h1>Find Talent. <span>Hire Fast.</span></h1>
+<p>Dynamic student marketplace powered by Supabase.</p>
+
 <div class="searchbox">
-<input placeholder="Search student services...">
-<button>🔍</button>
+<input id="searchInput" placeholder="Search services...">
+<button onclick="loadProviders()">🔍</button>
 </div>
 </section>
 
-<div class="cats">
-<div class="cat">📚<br>Tutoring</div>
-<div class="cat">🎨<br>Design</div>
-<div class="cat">📸<br>Photography</div>
-<div class="cat">🧹<br>Cleaning</div>
-<div class="cat">💻<br>Tech Help</div>
-<div class="cat">➕<br>More</div>
-</div>
+<div class="filters" id="filters"></div>
 
-<section class="section">
-<h2>💼 Student Services</h2><br>
-<div class="cards">
-<div class="card">
-<img alt="service">
-<div class="content">
-<span class="badge">Top Rated</span>
-<h3>Math Tutor</h3>
-<p>From R80 per hour • Randfontein</p>
-<a class="btn" href="#">Hire via WhatsApp</a>
-</div></div>
+<div class="cards" id="cards"></div>
 
-<div class="card">
-<img alt="service">
-<div class="content">
-<span class="badge">Rising Star</span>
-<h3>Graphic Designer</h3>
-<p>From R350 • Remote</p>
-<a class="btn" href="#">Hire via WhatsApp</a>
-</div></div>
-</div>
-</section>
-
-<section class="section">
-<div class="cta">
-<h2>🚀 Earn on the Side</h2>
-<p>Turn your skills into income.</p>
-<a class="btn" href="provider.html">Start Earning</a>
-</div>
-</section>
-
-<section class="section">
-<h2>🏷️ Student Deals</h2><br>
-<div class="cards">
-<div class="card"><div class="content">
-<span class="badge">50% OFF</span>
-<h3>Burger Special</h3>
-<p>18 claims left • Ends today</p>
-<a class="btn" href="#">Claim Deal</a>
-</div></div>
-
-<div class="card"><div class="content">
-<span class="badge">Student Deal</span>
-<h3>Printing Discount</h3>
-<p>Save 30% this week</p>
-<a class="btn" href="#">Claim Deal</a>
-</div></div>
-</div>
-</section>
-
-<section class="section">
-<div class="cta">
-<h2>🏪 Promote Your Business</h2>
-<p>Create student deals instantly.</p>
-<a class="btn" href="business-deals.html">Add Deal</a>
-</div>
-</section>
 </div>
 
 <nav class="bottom">
-<a href="#">🏠<br>Home</a>
-<a href="#">🛠️<br>Services</a>
-<a href="#">🏷️<br>Deals</a>
+<a href="index.html">🏠<br>Home</a>
+<a href="provider.html">🛠️<br>Services</a>
+<a href="business-deals.html">🏷️<br>Deals</a>
 <a href="#">💬<br>Inbox</a>
 <a href="#">👤<br>Profile</a>
 </nav>
+
+<script>
+// ===============================
+// SUPABASE CONFIG (ADD YOUR KEYS LATER)
+// ===============================
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let allProviders = [];
+let selectedCategory = "All";
+
+// ===============================
+// LOAD PROVIDERS
+// ===============================
+async function loadProviders(){
+const { data, error } = await supabaseClient
+.from("providers")
+.select("*")
+.eq("approved", true)
+.order("created_at", { ascending: false });
+
+if(error){
+console.log(error);
+return;
+}
+
+allProviders = data;
+renderFilters();
+renderProviders(data);
+}
+
+// ===============================
+// RENDER PROVIDERS
+// ===============================
+function renderProviders(data){
+const container = document.getElementById("cards");
+const search = document.getElementById("searchInput").value.toLowerCase();
+
+container.innerHTML = "";
+
+data
+.filter(p =>
+(p.service || "").toLowerCase().includes(search) ||
+(p.name || "").toLowerCase().includes(search)
+)
+.filter(p =>
+selectedCategory === "All" || p.category === selectedCategory
+)
+.forEach(p => {
+
+const card = document.createElement("div");
+card.className = "card";
+
+card.innerHTML = `
+<img src="${p.image_url || 'https://via.placeholder.com/400'}">
+<div class="content">
+<span class="badge">${p.category || "Service"}</span>
+<h3>${p.service}</h3>
+<p>${p.name} • ${p.location || ""}</p>
+<p>From ${p.price || "N/A"}</p>
+<a class="btn" target="_blank"
+href="https://wa.me/${p.whatsapp}">
+Hire via WhatsApp
+</a>
+</div>
+`;
+
+container.appendChild(card);
+});
+}
+
+// ===============================
+// FILTERS
+// ===============================
+function renderFilters(){
+const container = document.getElementById("filters");
+
+const categories = ["All", ...new Set(allProviders.map(p => p.category).filter(Boolean))];
+
+container.innerHTML = "";
+
+categories.forEach(cat => {
+const btn = document.createElement("button");
+btn.textContent = cat;
+
+if(cat === selectedCategory) btn.classList.add("active");
+
+btn.onclick = () => {
+selectedCategory = cat;
+renderProviders(allProviders);
+renderFilters();
+};
+
+container.appendChild(btn);
+});
+}
+
+// ===============================
+// SEARCH LIVE
+// ===============================
+document.getElementById("searchInput").addEventListener("input", () => {
+renderProviders(allProviders);
+});
+
+// INIT
+loadProviders();
+</script>
+
 </body>
 </html>
