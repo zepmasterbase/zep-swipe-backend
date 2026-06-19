@@ -3,105 +3,128 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Business Deals</title>
+<title>Zep Deals V16 Ecosystem</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
 
+/* =========================
+   V16 MARKETPLACE THEME
+========================= */
+:root{
+  --bg:#070707;
+  --card:#141414;
+  --accent:#b8ff3b;
+  --text:#ffffff;
+  --muted:#aaaaaa;
+  --border:#262626;
+}
+
 body{
 margin:0;
 font-family:system-ui;
-background:radial-gradient(circle at top,#070a09,#050807);
-color:white;
-padding-bottom:40px;
+background:var(--bg);
+color:var(--text);
+padding-bottom:60px;
 }
 
+/* HEADER */
 header{
-padding:16px;
+padding:18px;
 text-align:center;
-border-bottom:1px solid rgba(0,255,140,.15);
+border-bottom:1px solid var(--border);
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(10px);
 }
 
 h1{
-color:#00ff8c;
+color:var(--accent);
 margin:0;
-}
-
-.container{
-max-width:520px;
-margin:auto;
-padding:15px;
-}
-
-.card{
-background:rgba(255,255,255,.03);
-border:1px solid rgba(255,255,255,.08);
-border-radius:14px;
-padding:12px;
-margin-top:12px;
-}
-
-input, select, textarea{
-width:100%;
-padding:10px;
-margin-top:8px;
-border-radius:8px;
-border:none;
-outline:none;
-background:rgba(255,255,255,.08);
-color:white;
-}
-
-label{
-font-size:12px;
-opacity:.8;
-margin-top:10px;
-display:block;
-}
-
-button{
-width:100%;
-padding:12px;
-margin-top:12px;
-border:none;
-border-radius:10px;
-font-weight:700;
-cursor:pointer;
-}
-
-.primary{
-background:linear-gradient(90deg,#00ff8c,#00c2ff);
-color:black;
-}
-
-.preview img{
-width:100%;
-border-radius:10px;
-margin-top:10px;
-}
-
-.badge{
-display:inline-block;
-padding:4px 8px;
-font-size:11px;
-border-radius:20px;
-background:rgba(0,255,140,.15);
-color:#00ff8c;
-margin-top:6px;
 }
 
 .small{
 font-size:12px;
-opacity:.7;
+color:var(--muted);
 }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
+/* CONTAINER */
+.container{
+max-width:540px;
+margin:auto;
+padding:16px;
 }
 
+/* CARD */
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:14px;
+padding:14px;
+margin-top:12px;
+transition:0.3s;
+}
+
+.card:hover{
+border-color:var(--accent);
+transform:translateY(-2px);
+}
+
+/* INPUTS */
+input, select, textarea{
+width:100%;
+padding:12px;
+margin-top:8px;
+border-radius:10px;
+border:1px solid var(--border);
+background:#0d0d0d;
+color:var(--text);
+outline:none;
+}
+
+input:focus, textarea:focus, select:focus{
+border-color:var(--accent);
+}
+
+/* LABEL */
+label{
+font-size:12px;
+color:var(--muted);
+margin-top:10px;
+display:block;
+}
+
+/* BUTTON */
+button{
+width:100%;
+padding:14px;
+margin-top:12px;
+border:none;
+border-radius:12px;
+font-weight:700;
+cursor:pointer;
+transition:0.3s;
+}
+
+.primary{
+background:var(--accent);
+color:black;
+}
+
+.primary:hover{
+box-shadow:0 10px 25px rgba(184,255,59,0.15);
+transform:translateY(-2px);
+}
+
+/* IMAGE */
+.preview img{
+width:100%;
+border-radius:10px;
+margin-top:10px;
+border:1px solid var(--border);
+}
+
+/* DAYS */
 .days{
 display:flex;
 flex-wrap:wrap;
@@ -111,15 +134,23 @@ margin-top:8px;
 
 .day{
 padding:6px 10px;
-border:1px solid rgba(255,255,255,.2);
+border:1px solid var(--border);
 border-radius:8px;
 cursor:pointer;
 font-size:12px;
+background:#0d0d0d;
 }
 
 .day.active{
-background:#00ff8c;
+background:var(--accent);
 color:black;
+}
+
+/* STATUS */
+.status{
+font-size:12px;
+color:var(--muted);
+margin-top:10px;
 }
 
 </style>
@@ -129,25 +160,20 @@ color:black;
 
 <header>
 <h1>⚡ Zep Business Deals</h1>
-<p class="small">Create student offers in seconds</p>
+<p class="small">Ecosystem-powered student deals engine</p>
 </header>
 
 <div class="container">
 
-<!-- IMAGE UPLOAD -->
+<!-- IMAGE -->
 <div class="card">
-
 <label>📸 Upload Deal Image</label>
 <input type="file" id="imageFile" accept="image/*">
-
 <div class="preview" id="preview"></div>
-
 </div>
-
 
 <!-- CATEGORY -->
 <div class="card">
-
 <label>🏷️ Category</label>
 <select id="category">
 <option>Food & Drinks</option>
@@ -157,13 +183,10 @@ color:black;
 <option>Events</option>
 <option>Retail</option>
 </select>
-
 </div>
-
 
 <!-- DETAILS -->
 <div class="card">
-
 <label>Deal Title</label>
 <input id="title" placeholder="e.g. 50% Off Chicken Meal">
 
@@ -173,15 +196,12 @@ color:black;
 <label>Location</label>
 <input id="location">
 
-<label>Business Phone (WhatsApp)</label>
+<label>WhatsApp Number</label>
 <input id="phone">
-
 </div>
-
 
 <!-- SCHEDULE -->
 <div class="card">
-
 <label>📅 Active Days</label>
 
 <div class="days" id="days">
@@ -194,11 +214,9 @@ color:black;
 <div class="day" onclick="toggleDay(this)">Sun</div>
 </div>
 
-<label>👥 Students Per Day</label>
+<label>👥 Limit Per Day</label>
 <input type="number" id="limit" value="10">
-
 </div>
-
 
 <!-- ACTION -->
 <div class="card">
@@ -207,12 +225,11 @@ color:black;
 🚀 Publish Deal
 </button>
 
-<p class="small" id="status"></p>
+<div class="status" id="status"></div>
 
 </div>
 
 </div>
-
 
 <script>
 
@@ -223,9 +240,8 @@ const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let selectedDays=[];
 
-
-/* PREVIEW IMAGE */
-document.getElementById("imageFile").onchange = (e)=>{
+/* IMAGE PREVIEW */
+document.getElementById("imageFile").onchange=(e)=>{
 const file=e.target.files[0];
 if(!file)return;
 
@@ -237,7 +253,6 @@ document.getElementById("preview").innerHTML=
 reader.readAsDataURL(file);
 };
 
-
 /* DAYS SELECT */
 function toggleDay(el){
 el.classList.toggle("active");
@@ -246,31 +261,12 @@ selectedDays=[...document.querySelectorAll(".day.active")]
 .map(d=>d.innerText);
 }
 
-
-/* GENERATE COUPONS */
-function generateCoupons(count, dealId){
-let coupons=[];
-
-for(let i=0;i<count;i++){
-coupons.push({
-deal_id:dealId,
-coupon_code:"ZS-"+Math.random().toString(36).substring(2,8).toUpperCase(),
-is_used:false,
-expires_at:new Date(Date.now()+7*24*60*60*1000)
-});
-}
-
-return coupons;
-}
-
-
 /* UPLOAD IMAGE */
 async function uploadImage(file){
 
 const fileName=Date.now()+"-"+file.name;
 
-const {data,error}=await client
-.storage
+const {data,error}=await client.storage
 .from("deal-images")
 .upload(fileName,file);
 
@@ -279,29 +275,39 @@ console.log(error);
 return null;
 }
 
-const {data:urlData}=client
-.storage
+const {data:urlData}=client.storage
 .from("deal-images")
 .getPublicUrl(fileName);
 
 return urlData.publicUrl;
 }
 
+/* COUPONS ENGINE */
+function generateCoupons(count, dealId){
+let coupons=[];
+for(let i=0;i<count;i++){
+coupons.push({
+deal_id:dealId,
+coupon_code:"ZS-"+Math.random().toString(36).substring(2,8).toUpperCase(),
+is_used:false,
+expires_at:new Date(Date.now()+7*24*60*60*1000)
+});
+}
+return coupons;
+}
 
 /* PUBLISH DEAL */
 async function publishDeal(){
 
 const status=document.getElementById("status");
-status.innerText="Publishing...";
+status.innerText="Publishing deal...";
 
 const file=document.getElementById("imageFile").files[0];
-
 let imageUrl="";
 
 if(file){
 imageUrl=await uploadImage(file);
 }
-
 
 const title=document.getElementById("title").value;
 const desc=document.getElementById("desc").value;
@@ -310,9 +316,7 @@ const phone=document.getElementById("phone").value;
 const category=document.getElementById("category").value;
 const limit=parseInt(document.getElementById("limit").value||"0");
 
-
-const totalCoupons=selectedDays.length * limit;
-
+const totalCoupons=selectedDays.length*limit;
 
 /* INSERT DEAL */
 const {data:deal,error}=await client
@@ -333,18 +337,19 @@ status.innerText="Error publishing deal";
 return;
 }
 
-
 /* INSERT COUPONS */
 const coupons=generateCoupons(totalCoupons,deal.id);
 
-await client
-.from("deal_coupons")
-.insert(coupons);
+await client.from("deal_coupons").insert(coupons);
 
+/* ECOSYSTEM EVENT (READY FOR V16 ANALYTICS) */
+await client.from("analytics").insert([{
+event_type:"deal_created",
+meta:{deal_id:deal.id,totalCoupons}
+}]);
 
 status.innerText=
-`Deal published! ${totalCoupons} coupons generated 🎟️`;
-
+`🚀 Deal live! ${totalCoupons} coupons generated`;
 }
 
 </script>
