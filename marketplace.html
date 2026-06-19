@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V15.1</title>
+<title>Zep Swipe Marketplace V15.2</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
@@ -182,20 +182,18 @@ text-align:center;
 
 <div class="searchbox">
 <input id="searchInput" placeholder="Search services...">
-<button onclick="loadProviders()">🔍</button>
+<button onclick="loadData()">🔍</button>
 </div>
 </section>
 
-<!-- ⭐ EARN + POPULAR -->
+<!-- EARN SECTION -->
 <div class="cards" style="margin-top:20px;">
 
 <div class="card" style="border:1px solid #b8ff3b;">
 <div class="content">
 <span class="badge">🔥 Earn on the Side</span>
-<h2 style="margin:10px 0;">
-Offer your skill. Make money. Help your community.
-</h2>
-<p style="color:#aaa;">Become a provider and start earning today.</p>
+<h2>Offer your skill. Make money. Help your community.</h2>
+<p style="color:#aaa;">Start earning from your skills today.</p>
 <a class="btn" href="provider.html">Start Earning</a>
 </div>
 </div>
@@ -203,8 +201,7 @@ Offer your skill. Make money. Help your community.
 <div class="card">
 <div class="content">
 <span class="badge">⭐ Popular Near You</span>
-<h3>Most Hired Services</h3>
-<div id="popularList" style="margin-top:10px;"></div>
+<div id="popularList"></div>
 </div>
 </div>
 
@@ -216,6 +213,10 @@ Offer your skill. Make money. Help your community.
 <!-- PROVIDERS -->
 <div class="cards" id="cards"></div>
 
+<!-- DEALS -->
+<h2 style="margin-top:30px;">🏷️ Deals Near You</h2>
+<div class="cards" id="dealsCards"></div>
+
 </div>
 
 <!-- FOOTER -->
@@ -223,49 +224,70 @@ Offer your skill. Make money. Help your community.
 <a href="index.html">🏠<br>Home</a>
 <a href="provider.html">🛠️<br>Services</a>
 <a href="business-deals.html">🏷️<br>Deals</a>
-<a href="#">💬<br>Inbox</a>
-<a href="#">👤<br>Profile</a>
+<a href="business-deals.html">💬<br>List Deal</a>
+<a href="waitlist.html">👤<br>Join Waitlist</a>
 </nav>
 
 <script>
 
-// ======================
+// =====================
 // SUPABASE CONFIG
-// ======================
+// =====================
 const SUPABASE_URL = "YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let allProviders = [];
+let allDeals = [];
 let selectedCategory = "All";
 
-// ======================
-// LOAD PROVIDERS
-// ======================
+// =====================
+// LOAD ALL DATA
+// =====================
+async function loadData(){
+
+await loadProviders();
+await loadDeals();
+}
+
+// =====================
+// PROVIDERS
+// =====================
 async function loadProviders(){
 
-const { data, error } = await supabaseClient
+const { data } = await supabaseClient
 .from("providers")
 .select("*")
 .eq("approved", true)
 .order("created_at", { ascending: false });
 
-if(error){
-console.log(error);
-return;
-}
-
-allProviders = data;
+allProviders = data || [];
 
 renderFilters();
 renderProviders();
 renderPopular();
 }
 
-// ======================
+// =====================
+// DEALS
+// =====================
+async function loadDeals(){
+
+const { data } = await supabaseClient
+.from("deals")
+.select("*")
+.eq("active", true)
+.order("created_at", { ascending: false });
+
+allDeals = data || [];
+
+renderDeals();
+}
+
+// =====================
 // RENDER PROVIDERS
-// ======================
+// =====================
 function renderProviders(){
 
 const container = document.getElementById("cards");
@@ -303,18 +325,66 @@ container.appendChild(card);
 });
 }
 
-// ======================
+// =====================
+// DEALS RENDER
+// =====================
+function renderDeals(){
+
+const container = document.getElementById("dealsCards");
+
+container.innerHTML = "";
+
+allDeals.forEach(d => {
+
+const card = document.createElement("div");
+
+card.className = "card";
+
+card.innerHTML = `
+<div class="content">
+<span class="badge">🔥 Limited Deal</span>
+<h3>${d.title}</h3>
+<p>${d.description || ""}</p>
+<p>⏳ ${d.claims_left || "Limited"} claims left</p>
+<a class="btn" href="${d.link || '#'}">Claim Deal</a>
+</div>
+`;
+
+container.appendChild(card);
+});
+}
+
+// =====================
+// POPULAR
+// =====================
+function renderPopular(){
+
+const container = document.getElementById("popularList");
+
+const top = [...allProviders]
+.sort((a,b)=>(b.hired_count||0)-(a.hired_count||0))
+.slice(0,5);
+
+container.innerHTML = top.map(p => `
+<div style="padding:6px;border:1px solid #262626;margin-bottom:6px;border-radius:10px;">
+<strong>${p.service}</strong><br>
+<span style="color:#aaa">${p.hired_count||0} hires</span>
+</div>
+`).join("");
+}
+
+// =====================
 // FILTERS
-// ======================
+// =====================
 function renderFilters(){
 
 const container = document.getElementById("filters");
 
-const categories = ["All", ...new Set(allProviders.map(p => p.category).filter(Boolean))];
+const cats = ["All", ...new Set(allProviders.map(p => p.category).filter(Boolean))];
 
 container.innerHTML = "";
 
-categories.forEach(cat => {
+cats.forEach(cat => {
 
 const btn = document.createElement("button");
 btn.textContent = cat;
@@ -331,43 +401,11 @@ container.appendChild(btn);
 });
 }
 
-// ======================
-// POPULAR SERVICES
-// ======================
-function renderPopular(){
-
-const container = document.getElementById("popularList");
-
-const top = [...allProviders]
-.sort((a,b)=>(b.hired_count||0)-(a.hired_count||0))
-.slice(0,5);
-
-container.innerHTML = "";
-
-top.forEach(p => {
-
-const div = document.createElement("div");
-div.style.cssText = `
-padding:8px;
-margin-bottom:6px;
-border:1px solid #262626;
-border-radius:10px;
-font-size:13px;
-`;
-
-div.innerHTML = `<strong>${p.service}</strong><br><span style="color:#aaa;">${p.hired_count||0} hires</span>`;
-
-container.appendChild(div);
-
-});
-
-}
-
-// SEARCH LIVE
+// SEARCH
 document.getElementById("searchInput").addEventListener("input", renderProviders);
 
 // INIT
-loadProviders();
+loadData();
 
 </script>
 
