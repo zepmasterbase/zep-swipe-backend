@@ -8,74 +8,148 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
+:root{
+  --bg:#070707;
+  --card:#141414;
+  --accent:#b8ff3b;
+  --text:#ffffff;
+  --muted:#aaaaaa;
+  --border:#262626;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Inter,system-ui;
+}
+
 body{
-margin:0;
-font-family:Inter,system-ui;
-background:#070707;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+  background:radial-gradient(circle at top,#0f0f0f,#070707);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  padding:20px;
 }
 
+/* CARD */
 .card{
-width:340px;
-background:#141414;
-border:1px solid #262626;
-border-radius:16px;
-padding:20px;
+  width:360px;
+  background:rgba(20,20,20,0.85);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px;
+  backdrop-filter:blur(12px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+  text-align:center;
 }
 
-h2{color:#b8ff3b;margin-bottom:10px}
-
-input{
-width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-border:1px solid #262626;
-background:#0b0b0b;
-color:white;
-outline:none;
+/* LOGO */
+.logo{
+  font-size:20px;
+  font-weight:800;
+  color:var(--accent);
+  margin-bottom:6px;
 }
 
-button{
-width:100%;
-padding:12px;
-margin-top:12px;
-border:none;
-border-radius:10px;
-background:#b8ff3b;
-color:black;
-font-weight:800;
-cursor:pointer;
+/* TEXT */
+h2{
+  margin-top:10px;
+  font-size:18px;
 }
 
 .small{
-font-size:12px;
-opacity:0.7;
-margin-top:10px;
-text-align:center;
+  font-size:12px;
+  color:var(--muted);
+  margin-top:6px;
 }
 
-.hidden{display:none}
+/* INPUTS */
+input{
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#0b0b0b;
+  color:white;
+  outline:none;
+}
+
+/* BUTTONS */
+button{
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  border:none;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.primary{
+  background:var(--accent);
+  color:black;
+}
+
+.secondary{
+  background:transparent;
+  border:1px solid var(--accent);
+  color:var(--accent);
+}
+
+button:hover{
+  transform:translateY(-2px);
+}
+
+/* MESSAGE */
+#msg{
+  font-size:12px;
+  margin-top:10px;
+  color:var(--muted);
+  min-height:16px;
+}
+
+/* LOADING DOT */
+.dot{
+  display:inline-block;
+  width:6px;
+  height:6px;
+  background:var(--accent);
+  border-radius:50%;
+  animation:blink 1s infinite;
+}
+
+@keyframes blink{
+  0%,100%{opacity:0.3}
+  50%{opacity:1}
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="card" id="authBox">
-  <h2>⚡ Zep Swipe</h2>
-  <p class="small">Login or Sign up to continue</p>
+<div class="card">
+
+  <div class="logo">⚡ Zep Swipe</div>
+  <div class="small">Earn • Learn • Get Hired</div>
+
+  <h2>Welcome Back</h2>
+  <div class="small">Login or create your account</div>
 
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
 
-  <button onclick="signup()">Create Account</button>
-  <button onclick="login()">Login</button>
+  <button class="primary" onclick="signup()">Create Account</button>
+  <button class="secondary" onclick="login()">Login</button>
 
-  <p class="small" id="msg"></p>
+  <div id="msg"></div>
+
 </div>
 
 <script>
@@ -83,56 +157,55 @@ text-align:center;
 /* =========================
    SUPABASE
 ========================= */
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-const client = supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* =========================
-   GEO CHECK
+   GEO RESTRICTION (South Africa only)
 ========================= */
 async function checkLocation(){
 
-try {
-const res = await fetch("https://ipapi.co/json/");
-const data = await res.json();
+  try{
 
-if(data.country_code !== "ZA"){
-window.location.href = "waitlist.html";
-return;
+    const res = await fetch("https://ipapi.co/json/");
+    const data = await res.json();
+
+    if(data.country_code !== "ZA"){
+      window.location.href = "waitlist.html";
+      return;
+    }
+
+    showMsg("Access verified for South Africa ✔");
+
+  }catch(err){
+    console.log(err);
+    window.location.href = "waitlist.html";
+  }
 }
-
-document.getElementById("msg").innerText =
-"✔ South Africa verified - access granted";
-
-} catch(e){
-console.log("Geo check failed",e);
-window.location.href = "waitlist.html";
-}
-}
-
-checkLocation();
 
 /* =========================
    SIGNUP
 ========================= */
 async function signup(){
 
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-const {error} = await client.auth.signUp({
-email,
-password
-});
+  showMsg("Creating account <span class='dot'></span>");
 
-if(error){
-document.getElementById("msg").innerText = error.message;
-return;
-}
+  const { error } = await client.auth.signUp({
+    email,
+    password
+  });
 
-document.getElementById("msg").innerText =
-"Account created. Please login.";
+  if(error){
+    showMsg(error.message);
+    return;
+  }
+
+  showMsg("Account created. Please login ✔");
 }
 
 /* =========================
@@ -140,24 +213,39 @@ document.getElementById("msg").innerText =
 ========================= */
 async function login(){
 
-const email = document.getElementById("email").value;
-const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-const {data,error} = await client.auth.signInWithPassword({
-email,
-password
-});
+  showMsg("Logging in <span class='dot'></span>");
 
-if(error){
-document.getElementById("msg").innerText = error.message;
-return;
+  const { data, error } = await client.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+    showMsg(error.message);
+    return;
+  }
+
+  localStorage.setItem("zep_user", JSON.stringify(data.user));
+
+  showMsg("Success ✔ Redirecting...");
+
+  setTimeout(()=>{
+    window.location.href = "provider.html";
+  },800);
 }
 
-/* SAVE SESSION (PERSISTENT LOGIN) */
-localStorage.setItem("zep_user", JSON.stringify(data.user));
-
-window.location.href = "provider.html";
+/* =========================
+   MESSAGE
+========================= */
+function showMsg(msg){
+  document.getElementById("msg").innerHTML = msg;
 }
+
+/* INIT */
+checkLocation();
 
 </script>
 
