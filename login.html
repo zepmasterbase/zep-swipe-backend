@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe | Login / Signup</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+:root{
+  --bg:#070707;
+  --card:#141414;
+  --accent:#b8ff3b;
+  --text:#fff;
+  --muted:#aaa;
+  --border:#262626;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Inter,sans-serif;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+/* CONTAINER */
+.box{
+  width:100%;
+  max-width:420px;
+  padding:20px;
+}
+
+/* CARD */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+}
+
+/* LOGO */
+.logo{
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.logo img{
+  width:60px;
+  height:60px;
+}
+
+h2{
+  text-align:center;
+  margin-bottom:6px;
+  color:var(--accent);
+}
+
+p{
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:16px;
+}
+
+/* INPUTS */
+input, select{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#0b0b0b;
+  color:#fff;
+  outline:none;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  margin-top:12px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:var(--accent);
+  color:#000;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.toggle{
+  background:transparent;
+  color:var(--accent);
+  border:1px solid var(--accent);
+}
+
+/* SWITCH */
+.switch{
+  display:flex;
+  justify-content:space-between;
+  margin-top:12px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.hidden{
+  display:none;
+}
+
+/* ERROR */
+.error{
+  color:#ff4d4d;
+  font-size:12px;
+  margin-top:10px;
+  text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <div class="card">
+
+    <div class="logo">
+      <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png">
+    </div>
+
+    <h2>Zep Swipe</h2>
+    <p>Earn. Learn. Get Hired.</p>
+
+    <!-- EMAIL -->
+    <input id="email" type="email" placeholder="Email">
+
+    <!-- PASSWORD -->
+    <input id="password" type="password" placeholder="Password">
+
+    <!-- ROLE -->
+    <select id="role">
+      <option value="student">Student (Earn Services)</option>
+      <option value="provider">Provider (Offer Services)</option>
+    </select>
+
+    <button onclick="auth()">Continue</button>
+
+    <button class="toggle" onclick="toggleMode()">
+      Switch to Signup / Login
+    </button>
+
+    <div id="error" class="error"></div>
+
+  </div>
+
+</div>
+
+<script>
+
+/* =========================
+   SUPABASE CONFIG
+========================= */
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const supabase = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+/* MODE */
+let isLogin = true;
+
+/* =========================
+   AUTO SESSION CHECK
+========================= */
+window.onload = async () => {
+  const { data } = await supabase.auth.getUser();
+
+  if(data?.user){
+    window.location.href = "provider.html";
+  }
+};
+
+/* =========================
+   TOGGLE MODE
+========================= */
+function toggleMode(){
+  isLogin = !isLogin;
+  document.querySelector("button").innerText =
+    isLogin ? "Login / Continue" : "Signup / Continue";
+}
+
+/* =========================
+   AUTH FUNCTION
+========================= */
+async function auth(){
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const role = document.getElementById("role").value;
+  const errorBox = document.getElementById("error");
+
+  errorBox.innerText = "";
+
+  if(!email || !password){
+    errorBox.innerText = "Please fill in all fields";
+    return;
+  }
+
+  let result;
+
+  if(isLogin){
+    result = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+  } else {
+    result = await supabase.auth.signUp({
+      email,
+      password
+    });
+  }
+
+  if(result.error){
+    errorBox.innerText = result.error.message;
+    return;
+  }
+
+  // SAVE ROLE
+  const user = result.data.user;
+
+  await supabase.from("profiles").upsert({
+    id: user.id,
+    email,
+    role
+  });
+
+  // SAVE SESSION ROLE
+  localStorage.setItem("role", role);
+
+  // REDIRECT TO DASHBOARD
+  window.location.href = "provider.html";
+}
+
+</script>
+
+</body>
+</html>
