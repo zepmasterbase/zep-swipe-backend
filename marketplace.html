@@ -2,105 +2,134 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Marketplace V12</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zep Swipe Marketplace V14</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
---bg:#07110d;--card:#101b16;--accent:#00ff8c;--accent2:#00c2ff;--text:#fff;
+--bg:#070707;--card:#141414;--accent:#b8ff3b;--text:#fff;--muted:#aaa;--border:#262626;
 }
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
-header{position:sticky;top:0;background:#0b1511;padding:14px 18px;border-bottom:1px solid #1d3128;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:700;color:var(--accent)}
-.container{max-width:1100px;margin:auto;padding:20px}
-.hero{padding:30px 0;text-align:center}
-.hero h1{font-size:42px;margin:0}
-.hero p{opacity:.8}
-.search{background:#111;padding:12px;border-radius:14px;width:100%;border:1px solid #222;color:white}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
-.cat,.card,.cta{background:var(--card);padding:16px;border-radius:16px;border:1px solid #1d3128}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text);padding-bottom:90px}
+.money{position:fixed;font-size:36px;opacity:.12;animation:float 14s linear infinite;pointer-events:none}
+.m1{left:10%;bottom:-50px}.m2{left:35%;bottom:-50px;animation-delay:3s}
+.m3{left:70%;bottom:-50px;animation-delay:6s}.m4{left:90%;bottom:-50px;animation-delay:1s}
+@keyframes float{from{transform:translateY(0) rotate(0)}to{transform:translateY(-120vh) rotate(360deg)}}
+header{position:sticky;top:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);display:flex;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border)}
+.logo{color:var(--accent);font-weight:800}
+.wrap{max-width:1100px;margin:auto;padding:20px}
+.hero h1{font-size:54px;font-weight:800}
+.hero span{color:var(--accent)}
+.hero p{color:var(--muted);margin:10px 0 20px}
+.searchbox{display:flex;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:8px}
+.searchbox input{flex:1;background:none;border:none;color:white;padding:14px}
+.searchbox button{width:54px;border:none;border-radius:14px;background:var(--accent)}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:22px 0}
+.cat,.card,.cta{background:var(--card);border:1px solid var(--border);border-radius:20px}
+.cat{padding:18px;text-align:center}
 .section{margin-top:30px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.btn{display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#000;padding:12px 16px;border-radius:10px;text-decoration:none;font-weight:bold}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#163326;color:var(--accent);font-size:12px}
-footer{padding:30px;text-align:center;opacity:.7}
+.card img{width:100%;height:160px;object-fit:cover;background:#222}
+.content{padding:16px}
+.badge{display:inline-block;background:rgba(184,255,59,.15);color:var(--accent);padding:6px 10px;border-radius:999px;font-size:12px}
+.btn{display:inline-block;margin-top:12px;background:var(--accent);color:#000;text-decoration:none;padding:12px 16px;border-radius:12px;font-weight:700}
+.cta{padding:28px;background:linear-gradient(135deg,#151515,#1d2810)}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#0d0d0d;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px}
+.bottom a{color:white;text-decoration:none;text-align:center;font-size:12px}
 </style>
 </head>
 <body>
+<div class="money m1">💵</div><div class="money m2">🪙</div><div class="money m3">💰</div><div class="money m4">💵</div>
+
 <header>
 <div class="logo">⚡ Zep Swipe</div>
-<div>Randfontein Live</div>
+<div>🔔</div>
 </header>
 
-<div class="container">
-<div class="hero">
-<h1>Hire. Save. Earn.</h1>
+<div class="wrap">
+<section class="hero">
+<h1>Find. Book. <span>Earn.</span></h1>
 <p>Student services and local deals in one marketplace.</p>
-<input class="search" placeholder="Search student services...">
+<div class="searchbox">
+<input placeholder="Search student services...">
+<button>🔍</button>
+</div>
+</section>
+
+<div class="cats">
+<div class="cat">📚<br>Tutoring</div>
+<div class="cat">🎨<br>Design</div>
+<div class="cat">📸<br>Photography</div>
+<div class="cat">🧹<br>Cleaning</div>
+<div class="cat">💻<br>Tech Help</div>
+<div class="cat">➕<br>More</div>
 </div>
 
-<div class="grid">
-<div class="cat">📚 Tutoring</div>
-<div class="cat">🎨 Design</div>
-<div class="cat">📸 Photography</div>
-<div class="cat">🧹 Cleaning</div>
-<div class="cat">💻 Tech Help</div>
-<div class="cat">➕ More</div>
-</div>
-
-<div class="section">
-<h2>💼 Student Services</h2>
+<section class="section">
+<h2>💼 Student Services</h2><br>
 <div class="cards">
 <div class="card">
+<img alt="service">
+<div class="content">
 <span class="badge">Top Rated</span>
 <h3>Math Tutor</h3>
 <p>From R80 • Randfontein</p>
 <a class="btn" href="#">Hire via WhatsApp</a>
-</div>
+</div></div>
+
 <div class="card">
+<img alt="service">
+<div class="content">
 <span class="badge">Rising Star</span>
 <h3>Graphic Designer</h3>
 <p>From R120 • Remote</p>
 <a class="btn" href="#">Hire via WhatsApp</a>
+</div></div>
 </div>
-</div>
-</div>
+</section>
 
-<div class="section">
-<h2>🏷️ Student Deals</h2>
+<section class="section">
+<div class="cta">
+<h2>🚀 Earn on the Side</h2>
+<p>Turn your skills into income.</p>
+<a class="btn" href="provider.html">Start Earning</a>
+</div>
+</section>
+
+<section class="section">
+<h2>🏷️ Student Deals</h2><br>
 <div class="cards">
-<div class="card">
+<div class="card"><div class="content">
 <span class="badge">50% OFF</span>
 <h3>Burger Special</h3>
 <p>18 claims left • Ends today</p>
 <a class="btn" href="#">Claim Deal</a>
-</div>
-<div class="card">
+</div></div>
+
+<div class="card"><div class="content">
 <span class="badge">Student Deal</span>
 <h3>Printing Discount</h3>
 <p>Save 30% this week</p>
 <a class="btn" href="#">Claim Deal</a>
+</div></div>
 </div>
-</div>
-</div>
+</section>
 
-<div class="section cards">
-<div class="cta">
-<h2>🚀 Start Earning</h2>
-<p>Turn your skills into income.</p>
-<a class="btn" href="provider.html">Start Earning</a>
-</div>
-
+<section class="section">
 <div class="cta">
 <h2>🏪 Promote Your Business</h2>
 <p>Create student deals instantly.</p>
 <a class="btn" href="business-deals.html">Add Deal</a>
 </div>
-</div>
+</section>
 </div>
 
-<footer>
-Marketplace V12 • Connect Supabase tables service_profiles and deals.
-</footer>
+<nav class="bottom">
+<a href="#">🏠<br>Home</a>
+<a href="#">🛠️<br>Services</a>
+<a href="#">🏷️<br>Deals</a>
+<a href="#">💬<br>Inbox</a>
+<a href="#">👤<br>Profile</a>
+</nav>
 </body>
 </html>
