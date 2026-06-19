@@ -10,7 +10,7 @@
 <style>
 
 /* =========================
-   V16 MARKETPLACE THEME
+   ZEP MARKETPLACE V16 UI
 ========================= */
 :root{
   --bg:#070707;
@@ -23,24 +23,28 @@
 
 body{
 margin:0;
-font-family:system-ui;
+font-family:system-ui, Inter;
 background:var(--bg);
 color:var(--text);
-padding-bottom:60px;
+padding-bottom:70px;
 }
 
 /* HEADER */
 header{
+position:sticky;
+top:0;
+z-index:10;
 padding:18px;
 text-align:center;
 border-bottom:1px solid var(--border);
-background:rgba(0,0,0,0.6);
-backdrop-filter:blur(10px);
+background:rgba(0,0,0,0.7);
+backdrop-filter:blur(12px);
 }
 
 h1{
 color:var(--accent);
 margin:0;
+font-size:20px;
 }
 
 .small{
@@ -50,23 +54,23 @@ color:var(--muted);
 
 /* CONTAINER */
 .container{
-max-width:540px;
+max-width:560px;
 margin:auto;
 padding:16px;
 }
 
 /* CARD */
 .card{
-background:var(--card);
+background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
 border:1px solid var(--border);
-border-radius:14px;
+border-radius:16px;
 padding:14px;
 margin-top:12px;
-transition:0.3s;
+transition:0.2s;
 }
 
 .card:hover{
-border-color:var(--accent);
+border-color:rgba(184,255,59,0.4);
 transform:translateY(-2px);
 }
 
@@ -75,7 +79,7 @@ input, select, textarea{
 width:100%;
 padding:12px;
 margin-top:8px;
-border-radius:10px;
+border-radius:12px;
 border:1px solid var(--border);
 background:#0d0d0d;
 color:var(--text);
@@ -101,9 +105,8 @@ padding:14px;
 margin-top:12px;
 border:none;
 border-radius:12px;
-font-weight:700;
+font-weight:800;
 cursor:pointer;
-transition:0.3s;
 }
 
 .primary{
@@ -111,15 +114,10 @@ background:var(--accent);
 color:black;
 }
 
-.primary:hover{
-box-shadow:0 10px 25px rgba(184,255,59,0.15);
-transform:translateY(-2px);
-}
-
-/* IMAGE */
+/* IMAGE PREVIEW */
 .preview img{
 width:100%;
-border-radius:10px;
+border-radius:12px;
 margin-top:10px;
 border:1px solid var(--border);
 }
@@ -135,7 +133,7 @@ margin-top:8px;
 .day{
 padding:6px 10px;
 border:1px solid var(--border);
-border-radius:8px;
+border-radius:10px;
 cursor:pointer;
 font-size:12px;
 background:#0d0d0d;
@@ -144,13 +142,15 @@ background:#0d0d0d;
 .day.active{
 background:var(--accent);
 color:black;
+font-weight:700;
 }
 
 /* STATUS */
 .status{
 font-size:12px;
 color:var(--muted);
-margin-top:10px;
+margin-top:12px;
+min-height:18px;
 }
 
 </style>
@@ -160,7 +160,7 @@ margin-top:10px;
 
 <header>
 <h1>⚡ Zep Student Deals</h1>
-<p class="small">Ecosystem-powered student deals engine</p>
+<p class="small">No signup required — list your deal instantly</p>
 </header>
 
 <div class="container">
@@ -188,7 +188,7 @@ margin-top:10px;
 <!-- DETAILS -->
 <div class="card">
 <label>Deal Title</label>
-<input id="title" placeholder="e.g. 50% Off Chicken Meal">
+<input id="title" placeholder="e.g. 50% Off Student Meal">
 
 <label>Description</label>
 <textarea id="desc"></textarea>
@@ -220,13 +220,11 @@ margin-top:10px;
 
 <!-- ACTION -->
 <div class="card">
-
 <button class="primary" onclick="publishDeal()">
 🚀 Publish Deal
 </button>
 
 <div class="status" id="status"></div>
-
 </div>
 
 </div>
@@ -237,6 +235,16 @@ const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
 
 const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+/* =========================
+   BUSINESS ID (NO LOGIN SYSTEM)
+========================= */
+let business_id = localStorage.getItem("zep_business_id");
+
+if(!business_id){
+  business_id = crypto.randomUUID();
+  localStorage.setItem("zep_business_id", business_id);
+}
 
 let selectedDays=[];
 
@@ -256,9 +264,7 @@ reader.readAsDataURL(file);
 /* DAYS SELECT */
 function toggleDay(el){
 el.classList.toggle("active");
-
-selectedDays=[...document.querySelectorAll(".day.active")]
-.map(d=>d.innerText);
+selectedDays=[...document.querySelectorAll(".day.active")].map(d=>d.innerText);
 }
 
 /* UPLOAD IMAGE */
@@ -282,7 +288,7 @@ const {data:urlData}=client.storage
 return urlData.publicUrl;
 }
 
-/* COUPONS ENGINE */
+/* COUPONS */
 function generateCoupons(count, dealId){
 let coupons=[];
 for(let i=0;i<count;i++){
@@ -316,9 +322,9 @@ const phone=document.getElementById("phone").value;
 const category=document.getElementById("category").value;
 const limit=parseInt(document.getElementById("limit").value||"0");
 
-const totalCoupons=selectedDays.length*limit;
+const totalCoupons = selectedDays.length * limit;
 
-/* INSERT DEAL */
+/* DEAL INSERT */
 const {data:deal,error}=await client
 .from("deals")
 .insert([{
@@ -327,7 +333,9 @@ description:desc,
 location,
 phone,
 category,
-image_url:imageUrl
+image_url:imageUrl,
+business_id:business_id,
+created_at:new Date()
 }])
 .select()
 .single();
@@ -337,19 +345,21 @@ status.innerText="Error publishing deal";
 return;
 }
 
-/* INSERT COUPONS */
-const coupons=generateCoupons(totalCoupons,deal.id);
-
+/* COUPONS */
+const coupons = generateCoupons(totalCoupons, deal.id);
 await client.from("deal_coupons").insert(coupons);
 
-/* ECOSYSTEM EVENT (READY FOR V16 ANALYTICS) */
+/* ANALYTICS */
 await client.from("analytics").insert([{
 event_type:"deal_created",
-meta:{deal_id:deal.id,totalCoupons}
+meta:{
+deal_id:deal.id,
+business_id,
+totalCoupons
+}
 }]);
 
-status.innerText=
-`🚀 Deal live! ${totalCoupons} coupons generated`;
+status.innerText=`🚀 Deal live! ${totalCoupons} coupons generated`;
 }
 
 </script>
