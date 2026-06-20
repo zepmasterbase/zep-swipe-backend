@@ -3,39 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Marketplace</title>
+<title>Zep Swipe Marketplace V22</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--text:#fff;--muted:#aaa;--border:#262626;}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:90px}
-header{position:sticky;top:0;background:#090909;border-bottom:1px solid var(--border);padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+header{position:sticky;top:0;background:#0b0b0b;padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .logo{display:flex;align-items:center;gap:10px;color:var(--accent);font-weight:800}
-.logo img{width:32px;height:32px}
+.logo img{width:34px;height:34px}
 .search{padding:16px}
-.search input{width:100%;padding:14px;border-radius:14px;border:1px solid var(--border);background:var(--card);color:#fff}
-.hero{margin:0 16px 16px;background:linear-gradient(135deg,#141414,#102010);border:1px solid var(--border);border-radius:18px;overflow:hidden;display:flex}
-.hero img{width:42%;object-fit:cover}
+.search input,.modal input,.modal textarea,.modal select{width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:#111;color:#fff}
+.hero{margin:0 16px 16px;display:flex;background:linear-gradient(135deg,#141414,#102010);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+.hero img{width:40%;object-fit:cover}
 .hero-content{padding:16px}
-.btn{display:inline-block;background:var(--accent);color:#000;padding:12px 16px;border-radius:12px;text-decoration:none;font-weight:700;margin-top:10px;border:none}
+.btn{background:var(--accent);color:#000;padding:12px 16px;border:none;border-radius:12px;font-weight:700;text-decoration:none;cursor:pointer;display:inline-block;margin-top:10px}
 .section{padding:16px}
-.scroll{display:flex;overflow:auto;gap:10px;padding:0 16px 16px}
-.scroll-card,.card{background:var(--card);border:1px solid var(--border);border-radius:16px}
-.scroll-card{min-width:220px;padding:14px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;padding:0 16px}
-.card img{width:100%;height:180px;object-fit:cover;border-radius:16px 16px 0 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;padding:0 16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.card img{width:100%;height:180px;object-fit:cover}
 .content{padding:14px}
-.badge{display:inline-block;padding:5px 10px;background:rgba(184,255,59,.15);color:var(--accent);border-radius:999px;font-size:11px}
+.badge{display:inline-block;padding:5px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent);font-size:11px}
+.scroll{display:flex;overflow:auto;gap:10px;padding:0 16px 16px}
+.scrollCard{min-width:220px;background:var(--card);padding:12px;border-radius:14px;border:1px solid var(--border)}
 footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px}
-footer a{color:#fff;text-decoration:none;text-align:center;font-size:12px}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);align-items:center;justify-content:center;padding:20px}
-.modal-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;max-width:420px;width:100%}
-.modal-box input,.modal-box textarea{width:100%;margin-top:10px;padding:12px;background:#0b0b0b;color:#fff;border:1px solid var(--border);border-radius:10px}
+footer a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);padding:20px;align-items:center;justify-content:center}
+.modal-box{background:#141414;border:1px solid var(--border);border-radius:16px;padding:20px;max-width:450px;width:100%}
 </style>
 </head>
 <body>
-
 <header>
 <div class="logo">
 <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png">
@@ -44,7 +41,7 @@ footer a{color:#fff;text-decoration:none;text-align:center;font-size:12px}
 <div>🔔</div>
 </header>
 
-<div class="search"><input id="search" placeholder="Search services, tutors, deals..."></div>
+<div class="search"><input placeholder="Search services, tutors, deals..."></div>
 
 <div class="hero">
 <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jrg40d1f1srq1v5l1m4omlrpjt1a.png">
@@ -56,13 +53,53 @@ footer a{color:#fff;text-decoration:none;text-align:center;font-size:12px}
 </div>
 
 <div class="section"><h2>🔥 Popular Near You</h2></div>
-<div class="scroll" id="popular"></div>
+<div class="scroll">
+<div class="scrollCard">📚 Math Tutor<br>48 hires</div>
+<div class="scrollCard">🎨 Graphic Designer<br>32 hires</div>
+<div class="scrollCard">📸 Photography<br>24 hires</div>
+</div>
 
 <div class="section"><h2>🛠️ Services</h2></div>
-<div class="cards" id="services"></div>
+<div class="cards">
+<div class="card">
+<img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800">
+<div class="content">
+<span class="badge">Hourly Service</span>
+<h3>Math Tutor</h3>
+<p>R200 / hour</p>
+<button class="btn" onclick="openBooking('Math Tutor','hourly',200)">Request Lesson</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1558655146-d09347e92766?w=800">
+<div class="content">
+<span class="badge">Fixed Price</span>
+<h3>Graphic Designer</h3>
+<p>From R250</p>
+<button class="btn" onclick="openBooking('Graphic Designer','fixed',250)">Request Design</button>
+</div>
+</div>
+</div>
 
 <div class="section"><h2>🏷️ Deals</h2></div>
-<div class="cards" id="deals"></div>
+<div class="cards">
+<div class="card"><div class="content">
+<span class="badge">Featured Deal 🔥</span>
+<h3>50% Student Meal</h3>
+<p>Limited student offer.</p>
+</div></div>
+</div>
+
+<div class="modal" id="modal">
+<div class="modal-box">
+<h3 id="serviceTitle">Request Service</h3>
+<div id="dynamicFields"></div>
+<textarea placeholder="Describe what you need"></textarea>
+<div id="pricing"></div>
+<button class="btn" onclick="submitRequest()">Send Request</button>
+</div>
+</div>
 
 <footer>
 <a href="index.html">🏠<br>Home</a>
@@ -72,42 +109,46 @@ footer a{color:#fff;text-decoration:none;text-align:center;font-size:12px}
 <a href="waitlist.html">👤<br>Waitlist</a>
 </footer>
 
-<div class="modal" id="bookingModal">
-<div class="modal-box">
-<h3>Request Service</h3>
-<input id="customerName" placeholder="Your Name">
-<textarea id="jobDetails" placeholder="Describe what you need"></textarea>
-<button class="btn" onclick="payNow()">Continue to Payment</button>
-<button class="btn" style="background:#333;color:#fff" onclick="closeModal()">Close</button>
-</div>
-</div>
-
 <script>
 const COMMISSION_RATE=0.10;
-let currentProvider=null;
+let currentType='',currentPrice=0;
 
-const providers=[
-{name:"Math Tutor",service:"Math Tutoring",price:200,hires:48,image:"https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrg40ll0rmnvj215qr12o2331g.png"},
-{name:"Graphic Designer",service:"Graphic Design",price:250,hires:32,image:"https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jrg40d1f1srq1v5l1m4omlrpjt1a.png"}
-];
+function openBooking(service,type,price){
+currentType=type; currentPrice=price;
+document.getElementById('serviceTitle').innerText=service;
 
-const deals=[{title:"50% Student Meal",description:"Limited student special"}];
-
-function render(){
-popular.innerHTML=providers.map(p=>`<div class='scroll-card'><b>${p.service}</b><br>${p.hires} hires</div>`).join("");
-services.innerHTML=providers.map((p,i)=>`<div class='card'><img src='${p.image}'><div class='content'><span class='badge'>Featured</span><h3>${p.service}</h3><p>From R${p.price}</p><button class='btn' onclick='openBooking(${i})'>Request Service</button></div></div>`).join("");
-deals.innerHTML=dealsData();
+if(type==='hourly'){
+document.getElementById('dynamicFields').innerHTML='<label>Hours</label><input id="hours" type="number" value="1" onchange="calculate()">';
+}else{
+document.getElementById('dynamicFields').innerHTML='';
 }
-function dealsData(){return deals.map(d=>`<div class='card'><div class='content'><span class='badge'>Featured Deal 🔥</span><h3>${d.title}</h3><p>${d.description}</p></div></div>`).join("")}
-function openBooking(i){currentProvider=providers[i];bookingModal.style.display='flex';}
-function closeModal(){bookingModal.style.display='none';}
-function payNow(){
-const fee=currentProvider.price*COMMISSION_RATE;
-const student=currentProvider.price-fee;
-alert(`Paystack Checkout\nCustomer Pays: R${currentProvider.price}\nPlatform Fee: R${fee.toFixed(2)}\nStudent Receives: R${student.toFixed(2)}\n\nConnect Paystack here.`);
+calculate();
+document.getElementById('modal').style.display='flex';
 }
-render();
+
+function calculate(){
+let total=currentPrice;
+if(currentType==='hourly'){
+total=currentPrice*(parseInt(document.getElementById('hours').value||1));
+}
+let fee=total*COMMISSION_RATE;
+let provider=total-fee;
+
+document.getElementById('pricing').innerHTML=`
+<p>Total Service: R${total.toFixed(2)}</p>
+<p>Platform Fee (10%): R${fee.toFixed(2)}</p>
+<p>Student Receives: R${provider.toFixed(2)}</p>
+<p><b>Status:</b> Request first → Student accepts → Customer pays</p>`;
+}
+
+function submitRequest(){
+alert('Request sent. Next step: Student Accepts → Customer Pays via Paystack → Job Starts.');
+document.getElementById('modal').style.display='none';
+}
+
+document.getElementById('modal').addEventListener('click',e=>{
+if(e.target.id==='modal'){e.target.style.display='none';}
+});
 </script>
-
 </body>
 </html>
