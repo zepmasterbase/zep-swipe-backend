@@ -3,154 +3,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Provider V9 Ecosystem</title>
+<title>Zep Swipe Provider </title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--text:#fff;--muted:#aaa;--border:#262626;}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:100px}
-header{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:16px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:800;color:var(--accent)}
-.wrap{max-width:900px;margin:auto;padding:16px}
+header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:16px;display:flex;justify-content:space-between;align-items:center}
+.logo{color:var(--accent);font-weight:800}
+.wrap{max-width:1100px;margin:auto;padding:16px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-top:14px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
 .box{background:rgba(184,255,59,.08);border:1px solid rgba(184,255,59,.15);padding:14px;border-radius:14px}
-input,textarea,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:1px solid var(--border);background:#0d0d0d;color:#fff}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;font-weight:700;cursor:pointer;margin-top:10px}
+input,select,textarea{width:100%;padding:12px;margin-top:10px;border-radius:12px;border:1px solid var(--border);background:#0d0d0d;color:#fff}
+.btn{padding:12px;border:none;border-radius:12px;font-weight:700;cursor:pointer;margin-top:10px}
 .primary{background:var(--accent);color:#000}
-.secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}
-.hidden{display:none}
-.badge{padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent);font-size:12px}
+.secondary{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.badge{padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
+.service{padding:12px;border:1px solid var(--border);border-radius:12px;margin-top:10px}
 .small{font-size:12px;color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
 </style>
 </head>
 <body>
-
 <header>
-<div class="logo">⚡ Zep Swipe Provider V9</div>
-<div class="badge">Verified Student Ecosystem</div>
+<div class="logo">⚡ Zep Swipe Provider V11</div>
+<div class="badge">Marketplace Connected</div>
 </header>
 
 <div class="wrap">
 
-<div id="authBox" class="card">
-<h2>Student Provider Login</h2>
-<p class="small">Manage services, jobs, earnings and payouts.</p>
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button class="btn primary" onclick="signup()">Create Account</button>
-<button class="btn secondary" onclick="login()">Login</button>
-</div>
-
-<div id="dashboard" class="hidden">
-
 <div class="card">
-<h2>🎓 Student Dashboard</h2>
-<p class="small">Your earning ecosystem.</p>
+<h2>🎓 Student Provider Dashboard</h2>
+<p class="small">Services • Requests • Wallet • Withdrawals • Reviews</p>
 </div>
 
 <div class="grid">
-<div class="box"><h2 id="totalEarned">R0</h2><p>Total Earned</p></div>
-<div class="box"><h2 id="pendingBalance">R0</h2><p>Pending</p></div>
-<div class="box"><h2 id="completedJobs">0</h2><p>Completed Jobs</p></div>
-<div class="box"><h2 id="rating">5.0⭐</h2><p>Rating</p></div>
+<div class="box"><h2>R2,450</h2><p>Available Balance</p></div>
+<div class="box"><h2>R600</h2><p>Pending Balance</p></div>
+<div class="box"><h2>38</h2><p>Completed Jobs</p></div>
+<div class="box"><h2>4.9⭐</h2><p>Rating</p></div>
 </div>
 
 <div class="card">
-<h3>👤 Provider Profile</h3>
-<input id="name" placeholder="Full Name">
-<input id="service" placeholder="Service">
-<input id="location" placeholder="Location">
-<input id="whatsapp" placeholder="WhatsApp">
-<input id="university" placeholder="University / College">
-<button class="btn primary" onclick="saveProfile()">Save Profile</button>
+<h3>🟢 Verification Status</h3>
+<p><span class="badge">Verified Student</span></p>
+<input placeholder="Full Name">
+<input placeholder="University / College">
+<input placeholder="Student Number">
+<input placeholder="WhatsApp Number">
+<input placeholder="Profile Photo URL">
+<button class="btn primary">Save Verification Profile</button>
 </div>
 
 <div class="card">
-<h3>🧾 Commission Calculator</h3>
-<input id="jobAmount" type="number" placeholder="Job Value (R)" oninput="calc()">
-<p id="calcResult" class="small">Enter a job amount.</p>
+<h3>➕ Create Service</h3>
+<input placeholder="Service Name">
+<select>
+<option>Fixed Price</option>
+<option>Hourly</option>
+<option>Package</option>
+</select>
+<input placeholder="Price / Rate">
+<textarea placeholder="Service Description"></textarea>
+<button class="btn primary">Publish Service</button>
 </div>
 
 <div class="card">
-<h3>📦 Incoming Jobs</h3>
-<div id="jobs">
-<p class="small">No jobs yet. Connected to future marketplace requests.</p>
+<h3>🛠 My Services</h3>
+<div class="service"><b>Math Tutor</b><br><span class="small">Hourly • R200/hour</span></div>
+<div class="service"><b>Graphic Designer</b><br><span class="small">Fixed • R250</span></div>
+<div class="service"><b>Photography Package</b><br><span class="small">Package • R1200</span></div>
+</div>
+
+<div class="card">
+<h3>📥 Incoming Requests</h3>
+<div class="service">
+<b>Math Tutoring Request</b><br>
+Customer: Sarah<br>
+Hours: 2<br>
+Amount: R400<br>
+<div class="row">
+<button class="btn primary">Accept</button>
+<button class="btn secondary">Decline</button>
+</div>
 </div>
 </div>
 
 <div class="card">
-<h3>🏦 Wallet & Payouts</h3>
-<input placeholder="Bank Name">
-<input placeholder="Account Number">
-<button class="btn primary">Request Payout</button>
-<p class="small">Paystack Transfer integration ready.</p>
+<h3>📦 Active Jobs</h3>
+<div class="service">
+<b>Graphic Design Project</b><br>
+Status: In Progress
+<br><button class="btn primary">Mark Complete</button>
+</div>
 </div>
 
 <div class="card">
 <h3>🔔 Notifications</h3>
-<p class="small">New jobs, payouts and reviews will appear here.</p>
+<div class="service">New booking request received</div>
+<div class="service">Payment received for tutoring job</div>
+</div>
+
+<div class="card">
+<h3>⭐ Reviews</h3>
+<div class="service">★★★★★ Excellent tutor - Sarah</div>
+<div class="service">★★★★★ Fast delivery - Michael</div>
+</div>
+
+<div class="card">
+<h3>📊 Analytics</h3>
+<div class="grid">
+<div class="box"><h3>324</h3><p>Views</p></div>
+<div class="box"><h3>28</h3><p>Requests</p></div>
+<div class="box"><h3>12</h3><p>Bookings</p></div>
+<div class="box"><h3>42%</h3><p>Conversion</p></div>
+</div>
+</div>
+
+<div class="card">
+<h3>💰 Wallet & Withdrawals</h3>
+<input placeholder="Bank Name">
+<input placeholder="Account Number">
+<input placeholder="Withdrawal Amount">
+<button class="btn primary">Request Withdrawal</button>
+<p class="small">Ready for Paystack Transfers and Supabase backend integration.</p>
+</div>
+
+<div class="card">
+<h3>🔥 Featured Provider</h3>
+<p>Get priority placement in the marketplace.</p>
+<p><b>R49/month</b></p>
+<button class="btn primary">Upgrade to Featured</button>
 </div>
 
 </div>
-</div>
-
-<script>
-const COMMISSION_RATE=0.10;
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let sessionUser=null;
-
-async function signup(){
-const {error}=await client.auth.signUp({email:email.value,password:password.value});
-if(error)return alert(error.message);
-alert("Account created. Login to continue.");
-}
-
-async function login(){
-const {data,error}=await client.auth.signInWithPassword({email:email.value,password:password.value});
-if(error)return alert(error.message);
-sessionUser=data.user;
-localStorage.setItem("zep_v9_session",JSON.stringify(sessionUser));
-showDashboard();
-}
-
-function showDashboard(){
-authBox.classList.add("hidden");
-dashboard.classList.remove("hidden");
-}
-
-function init(){
-const saved=localStorage.getItem("zep_v9_session");
-if(saved){sessionUser=JSON.parse(saved);showDashboard();}
-}
-init();
-
-async function saveProfile(){
-if(!sessionUser)return;
-const {error}=await client.from("providers").upsert([{
-user_id:sessionUser.id,
-name:name.value,
-service:service.value,
-location:location.value,
-whatsapp:whatsapp.value,
-university:university.value,
-updated_at:new Date()
-}]);
-if(error)return alert(error.message);
-alert("Profile saved successfully.");
-}
-
-function calc(){
-let amount=parseFloat(document.getElementById("jobAmount").value||0);
-let fee=amount*COMMISSION_RATE;
-let payout=amount-fee;
-document.getElementById("calcResult").innerHTML=
-`Job: R${amount.toFixed(2)} | Platform Fee: R${fee.toFixed(2)} | You Receive: R${payout.toFixed(2)}`;
-}
-</script>
-
 </body>
 </html>
