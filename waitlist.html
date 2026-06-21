@@ -3,159 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Waitlist V91 Supabase Ready</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Zep Swipe Waitlist V100 Gamified</title>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:var(--bg);color:#fff;padding-bottom:90px}
-.header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:14px 16px;display:flex;align-items:center;gap:12px}
-.header img{width:46px;height:46px}
-.hero{margin:16px;padding:32px;border-radius:28px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.card{background:#141414;border:1px solid #262626;border-radius:22px;padding:18px;margin:16px}
-input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
-.btn{width:100%;padding:14px;border:none;border-radius:14px;background:#b8ff3b;color:#000;font-weight:800;margin-top:12px;cursor:pointer}
-.badge{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
+body{background:#070707;color:#fff;font-family:Arial,sans-serif;margin:0;padding-bottom:90px}
+.header,.card{background:#141414;border:1px solid #262626;border-radius:20px}
+.header{padding:15px;display:flex;align-items:center;gap:12px}
+.hero{margin:16px;padding:32px;border-radius:24px;background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.card{margin:16px;padding:16px}
+input,select{width:100%;padding:12px;margin-top:8px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
+.btn{width:100%;padding:12px;margin-top:10px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:bold}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.stat{background:#101010;border:1px solid #262626;border-radius:16px;padding:14px;text-align:center}
-.circle{width:150px;height:150px;border-radius:50%;border:12px solid #1f1f1f;border-top-color:#b8ff3b;display:flex;align-items:center;justify-content:center;margin:12px auto;font-weight:800}
-.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
-.footer a{text-decoration:none;color:#fff;font-size:12px}
-#dashboard{display:none}
+.stat{background:#101010;padding:12px;border-radius:14px;text-align:center}
+.wheel{width:260px;height:260px;border-radius:50%;margin:auto;background:conic-gradient(#00ff88,#b8ff3b,#ffd700,#00ffaa,#66ff33,#00ff88);display:flex;align-items:center;justify-content:center}
+.center{width:110px;height:110px;border-radius:50%;background:#141414;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;padding:12px;display:flex;justify-content:space-around}
+.footer a{color:white;text-decoration:none}
 </style>
 </head>
 <body>
-
 <div class="header">
-<img src="https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png">
-<div><h3 style="color:#b8ff3b">Zep Swipe</h3><small>Student Economy</small></div>
+<img src="https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" width="48">
+<div><h3 style="color:#b8ff3b;margin:0">Zep Swipe</h3><small>Student Economy</small></div>
 </div>
 
-<div id="onboarding">
 <div class="hero">
-<span class="badge">🎓 Africa's Student Economy</span>
-<h1 style="margin-top:12px">Learn • Earn • Refer • Grow</h1>
-<p style="margin-top:10px">Join the waitlist and unlock your gamified dashboard.</p>
+<h1>Learn • Earn • Refer • Grow</h1>
+<p>Join the future of the Student Economy.</p>
 </div>
 
 <div class="card">
 <h3>Join Free</h3>
-<input id="name" placeholder="Full Name">
-<input id="email" placeholder="Email">
-<input id="country" placeholder="Country">
-<select id="course">
-<option>Graphic Design</option>
-<option>Tutoring</option>
-<option>Photography</option>
-<option>Tech Support</option>
-</select>
-<button class="btn" onclick="unlock()">Unlock Dashboard</button>
-</div>
-</div>
-
-<div id="dashboard">
-<div class="hero">
-<h2 id="welcome"></h2>
-<p>Build skills. Earn MARI. Become an Ambassador.</p>
+<input placeholder="Full Name">
+<input placeholder="Email">
+<input placeholder="Country">
+<input placeholder="Referral Code (Optional)">
+<select><option>Graphic Design</option><option>Tutoring</option><option>Photography</option><option>Tech Support</option></select>
+<button class="btn">Unlock Dashboard</button>
 </div>
 
 <div class="card">
-<h3>🆔 Student Identity</h3>
-<div class="circle"><div id="studentId">ZS-0000</div></div>
+<h3>🎡 Daily MARI Spin</h3>
+<div class="wheel"><div class="center">SPIN</div></div>
+<p style="text-align:center">Rewards: 3 • 5 • 7 • 10 • 15 • 20 MARI</p>
+<p style="text-align:center">Next Spin: 23:59:59</p>
+</div>
+
+<div class="card">
+<h3>🚀 Referral Command Center</h3>
+<div class="grid">
+<div class="stat"><h2>0/5</h2><small>Referrals</small></div>
+<div class="stat"><h2>50</h2><small>MARI Bonus</small></div>
+</div>
+<input value="https://zepswipe.com/ref/ZS-12345" readonly>
+<button class="btn">Share WhatsApp</button>
 </div>
 
 <div class="card">
 <h3>💰 MARI Wallet</h3>
-<div class="circle"><div><span id="mari">0</span><br>MARI</div></div>
+<div class="stat"><h1>0 MARI</h1></div>
 </div>
 
 <div class="card">
-<h3>🎡 Daily Spin</h3>
-<p>Claim 5 MARI every 24 hours.</p>
-<button class="btn" onclick="spin()">SPIN NOW</button>
-<p id="spinResult"></p>
+<h3>🎯 Daily Missions</h3>
+<div class="stat">Invite 1 Student (+5 MARI)</div>
+<div class="stat">Complete Lesson (+5 MARI)</div>
+<div class="stat">Share Referral (+5 MARI)</div>
 </div>
 
 <div class="card">
-<h3>🚀 Referral Progress</h3>
+<h3>🎓 Learn & Earn</h3>
 <div class="grid">
-<div class="stat"><h2 id="refs">0/5</h2><small>Referrals</small></div>
-<div class="stat"><h2>50</h2><small>MARI Bonus</small></div>
+<div class="stat">Graphic Design 80%</div>
+<div class="stat">Tutoring 40%</div>
+<div class="stat">Photography 20%</div>
+<div class="stat">Tech Support 10%</div>
 </div>
-<input id="refLink" readonly>
-</div>
 </div>
 
-<script>
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
-const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+<div class="card">
+<h3>🏆 Ambassador Ladder</h3>
+<p>Explorer → Connector → Ambassador → Campus Leader → Regional Leader</p>
+</div>
 
-async function unlock(){
- const name=document.getElementById('name').value;
- const email=document.getElementById('email').value;
- const country=document.getElementById('country').value;
- const course=document.getElementById('course').value;
+<div class="card">
+<h3>🌍 Global Leaderboard</h3>
+<p>1. South Africa</p>
+<p>2. Nigeria</p>
+<p>3. Ghana</p>
+<p>Your Rank: #100</p>
+</div>
 
- if(!name || !email){alert('Complete all fields');return;}
-
- const studentId='ZS-'+Math.floor(Math.random()*90000+10000);
-
- await supabaseClient.from('students').insert({
-   student_id:studentId,
-   full_name:name,
-   email:email,
-   country:country,
-   course:course,
-   mari_balance:0,
-   referrals:0
- });
-
- localStorage.setItem('studentId',studentId);
-
- document.getElementById('onboarding').style.display='none';
- document.getElementById('dashboard').style.display='block';
- document.getElementById('welcome').innerText='Good Morning, '+name+' 👋';
- document.getElementById('studentId').innerText=studentId;
- document.getElementById('refLink').value='https://zepswipe.com/ref/'+studentId;
-}
-
-async function spin(){
- const studentId=localStorage.getItem('studentId');
- if(!studentId) return;
-
- const {data}=await supabaseClient
- .from('students')
- .select('*')
- .eq('student_id',studentId)
- .single();
-
- if(!data) return;
-
- const now=new Date();
-
- if(data.last_spin){
-   const diff=now-new Date(data.last_spin);
-   if(diff<86400000){
-      alert('Spin available after 24 hours');
-      return;
-   }
- }
-
- const newBalance=(data.mari_balance||0)+5;
-
- await supabaseClient.from('students')
- .update({
-   mari_balance:newBalance,
-   last_spin:now.toISOString()
- })
- .eq('student_id',studentId);
-
- document.getElementById('mari').innerText=newBalance;
- document.getElementById('spinResult').innerText='🎉 +5 MARI Earned';
-}
-</script>
-
+<div class="footer">
+<a href="#">Home</a>
+<a href="#">Spin</a>
+<a href="#">Wallet</a>
+<a href="#">Rank</a>
+<a href="#">Profile</a>
+</div>
 </body>
 </html>
