@@ -3,21 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Waitlist V40 Production Ready</title>
+<title>Zep Swipe Waitlist V50 Premium</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
-*{box-sizing:border-box;font-family:Inter,sans-serif;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);padding-bottom:90px}
-.hero{padding:32px;min-height:320px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;margin:16px}
-input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid var(--border);border-radius:12px}
-.btn{width:100%;padding:14px;border:none;border-radius:14px;background:var(--accent);color:#000;font-weight:800;margin-top:12px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.stat{background:#101010;border:1px solid var(--border);border-radius:14px;padding:12px}
-.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
-.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--bg);color:#fff;padding-bottom:90px}
+.hero{padding:40px;min-height:380px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover;border-radius:0 0 32px 32px}
+.glow{animation:pulse 3s infinite}
+@keyframes pulse{0%{box-shadow:0 0 10px rgba(184,255,59,.15)}50%{box-shadow:0 0 35px rgba(184,255,59,.45)}100%{box-shadow:0 0 10px rgba(184,255,59,.15)}}
+.card{background:#141414;border:1px solid #262626;border-radius:22px;padding:18px;margin:16px}
+input,select{width:100%;padding:13px;margin-top:10px;border-radius:12px;background:#101010;color:#fff;border:1px solid #262626}
+.btn{width:100%;padding:14px;border:none;border-radius:14px;background:#b8ff3b;color:#000;font-weight:800;margin-top:12px}
+.badge{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{background:#101010;border:1px solid #262626;border-radius:16px;padding:14px}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
 .footer a{color:#fff;text-decoration:none;display:flex;flex-direction:column;align-items:center;font-size:12px}
 #dashboard{display:none}
 </style>
@@ -25,39 +27,42 @@ input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#f
 <body>
 
 <div id="onboarding">
-<div class="hero">
-<h1>⚡ Zep Swipe</h1>
-<span class="badge">Africa's Student Economy</span>
-<h2 style="margin-top:12px">Learn • Earn • Grow</h2>
-<p>Join the waitlist and unlock your student dashboard.</p>
+<div class="hero glow">
+<span class="badge">🎓 Africa's Student Economy</span>
+<h1 style="margin-top:15px">Learn. Earn. Grow.</h1>
+<p style="max-width:600px;margin-top:10px">Join the movement, build skills, earn MARI rewards and prepare for launch.</p>
 </div>
 
 <div class="card">
-<h3>🎓 Join Waitlist</h3>
+<h2>Join Waitlist</h2>
 <input id="name" placeholder="Full Name">
-<input id="email" placeholder="Email">
+<input id="email" placeholder="Email Address">
 <input id="university" placeholder="University / College">
 <input id="country" placeholder="Country">
+<input id="referral" placeholder="Referral Code (Optional)">
 <select id="service">
 <option>Tutoring</option>
 <option>Graphic Design</option>
 <option>Photography</option>
 <option>Cleaning</option>
 <option>Tech Support</option>
+<option>Social Media Management</option>
 </select>
-<button class="btn" onclick="joinWaitlist()">Unlock Dashboard</button>
+<button class="btn" onclick="joinNow()">Unlock Dashboard</button>
 </div>
 </div>
 
 <div id="dashboard">
-<div class="hero">
-<h2 id="welcome">Welcome 👋</h2>
-<p>Your Student Economy Dashboard</p>
+<div class="hero glow">
+<span class="badge">🚀 Student Economy Dashboard</span>
+<h1 id="welcome">Welcome 👋</h1>
+<p>Your journey to earning starts here.</p>
 </div>
 
-<div class="card">
+<div class="card glow">
 <h3>🆔 Student ID</h3>
-<h2 id="studentId" style="color:#b8ff3b"></h2>
+<h2 id="sid" style="color:#b8ff3b"></h2>
+<p id="refLink"></p>
 </div>
 
 <div class="card">
@@ -67,7 +72,16 @@ input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#f
 <div class="stat"><h2>0</h2><small>Referrals</small></div>
 <div class="stat"><h2>0</h2><small>XP</small></div>
 </div>
-<p>Earn 15 MARI for every 5 successful referrals.</p>
+<p style="margin-top:10px">Earn 15 MARI for every 5 verified referrals.</p>
+</div>
+
+<div class="card">
+<h3>📈 Growth Journey</h3>
+<div style="height:120px;background:linear-gradient(180deg,#1b2d0a,#101010);border-radius:14px;padding:15px">
+Join ▰▰▰▰▱<br><br>
+Learner ▰▰▰▱▱<br><br>
+Freelancer ▰▱▱▱▱
+</div>
 </div>
 
 <div class="card">
@@ -75,6 +89,7 @@ input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#f
 <p>▶ Graphic Design Basics (+5 XP)</p>
 <p>▶ Tutoring Fundamentals (+5 XP)</p>
 <p>▶ Photography Starter (+5 XP)</p>
+<p>▶ Tech Support Essentials (+5 XP)</p>
 </div>
 
 <div class="card">
@@ -82,6 +97,7 @@ input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#f
 <p>Invite Friend (+3 XP)</p>
 <p>Watch Lesson (+5 XP)</p>
 <p>Share Referral (+2 XP)</p>
+<p>Complete Quiz (+10 XP)</p>
 </div>
 </div>
 
@@ -92,15 +108,16 @@ input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#f
 </footer>
 
 <script>
-function joinWaitlist(){
-const name=document.getElementById('name').value;
-const country=(document.getElementById('country').value||'AF').substring(0,2).toUpperCase();
-if(!name){alert('Enter your name');return;}
-const id='ZS-'+Math.floor(Math.random()*90000+10000)+'-'+country;
-document.getElementById('onboarding').style.display='none';
-document.getElementById('dashboard').style.display='block';
-document.getElementById('welcome').innerText='Welcome '+name+' 👋';
-document.getElementById('studentId').innerText=id;
+function joinNow(){
+ let n=document.getElementById('name').value;
+ let c=(document.getElementById('country').value||'AF').substring(0,2).toUpperCase();
+ if(!n){alert('Enter your name');return;}
+ let id='ZS-'+Math.floor(Math.random()*90000+10000)+'-'+c;
+ document.getElementById('onboarding').style.display='none';
+ document.getElementById('dashboard').style.display='block';
+ document.getElementById('welcome').innerText='Welcome '+n+' 👋';
+ document.getElementById('sid').innerText=id;
+ document.getElementById('refLink').innerText='Referral Link: https://zepswipe.com/?ref='+id;
 }
 lucide.createIcons();
 </script>
