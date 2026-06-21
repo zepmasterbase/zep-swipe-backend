@@ -2,163 +2,129 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Student Deals V19</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zep Student Deals V21</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--text:#fff;--muted:#aaa;--border:#262626;}
-*{box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
-body{margin:0;background:var(--bg);color:var(--text);padding-bottom:80px}
-header{position:sticky;top:0;z-index:10;padding:18px;text-align:center;background:rgba(0,0,0,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
-h1{margin:0;color:var(--accent)}
-.container{max-width:720px;margin:auto;padding:16px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-top:12px}
-.banner{background:linear-gradient(135deg,#1a2208,#101010)}
-.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
-.small{font-size:12px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-input,select,textarea{width:100%;padding:12px;margin-top:8px;border-radius:12px;border:1px solid var(--border);background:#0d0d0d;color:#fff}
-button{width:100%;padding:14px;border:none;border-radius:12px;font-weight:700;cursor:pointer;margin-top:12px}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,sans-serif}
+header{padding:18px;text-align:center;border-bottom:1px solid var(--border)}
+h1{color:var(--accent)}
+.container{max-width:900px;margin:auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:12px}
+input,textarea,select{width:100%;padding:12px;margin-top:8px;background:#0d0d0d;color:#fff;border:1px solid var(--border);border-radius:12px}
+button{padding:12px;border:none;border-radius:12px;font-weight:700;cursor:pointer}
 .primary{background:var(--accent);color:#000}
-.preview img{width:100%;border-radius:12px}
-.days{display:flex;flex-wrap:wrap;gap:6px}
-.day{padding:6px 10px;border:1px solid var(--border);border-radius:10px;cursor:pointer}
-.day.active{background:var(--accent);color:#000}
-.plan{padding:12px;border:1px solid var(--border);border-radius:12px;margin-top:8px}
-.verified{color:#7dff7d}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.box{background:#111;padding:12px;border-radius:12px}
+.deal{border:1px solid var(--border);padding:12px;border-radius:12px;margin-top:10px}
 </style>
 </head>
 <body>
 <header>
-<h1>⚡ Zep Student Deals V19</h1>
-<div class="small">Supabase + Paystack Ready Architecture</div>
+<h1>⚡ Zep Student Deals V21</h1>
+<p>Backend Ready + Monetisation Ready</p>
 </header>
 
 <div class="container">
 
-<div class="card banner">
-<span class="badge">🎉 Founding Business Offer</span>
-<h3>First 5,000 Listings Free</h3>
-<p id="slots">Loading available slots...</p>
-</div>
-
-<div class="card">
-<h3>📊 Deal Performance</h3>
 <div class="grid">
-<div><b>0</b><br><span class="small">Views</span></div>
-<div><b>0</b><br><span class="small">WhatsApp Clicks</span></div>
-<div><b>0</b><br><span class="small">Claims</span></div>
-<div><b>0</b><br><span class="small">Active Deals</span></div>
-</div>
-</div>
-
-<div class="card">
-<h3>🏪 Business Verification</h3>
-<input placeholder="Business Name">
-<input placeholder="Owner Name">
-<p class="verified">✔ Eligible for Verified Business Badge</p>
+<div class="box"><h3 id="views">0</h3><p>Views</p></div>
+<div class="box"><h3 id="claims">0</h3><p>Claims</p></div>
+<div class="box"><h3 id="clicks">0</h3><p>WhatsApp Clicks</p></div>
+<div class="box"><h3 id="activeDeals">0</h3><p>Active Deals</p></div>
 </div>
 
 <div class="card">
-<label>📸 Upload Deal Image</label>
-<input type="file" id="imageFile" accept="image/*">
-<div class="preview" id="preview"></div>
+<h3>Business Profile</h3>
+<input id="businessName" placeholder="Business Name">
+<input id="ownerName" placeholder="Owner Name">
 </div>
 
 <div class="card">
-<label>Category</label>
-<select id="category">
-<option>Food & Drinks</option>
-<option>Retail</option>
-<option>Education</option>
-<option>Services</option>
-<option>Beauty & Hair</option>
+<h3>Create Deal</h3>
+<input type="file" id="imageFile">
+<select id="listingType">
+<option value="free">Free Listing</option>
+<option value="featured">Featured Deal (R49)</option>
+<option value="premium">Premium Deal (R99)</option>
 </select>
-
-<label>Deal Title</label>
-<input id="title">
-
-<label>Description</label>
-<textarea id="desc"></textarea>
-
-<label>Location</label>
-<input id="location">
-
-<label>WhatsApp Number</label>
-<input id="phone">
+<input id="title" placeholder="Deal Title">
+<textarea id="description" placeholder="Description"></textarea>
+<input id="location" placeholder="Location">
+<button class="primary" onclick="publishDeal()">Publish Deal</button>
+<p id="status"></p>
 </div>
 
 <div class="card">
-<label>📅 Active Days</label>
-<div class="days">
-<div class="day" onclick="toggleDay(this)">Mon</div>
-<div class="day" onclick="toggleDay(this)">Tue</div>
-<div class="day" onclick="toggleDay(this)">Wed</div>
-<div class="day" onclick="toggleDay(this)">Thu</div>
-<div class="day" onclick="toggleDay(this)">Fri</div>
-<div class="day" onclick="toggleDay(this)">Sat</div>
-<div class="day" onclick="toggleDay(this)">Sun</div>
-</div>
-<input type="number" id="limit" value="10" placeholder="Daily Limit">
-</div>
-
-<div class="card">
-<h3>🚀 Visibility Packages</h3>
-<div class="plan">Free Listing — Included</div>
-<div class="plan">🔥 Featured Deal — R49 / 7 Days</div>
-<div class="plan">⭐ Premium Deal — R99 / 30 Days</div>
-
-<label><input type="radio" name="boost" value="free" checked> Free</label><br>
-<label><input type="radio" name="boost" value="featured"> Featured</label><br>
-<label><input type="radio" name="boost" value="premium"> Premium</label>
-</div>
-
-<div class="card">
-<button class="primary" onclick="publishDeal()">🚀 Publish Deal</button>
-<div id="status" class="small"></div>
-</div>
-
-<div class="card">
-<h3>📋 My Deals</h3>
-<div>🔥 Featured Burger Deal</div>
-<div>⭐ Premium Pizza Deal</div>
-<div>📦 Standard Hair Deal</div>
+<h3>My Deals</h3>
+<div id="myDeals"></div>
 </div>
 
 </div>
 
 <script>
-let selectedDays=[];
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
+const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-document.getElementById('slots').innerText='5,000 free slots campaign active';
-
-document.getElementById('imageFile').onchange=(e)=>{
-const f=e.target.files[0];
-if(!f) return;
-const r=new FileReader();
-r.onload=()=>document.getElementById('preview').innerHTML='<img src="'+r.result+'">';
-r.readAsDataURL(f);
+let businessId=localStorage.getItem("zep_business_id");
+if(!businessId){
+ businessId=crypto.randomUUID();
+ localStorage.setItem("zep_business_id",businessId);
 }
 
-function toggleDay(el){
-el.classList.toggle('active');
-selectedDays=[...document.querySelectorAll('.day.active')].map(d=>d.innerText);
+async function uploadImage(file){
+ if(!file) return "";
+ const fileName=Date.now()+"-"+file.name;
+ await client.storage.from("deal-images").upload(fileName,file);
+ return client.storage.from("deal-images").getPublicUrl(fileName).data.publicUrl;
 }
 
-function publishDeal(){
-const boost=document.querySelector('input[name="boost"]:checked').value;
+async function publishDeal(){
+ const type=document.getElementById("listingType").value;
 
-if(boost==='featured'){
-document.getElementById('status').innerText='Featured deal selected. Redirect to Paystack payment in production.';
-return;
-}
-if(boost==='premium'){
-document.getElementById('status').innerText='Premium deal selected. Redirect to Paystack payment in production.';
-return;
+ if(type==="featured" || type==="premium"){
+   document.getElementById("status").innerText=
+   "Connect Paystack payment verification before activating paid listings.";
+   return;
+ }
+
+ const imageUrl=await uploadImage(document.getElementById("imageFile").files[0]);
+
+ const {error}=await client.from("deals").insert([{
+   business_id:businessId,
+   business_name:businessName.value,
+   owner_name:ownerName.value,
+   title:title.value,
+   description:description.value,
+   location:location.value,
+   image_url:imageUrl,
+   listing_type:type,
+   active:true
+ }]);
+
+ document.getElementById("status").innerText=
+   error ? error.message : "Deal published successfully";
+
+ loadDeals();
 }
 
-document.getElementById('status').innerText='Free deal published successfully.';
+async function loadDeals(){
+ const {data=[]}=await client.from("deals")
+ .select("*")
+ .eq("business_id",businessId);
+
+ document.getElementById("activeDeals").innerText=data.length;
+
+ myDeals.innerHTML=data.map(d=>`
+ <div class="deal">
+ <b>${d.title}</b><br>
+ ${d.listing_type}
+ </div>`).join("");
 }
+
+loadDeals();
 </script>
-
 </body>
 </html>
