@@ -3,111 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Waitlist V80</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest"></script>
+<title>Zep Swipe Waitlist V80 Supabase Ready</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif}
-body{background:var(--bg);color:#fff;padding-bottom:90px}
-.hero{padding:40px;min-height:340px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover;border-radius:0 0 30px 30px}
-.card{background:#141414;border:1px solid #262626;border-radius:22px;padding:18px;margin:16px}
-input,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;background:#101010;color:#fff;border:1px solid #262626}
-.btn{width:100%;padding:14px;border:none;border-radius:14px;background:#b8ff3b;color:#000;font-weight:800;margin-top:12px}
-.badge{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.stat{background:#101010;border:1px solid #262626;border-radius:16px;padding:14px}
-.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
-.footer a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
-#dashboard{display:none}
+body{font-family:Arial,sans-serif;background:#070707;color:#fff;margin:0;padding:20px}
+.card{background:#141414;border:1px solid #262626;border-radius:16px;padding:16px;margin:12px 0}
+input,select,button{width:100%;padding:12px;margin-top:10px}
+button{background:#b8ff3b;border:none;font-weight:bold}
 </style>
 </head>
 <body>
-<div id="onboarding">
-<div class="hero">
-<span class="badge">🎓 Africa's Student Economy</span>
-<h1 style="margin-top:15px">Learn • Earn • Grow</h1>
-<p>Join the waitlist and unlock your dashboard.</p>
-</div>
+<h1>Zep Swipe Waitlist V80</h1>
+
 <div class="card">
-<h2>Join Waitlist</h2>
+<h3>Join Waitlist</h3>
 <input id="name" placeholder="Full Name">
 <input id="email" placeholder="Email">
-<input id="university" placeholder="University / College">
+<input id="university" placeholder="University">
 <input id="country" placeholder="Country">
-<input id="ref" placeholder="Referral Code (Optional)">
 <select id="course">
-<option>Graphic Design</option><option>Tutoring</option><option>Photography</option><option>Cleaning</option><option>Tech Support</option>
+<option>Graphic Design</option>
+<option>Tutoring</option>
+<option>Photography</option>
+<option>Cleaning</option>
+<option>Tech Support</option>
 </select>
-<button class="btn" onclick="unlock()">Unlock Dashboard</button>
-</div>
-</div>
-
-<div id="dashboard">
-<div class="hero">
-<span class="badge">🚀 Student Economy Dashboard</span>
-<h1 id="welcome"></h1>
-<p>Complete quests. Earn MARI. Build skills.</p>
+<button onclick="joinWaitlist()">Unlock Dashboard</button>
 </div>
 
 <div class="card">
-<h3>🆔 Student ID</h3>
-<h2 id="sid" style="color:#b8ff3b"></h2>
-<p id="refLink"></p>
-<button class="btn" onclick="shareWhatsApp()">Share on WhatsApp</button>
-</div>
-
-<div class="card">
-<h3>🎁 MARI Wallet</h3>
-<div class="grid">
-<div class="stat"><h2>0</h2><small>MARI</small></div>
-<div class="stat"><h2>20</h2><small>Daily Reward</small></div>
-<div class="stat"><h2>0</h2><small>XP</small></div>
-</div>
-</div>
-
-<div class="card">
-<h3>📚 Daily Skill Quest</h3>
-<p id="courseTitle"></p>
-<p>Task 1: Watch lesson (+4 MARI)</p>
-<p>Task 2: Practice exercise (+4 MARI)</p>
-<p>Task 3: Mini challenge (+4 MARI)</p>
-<p>Task 4: Quiz (+4 MARI)</p>
-<p>Task 5: Submit work (+4 MARI)</p>
-<button class="btn">Continue Quest</button>
-</div>
-
-<div class="card">
-<h3>👥 Referral Engine</h3>
-<p>Earn 15 MARI for every 5 completed referrals.</p>
-</div>
-</div>
-
-<div class="footer">
-<a href="#"><i data-lucide="home"></i><span>Home</span></a>
-<a href="marketplace.html"><i data-lucide="shopping-bag"></i><span>Marketplace</span></a>
-<a href="#" onclick="shareWhatsApp()"><i data-lucide="send"></i><span>Invite</span></a>
+<h3>Supabase Configuration</h3>
+<pre>
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+</pre>
 </div>
 
 <script>
-function unlock(){
- let n=document.getElementById('name').value;
- if(!n){alert('Enter name');return;}
- let c=(document.getElementById('country').value||'AF').substring(0,2).toUpperCase();
- let id='ZS-'+Math.floor(Math.random()*90000+10000)+'-'+c;
- document.getElementById('onboarding').style.display='none';
- document.getElementById('dashboard').style.display='block';
- document.getElementById('welcome').innerText='Welcome '+n+' 👋';
- document.getElementById('sid').innerText=id;
- document.getElementById('refLink').innerText='Referral: https://zepswipe.com/?ref='+id;
- document.getElementById('courseTitle').innerText=document.getElementById('course').value+' Daily Quest';
- lucide.createIcons();
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+
+function joinWaitlist(){
+ const name=document.getElementById('name').value;
+ if(!name){alert('Enter name');return;}
+ const id='ZS-'+Math.floor(Math.random()*90000+10000);
+ localStorage.setItem('zep_student_id',id);
+ alert('Dashboard unlocked. Student ID: '+id);
 }
-function shareWhatsApp(){
- const id=document.getElementById('sid').innerText || 'ZS-DEMO';
- window.open('https://wa.me/?text='+encodeURIComponent('Join Zep Swipe '+id),'_blank');
-}
-lucide.createIcons();
 </script>
 </body>
 </html>
