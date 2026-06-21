@@ -3,75 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Marketplace V30 Production Ready</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Zep Swipe Marketplace V31 Growth Engine</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff;--muted:#aaa}
-*{box-sizing:border-box;font-family:Inter,sans-serif;margin:0;padding:0}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:90px}
 header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:14px 16px;z-index:100}
-.logo{color:var(--accent);font-weight:800}
-.search{padding:16px}
-.search input,.search select{width:100%;padding:12px;margin-top:8px;border-radius:12px;background:#111;border:1px solid var(--border);color:#fff}
-.hero{margin:16px;border:1px solid var(--border);border-radius:24px;overflow:hidden;display:flex;gap:16px;background:linear-gradient(135deg,#141414,#102010)}
-.hero img{width:150px;height:150px;object-fit:cover}
-.hero-content{padding:18px}
+.logo{font-weight:800;color:var(--accent)}
+.hero{margin:16px;border-radius:28px;overflow:hidden;background:linear-gradient(135deg,#141414,#132013);display:grid;grid-template-columns:1.2fr .8fr;align-items:center;border:1px solid var(--border)}
+.hero-content{padding:24px}
+.hero-image img{width:100%;height:100%;object-fit:contain;max-height:280px}
 .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
-.btn{background:var(--accent);color:#000;border:none;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;padding:16px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);padding:20px;overflow:auto}
-.modalbox{max-width:560px;margin:40px auto;background:#141414;border-radius:18px;padding:20px}
+.btn{background:var(--accent);color:#000;border:none;padding:12px 16px;border-radius:12px;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;padding:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px}
+.section-title{padding:0 16px;color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:16px}
+.stat{background:#111;border:1px solid var(--border);padding:14px;border-radius:16px;text-align:center}
 footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px}
 footer a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
 </style>
 </head>
 <body>
 
-<header><div class="logo">⚡ Zep Swipe Marketplace V30</div></header>
-
-<div class="search">
-<input id="search" placeholder="Search services...">
-<select id="categoryFilter">
-<option value="">All Categories</option>
-<option>Tutoring</option>
-<option>Design</option>
-<option>Coding</option>
-<option>Photography</option>
-</select>
-</div>
+<header>
+<div class="logo">⚡ Zep Swipe Marketplace V31</div>
+</header>
 
 <div class="hero">
-<img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jrg40d1f1srq1v5l1m4omlrpjt1a.png">
 <div class="hero-content">
-<span class="badge">🎓 Student Economy</span>
-<h2 style="color:#b8ff3b;margin-top:8px">Earn on the Side</h2>
-<p>Offer your skills. Get hired. Earn while studying.</p><br>
-<a href="provider.html"><button class="btn">🚀 Start Earning</button></a>
+<span class="badge">🎓 Africa's Student Economy</span>
+<h1 style="margin-top:12px">Learn. Earn. Grow.</h1>
+<p style="color:#ccc;margin:12px 0">Find tutors, designers, photographers, tech support and student deals near you.</p>
+<button class="btn">🚀 Start Earning</button>
+</div>
+<div class="hero-image">
+<img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jrg40d1f1srq1v5l1m4omlrpjt1a.png">
 </div>
 </div>
 
-<h3 style="padding:0 16px;color:#b8ff3b">🔥 Featured Providers</h3>
-<div class="grid" id="featured"></div>
-
-<h3 style="padding:0 16px;color:#b8ff3b">🛠 Services</h3>
-<div class="grid" id="services"></div>
-
-<h3 style="padding:0 16px;color:#b8ff3b">🏷 Deals</h3>
-<div class="grid" id="deals"></div>
-
-<div class="modal" id="bookingModal">
-<div class="modalbox">
-<h2>Book Service</h2>
-<input id="customerName" placeholder="Full Name">
-<input id="customerPhone" placeholder="Phone Number">
-<input id="quantity" type="number" value="1">
-<textarea id="jobDetails" placeholder="Project requirements" style="width:100%;margin-top:8px;padding:12px;background:#111;color:#fff"></textarea>
-<p id="pricePreview"></p>
-<button class="btn" onclick="submitBooking()">Continue</button>
-<button class="btn" onclick="closeModal()" style="margin-top:10px">Close</button>
+<div class="stats">
+<div class="stat"><h3>250+</h3><p>Students</p></div>
+<div class="stat"><h3>80+</h3><p>Services</p></div>
+<div class="stat"><h3>45+</h3><p>Deals</p></div>
+<div class="stat"><h3>R50k+</h3><p>Earned</p></div>
 </div>
+
+<h3 class="section-title">🔥 Featured Providers</h3>
+<div class="grid">
+<div class="card"><h3>Graphic Designer</h3><p>Portfolio • Reviews • Fast Delivery</p></div>
+<div class="card"><h3>Math Tutor</h3><p>Exam Prep • Homework Help</p></div>
+</div>
+
+<h3 class="section-title">🎯 Daily Challenges</h3>
+<div class="grid">
+<div class="card"><h3>Complete a Booking</h3><p>Earn XP and rewards.</p></div>
+<div class="card"><h3>Refer a Friend</h3><p>Unlock growth rewards.</p></div>
+</div>
+
+<h3 class="section-title">🛠 Popular Services</h3>
+<div class="grid">
+<div class="card"><h3>Tutoring</h3><p>From R200/hr</p></div>
+<div class="card"><h3>Graphic Design</h3><p>From R250</p></div>
+<div class="card"><h3>Photography</h3><p>From R400</p></div>
+</div>
+
+<h3 class="section-title">🏷 Student Deals</h3>
+<div class="grid">
+<div class="card"><h3>50% Student Meal</h3><p>Restaurant Deal</p></div>
+<div class="card"><h3>20% Barber Discount</h3><p>Local Business</p></div>
 </div>
 
 <footer>
@@ -82,62 +83,5 @@ footer a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
 <a href="provider.html">👤<br>Profile</a>
 </footer>
 
-<script>
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let selectedService=null;
-
-async function loadMarketplace(){
- const {data:providers=[]}=await client.from('providers').select('*').eq('featured',true);
- featured.innerHTML=providers.map(p=>`<div class="card"><h3>${p.service||'Provider'}</h3><p>${p.location||''}</p></div>`).join('');
-
- const {data:servicesData=[]}=await client.from('services').select('*').eq('active',true);
- renderServices(servicesData);
-
- const {data:dealsData=[]}=await client.from('deals').select('*').eq('active',true);
- deals.innerHTML=dealsData.map(d=>`<div class="card"><span class="badge">Deal</span><h3>${d.title||''}</h3></div>`).join('');
-}
-
-function renderServices(data){
- services.innerHTML=data.map(s=>`<div class="card">
- <span class="badge">${s.service_type||'Service'}</span>
- <h3>${s.service_name||''}</h3>
- <p>R${s.price||0}</p>
- <button class="btn" onclick='openBooking(${JSON.stringify({id:""+(s.provider_id||""),name:""+(s.service_name||""),price:Number(s.price||0),type:(s.service_type||"fixed")}).replace(/'/g,"")} )'>Book Service</button>
- </div>`).join('');
-}
-
-function openBooking(service){
- selectedService=service;
- bookingModal.style.display='block';
- updatePrice();
-}
-function closeModal(){bookingModal.style.display='none';}
-function updatePrice(){
- if(!selectedService)return;
- const q=parseInt(quantity.value||1);
- const total=(selectedService.price||0)*q;
- pricePreview.innerHTML='Total: R'+total.toFixed(2);
-}
-quantity.addEventListener('input',updatePrice);
-
-async function submitBooking(){
- if(!selectedService)return;
- await client.from('service_requests').insert([{
- provider_id:selectedService.id,
- customer_name:customerName.value,
- customer_phone:customerPhone.value,
- service_name:selectedService.name,
- amount:(selectedService.price||0)*(parseInt(quantity.value||1)),
- requirements:jobDetails.value,
- status:'pending'
- }]);
- alert('Booking request submitted.');
- closeModal();
-}
-
-loadMarketplace();
-</script>
 </body>
 </html>
