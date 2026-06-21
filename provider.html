@@ -2,87 +2,147 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V30 Production</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe Provider V33 Beautiful Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff;--muted:#aaa}
+:root{
+--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;
+--text:#fff;--muted:#aaa;
+}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:100px}
-.hero{padding:24px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.brand{display:flex;justify-content:space-between;align-items:center}
-.logo{width:64px;height:64px;border-radius:18px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:#b8ff3b;font-size:32px;font-weight:800}
-.avatar{width:58px;height:58px;border-radius:50%;border:2px solid #b8ff3b}
-.glass,.card{background:#141414d9;border:1px solid #262626;border-radius:20px}
+.hero{
+padding:24px;
+background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),
+url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover;
+border-radius:0 0 28px 28px;
+}
+.top{display:flex;justify-content:space-between;align-items:center}
+.logo{
+width:64px;height:64px;border-radius:18px;
+background:rgba(184,255,59,.15);
+display:flex;align-items:center;justify-content:center;
+color:var(--accent);font-size:32px;font-weight:800;
+box-shadow:0 0 25px rgba(184,255,59,.4);
+}
+.avatar{width:58px;height:58px;border-radius:50%;border:2px solid var(--accent)}
+.glass,.card{
+background:rgba(20,20,20,.88);
+border:1px solid var(--border);
+border-radius:20px;
+backdrop-filter:blur(12px);
+}
 .glass{padding:18px;margin-top:18px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;padding:16px}
+.section{padding:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
 .card{padding:16px}
-.section{padding:0 16px 16px}
+.accent{color:var(--accent)}
+.progress{height:10px;background:#222;border-radius:99px;overflow:hidden}
+.fill{height:100%;width:72%;background:var(--accent)}
 .item{padding:10px 0;border-bottom:1px solid #222}
-.btn{background:#b8ff3b;color:#000;border:none;padding:12px;border-radius:12px;font-weight:700;width:100%}
-.progress{height:10px;background:#222;border-radius:999px;overflow:hidden}.fill{height:100%;width:68%;background:#b8ff3b}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:10px}
+.btn{
+width:100%;padding:12px;border:none;border-radius:12px;
+background:var(--accent);color:#000;font-weight:800;margin-top:10px
+}
+.nav{
+position:fixed;bottom:0;left:0;right:0;
+background:#0b0b0b;border-top:1px solid var(--border);
+display:flex;justify-content:space-around;padding:10px
+}
 .nav a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
+input,select,textarea{
+width:100%;padding:12px;margin-top:8px;
+background:#101010;color:#fff;border:1px solid var(--border);
+border-radius:12px
+}
 </style>
 </head>
 <body>
 
 <div class="hero">
-<div class="brand">
+<div class="top">
 <div style="display:flex;gap:12px;align-items:center">
 <div class="logo">Z</div>
 <div>
-<h2 id="providerName">Welcome Back 👋</h2>
-<p style="color:#aaa">Build Skills • Earn Money • Grow</p>
+<h2>Welcome Back 👋</h2>
+<p style="color:#ccc">Turn your skills into income today</p>
 </div>
 </div>
-<img id="avatar" class="avatar" src="https://via.placeholder.com/58">
+<img class="avatar" src="https://via.placeholder.com/58">
 </div>
 
 <div class="glass">
-<div style="color:#aaa">Wallet Balance</div>
-<h1 id="walletBalance" style="color:#b8ff3b">R0.00</h1>
-<p>Available • Pending • Lifetime Earnings</p>
+<p>Available Balance</p>
+<h1 class="accent">R2,450.00</h1>
+<p>This Month +R1,200 • Pending R400</p>
+<button class="btn">Withdraw Earnings</button>
 </div>
 </div>
 
+<div class="section">
 <div class="grid">
-<div class="card"><h4>🔥 Daily Goal</h4><p>R170 / R250</p></div>
-<div class="card"><h4>⚡ Streak</h4><h2>7 Days</h2></div>
-<div class="card"><h4>🏆 XP</h4><h2>320 XP</h2></div>
-<div class="card"><h4>🎁 Referrals</h4><h2>4</h2></div>
+<div class="card"><h3>🔥 Goal</h3><p>R180 / R250</p></div>
+<div class="card"><h3>⚡ Streak</h3><p>7 Days</p></div>
+<div class="card"><h3>🏆 XP</h3><p>320 XP</p></div>
+<div class="card"><h3>🎁 Referrals</h3><p>4 Joined</p></div>
+</div>
 </div>
 
-<div class="section"><div class="card">
-<h3>💎 Grow Faster</h3>
-<p>Current Plan: Free</p><br>
-<button class="btn">Featured Provider • R49/mo</button><br><br>
-<button class="btn">Pro Provider • R99/mo</button>
-</div></div>
-
-<div class="section"><div class="card">
+<div class="section">
+<div class="card">
 <h3>📈 Visibility Score</h3>
-<p>68%</p>
+<p>72%</p>
 <div class="progress"><div class="fill"></div></div>
-<p style="margin-top:8px">Add portfolio, reviews and featured status to increase visibility.</p>
-</div></div>
+<p style="margin-top:8px">Add portfolio images and reviews to rank higher.</p>
+</div>
+</div>
 
-<div class="section"><div class="card">
+<div class="section">
+<div class="card">
 <h3>➕ Create Service Studio</h3>
-<input type="file" style="width:100%;margin:8px 0">
-<input type="file" multiple style="width:100%;margin:8px 0">
+<select>
+<option>📚 Tutoring</option>
+<option>🎨 Graphic Design</option>
+<option>📸 Photography</option>
+<option>🧹 Cleaning</option>
+<option>💻 Tech Support</option>
+</select>
+<input placeholder="Service Name">
+<input placeholder="Price">
+<textarea placeholder="Describe your service"></textarea>
+<input type="file" accept="image/*">
+<input type="file" multiple accept="image/*">
 <button class="btn">Publish Service</button>
-</div></div>
+</div>
+</div>
 
-<div class="section"><div class="card"><h3>🎯 Daily Missions</h3>
+<div class="section">
+<div class="card">
+<h3>🎯 Daily Missions</h3>
 <div class="item">Upload Portfolio (+50 XP)</div>
-<div class="item">Get Review (+100 XP)</div>
-<div class="item">Apply for Job (+20 XP)</div>
-</div></div>
+<div class="item">Complete a Job (+50 XP)</div>
+<div class="item">Get a Review (+100 XP)</div>
+</div>
+</div>
 
-<div class="section"><div class="card"><h3>🛠 My Services</h3><div id="services"></div></div></div>
-<div class="section"><div class="card"><h3>🏷 Student Deals</h3><div id="deals"></div></div></div>
+<div class="section">
+<div class="card">
+<h3>🚀 Recommended Opportunities</h3>
+<div class="item">Math Tutor • R400+</div>
+<div class="item">Graphic Designer • R350+</div>
+<div class="item">Photography • R600+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="card">
+<h3>💎 Growth Plans</h3>
+<div class="item">Featured Provider • R49/month</div>
+<div class="item">Pro Provider • R99/month</div>
+<div class="item">Boost Service • R29/week</div>
+</div>
+</div>
 
 <div class="nav">
 <a href="index.html">🏠<br>Home</a>
@@ -91,34 +151,6 @@ body{background:var(--bg);color:var(--text);padding-bottom:100px}
 <a href="provider.html">🏦<br>Wallet</a>
 <a href="provider.html">👤<br>Profile</a>
 </div>
-
-<script>
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-async function init(){
- const {data:{session}}=await client.auth.getSession();
- if(!session) return;
- const uid=session.user.id;
-
- const {data:p}=await client.from('providers').select('*').eq('user_id',uid).single();
- if(p){
-   providerName.textContent='Welcome Back, '+(p.name||'Student')+' 👋';
-   if(p.profile_image) avatar.src=p.profile_image;
- }
-
- const {data:w=[]}=await client.from('wallet_transactions').select('*').eq('user_id',uid);
- walletBalance.textContent='R'+w.reduce((s,x)=>s+(Number(x.amount)||0),0).toFixed(2);
-
- const {data:s=[]}=await client.from('services').select('*').eq('provider_id',uid);
- document.getElementById('services').innerHTML=s.map(v=>'<div class="item">'+v.service_name+'</div>').join('');
-
- const {data:d=[]}=await client.from('deals').select('*').eq('active',true).limit(5);
- document.getElementById('deals').innerHTML=d.map(v=>'<div class="item">'+v.title+'</div>').join('');
-}
-init();
-</script>
 
 </body>
 </html>
