@@ -3,28 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Waitlist V60</title>
+<title>Zep Swipe Waitlist V61</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif}
-body{background:var(--bg);color:#fff;padding-bottom:90px}
-.hero{padding:40px;min-height:360px;border-radius:0 0 32px 32px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--bg);color:var(--text);padding-bottom:90px}
+.hero{padding:40px;min-height:340px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover;border-radius:0 0 30px 30px}
 .glow{animation:pulse 3s infinite}
 @keyframes pulse{0%{box-shadow:0 0 10px rgba(184,255,59,.15)}50%{box-shadow:0 0 40px rgba(184,255,59,.45)}100%{box-shadow:0 0 10px rgba(184,255,59,.15)}}
 .card{background:#141414;border:1px solid #262626;border-radius:22px;padding:18px;margin:16px}
-input,select{width:100%;padding:12px;margin-top:10px;background:#101010;border:1px solid #262626;border-radius:12px;color:#fff}
+input,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;background:#101010;color:#fff;border:1px solid #262626}
 .btn{width:100%;padding:14px;border:none;border-radius:14px;background:#b8ff3b;color:#000;font-weight:800;margin-top:12px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.stat{background:#101010;border:1px solid #262626;border-radius:16px;padding:14px}
-.quest{background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.9)),url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80') center/cover}
 .badge{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
-.progress{height:10px;background:#222;border-radius:999px;overflow:hidden;margin-top:10px}
-.fill{height:100%;width:80%;background:#b8ff3b}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat{background:#101010;border:1px solid #262626;border-radius:16px;padding:14px}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
+.footer a{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;text-decoration:none;font-size:12px}
 #dashboard{display:none}
 </style>
 </head>
 <body>
+
 <div id="onboarding">
 <div class="hero glow">
 <span class="badge">🎓 Africa's Student Economy</span>
@@ -60,6 +61,8 @@ input,select{width:100%;padding:12px;margin-top:10px;background:#101010;border:1
 <div class="card glow">
 <h3>🆔 Student ID</h3>
 <h2 id="sid" style="color:#b8ff3b"></h2>
+<p id="refLink"></p>
+<button class="btn" onclick="shareWhatsApp()">📲 Share Referral Link on WhatsApp</button>
 </div>
 
 <div class="card">
@@ -71,39 +74,22 @@ input,select{width:100%;padding:12px;margin-top:10px;background:#101010;border:1
 </div>
 </div>
 
-<div class="card quest glow">
+<div class="card">
 <h3>📚 Daily Skill Quest</h3>
-<p id="courseTitle">Today's Quest</p>
-<br>
+<p id="courseTitle"></p>
 <p>✅ Task 1: Watch lesson</p>
 <p>✅ Task 2: Practice exercise</p>
 <p>⬜ Task 3: Mini challenge</p>
 <p>⬜ Task 4: Quiz</p>
 <p>⬜ Task 5: Upload work</p>
-<div class="progress"><div class="fill"></div></div>
-<p style="margin-top:10px">4/5 Tasks Complete</p>
-<p>Reward: <b>20 MARI + 25 XP</b></p>
 <button class="btn">Continue Quest</button>
 </div>
-
-<div class="card">
-<h3>⏱ Next Quest</h3>
-<h2 style="color:#b8ff3b">23:59:59</h2>
-<p>New quest unlocks after 24 hours.</p>
 </div>
 
-<div class="card">
-<h3>🔥 Daily Streak</h3>
-<div class="grid">
-<div class="stat"><h2>7</h2><small>Current</small></div>
-<div class="stat"><h2>14</h2><small>Best</small></div>
-</div>
-</div>
-
-<div class="card">
-<h3>👥 Referral Engine</h3>
-<p>Earn 15 MARI for every 5 verified referrals.</p>
-</div>
+<div class="footer">
+<a href="#"><i data-lucide="home"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="shopping-bag"></i><span>Marketplace</span></a>
+<a href="#" onclick="shareWhatsApp()"><i data-lucide="send"></i><span>Invite</span></a>
 </div>
 
 <script>
@@ -116,8 +102,16 @@ function unlock(){
  document.getElementById('dashboard').style.display='block';
  document.getElementById('welcome').innerText='Welcome '+n+' 👋';
  document.getElementById('sid').innerText=id;
+ document.getElementById('refLink').innerText='Referral: https://zepswipe.com/?ref='+id;
  document.getElementById('courseTitle').innerText=document.getElementById('course').value+' Daily Quest';
+ lucide.createIcons();
 }
+function shareWhatsApp(){
+ const id=document.getElementById('sid').innerText || 'ZS-DEMO';
+ const text='Join Zep Swipe using my referral code '+id+' https://zepswipe.com/?ref='+id;
+ window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+}
+lucide.createIcons();
 </script>
 </body>
 </html>
