@@ -3,59 +3,105 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Marketplace V45</title>
+<title>Zep Swipe Marketplace V46 Premium</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{background:#070707;color:#fff;font-family:Inter,sans-serif;margin:0;padding-bottom:90px}
-.card{background:#141414;border:1px solid #262626;border-radius:18px;padding:16px;margin:16px}
-.btn{background:#b8ff3b;color:#000;border:none;padding:12px 16px;border-radius:12px;font-weight:800;cursor:pointer}
-#claimModal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:420px;z-index:999}
-input{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--bg);color:#fff;padding-bottom:90px}
+header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:14px 16px;z-index:100}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:42px;height:42px;object-fit:contain}
+.logo{color:var(--accent);font-weight:800}
+.hero{position:relative;margin:16px;padding:32px;border-radius:24px;overflow:hidden;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.82)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.hero:before{content:'';position:absolute;inset:0;background:radial-gradient(circle at top right,rgba(184,255,59,.22),transparent 40%)}
+.hero>*{position:relative}
+.badge{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
+.search-card{margin:16px;padding:14px;background:#141414;border:1px solid rgba(184,255,59,.25);border-radius:18px;display:flex;gap:12px;align-items:center}
+.search-card input{flex:1;background:none;border:none;color:#fff;outline:none}
+.card{background:#141414;border:1px solid #262626;border-radius:18px;padding:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:16px}
+.providers-grid,.deals-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;padding:16px}
+.provider-card,.deal-card{overflow:hidden}
+.provider-img,.deal-img{width:100%;height:180px;object-fit:cover}
+.content{padding:16px}
+.btn{background:#b8ff3b;color:#000;border:none;padding:12px;border-radius:12px;font-weight:800;width:100%;cursor:pointer}
+.section{padding:0 16px;color:#b8ff3b}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
+.footer a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
 </style>
 </head>
 <body>
 
-<div class="card">
-<h2>Zep Swipe Marketplace V45</h2>
-<p>Supabase-ready marketplace with student deal claims.</p>
-<button class="btn" onclick="openClaim('meal-deal')">Claim Deal</button>
+<header>
+<div class="brand">
+<img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png">
+<div class="logo">Zep Swipe Marketplace</div>
+</div>
+</header>
+
+<div class="hero">
+<span class="badge">🎓 Africa's Student Economy</span>
+<h1 style="margin-top:12px">Find Student Talent.<br>Unlock Exclusive Deals.</h1>
+<p style="margin-top:10px">Discover tutors, designers, photographers, tech support and local student deals.</p>
 </div>
 
-<div id="claimModal" class="card">
-<h3>Student Verification</h3>
-<input id="studentId" placeholder="Zep Swipe Student ID">
-<input id="studentName" placeholder="Full Name">
-<input id="studentUniversity" placeholder="University">
-<button class="btn" onclick="submitClaim()">Claim Deal</button>
-<button class="btn" onclick="closeClaim()">Cancel</button>
+<div class="search-card">
+<i data-lucide="search"></i>
+<input id="searchInput" placeholder="Search services, providers or deals..." onkeyup="searchMarketplace()">
 </div>
+
+<div class="stats">
+<div class="card"><h3 id="servicesCount">3</h3><small>Services</small></div>
+<div class="card"><h3 id="dealsCount">3</h3><small>Deals</small></div>
+<div class="card"><h3 id="providersCount">3</h3><small>Providers</small></div>
+<div class="card"><h3>100</h3><small>MARI Reward</small></div>
+</div>
+
+<h3 class="section">Featured Providers</h3>
+<div class="providers-grid" id="providersGrid">
+<div class="card provider-card">
+<img class="provider-img" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80">
+<div class="content"><span class="badge">Graphic Design</span><h4>John Mensah</h4><p>From R250</p><button class="btn">Hire Now</button></div>
+</div>
+<div class="card provider-card">
+<img class="provider-img" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80">
+<div class="content"><span class="badge">Math Tutor</span><h4>Sarah Nkosi</h4><p>From R200/hr</p><button class="btn">Hire Now</button></div>
+</div>
+</div>
+
+<h3 class="section">Student Deals</h3>
+<div class="deals-grid" id="dealsGrid">
+<div class="card deal-card">
+<img class="deal-img" src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=800&q=80">
+<div class="content"><span class="badge">Restaurant</span><h4>50% Student Meal</h4><button class="btn" onclick="claimDeal()">Claim Deal</button></div>
+</div>
+</div>
+
+<footer class="footer">
+<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="briefcase"></i><span>Services</span></a>
+<a href="business-deals.html"><i data-lucide="ticket-percent"></i><span>Deals</span></a>
+<a href="provider.html"><i data-lucide="coins"></i><span>Earn</span></a>
+</footer>
 
 <script>
 const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-let currentDeal='';
-
-function openClaim(id){
- currentDeal=id;
- document.getElementById('claimModal').style.display='block';
+function searchMarketplace(){
+ const q=document.getElementById('searchInput').value.toLowerCase();
+ document.querySelectorAll('.provider-card,.deal-card').forEach(card=>{
+  card.style.display=card.innerText.toLowerCase().includes(q)?'block':'none';
+ });
 }
 
-function closeClaim(){
- document.getElementById('claimModal').style.display='none';
-}
-
-function coupon(){
- return 'ZS-'+Math.random().toString(36).substring(2,8).toUpperCase();
-}
-
-async function submitClaim(){
- const code=coupon();
- alert('Demo coupon: '+code+'\nConnect Supabase to save claims.');
- closeClaim();
+function claimDeal(){
+ const studentId=prompt('Enter Student ID');
+ if(!studentId) return;
+ alert('Deal claimed for '+studentId);
 }
 
 lucide.createIcons();
