@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V39 Secure</title>
+<title>Zep Swipe Provider V40</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -22,8 +22,8 @@ body{background:var(--bg);color:var(--text);padding-bottom:90px}
 .stat{background:#111;border:1px solid #262626;border-radius:14px;padding:12px}
 input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
 .btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800;margin-top:10px}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:10px}
-.nav a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:#fff;font-size:12px}
 .small{font-size:12px;color:#aaa}
 </style>
 </head>
@@ -50,11 +50,10 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;
 <button class="btn">Withdraw Earnings</button>
 </div>
 
-<div class="card" id="referrals">
+<div class="card">
 <h3>🚀 Refer & Earn MARI</h3>
 <p>Earn <b style="color:#b8ff3b">25 MARI</b> per referral.</p>
-<p>1 MARI = $0.041</p>
-<p class="small">🔒 Rewards locked until token launch.</p>
+<p class="small">Rewards locked until launch.</p>
 <input value="https://zepswipe.com/ref/example" readonly>
 <button class="btn">Copy Referral Link</button>
 </div>
@@ -78,7 +77,7 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;
 </div>
 
 <div class="card" id="wallet">
-<h3>💰 Withdraw</h3>
+<h3>Withdraw</h3>
 <input placeholder="Bank Name">
 <input placeholder="Account Number">
 <input placeholder="Amount">
@@ -96,11 +95,11 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;
 </div>
 
 <div class="nav">
-<a href="index.html">🏠<br>Home</a>
-<a href="marketplace.html">💼<br>Jobs</a>
-<a href="#create">➕<br>Create</a>
-<a href="#wallet">🏦<br>Withdraw</a>
-<a href="#profile">👤<br>Profile</a>
+<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="shopping-bag"></i><span>Marketplace</span></a>
+<a href="#create"><i data-lucide="plus-circle"></i><span>Create</span></a>
+<a href="#wallet"><i data-lucide="wallet"></i><span>Withdraw</span></a>
+<a href="#profile"><i data-lucide="user"></i><span>Profile</span></a>
 </div>
 
 <script>
@@ -109,25 +108,16 @@ const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
 const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 async function protectDashboard(){
- const {data:{session}} = await client.auth.getSession();
-
- if(!session){
-   window.location.href="login.html";
-   return;
- }
-
- document.getElementById("welcome").innerText =
- "Welcome Back, " + (session.user.email || "Student") + " 👋";
+ const {data:{session}}=await client.auth.getSession();
+ if(!session){window.location.href='login.html';return;}
+ document.getElementById('welcome').innerText='Welcome Back, '+(session.user.email||'Student')+' 👋';
 }
-
 async function logout(){
  await client.auth.signOut();
- window.location.href="login.html";
+ window.location.href='login.html';
 }
-
 lucide.createIcons();
 protectDashboard();
 </script>
-
 </body>
 </html>
