@@ -3,134 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V41 Production Ready</title>
+<title>Zep Swipe Provider V42 Premium</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:90px}
-.header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;z-index:100}
+.header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
 .brand{display:flex;gap:10px;align-items:center}
-.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:#b8ff3b;font-weight:800}
-.actions{display:flex;gap:10px;align-items:center}
-.iconbtn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#141414;border:1px solid #262626;border-radius:12px;color:#fff;cursor:pointer;position:relative}
-.iconbtn svg{width:20px;height:20px}
-.badge-count{position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#ff3b30;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center}
-.hero,.card{background:#141414;border:1px solid #262626;border-radius:20px;margin:16px;padding:16px}
+.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:#b8ff3b}
+.actions{display:flex;gap:10px}
+.iconbtn{width:44px;height:44px;border:1px solid var(--border);border-radius:12px;background:#141414;color:#fff;display:flex;align-items:center;justify-content:center;position:relative}
+.badge{position:absolute;top:-4px;right:-4px;background:#ff3b30;color:#fff;width:18px;height:18px;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center}
+.hero,.card{background:#141414;border:1px solid var(--border);border-radius:20px;margin:16px;padding:16px}
 .hero{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.stat{background:#111;border:1px solid #262626;border-radius:14px;padding:12px}
-input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
+.stat{background:#101010;border:1px solid var(--border);border-radius:14px;padding:12px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0}
+.nav a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
 .btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800;margin-top:10px}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
-.nav a{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;color:#fff;font-size:12px}
-.small{font-size:12px;color:#aaa}
 </style>
 </head>
 <body>
 
 <div class="header">
 <div class="brand">
-<div class="logo">⚡</div>
-<div><b style="color:#b8ff3b">Zep Swipe</b><div class="small">Provider Dashboard</div></div>
+<div class="logo"><i data-lucide="zap"></i></div>
+<div>
+<b style="color:#b8ff3b">Zep Swipe</b>
+<div style="font-size:12px;color:#aaa">Provider Dashboard</div>
+</div>
 </div>
 
 <div class="actions">
-<button class="iconbtn" onclick="openNotifications()">
+<button class="iconbtn">
 <i data-lucide="bell"></i>
-<span class="badge-count" id="notificationBadge">3</span>
+<span class="badge">3</span>
 </button>
-
-<button class="iconbtn" onclick="logout()">
+<button class="iconbtn">
 <i data-lucide="log-out"></i>
 </button>
 </div>
 </div>
 
 <div class="hero">
-<h2 id="welcome">Welcome Back 👋</h2>
+<h2>Welcome Back 👋</h2>
 <p>Turn your skills into income today.</p>
 <h1 style="color:#b8ff3b">R0.00</h1>
-<button class="btn">Withdraw Earnings</button>
-</div>
-
-<div class="card" id="notificationsModal" style="display:none">
-<h3>🔔 New Job Alerts</h3>
-<div class="stat"><b>New Tutoring Request</b><p>Grade 12 Mathematics • R250</p></div>
-<div class="stat" style="margin-top:10px"><b>New Graphic Design Job</b><p>Logo Design • R400</p></div>
+<button class="btn"><i data-lucide="banknote-arrow-up"></i> Withdraw Earnings</button>
 </div>
 
 <div class="card">
-<h3>🚀 Refer & Earn MARI</h3>
+<h3><i data-lucide="rocket"></i> Refer & Earn MARI</h3>
 <p>Earn 25 MARI per referral.</p>
-<input value="https://zepswipe.com/ref/example" readonly>
-<button class="btn">Copy Referral Link</button>
+<button class="btn"><i data-lucide="copy"></i> Copy Referral Link</button>
 </div>
 
-<div class="card" id="create">
-<h3>Create Service</h3>
-<select><option>Tutoring</option><option>Graphic Design</option><option>Photography</option><option>Cleaning</option><option>Tech Support</option></select>
-<input placeholder="Service Name">
-<input placeholder="Price">
-<textarea placeholder="Description"></textarea>
-<button class="btn">Publish Service</button>
+<div class="card">
+<div class="grid">
+<div class="stat"><i data-lucide="briefcase-business"></i><h3>0</h3><small>Services</small></div>
+<div class="stat"><i data-lucide="clipboard-list"></i><h3>0</h3><small>Jobs</small></div>
+<div class="stat"><i data-lucide="star"></i><h3>0</h3><small>Reviews</small></div>
+<div class="stat"><i data-lucide="bell-ring"></i><h3>0</h3><small>Alerts</small></div>
 </div>
-
-<div class="card" id="wallet">
-<h3>Withdraw</h3>
-<input placeholder="Bank Name">
-<input placeholder="Account Number">
-<input placeholder="Amount">
-<button class="btn">Request Withdrawal</button>
-</div>
-
-<div class="card" id="profile">
-<h3>Profile</h3>
-<input placeholder="Full Name">
-<input placeholder="University">
-<button class="btn">Save Profile</button>
 </div>
 
 <div class="nav">
-<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
-<a href="marketplace.html"><i data-lucide="shopping-bag"></i><span>Marketplace</span></a>
-<a href="#create"><i data-lucide="plus-circle"></i><span>Create</span></a>
-<a href="#wallet"><i data-lucide="wallet"></i><span>Withdraw</span></a>
-<a href="#profile"><i data-lucide="user"></i><span>Profile</span></a>
+<a href="index.html"><i data-lucide="layout-dashboard"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="store"></i><span>Marketplace</span></a>
+<a href="#create"><i data-lucide="square-plus"></i><span>Create</span></a>
+<a href="#wallet"><i data-lucide="landmark"></i><span>Withdraw</span></a>
+<a href="#profile"><i data-lucide="circle-user-round"></i><span>Profile</span></a>
 </div>
 
-<script>
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-async function protectDashboard(){
- const {data:{session}}=await client.auth.getSession();
- if(!session){window.location.replace('login.html');return;}
- document.getElementById('welcome').innerText='Welcome Back, '+(session.user.email||'Student')+' 👋';
-}
-
-function openNotifications(){
- const modal=document.getElementById('notificationsModal');
- modal.style.display=modal.style.display==='none'?'block':'none';
-}
-
-async function logout(){
- try{
-  await client.auth.signOut();
-  localStorage.clear();
-  sessionStorage.clear();
-  window.location.replace('login.html');
- }catch(e){
-  window.location.replace('login.html');
- }
-}
-
-lucide.createIcons();
-protectDashboard();
-</script>
-
+<script>lucide.createIcons();</script>
 </body>
 </html>
