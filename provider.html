@@ -3,154 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Provider V33 Beautiful Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<title>Zep Swipe Provider Dashboard</title>
 <style>
 :root{
---bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;
---text:#fff;--muted:#aaa;
+--bg:#050816;--card:#0f172a;--accent:#10b981;--text:#fff;--muted:#94a3b8;
 }
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:var(--bg);color:var(--text);padding-bottom:100px}
-.hero{
-padding:24px;
-background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),
-url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover;
-border-radius:0 0 28px 28px;
-}
-.top{display:flex;justify-content:space-between;align-items:center}
-.logo{
-width:64px;height:64px;border-radius:18px;
-background:rgba(184,255,59,.15);
-display:flex;align-items:center;justify-content:center;
-color:var(--accent);font-size:32px;font-weight:800;
-box-shadow:0 0 25px rgba(184,255,59,.4);
-}
-.avatar{width:58px;height:58px;border-radius:50%;border:2px solid var(--accent)}
-.glass,.card{
-background:rgba(20,20,20,.88);
-border:1px solid var(--border);
-border-radius:20px;
-backdrop-filter:blur(12px);
-}
-.glass{padding:18px;margin-top:18px}
-.section{padding:16px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.card{padding:16px}
-.accent{color:var(--accent)}
-.progress{height:10px;background:#222;border-radius:99px;overflow:hidden}
-.fill{height:100%;width:72%;background:var(--accent)}
-.item{padding:10px 0;border-bottom:1px solid #222}
-.btn{
-width:100%;padding:12px;border:none;border-radius:12px;
-background:var(--accent);color:#000;font-weight:800;margin-top:10px
-}
-.nav{
-position:fixed;bottom:0;left:0;right:0;
-background:#0b0b0b;border-top:1px solid var(--border);
-display:flex;justify-content:space-around;padding:10px
-}
-.nav a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
-input,select,textarea{
-width:100%;padding:12px;margin-top:8px;
-background:#101010;color:#fff;border:1px solid var(--border);
-border-radius:12px
-}
+*{box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+body{margin:0;background:var(--bg);color:var(--text)}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;background:#08101f;padding:20px}
+.logo{font-size:28px;font-weight:700;color:var(--accent)}
+.sidebar a{display:block;color:#cbd5e1;text-decoration:none;padding:12px 0}
+.main{margin-left:240px;padding:24px}
+.hero,.card{background:rgba(15,23,42,.95);border-radius:24px;padding:24px}
+.hero{display:flex;justify-content:space-between;gap:20px;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.stat{background:var(--card);padding:20px;border-radius:20px}
+.amount{font-size:36px;font-weight:700;color:var(--accent)}
+.section{margin-top:24px}
+.table{width:100%;border-collapse:collapse}
+.table td,.table th{padding:12px;border-bottom:1px solid #1e293b}
+.btn{background:var(--accent);color:white;padding:12px 18px;border:none;border-radius:12px;cursor:pointer}
+.service{padding:20px;background:var(--card);border-radius:20px}
+.small{color:var(--muted)}
+input{padding:12px;border-radius:10px;border:none;width:100%}
 </style>
 </head>
 <body>
+<div class="sidebar">
+<div class="logo">Zep Swipe</div>
+<a href="#">Dashboard</a>
+<a href="#">Jobs</a>
+<a href="#">Services</a>
+<a href="#">Wallet</a>
+<a href="#">Reviews</a>
+<a href="#">Settings</a>
+</div>
 
+<div class="main">
 <div class="hero">
-<div class="top">
-<div style="display:flex;gap:12px;align-items:center">
-<div class="logo">Z</div>
 <div>
-<h2>Welcome Back 👋</h2>
-<p style="color:#ccc">Turn your skills into income today</p>
+<h1>Good Morning, Provider 👋</h1>
+<p>Build your reputation. Earn real income. Grow your business.</p>
+<button class="btn">Browse Jobs</button>
 </div>
-</div>
-<img class="avatar" src="https://via.placeholder.com/58">
-</div>
-
-<div class="glass">
-<p>Available Balance</p>
-<h1 class="accent">R2,450.00</h1>
-<p>This Month +R1,200 • Pending R400</p>
-<button class="btn">Withdraw Earnings</button>
+<div>
+<div class="small">Available Balance</div>
+<div class="amount">R1,850</div>
+<button class="btn">Withdraw Funds</button>
 </div>
 </div>
 
-<div class="section">
 <div class="grid">
-<div class="card"><h3>🔥 Goal</h3><p>R180 / R250</p></div>
-<div class="card"><h3>⚡ Streak</h3><p>7 Days</p></div>
-<div class="card"><h3>🏆 XP</h3><p>320 XP</p></div>
-<div class="card"><h3>🎁 Referrals</h3><p>4 Joined</p></div>
-</div>
-</div>
-
-<div class="section">
-<div class="card">
-<h3>📈 Visibility Score</h3>
-<p>72%</p>
-<div class="progress"><div class="fill"></div></div>
-<p style="margin-top:8px">Add portfolio images and reviews to rank higher.</p>
-</div>
+<div class="stat"><h3>Total Earnings</h3><div class="amount">R5,420</div></div>
+<div class="stat"><h3>Jobs Completed</h3><div class="amount">27</div></div>
+<div class="stat"><h3>Rating</h3><div class="amount">4.9★</div></div>
+<div class="stat"><h3>Profile Views</h3><div class="amount">1283</div></div>
 </div>
 
 <div class="section">
-<div class="card">
-<h3>➕ Create Service Studio</h3>
-<select>
-<option>📚 Tutoring</option>
-<option>🎨 Graphic Design</option>
-<option>📸 Photography</option>
-<option>🧹 Cleaning</option>
-<option>💻 Tech Support</option>
-</select>
-<input placeholder="Service Name">
-<input placeholder="Price">
-<textarea placeholder="Describe your service"></textarea>
-<input type="file" accept="image/*">
-<input type="file" multiple accept="image/*">
-<button class="btn">Publish Service</button>
+<h2>Services</h2>
+<div class="grid">
+<div class="service">🎓 Tutoring</div>
+<div class="service">🎨 Graphic Design</div>
+<div class="service">🧹 Cleaning Services</div>
+<div class="service">📸 Photography</div>
+<div class="service">💻 Tech Support</div>
 </div>
 </div>
 
-<div class="section">
-<div class="card">
-<h3>🎯 Daily Missions</h3>
-<div class="item">Upload Portfolio (+50 XP)</div>
-<div class="item">Complete a Job (+50 XP)</div>
-<div class="item">Get a Review (+100 XP)</div>
-</div>
-</div>
-
-<div class="section">
-<div class="card">
-<h3>🚀 Recommended Opportunities</h3>
-<div class="item">Math Tutor • R400+</div>
-<div class="item">Graphic Designer • R350+</div>
-<div class="item">Photography • R600+</div>
-</div>
+<div class="section card">
+<h2>Available Jobs</h2>
+<table class="table">
+<tr><th>Job</th><th>Location</th><th>Budget</th></tr>
+<tr><td>Math Tutor Needed</td><td>Randfontein</td><td>R200</td></tr>
+<tr><td>Flyer Design</td><td>Johannesburg</td><td>R350</td></tr>
+<tr><td>Cleaning Service</td><td>Krugersdorp</td><td>R500</td></tr>
+</table>
 </div>
 
-<div class="section">
-<div class="card">
-<h3>💎 Growth Plans</h3>
-<div class="item">Featured Provider • R49/month</div>
-<div class="item">Pro Provider • R99/month</div>
-<div class="item">Boost Service • R29/week</div>
+<div class="section card">
+<h2>Supabase Configuration</h2>
+<p class="small">Replace placeholders with your own values.</p>
+<pre>
+const SUPABASE_URL = "YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const PAYSTACK_PUBLIC_KEY = "YOUR_PAYSTACK_PUBLIC_KEY";
+</pre>
 </div>
 </div>
-
-<div class="nav">
-<a href="index.html">🏠<br>Home</a>
-<a href="marketplace.html">💼<br>Jobs</a>
-<a href="provider.html">➕<br>Create</a>
-<a href="provider.html">🏦<br>Wallet</a>
-<a href="provider.html">👤<br>Profile</a>
-</div>
-
 </body>
 </html>
