@@ -3,25 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V35 Production Ready</title>
+<title>Zep Swipe Provider V36 Backend Ready</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff;--muted:#aaa}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:90px}
-.header{position:sticky;top:0;background:rgba(11,11,11,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;z-index:100}
-.brand{display:flex;align-items:center;gap:10px}
-.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:#b8ff3b;font-weight:800}
-.actions{display:flex;gap:10px;align-items:center}
-.iconbtn{background:#141414;border:1px solid #262626;border-radius:12px;padding:10px;color:#fff}
-.hero{padding:24px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover;border-radius:0 0 28px 28px}
-.glass,.card{background:rgba(20,20,20,.88);border:1px solid var(--border);border-radius:22px}
-.glass{padding:18px}
-.section{padding:16px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.card{padding:16px}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;background:var(--accent);color:#000;font-weight:800}
+.header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(12px)}
+.brand{display:flex;gap:10px;align-items:center}
+.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800}
+.hero{margin:16px;padding:20px;border-radius:24px;background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;margin:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat{background:#111;border:1px solid var(--border);border-radius:16px;padding:12px}
+input,select,textarea{width:100%;padding:12px;margin-top:8px;border-radius:12px;background:#101010;color:#fff;border:1px solid var(--border)}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;background:var(--accent);color:#000;font-weight:800;margin-top:10px}
+.item{padding:10px 0;border-bottom:1px solid #222}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px}
 .nav a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
 </style>
@@ -31,56 +30,116 @@ body{background:var(--bg);color:var(--text);padding-bottom:90px}
 <div class="header">
 <div class="brand">
 <div class="logo">⚡</div>
+<div><b style="color:#b8ff3b">Zep Swipe</b><div style="font-size:12px;color:#aaa">Provider Dashboard</div></div>
+</div>
 <div>
-<b style="color:#b8ff3b">Zep Swipe</b>
-<div style="font-size:12px;color:#aaa">Provider Dashboard</div>
-</div>
-</div>
-
-<div class="actions">
-<button class="iconbtn"><i data-lucide="bell"></i></button>
-<button class="iconbtn" onclick="logout()"><i data-lucide="log-out"></i> Logout</button>
+<button onclick="logout()" style="background:none;border:none;color:white"><i data-lucide="log-out"></i></button>
 </div>
 </div>
 
 <div class="hero">
-<h2>Welcome Back 👋</h2>
-<p>Turn your skills into income today.</p><br>
-<div class="glass">
-<p>Available Balance</p>
-<h1 style="color:#b8ff3b">R2,450.00</h1>
-<p>This Month +R1,200 • Pending R400</p><br>
-<button class="btn">Withdraw with Paystack</button>
-</div>
+<h2 id="welcome">Welcome Back 👋</h2>
+<p>Turn your skills into income today.</p>
+<h1 id="balance" style="color:#b8ff3b;margin-top:12px">R0.00</h1>
 </div>
 
-<div class="section">
+<div class="card">
 <div class="grid">
-<div class="card"><h3>🔥 Goal</h3><p>R180 / R250</p></div>
-<div class="card"><h3>⚡ Streak</h3><p>7 Days</p></div>
-<div class="card"><h3>🏆 XP</h3><p>320 XP</p></div>
-<div class="card"><h3>🎁 Referrals</h3><p>4 Joined</p></div>
+<div class="stat"><h3 id="servicesCount">0</h3><small>Services</small></div>
+<div class="stat"><h3 id="jobsCount">0</h3><small>Jobs</small></div>
+<div class="stat"><h3 id="reviewsCount">0</h3><small>Reviews</small></div>
+<div class="stat"><h3 id="notificationsCount">0</h3><small>Alerts</small></div>
 </div>
 </div>
 
-<div class="section"><div class="card"><h3>➕ Create Service Studio</h3><p>Upload service cover, portfolio images and publish to marketplace.</p></div></div>
-<div class="section"><div class="card"><h3>🚀 Recommended Opportunities</h3><p>Tutoring • Design • Photography • Tech Support</p></div></div>
+<div class="card">
+<h3>Create Service</h3>
+<select id="category">
+<option>Tutoring</option>
+<option>Graphic Design</option>
+<option>Photography</option>
+<option>Cleaning</option>
+<option>Tech Support</option>
+</select>
+<input id="serviceName" placeholder="Service Name">
+<input id="price" placeholder="Price">
+<textarea id="description" placeholder="Description"></textarea>
+<input id="cover" type="file" accept="image/*">
+<button class="btn" onclick="publishService()">Publish Service</button>
+</div>
+
+<div class="card">
+<h3>My Services</h3>
+<div id="services"></div>
+</div>
+
+<div class="card">
+<h3>Live Notifications</h3>
+<div id="notifications"></div>
+</div>
 
 <div class="nav">
 <a href="index.html">🏠<br>Home</a>
 <a href="marketplace.html">💼<br>Jobs</a>
-<a href="provider.html">➕<br>Create</a>
-<a href="provider.html">🏦<br>Wallet</a>
-<a href="provider.html">👤<br>Profile</a>
+<a href="#" onclick="document.querySelector('.card').scrollIntoView()">➕<br>Create</a>
+<a href="#wallet">🏦<br>Wallet</a>
+<a href="#profile">👤<br>Profile</a>
 </div>
 
 <script>
-lucide.createIcons();
-function logout(){
- alert('Connect Supabase signOut() here');
- window.location.href='login.html';
-}
-</script>
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
+const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let user=null;
 
+async function init(){
+ const {data:{session}}=await client.auth.getSession();
+ if(!session){ location.href="login.html"; return; }
+ user=session.user;
+
+ const {data:profile}=await client.from('providers').select('*').eq('user_id',user.id).maybeSingle();
+ if(profile) welcome.textContent='Welcome Back, '+(profile.name||'Student')+' 👋';
+
+ loadServices();
+ loadNotifications();
+
+ client.channel('provider-live')
+ .on('postgres_changes',{event:'*',schema:'public',table:'notifications'},loadNotifications)
+ .subscribe();
+}
+
+async function publishService(){
+ const payload={
+  provider_id:user.id,
+  category:category.value,
+  service_name:serviceName.value,
+  price:price.value,
+  description:description.value,
+  active:true
+ };
+ await client.from('services').insert([payload]);
+ loadServices();
+}
+
+async function loadServices(){
+ const {data=[]}=await client.from('services').select('*').eq('provider_id',user.id);
+ servicesCount.textContent=data.length;
+ services.innerHTML=data.map(s=>`<div class="item">${s.service_name} - R${s.price}</div>`).join('');
+}
+
+async function loadNotifications(){
+ const {data=[]}=await client.from('notifications').select('*').eq('user_id',user.id);
+ notificationsCount.textContent=data.length;
+ notifications.innerHTML=data.map(n=>`<div class="item">${n.title||'Notification'}</div>`).join('');
+}
+
+async function logout(){
+ await client.auth.signOut();
+ location.href='login.html';
+}
+
+lucide.createIcons();
+init();
+</script>
 </body>
 </html>
