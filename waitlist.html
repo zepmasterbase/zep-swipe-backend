@@ -3,53 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Waitlist V80 Supabase Ready</title>
+<title>Zep Swipe Waitlist V91 Supabase Ready</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{font-family:Arial,sans-serif;background:#070707;color:#fff;margin:0;padding:20px}
-.card{background:#141414;border:1px solid #262626;border-radius:16px;padding:16px;margin:12px 0}
-input,select,button{width:100%;padding:12px;margin-top:10px}
-button{background:#b8ff3b;border:none;font-weight:bold}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--bg);color:#fff;padding-bottom:90px}
+.header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:14px 16px;display:flex;align-items:center;gap:12px}
+.header img{width:46px;height:46px}
+.hero{margin:16px;padding:32px;border-radius:28px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.card{background:#141414;border:1px solid #262626;border-radius:22px;padding:18px;margin:16px}
+input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
+.btn{width:100%;padding:14px;border:none;border-radius:14px;background:#b8ff3b;color:#000;font-weight:800;margin-top:12px;cursor:pointer}
+.badge{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat{background:#101010;border:1px solid #262626;border-radius:16px;padding:14px;text-align:center}
+.circle{width:150px;height:150px;border-radius:50%;border:12px solid #1f1f1f;border-top-color:#b8ff3b;display:flex;align-items:center;justify-content:center;margin:12px auto;font-weight:800}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
+.footer a{text-decoration:none;color:#fff;font-size:12px}
+#dashboard{display:none}
 </style>
 </head>
 <body>
-<h1>Zep Swipe Waitlist V80</h1>
+
+<div class="header">
+<img src="https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png">
+<div><h3 style="color:#b8ff3b">Zep Swipe</h3><small>Student Economy</small></div>
+</div>
+
+<div id="onboarding">
+<div class="hero">
+<span class="badge">🎓 Africa's Student Economy</span>
+<h1 style="margin-top:12px">Learn • Earn • Refer • Grow</h1>
+<p style="margin-top:10px">Join the waitlist and unlock your gamified dashboard.</p>
+</div>
 
 <div class="card">
-<h3>Join Waitlist</h3>
+<h3>Join Free</h3>
 <input id="name" placeholder="Full Name">
 <input id="email" placeholder="Email">
-<input id="university" placeholder="University">
 <input id="country" placeholder="Country">
 <select id="course">
 <option>Graphic Design</option>
 <option>Tutoring</option>
 <option>Photography</option>
-<option>Cleaning</option>
 <option>Tech Support</option>
 </select>
-<button onclick="joinWaitlist()">Unlock Dashboard</button>
+<button class="btn" onclick="unlock()">Unlock Dashboard</button>
+</div>
+</div>
+
+<div id="dashboard">
+<div class="hero">
+<h2 id="welcome"></h2>
+<p>Build skills. Earn MARI. Become an Ambassador.</p>
 </div>
 
 <div class="card">
-<h3>Supabase Configuration</h3>
-<pre>
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-</pre>
+<h3>🆔 Student Identity</h3>
+<div class="circle"><div id="studentId">ZS-0000</div></div>
+</div>
+
+<div class="card">
+<h3>💰 MARI Wallet</h3>
+<div class="circle"><div><span id="mari">0</span><br>MARI</div></div>
+</div>
+
+<div class="card">
+<h3>🎡 Daily Spin</h3>
+<p>Claim 5 MARI every 24 hours.</p>
+<button class="btn" onclick="spin()">SPIN NOW</button>
+<p id="spinResult"></p>
+</div>
+
+<div class="card">
+<h3>🚀 Referral Progress</h3>
+<div class="grid">
+<div class="stat"><h2 id="refs">0/5</h2><small>Referrals</small></div>
+<div class="stat"><h2>50</h2><small>MARI Bonus</small></div>
+</div>
+<input id="refLink" readonly>
+</div>
 </div>
 
 <script>
 const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-function joinWaitlist(){
+async function unlock(){
  const name=document.getElementById('name').value;
- if(!name){alert('Enter name');return;}
- const id='ZS-'+Math.floor(Math.random()*90000+10000);
- localStorage.setItem('zep_student_id',id);
- alert('Dashboard unlocked. Student ID: '+id);
+ const email=document.getElementById('email').value;
+ const country=document.getElementById('country').value;
+ const course=document.getElementById('course').value;
+
+ if(!name || !email){alert('Complete all fields');return;}
+
+ const studentId='ZS-'+Math.floor(Math.random()*90000+10000);
+
+ await supabaseClient.from('students').insert({
+   student_id:studentId,
+   full_name:name,
+   email:email,
+   country:country,
+   course:course,
+   mari_balance:0,
+   referrals:0
+ });
+
+ localStorage.setItem('studentId',studentId);
+
+ document.getElementById('onboarding').style.display='none';
+ document.getElementById('dashboard').style.display='block';
+ document.getElementById('welcome').innerText='Good Morning, '+name+' 👋';
+ document.getElementById('studentId').innerText=studentId;
+ document.getElementById('refLink').value='https://zepswipe.com/ref/'+studentId;
+}
+
+async function spin(){
+ const studentId=localStorage.getItem('studentId');
+ if(!studentId) return;
+
+ const {data}=await supabaseClient
+ .from('students')
+ .select('*')
+ .eq('student_id',studentId)
+ .single();
+
+ if(!data) return;
+
+ const now=new Date();
+
+ if(data.last_spin){
+   const diff=now-new Date(data.last_spin);
+   if(diff<86400000){
+      alert('Spin available after 24 hours');
+      return;
+   }
+ }
+
+ const newBalance=(data.mari_balance||0)+5;
+
+ await supabaseClient.from('students')
+ .update({
+   mari_balance:newBalance,
+   last_spin:now.toISOString()
+ })
+ .eq('student_id',studentId);
+
+ document.getElementById('mari').innerText=newBalance;
+ document.getElementById('spinResult').innerText='🎉 +5 MARI Earned';
 }
 </script>
+
 </body>
 </html>
