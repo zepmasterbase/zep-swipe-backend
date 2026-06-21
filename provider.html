@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V38</title>
+<title>Zep Swipe Provider V39 Secure</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -12,8 +12,10 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:90px}
 .header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
-.brand{display:flex;gap:10px;align-items:center}.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:#b8ff3b;font-weight:800}
-.actions{display:flex;gap:10px}.iconbtn{background:#141414;border:1px solid #262626;color:#fff;padding:10px;border-radius:12px}
+.brand{display:flex;gap:10px;align-items:center}
+.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:#b8ff3b;font-weight:800}
+.actions{display:flex;gap:10px}
+.iconbtn{background:#141414;border:1px solid #262626;color:#fff;padding:10px;border-radius:12px}
 .hero,.card{background:#141414;border:1px solid #262626;border-radius:20px;margin:16px;padding:16px}
 .hero{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
@@ -26,16 +28,23 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;
 </style>
 </head>
 <body>
+
 <div class="header">
-<div class="brand"><div class="logo">⚡</div><div><b style="color:#b8ff3b">Zep Swipe</b><div class="small">Provider Dashboard</div></div></div>
+<div class="brand">
+<div class="logo">⚡</div>
+<div>
+<b style="color:#b8ff3b">Zep Swipe</b>
+<div class="small">Provider Dashboard</div>
+</div>
+</div>
 <div class="actions">
 <button class="iconbtn"><i data-lucide="bell"></i></button>
-<button class="iconbtn"><i data-lucide="log-out"></i></button>
+<button class="iconbtn" onclick="logout()"><i data-lucide="log-out"></i></button>
 </div>
 </div>
 
 <div class="hero">
-<h2>Welcome Back 👋</h2>
+<h2 id="welcome">Welcome Back 👋</h2>
 <p>Turn your skills into income today.</p>
 <h1 style="color:#b8ff3b">R0.00</h1>
 <button class="btn">Withdraw Earnings</button>
@@ -48,11 +57,6 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;
 <p class="small">🔒 Rewards locked until token launch.</p>
 <input value="https://zepswipe.com/ref/example" readonly>
 <button class="btn">Copy Referral Link</button>
-<div class="grid" style="margin-top:12px">
-<div class="stat"><h3>0</h3><small>Referrals</small></div>
-<div class="stat"><h3>0</h3><small>MARI</small></div>
-<div class="stat"><h3>$0</h3><small>Value</small></div>
-</div>
 </div>
 
 <div class="card">
@@ -83,7 +87,13 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;
 
 <div class="card"><h3>My Services</h3></div>
 <div class="card"><h3>Live Notifications</h3></div>
-<div class="card" id="profile"><h3>Profile</h3><input placeholder="Full Name"><input placeholder="University"><button class="btn">Save Profile</button></div>
+
+<div class="card" id="profile">
+<h3>Profile</h3>
+<input placeholder="Full Name">
+<input placeholder="University">
+<button class="btn">Save Profile</button>
+</div>
 
 <div class="nav">
 <a href="index.html">🏠<br>Home</a>
@@ -92,6 +102,32 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;
 <a href="#wallet">🏦<br>Withdraw</a>
 <a href="#profile">👤<br>Profile</a>
 </div>
-<script>lucide.createIcons();</script>
+
+<script>
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
+const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+async function protectDashboard(){
+ const {data:{session}} = await client.auth.getSession();
+
+ if(!session){
+   window.location.href="login.html";
+   return;
+ }
+
+ document.getElementById("welcome").innerText =
+ "Welcome Back, " + (session.user.email || "Student") + " 👋";
+}
+
+async function logout(){
+ await client.auth.signOut();
+ window.location.href="login.html";
+}
+
+lucide.createIcons();
+protectDashboard();
+</script>
+
 </body>
 </html>
