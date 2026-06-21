@@ -3,83 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Marketplace V47</title>
+<title>Zep Swipe Marketplace V60 Backend Ready</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:#fff;padding-bottom:90px}
-header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:14px 16px}
+header{padding:14px 16px;background:#0b0b0b;border-bottom:1px solid var(--border)}
 .brand{display:flex;align-items:center;gap:12px}
 .brand img{width:42px;height:42px}
-.logo{color:var(--accent);font-weight:800}
-.hero{margin:16px;padding:32px;border-radius:24px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.82)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.badge{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
-.search{margin:16px;padding:14px;border:1px solid rgba(184,255,59,.25);border-radius:18px;background:#141414}
-.search input{width:100%;background:none;border:none;color:#fff;outline:none}
-.providers-grid,.deals-grid{display:flex;gap:18px;overflow-x:auto;padding:16px;scroll-behavior:smooth}
-.card{background:#141414;border:1px solid #262626;border-radius:18px;padding:16px}
-.provider-card,.deal-card{min-width:280px;max-width:280px;overflow:hidden}
-.provider-card img,.deal-card img{width:100%;height:180px;object-fit:cover;border-radius:12px}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800;margin-top:10px}
-.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
-.footer a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}
+.hero,.card{margin:16px;background:#141414;border:1px solid #262626;border-radius:20px}
+.hero{padding:30px}
+.card{padding:16px}
+.search input{width:100%;padding:12px;background:#101010;border:1px solid #262626;color:#fff;border-radius:12px}
+.row{display:flex;gap:16px;overflow:auto;padding:16px}
+.item{min-width:280px;background:#101010;border:1px solid #262626;border-radius:16px;padding:12px}
+.btn{width:100%;padding:12px;margin-top:10px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px}
+.footer a{color:#fff;text-decoration:none}
 </style>
 </head>
 <body>
+
 <header>
 <div class="brand">
-<img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png">
-<div class="logo">Zep Swipe Marketplace</div>
+<img src="https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png">
+<h3 style="color:#b8ff3b">Zep Swipe Marketplace</h3>
 </div>
 </header>
 
 <div class="hero">
-<span class="badge">Africa's Student Economy</span>
 <h1>Hire. Save. Earn.</h1>
-<p>Discover student talent and exclusive deals.</p>
+<p>Backend-ready marketplace for student services and deals.</p>
 </div>
 
-<div class="search">
-<input id="searchInput" placeholder="Search services, providers or deals..." onkeyup="searchMarketplace()">
+<div class="card search">
+<input placeholder="Search services, providers or deals">
 </div>
 
-<h3 style="padding:16px;color:#b8ff3b">Featured Providers</h3>
-<div class="providers-grid" id="providersGrid"></div>
+<div class="card">
+<h3>Featured Providers</h3>
+<div class="row" id="providers"></div>
+</div>
 
-<h3 style="padding:16px;color:#b8ff3b">Student Deals</h3>
-<div class="deals-grid" id="dealsGrid"></div>
+<div class="card">
+<h3>Student Deals</h3>
+<div class="row" id="deals"></div>
+</div>
 
-<footer class="footer">
-<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
-<a href="marketplace.html"><i data-lucide="briefcase"></i><span>Services</span></a>
-<a href="business-deals.html"><i data-lucide="ticket-percent"></i><span>Deals</span></a>
-<a href="provider.html"><i data-lucide="coins"></i><span>Earn</span></a>
-</footer>
+<div class="card">
+<h3>Backend Workflow</h3>
+<p>Client → Book Service → Pay → Provider Accepts → Work Completed → Client Approves → Wallet Credit → MARI Reward</p>
+</div>
+
+<div class="footer">
+<a href="index.html">Home</a>
+<a href="marketplace.html">Services</a>
+<a href="business-deals.html">Deals</a>
+<a href="provider.html">Earn</a>
+</div>
 
 <script>
-const providersGrid=document.getElementById('providersGrid');
-const dealsGrid=document.getElementById('dealsGrid');
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const client=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+// Expected tables:
+// profiles, services, bookings, messages,
+// wallets, transactions, referrals, deals
 
 for(let i=1;i<=6;i++){
-providersGrid.innerHTML+=`<div class="card provider-card"><img src="https://picsum.photos/400/250?random=${i}"><h4>Provider ${i}</h4><p>From R250</p><button class="btn">Hire Now</button></div>`;
-dealsGrid.innerHTML+=`<div class="card deal-card"><img src="https://picsum.photos/401/250?random=${i}"><h4>Student Deal ${i}</h4><button class="btn" onclick="claimDeal()">Claim Deal</button></div>`;
+providers.innerHTML += `<div class="item"><h4>Provider ${i}</h4><p>Service from R250</p><button class="btn">Hire Now</button></div>`;
+deals.innerHTML += `<div class="item"><h4>Student Deal ${i}</h4><button class="btn">Claim Deal</button></div>`;
 }
-
-function searchMarketplace(){
-const q=document.getElementById('searchInput').value.toLowerCase();
-document.querySelectorAll('.provider-card,.deal-card').forEach(c=>{
-c.style.display=c.innerText.toLowerCase().includes(q)?'block':'none';
-});
-}
-
-function claimDeal(){
-const sid=prompt('Enter Student ID');
-if(sid) alert('Deal claimed for '+sid);
-}
-
-lucide.createIcons();
 </script>
+
 </body>
 </html>
