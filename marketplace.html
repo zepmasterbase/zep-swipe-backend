@@ -3,105 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Marketplace V42</title>
+<title>Zep Swipe Marketplace V43</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff;--muted:#aaa}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:90px}
-header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:14px 16px;z-index:100}
+header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:14px 16px}
 .logo{color:var(--accent);font-weight:800}
-.hero{margin:16px;padding:24px;border-radius:24px;overflow:hidden;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.75)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover;border:1px solid rgba(184,255,59,.25);animation:pulseGlow 3s infinite}
-@keyframes pulseGlow{0%{box-shadow:0 0 15px rgba(184,255,59,.1)}50%{box-shadow:0 0 40px rgba(184,255,59,.35)}100%{box-shadow:0 0 15px rgba(184,255,59,.1)}}
-.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
-.btn{padding:12px 16px;border:none;border-radius:12px;background:var(--accent);color:#000;font-weight:800;cursor:pointer}
-.stats,.grid{display:grid;gap:12px;padding:16px}
-.stats{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
-.grid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.hero{margin:16px;padding:24px;border-radius:24px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.75)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover;border:1px solid rgba(184,255,59,.25)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px}
-.reward-card{background:linear-gradient(135deg,rgba(184,255,59,.08),rgba(20,20,20,.95));border:1px solid rgba(184,255,59,.25);box-shadow:0 0 25px rgba(184,255,59,.08);margin:16px}
-.toggle{display:flex;margin:0 16px;background:#111;border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.toggle button{flex:1;padding:12px;border:none;background:none;color:#fff}
-.active{background:var(--accent)!important;color:#000!important}
-.search{padding:16px}
-.search input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:#111;color:#fff}
+.reward{margin:16px;background:linear-gradient(135deg,rgba(184,255,59,.08),rgba(20,20,20,.95))}
+.btn{background:var(--accent);color:#000;border:none;padding:12px 16px;border-radius:12px;font-weight:800}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:16px}
 .section{padding:0 16px;color:var(--accent)}
-.provider-card{overflow:hidden;padding:0}
-.provider-img{width:100%;height:180px;object-fit:cover}
-.provider-content{padding:16px}
-.provider-name{font-weight:700;margin-top:6px}
-.provider-school{font-size:13px;color:#aaa;margin-top:4px}
-.rating{color:#ffd700;margin-top:8px}
+.providers-grid,.deals-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:16px}
+.provider-card,.deal-card{overflow:hidden;padding:0}
+.provider-img,.deal-img{width:100%;height:180px;object-fit:cover}
+.content{padding:16px}
 .footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0}
-.footer a{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;text-decoration:none;font-size:12px}
-.footer a:hover{color:var(--accent)}
+.footer a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
+@media(max-width:900px){
+.providers-grid,.deals-grid{display:flex;overflow-x:auto;gap:16px;padding:16px}
+.provider-card,.deal-card{min-width:280px}
+}
 </style>
 </head>
 <body>
-<header><div class="logo">⚡ Zep Swipe Marketplace V42</div></header>
+<header><div class="logo">⚡ Zep Swipe Marketplace V43</div></header>
 
 <div class="hero">
 <span class="badge">🎓 Africa's Student Economy</span>
-<h1 style="margin-top:10px">Hire. Save. Earn.</h1>
-<p style="margin:10px 0;color:#ddd">Discover talented students, unlock local deals, and support your community.</p>
-<button class="btn">🛠 Find Services</button>
-<button class="btn" style="margin-left:8px">🏷 Unlock Deals</button>
+<h1>Hire. Save. Earn.</h1>
+<p>Discover talented students and unlock local deals.</p>
 </div>
 
-<div class="card reward-card">
-<span class="badge">🎁 Customer Rewards</span>
-<h3 style="margin-top:10px">Earn 100 MARI On Every Completed Booking</h3>
-<p style="margin-top:10px">Request a service, complete payment and earn <b style="color:#b8ff3b">100 MARI</b>.</p>
-<p>1 MARI = $0.041</p>
-<p style="color:#ffb84d;margin-top:10px">🔒 Rewards remain locked until official token launch.</p>
+<div class="card reward">
+<h3>🎁 Earn 100 MARI Per Completed Booking</h3>
+<p>1 MARI = $0.041 • Rewards locked until launch.</p>
 </div>
 
 <div class="stats">
-<div class="card"><h3>4,321</h3><small>Services Completed</small></div>
-<div class="card"><h3>R180k</h3><small>Student Earnings</small></div>
-<div class="card"><h3>127</h3><small>Active Deals</small></div>
+<div class="card"><h3>4321</h3><small>Services</small></div>
+<div class="card"><h3>R180k</h3><small>Earnings</small></div>
+<div class="card"><h3>127</h3><small>Deals</small></div>
 <div class="card"><h3>890</h3><small>Providers</small></div>
 </div>
 
-<div class="toggle">
-<button class="active" onclick="showTab('services',this)">Services</button>
-<button onclick="showTab('deals',this)">Deals</button>
-</div>
-
-<div class="search"><input placeholder="Search services, deals, tutors, designers..."></div>
-
-<div id="servicesTab">
 <h3 class="section">🔥 Featured Providers</h3>
-<div class="grid">
-<div class="card provider-card">
-<img class="provider-img" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80">
-<div class="provider-content">
-<span class="badge">Graphic Design</span>
-<div class="provider-name">John Mensah</div>
-<div class="provider-school">University of Johannesburg</div>
-<div class="rating">★★★★★ 4.9</div>
-<p>From R250</p><button class="btn">Hire Now</button>
-</div></div>
+<div class="providers-grid">
+<div class='card provider-card'><img class='provider-img' src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>Graphic Design</span><h4>John Mensah</h4><small>University of Johannesburg</small><p>★★★★★ 4.9</p><p>From R250</p><button class='btn'>Hire Now</button></div></div><div class='card provider-card'><img class='provider-img' src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>Math Tutor</span><h4>Sarah Nkosi</h4><small>University of Pretoria</small><p>★★★★★ 4.9</p><p>From R200/hr</p><button class='btn'>Hire Now</button></div></div><div class='card provider-card'><img class='provider-img' src='https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>Photography</span><h4>David Moyo</h4><small>Wits University</small><p>★★★★★ 4.9</p><p>From R450</p><button class='btn'>Hire Now</button></div></div><div class='card provider-card'><img class='provider-img' src='https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>Tech Support</span><h4>Peter Dube</h4><small>UNISA</small><p>★★★★★ 4.9</p><p>From R180</p><button class='btn'>Hire Now</button></div></div><div class='card provider-card'><img class='provider-img' src='https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>English Tutor</span><h4>Mary Ndlovu</h4><small>UJ</small><p>★★★★★ 4.9</p><p>From R220</p><button class='btn'>Hire Now</button></div></div><div class='card provider-card'><img class='provider-img' src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>Social Media</span><h4>Lerato Molefe</h4><small>UP</small><p>★★★★★ 4.9</p><p>From R300</p><button class='btn'>Hire Now</button></div></div></div>
 
-<div class="card provider-card">
-<img class="provider-img" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80">
-<div class="provider-content">
-<span class="badge">Mathematics Tutor</span>
-<div class="provider-name">Sarah Nkosi</div>
-<div class="provider-school">University of Pretoria</div>
-<div class="rating">★★★★★ 4.8</div>
-<p>From R200/hr</p><button class="btn">Hire Now</button>
-</div></div>
-</div>
-</div>
-
-<div id="dealsTab" style="display:none">
-<h3 class="section">⚡ Flash Deals</h3>
-<div class="grid">
-<div class="card"><h3>50% Student Meal</h3><p>Expires Today</p><button class="btn">Claim Deal</button></div>
-<div class="card"><h3>20% Barber Discount</h3><p>Student Exclusive</p><button class="btn">Claim Deal</button></div>
-</div>
+<h3 class="section">⚡ Featured Deals</h3>
+<div class="deals-grid">
+<div class='card deal-card'><img class='deal-img' src='https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>Restaurant Deal</span><h4>50% Student Meal</h4><button class='btn'>Claim Deal</button></div></div><div class='card deal-card'><img class='deal-img' src='https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>Barber</span><h4>20% Barber Discount</h4><button class='btn'>Claim Deal</button></div></div><div class='card deal-card'><img class='deal-img' src='https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>Cafe</span><h4>30% Cafe Discount</h4><button class='btn'>Claim Deal</button></div></div><div class='card deal-card'><img class='deal-img' src='https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>Transport</span><h4>15% Transport</h4><button class='btn'>Claim Deal</button></div></div><div class='card deal-card'><img class='deal-img' src='https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>Salon</span><h4>25% Hair Salon</h4><button class='btn'>Claim Deal</button></div></div><div class='card deal-card'><img class='deal-img' src='https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=800&q=80'><div class='content'><span class='badge'>Restaurant</span><h4>40% Pizza Night</h4><button class='btn'>Claim Deal</button></div></div>
 </div>
 
 <footer class="footer">
@@ -111,14 +68,5 @@ header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--bo
 <a href="provider.html"><i data-lucide="coins"></i><span>Earn</span></a>
 </footer>
 
-<script>
-function showTab(tab,btn){
-document.getElementById('servicesTab').style.display=tab==='services'?'block':'none';
-document.getElementById('dealsTab').style.display=tab==='deals'?'block':'none';
-document.querySelectorAll('.toggle button').forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-}
-lucide.createIcons();
-</script>
-</body>
-</html>
+<script>lucide.createIcons();</script>
+</body></html>
