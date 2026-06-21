@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V40</title>
+<title>Zep Swipe Provider V41 Production Ready</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -11,11 +11,13 @@
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:90px}
-.header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;z-index:100}
 .brand{display:flex;gap:10px;align-items:center}
 .logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:#b8ff3b;font-weight:800}
-.actions{display:flex;gap:10px}
-.iconbtn{background:#141414;border:1px solid #262626;color:#fff;padding:10px;border-radius:12px}
+.actions{display:flex;gap:10px;align-items:center}
+.iconbtn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:#141414;border:1px solid #262626;border-radius:12px;color:#fff;cursor:pointer;position:relative}
+.iconbtn svg{width:20px;height:20px}
+.badge-count{position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#ff3b30;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center}
 .hero,.card{background:#141414;border:1px solid #262626;border-radius:20px;margin:16px;padding:16px}
 .hero{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
@@ -32,14 +34,18 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;
 <div class="header">
 <div class="brand">
 <div class="logo">⚡</div>
-<div>
-<b style="color:#b8ff3b">Zep Swipe</b>
-<div class="small">Provider Dashboard</div>
+<div><b style="color:#b8ff3b">Zep Swipe</b><div class="small">Provider Dashboard</div></div>
 </div>
-</div>
+
 <div class="actions">
-<button class="iconbtn"><i data-lucide="bell"></i></button>
-<button class="iconbtn" onclick="logout()"><i data-lucide="log-out"></i></button>
+<button class="iconbtn" onclick="openNotifications()">
+<i data-lucide="bell"></i>
+<span class="badge-count" id="notificationBadge">3</span>
+</button>
+
+<button class="iconbtn" onclick="logout()">
+<i data-lucide="log-out"></i>
+</button>
 </div>
 </div>
 
@@ -50,21 +56,17 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;
 <button class="btn">Withdraw Earnings</button>
 </div>
 
-<div class="card">
-<h3>🚀 Refer & Earn MARI</h3>
-<p>Earn <b style="color:#b8ff3b">25 MARI</b> per referral.</p>
-<p class="small">Rewards locked until launch.</p>
-<input value="https://zepswipe.com/ref/example" readonly>
-<button class="btn">Copy Referral Link</button>
+<div class="card" id="notificationsModal" style="display:none">
+<h3>🔔 New Job Alerts</h3>
+<div class="stat"><b>New Tutoring Request</b><p>Grade 12 Mathematics • R250</p></div>
+<div class="stat" style="margin-top:10px"><b>New Graphic Design Job</b><p>Logo Design • R400</p></div>
 </div>
 
 <div class="card">
-<div class="grid">
-<div class="stat"><h3>0</h3><small>Services</small></div>
-<div class="stat"><h3>0</h3><small>Jobs</small></div>
-<div class="stat"><h3>0</h3><small>Reviews</small></div>
-<div class="stat"><h3>0</h3><small>Alerts</small></div>
-</div>
+<h3>🚀 Refer & Earn MARI</h3>
+<p>Earn 25 MARI per referral.</p>
+<input value="https://zepswipe.com/ref/example" readonly>
+<button class="btn">Copy Referral Link</button>
 </div>
 
 <div class="card" id="create">
@@ -83,9 +85,6 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;
 <input placeholder="Amount">
 <button class="btn">Request Withdrawal</button>
 </div>
-
-<div class="card"><h3>My Services</h3></div>
-<div class="card"><h3>Live Notifications</h3></div>
 
 <div class="card" id="profile">
 <h3>Profile</h3>
@@ -109,15 +108,29 @@ const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 async function protectDashboard(){
  const {data:{session}}=await client.auth.getSession();
- if(!session){window.location.href='login.html';return;}
+ if(!session){window.location.replace('login.html');return;}
  document.getElementById('welcome').innerText='Welcome Back, '+(session.user.email||'Student')+' 👋';
 }
-async function logout(){
- await client.auth.signOut();
- window.location.href='login.html';
+
+function openNotifications(){
+ const modal=document.getElementById('notificationsModal');
+ modal.style.display=modal.style.display==='none'?'block':'none';
 }
+
+async function logout(){
+ try{
+  await client.auth.signOut();
+  localStorage.clear();
+  sessionStorage.clear();
+  window.location.replace('login.html');
+ }catch(e){
+  window.location.replace('login.html');
+ }
+}
+
 lucide.createIcons();
 protectDashboard();
 </script>
+
 </body>
 </html>
