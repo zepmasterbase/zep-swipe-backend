@@ -3,61 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Student Deals V21</title>
+<title>Zep Student Deals V22</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,sans-serif}
-header{padding:18px;text-align:center;border-bottom:1px solid var(--border)}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff;--muted:#aaa;}
+*{box-sizing:border-box;font-family:Inter,sans-serif}
+body{margin:0;background:var(--bg);color:var(--text)}
+header{padding:18px;text-align:center;border-bottom:1px solid var(--border);position:sticky;top:0;background:#0b0b0b}
 h1{color:var(--accent)}
-.container{max-width:900px;margin:auto;padding:16px}
+.container{max-width:1000px;margin:auto;padding:16px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-top:12px}
-input,textarea,select{width:100%;padding:12px;margin-top:8px;background:#0d0d0d;color:#fff;border:1px solid var(--border);border-radius:12px}
-button{padding:12px;border:none;border-radius:12px;font-weight:700;cursor:pointer}
-.primary{background:var(--accent);color:#000}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.box{background:#111;padding:12px;border-radius:12px}
+.box{background:#111;border:1px solid var(--border);padding:12px;border-radius:12px}
+input,textarea,select{width:100%;padding:12px;margin-top:8px;background:#0d0d0d;color:#fff;border:1px solid var(--border);border-radius:12px}
+button{padding:12px 16px;border:none;border-radius:12px;font-weight:700;cursor:pointer}
+.primary{background:var(--accent);color:#000}
+.badge{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent);font-size:12px}
 .deal{border:1px solid var(--border);padding:12px;border-radius:12px;margin-top:10px}
+.small{font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
+
 <header>
-<h1>⚡ Zep Student Deals V21</h1>
-<p>Backend Ready + Monetisation Ready</p>
+<h1>⚡ Zep Student Deals V22</h1>
+<p>Real-Time + Analytics + Coupon Architecture</p>
 </header>
 
 <div class="container">
 
 <div class="grid">
-<div class="box"><h3 id="views">0</h3><p>Views</p></div>
-<div class="box"><h3 id="claims">0</h3><p>Claims</p></div>
-<div class="box"><h3 id="clicks">0</h3><p>WhatsApp Clicks</p></div>
-<div class="box"><h3 id="activeDeals">0</h3><p>Active Deals</p></div>
+<div class="box"><h2 id="views">0</h2><p>Views</p></div>
+<div class="box"><h2 id="claims">0</h2><p>Claims</p></div>
+<div class="box"><h2 id="clicks">0</h2><p>WhatsApp Clicks</p></div>
+<div class="box"><h2 id="activeDeals">0</h2><p>Active Deals</p></div>
 </div>
 
 <div class="card">
-<h3>Business Profile</h3>
+<h3>🏪 Business Profile</h3>
 <input id="businessName" placeholder="Business Name">
 <input id="ownerName" placeholder="Owner Name">
 </div>
 
 <div class="card">
-<h3>Create Deal</h3>
-<input type="file" id="imageFile">
+<h3>🚀 Create Deal</h3>
+
 <select id="listingType">
 <option value="free">Free Listing</option>
 <option value="featured">Featured Deal (R49)</option>
 <option value="premium">Premium Deal (R99)</option>
 </select>
+
+<input type="file" id="imageFile">
 <input id="title" placeholder="Deal Title">
-<textarea id="description" placeholder="Description"></textarea>
+<textarea id="description" placeholder="Deal Description"></textarea>
 <input id="location" placeholder="Location">
+
 <button class="primary" onclick="publishDeal()">Publish Deal</button>
+
+<p class="small">
+First 5000 listings are free. Featured and Premium require Paystack verification.
+</p>
+
 <p id="status"></p>
 </div>
 
 <div class="card">
-<h3>My Deals</h3>
+<h3>📦 My Deals</h3>
 <div id="myDeals"></div>
 </div>
 
@@ -66,9 +78,11 @@ button{padding:12px;border:none;border-radius:12px;font-weight:700;cursor:pointe
 <script>
 const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
+
 const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let businessId=localStorage.getItem("zep_business_id");
+
 if(!businessId){
  businessId=crypto.randomUUID();
  localStorage.setItem("zep_business_id",businessId);
@@ -77,54 +91,125 @@ if(!businessId){
 async function uploadImage(file){
  if(!file) return "";
  const fileName=Date.now()+"-"+file.name;
- await client.storage.from("deal-images").upload(fileName,file);
- return client.storage.from("deal-images").getPublicUrl(fileName).data.publicUrl;
+
+ const {error}=await client.storage
+ .from("deal-images")
+ .upload(fileName,file);
+
+ if(error) return "";
+
+ const {data}=client.storage
+ .from("deal-images")
+ .getPublicUrl(fileName);
+
+ return data.publicUrl;
+}
+
+function generateCouponCode(){
+ return "ZS-"+Math.random().toString(36).substring(2,8).toUpperCase();
 }
 
 async function publishDeal(){
- const type=document.getElementById("listingType").value;
 
- if(type==="featured" || type==="premium"){
-   document.getElementById("status").innerText=
+ const listingType=document.getElementById("listingType").value;
+
+ if(listingType==="featured" || listingType==="premium"){
+   document.getElementById("status").innerText =
    "Connect Paystack payment verification before activating paid listings.";
    return;
  }
 
- const imageUrl=await uploadImage(document.getElementById("imageFile").files[0]);
+ const imageUrl=await uploadImage(
+ document.getElementById("imageFile").files[0]
+ );
 
- const {error}=await client.from("deals").insert([{
-   business_id:businessId,
-   business_name:businessName.value,
-   owner_name:ownerName.value,
-   title:title.value,
-   description:description.value,
-   location:location.value,
-   image_url:imageUrl,
-   listing_type:type,
-   active:true
+ const expiresAt=new Date(
+ Date.now()+30*24*60*60*1000
+ ).toISOString();
+
+ const {data,error}=await client
+ .from("deals")
+ .insert([{
+ business_id:businessId,
+ business_name:businessName.value,
+ owner_name:ownerName.value,
+ title:title.value,
+ description:description.value,
+ location:location.value,
+ image_url:imageUrl,
+ listing_type:listingType,
+ active:true,
+ expires_at:expiresAt,
+ created_at:new Date().toISOString()
+ }])
+ .select()
+ .single();
+
+ if(error){
+   status.innerText=error.message;
+   return;
+ }
+
+ const coupons=[];
+
+ for(let i=0;i<50;i++){
+   coupons.push({
+     deal_id:data.id,
+     coupon_code:generateCouponCode(),
+     is_used:false
+   });
+ }
+
+ await client.from("deal_coupons").insert(coupons);
+
+ await client.from("analytics").insert([{
+   event_type:"deal_created",
+   meta:{
+     deal_id:data.id,
+     business_id:businessId
+   }
  }]);
 
- document.getElementById("status").innerText=
-   error ? error.message : "Deal published successfully";
+ status.innerText="✅ Deal published successfully";
 
  loadDeals();
 }
 
 async function loadDeals(){
- const {data=[]}=await client.from("deals")
+
+ const {data=[]}=await client
+ .from("deals")
  .select("*")
- .eq("business_id",businessId);
+ .eq("business_id",businessId)
+ .order("created_at",{ascending:false});
 
  document.getElementById("activeDeals").innerText=data.length;
 
  myDeals.innerHTML=data.map(d=>`
  <div class="deal">
- <b>${d.title}</b><br>
- ${d.listing_type}
- </div>`).join("");
+   <span class="badge">${d.listing_type}</span>
+   <h4>${d.title}</h4>
+   <p>${d.location||""}</p>
+   <small>Expires: ${d.expires_at||"N/A"}</small>
+ </div>
+ `).join("");
 }
+
+client.channel("realtime-deals")
+.on(
+"postgres_changes",
+{
+event:"*",
+schema:"public",
+table:"deals"
+},
+()=>{
+ loadDeals();
+})
+.subscribe();
 
 loadDeals();
 </script>
+
 </body>
 </html>
