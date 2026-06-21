@@ -3,22 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Waitlist V31</title>
+<title>Zep Swipe Waitlist V40 Production Ready</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:#070707;color:#fff;padding-bottom:90px}
-.hero{padding:32px;min-height:300px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.card{background:#141414;border:1px solid #262626;border-radius:20px;padding:18px;margin:16px}
-input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
-.btn{width:100%;padding:14px;border:none;border-radius:14px;background:#b8ff3b;color:#000;font-weight:800;margin-top:12px}
-.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
-.stat{background:#101010;border:1px solid #262626;border-radius:16px;padding:12px}
-.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
-.footer a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
+*{box-sizing:border-box;font-family:Inter,sans-serif;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);padding-bottom:90px}
+.hero{padding:32px;min-height:320px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;margin:16px}
+input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid var(--border);border-radius:12px}
+.btn{width:100%;padding:14px;border:none;border-radius:14px;background:var(--accent);color:#000;font-weight:800;margin-top:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat{background:#101010;border:1px solid var(--border);border-radius:14px;padding:12px}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0}
+.footer a{color:#fff;text-decoration:none;display:flex;flex-direction:column;align-items:center;font-size:12px}
 #dashboard{display:none}
 </style>
 </head>
@@ -28,32 +28,28 @@ input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#f
 <div class="hero">
 <h1>⚡ Zep Swipe</h1>
 <span class="badge">Africa's Student Economy</span>
-<h2 style="margin-top:12px">Learn. Earn. Grow.</h2>
-<p>Join the waitlist and unlock your Student Economy Dashboard.</p>
+<h2 style="margin-top:12px">Learn • Earn • Grow</h2>
+<p>Join the waitlist and unlock your student dashboard.</p>
 </div>
 
 <div class="card">
 <h3>🎓 Join Waitlist</h3>
 <input id="name" placeholder="Full Name">
-<input id="email" placeholder="Email Address">
+<input id="email" placeholder="Email">
 <input id="university" placeholder="University / College">
 <input id="country" placeholder="Country">
-
 <select id="service">
 <option>Tutoring</option>
 <option>Graphic Design</option>
 <option>Photography</option>
 <option>Cleaning</option>
 <option>Tech Support</option>
-<option>Social Media</option>
 </select>
-
-<button class="btn" onclick="joinWaitlist()">Continue</button>
+<button class="btn" onclick="joinWaitlist()">Unlock Dashboard</button>
 </div>
 </div>
 
 <div id="dashboard">
-
 <div class="hero">
 <h2 id="welcome">Welcome 👋</h2>
 <p>Your Student Economy Dashboard</p>
@@ -69,25 +65,24 @@ input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#f
 <div class="grid">
 <div class="stat"><h2>0</h2><small>MARI</small></div>
 <div class="stat"><h2>0</h2><small>Referrals</small></div>
+<div class="stat"><h2>0</h2><small>XP</small></div>
 </div>
 <p>Earn 15 MARI for every 5 successful referrals.</p>
 </div>
 
 <div class="card">
-<h3>📚 Daily Tasks</h3>
-<p>☐ Invite a Friend</p>
-<p>☐ Watch a Skill Lesson</p>
-<p>☐ Complete Quiz</p>
-<p>☐ Share Referral Link</p>
+<h3>📚 Learning Center</h3>
+<p>▶ Graphic Design Basics (+5 XP)</p>
+<p>▶ Tutoring Fundamentals (+5 XP)</p>
+<p>▶ Photography Starter (+5 XP)</p>
 </div>
 
 <div class="card">
-<h3>🏆 Leaderboard</h3>
-<p>#1 Sarah — 410 MARI</p>
-<p>#2 Michael — 380 MARI</p>
-<p>#3 David — 350 MARI</p>
+<h3>🔥 Daily Missions</h3>
+<p>Invite Friend (+3 XP)</p>
+<p>Watch Lesson (+5 XP)</p>
+<p>Share Referral (+2 XP)</p>
 </div>
-
 </div>
 
 <footer class="footer">
@@ -99,26 +94,15 @@ input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#f
 <script>
 function joinWaitlist(){
 const name=document.getElementById('name').value;
-const country=document.getElementById('country').value||'AF';
-
-if(!name){
-alert('Please enter your name');
-return;
-}
-
-const id='ZS-'+Math.floor(Math.random()*90000+10000)+'-'+country.substring(0,2).toUpperCase();
-
-localStorage.setItem('zep_student_id',id);
-localStorage.setItem('zep_name',name);
-
+const country=(document.getElementById('country').value||'AF').substring(0,2).toUpperCase();
+if(!name){alert('Enter your name');return;}
+const id='ZS-'+Math.floor(Math.random()*90000+10000)+'-'+country;
 document.getElementById('onboarding').style.display='none';
 document.getElementById('dashboard').style.display='block';
 document.getElementById('welcome').innerText='Welcome '+name+' 👋';
 document.getElementById('studentId').innerText=id;
 }
-
 lucide.createIcons();
 </script>
-
 </body>
 </html>
