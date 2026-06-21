@@ -3,26 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V42 Premium</title>
+<title>Zep Swipe Provider V43 Production Ready</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:var(--bg);color:var(--text);padding-bottom:90px}
-.header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+body{background:var(--bg);color:var(--text);padding-bottom:100px}
+.header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
 .brand{display:flex;gap:10px;align-items:center}
-.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:#b8ff3b}
+.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center}
 .actions{display:flex;gap:10px}
 .iconbtn{width:44px;height:44px;border:1px solid var(--border);border-radius:12px;background:#141414;color:#fff;display:flex;align-items:center;justify-content:center;position:relative}
-.badge{position:absolute;top:-4px;right:-4px;background:#ff3b30;color:#fff;width:18px;height:18px;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center}
+.badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ff3b30;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center}
 .hero,.card{background:#141414;border:1px solid var(--border);border-radius:20px;margin:16px;padding:16px}
 .hero{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
 .stat{background:#101010;border:1px solid var(--border);border-radius:14px;padding:12px}
+input,textarea,select{width:100%;padding:12px;margin-top:8px;background:#101010;color:#fff;border:1px solid var(--border);border-radius:12px}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800;margin-top:10px}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0}
 .nav a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800;margin-top:10px}
 </style>
 </head>
 <body>
@@ -30,20 +31,11 @@ body{background:var(--bg);color:var(--text);padding-bottom:90px}
 <div class="header">
 <div class="brand">
 <div class="logo"><i data-lucide="zap"></i></div>
-<div>
-<b style="color:#b8ff3b">Zep Swipe</b>
-<div style="font-size:12px;color:#aaa">Provider Dashboard</div>
+<div><b style="color:#b8ff3b">Zep Swipe</b><div style="font-size:12px;color:#aaa">Provider Dashboard</div></div>
 </div>
-</div>
-
 <div class="actions">
-<button class="iconbtn">
-<i data-lucide="bell"></i>
-<span class="badge">3</span>
-</button>
-<button class="iconbtn">
-<i data-lucide="log-out"></i>
-</button>
+<button class="iconbtn"><i data-lucide="bell"></i><span class="badge">3</span></button>
+<button class="iconbtn"><i data-lucide="log-out"></i></button>
 </div>
 </div>
 
@@ -56,8 +48,9 @@ body{background:var(--bg);color:var(--text);padding-bottom:90px}
 
 <div class="card">
 <h3><i data-lucide="rocket"></i> Refer & Earn MARI</h3>
-<p>Earn 25 MARI per referral.</p>
-<button class="btn"><i data-lucide="copy"></i> Copy Referral Link</button>
+<p>Earn 15 MARI for every 5 friends that complete onboarding.</p>
+<input value="https://zepswipe.com/ref/example" readonly>
+<button class="btn"><i data-lucide="message-circle"></i> Share On WhatsApp</button>
 </div>
 
 <div class="card">
@@ -67,6 +60,39 @@ body{background:var(--bg);color:var(--text);padding-bottom:90px}
 <div class="stat"><i data-lucide="star"></i><h3>0</h3><small>Reviews</small></div>
 <div class="stat"><i data-lucide="bell-ring"></i><h3>0</h3><small>Alerts</small></div>
 </div>
+</div>
+
+<div class="card" id="create">
+<h3><i data-lucide="square-plus"></i> Service Listing Studio</h3>
+<select><option>Tutoring</option><option>Graphic Design</option><option>Photography</option><option>Cleaning</option><option>Tech Support</option></select>
+<input placeholder="Service Name">
+<input placeholder="Price">
+<textarea placeholder="Description"></textarea>
+<input type="file">
+<button class="btn">Publish Service</button>
+</div>
+
+<div class="card" id="wallet">
+<h3><i data-lucide="wallet"></i> Withdrawal Request</h3>
+<input placeholder="Bank Name">
+<input placeholder="Account Number">
+<input placeholder="Account Holder">
+<input placeholder="Amount">
+<button class="btn">Request Withdrawal</button>
+</div>
+
+<div class="card">
+<h3><i data-lucide="briefcase-business"></i> My Services</h3>
+<p>Your active marketplace listings will appear here.</p>
+</div>
+
+<div class="card" id="profile">
+<h3><i data-lucide="circle-user-round"></i> Profile</h3>
+<input placeholder="Full Name">
+<input placeholder="Email">
+<input placeholder="University">
+<input type="file">
+<button class="btn">Save Profile</button>
 </div>
 
 <div class="nav">
