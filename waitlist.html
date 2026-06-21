@@ -3,156 +3,97 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Waitlist V27</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Zep Swipe Waitlist V30</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff;--muted:#aaa;}
-*{box-sizing:border-box;font-family:Inter,sans-serif;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);padding-bottom:90px}
-header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:16px;display:flex;justify-content:space-between}
-.logo{color:var(--accent);font-weight:800}
-.container{max-width:1200px;margin:auto;padding:16px}
-.card,.stat{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-top:12px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-input,select{width:100%;padding:12px;margin-top:10px;background:#111;border:1px solid var(--border);border-radius:12px;color:#fff}
-.btn{width:100%;padding:12px;margin-top:10px;border:none;border-radius:12px;background:var(--accent);color:#000;font-weight:700;cursor:pointer}
-.badge{padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
-.small{font-size:12px;color:var(--muted)}
-.progress{height:10px;background:#111;border-radius:999px;overflow:hidden;margin-top:10px}
-.bar{height:100%;width:0;background:var(--accent)}
-.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px}
-.footer a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:#070707;color:#fff;padding-bottom:40px}
+.hero{min-height:420px;padding:32px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.8)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover;border-radius:0 0 30px 30px}
+.logo{color:#b8ff3b;font-weight:800;font-size:24px}
+.card{background:#141414;border:1px solid #262626;border-radius:20px;padding:18px;margin:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.stat{background:#101010;border:1px solid #262626;border-radius:16px;padding:12px}
+.btn{width:100%;padding:14px;border:none;border-radius:14px;background:#b8ff3b;color:#000;font-weight:800}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
+.progress{height:10px;background:#222;border-radius:999px;overflow:hidden}
+.fill{height:100%;width:60%;background:#b8ff3b}
+input{width:100%;padding:12px;margin-top:10px;border-radius:12px;background:#101010;color:#fff;border:1px solid #262626}
 </style>
 </head>
 <body>
-<header>
-<div class="logo">⚡ Zep Swipe Waitlist V27</div>
-<div class="badge">Africa → Global</div>
-</header>
 
-<div class="container">
+<div class="hero">
+<div class="logo">⚡ Zep Swipe</div>
+<br>
+<span class="badge">Africa's Student Economy</span>
+<h1 style="margin-top:12px">Learn. Earn. Grow.</h1>
+<p style="margin-top:10px;max-width:600px">Join the movement helping students build skills, earn rewards and unlock opportunities before launch.</p>
+</div>
 
+<div class="card">
+<h3>🆔 Student Economy ID</h3>
+<p>Your unique waitlist identity</p>
+<h2 style="color:#b8ff3b;margin-top:10px">ZS-92841-GH</h2>
+</div>
+
+<div class="card">
+<h3>🚀 Launch Countdown</h3>
+<h2 style="color:#b8ff3b">48 Days 12 Hours</h2>
+</div>
+
+<div class="card">
+<h3>🎁 MARI Rewards Wallet</h3>
 <div class="grid">
-<div class="stat"><h2 id="users">0</h2><p>Total Students</p></div>
-<div class="stat"><h2 id="countries">0</h2><p>Countries</p></div>
-<div class="stat"><h2 id="referrals">0</h2><p>Referrals</p></div>
-<div class="stat"><h2 id="ambassadors">0</h2><p>Ambassadors</p></div>
+<div class="stat"><h2>45</h2><small>MARI</small></div>
+<div class="stat"><h2>$1.85</h2><small>Value</small></div>
+<div class="stat"><h2>Locked</h2><small>Status</small></div>
+</div>
+<p style="margin-top:10px">1 MARI = $0.041</p>
 </div>
 
 <div class="card">
-<h2>🎓 Join The Student Economy</h2>
-<p class="small">South Africa Pilot • Ghana Next • Global Waitlist Open</p>
-<input id="name" placeholder="Full Name">
-<input id="email" placeholder="Email">
-<input id="phone" placeholder="Phone Number">
-<input id="city" placeholder="City">
-<input id="university" placeholder="University / College">
-<select id="country">
-<option>South Africa</option>
-<option>Ghana</option>
-<option>Nigeria</option>
-<option>Kenya</option>
-<option>Zambia</option>
-<option>Botswana</option>
-<option>Other</option>
-</select>
-<button class="btn" onclick="joinWaitlist()">Join Waitlist</button>
-<p id="status" class="small"></p>
+<h3>👥 Refer & Earn</h3>
+<p>Invite 5 friends and earn 15 MARI.</p>
+<input value="https://zepswipe.com/ref/ZS-92841-GH" readonly>
+<div style="margin-top:12px">Progress 3 / 5</div>
+<div class="progress"><div class="fill"></div></div>
+<button class="btn" style="margin-top:12px">Copy Referral Link</button>
 </div>
 
 <div class="card">
-<h3>🚀 Referral Progress</h3>
-<div id="progressText">0 / 5 Referrals</div>
-<div class="progress"><div id="progressBar" class="bar"></div></div>
-<p id="tier">Starter</p>
-</div>
-
-<div class="card">
-<h3>🔗 Your Invite Link</h3>
-<input id="inviteLink" readonly>
-<button class="btn" onclick="copyLink()">Copy Invite Link</button>
-</div>
-
+<h3>🎮 Level Progress</h3>
 <div class="grid">
-<div class="card">
-<h3>🌍 Expansion Roadmap</h3>
-<p>✅ South Africa Pilot</p>
-<p>🟡 Ghana Next</p>
-<p>🟡 Nigeria Waitlist</p>
-<p>🟡 Kenya Waitlist</p>
-<p>🟡 Global Expansion</p>
+<div class="stat"><h2>Level 3</h2><small>Learner</small></div>
+<div class="stat"><h2>1280</h2><small>XP</small></div>
+</div>
+<div style="margin-top:12px">Next Level</div>
+<div class="progress"><div class="fill" style="width:75%"></div></div>
 </div>
 
 <div class="card">
-<h3>🏆 Reward Levels</h3>
-<p>5 Referrals → Priority Access 🚀</p>
-<p>10 Referrals → Ambassador 🔥</p>
-<p>25 Referrals → Founding Member ⭐</p>
-<p>50 Referrals → Champion 👑</p>
-</div>
+<h3>📚 Daily Tasks</h3>
+<p>☐ Invite 1 Friend</p>
+<p>☐ Watch Skill Lesson</p>
+<p>☐ Complete Quiz</p>
+<p>☐ Share Referral Link</p>
+<p>☐ Check Student Deals</p>
 </div>
 
 <div class="card">
-<h3>🏅 Global Leaderboard</h3>
-<div id="leaderboard">Loading...</div>
+<h3>🏆 Top Ambassadors</h3>
+<p>#1 Sarah — 410 MARI</p>
+<p>#2 Michael — 380 MARI</p>
+<p>#3 David — 350 MARI</p>
 </div>
 
+<div class="card">
+<h3>📝 Join Waitlist</h3>
+<input placeholder="Full Name">
+<input placeholder="Email Address">
+<input placeholder="Country">
+<button class="btn" style="margin-top:12px">Join Waitlist</button>
 </div>
 
-<nav class="footer">
-<a href="index.html">🏠<br>Home</a>
-<a href="marketplace.html">🛒<br>Marketplace</a>
-<a href="waitlist.html">👥<br>Waitlist</a>
-</nav>
-
-<script>
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-async function joinWaitlist(){
- const code=crypto.randomUUID().substring(0,8);
-
- const {data,error}=await client.from("waitlist_users").insert([{
-  name:name.value,
-  email:email.value,
-  phone:phone.value,
-  city:city.value,
-  university:university.value,
-  country:country.value,
-  invite_code:code,
-  invites:0,
-  access_status:"waitlist"
- }]).select().single();
-
- if(error){status.innerText=error.message;return;}
-
- inviteLink.value=window.location.origin+window.location.pathname+"?ref="+code;
- status.innerText="Welcome to Zep Swipe!";
- localStorage.setItem("zep_waitlist_user",JSON.stringify(data));
-}
-
-async function loadLeaderboard(){
- try{
-  const {data=[]}=await client.from("waitlist_users")
-  .select("name,country,invites")
-  .order("invites",{ascending:false})
-  .limit(20);
-
-  leaderboard.innerHTML=data.map(u =>
-  `<div style="padding:8px 0;border-bottom:1px solid #262626">${u.name||"User"} • ${u.country||""} • ${u.invites||0} referrals</div>`
-  ).join("");
- }catch(e){
-  leaderboard.innerHTML="No data yet";
- }
-}
-
-function copyLink(){
- navigator.clipboard.writeText(inviteLink.value);
- alert("Invite link copied");
-}
-
-loadLeaderboard();
-</script>
 </body>
 </html>
