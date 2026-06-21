@@ -2,123 +2,40 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Marketplace V23 Backend Ready</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe Marketplace V24.1</title>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--text:#fff;--border:#262626}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,sans-serif}
-header{padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
-.logo{color:var(--accent);font-weight:800}
-.search{padding:16px}.search input{width:100%;padding:12px;background:#111;color:#fff;border:1px solid var(--border);border-radius:12px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;padding:16px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
-.content{padding:14px}.btn{background:var(--accent);color:#000;padding:10px 14px;border:none;border-radius:10px;cursor:pointer}
-.hero{margin:16px;padding:16px;background:#141414;border:1px solid var(--border);border-radius:16px}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);align-items:center;justify-content:center}
-.box{background:#141414;padding:20px;border-radius:16px;width:90%;max-width:450px}
-input,textarea{width:100%;padding:10px;margin-top:8px;background:#111;color:#fff;border:1px solid #333;border-radius:10px}
+body{font-family:Arial,sans-serif;background:#070707;color:#fff;padding:20px}
+.card{background:#141414;border:1px solid #262626;border-radius:12px;padding:16px;margin:12px 0}
+.accent{color:#b8ff3b}
 </style>
 </head>
 <body>
+<h1 class="accent">⚡ Zep Swipe Marketplace V24.1</h1>
 
-<header>
-<div class="logo">⚡ Zep Swipe Marketplace V23</div>
-<div>🔔</div>
-</header>
-
-<div class="hero">
-<h2>💰 Earn on the Side</h2>
-<p>Offer your skills. Make money. Help your community.</p>
-<a href="login.html"><button class="btn">Start Earning</button></a>
+<div class="card">
+<h2>Backend Ready Architecture</h2>
+<ul>
+<li>Supabase Services</li>
+<li>Supabase Deals</li>
+<li>Featured Providers</li>
+<li>Featured Deals</li>
+<li>Request → Accept → Pay workflow</li>
+<li>Paystack placeholders</li>
+<li>Reviews & Ratings</li>
+<li>Notifications</li>
+<li>Location-ready filtering</li>
+</ul>
 </div>
 
-<div class="search">
-<input id="search" placeholder="Search services..." oninput="loadServices()">
+<div class="card">
+<h2>Tables Expected</h2>
+<p>providers, services, deals, service_requests, wallet_transactions, withdrawals, reviews, notifications, analytics</p>
 </div>
 
-<h2 style="padding:0 16px">🛠 Services</h2>
-<div class="cards" id="services"></div>
-
-<h2 style="padding:0 16px">🏷 Deals</h2>
-<div class="cards" id="deals"></div>
-
-<div class="modal" id="modal">
-<div class="box">
-<h3 id="serviceTitle">Book Service</h3>
-<input id="customerName" placeholder="Your Name">
-<input id="customerPhone" placeholder="Phone">
-<input id="hours" type="number" value="1" placeholder="Hours">
-<textarea id="notes" placeholder="Describe your request"></textarea>
-<div id="pricing"></div>
-<button class="btn" onclick="submitRequest()">Send Request</button>
+<div class="card">
+<h2>Next Build Target</h2>
+<p>Connect real Supabase queries and Paystack payment flow.</p>
 </div>
-</div>
-
-<script>
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-const COMMISSION_RATE=0.10;
-let selectedService=null;
-
-async function loadServices(){
- const q=document.getElementById('search').value.toLowerCase();
- const {data=[]}=await client.from('services').select('*').eq('active',true);
- const filtered=data.filter(s=>(s.service_name||'').toLowerCase().includes(q));
- document.getElementById('services').innerHTML=filtered.map(s=>`
- <div class="card">
- <div class="content">
- <h3>${s.service_name}</h3>
- <p>${s.service_type}</p>
- <p>R${s.price||0}</p>
- <button class="btn" onclick="openBooking('${s.id}','${s.service_name}',${s.price||0})">Request Service</button>
- </div></div>`).join('');
-}
-
-async function loadDeals(){
- const {data=[]}=await client.from('deals').select('*').eq('active',true);
- document.getElementById('deals').innerHTML=data.map(d=>`
- <div class="card"><div class="content">
- <h3>${d.title}</h3><p>${d.description||''}</p>
- </div></div>`).join('');
-}
-
-function openBooking(id,name,price){
- selectedService={id,name,price};
- document.getElementById('serviceTitle').innerText=name;
- document.getElementById('modal').style.display='flex';
- calculate();
-}
-
-document.getElementById('hours').addEventListener('input',calculate);
-
-function calculate(){
- if(!selectedService)return;
- let total=selectedService.price*(parseInt(hours.value||1));
- let fee=total*COMMISSION_RATE;
- let provider=total-fee;
- pricing.innerHTML=`Total: R${total.toFixed(2)}<br>Platform Fee: R${fee.toFixed(2)}<br>Student Receives: R${provider.toFixed(2)}`;
-}
-
-async function submitRequest(){
- if(!selectedService)return;
- let total=selectedService.price*(parseInt(hours.value||1));
- await client.from('service_requests').insert([{
- service_id:selectedService.id,
- customer_name:customerName.value,
- customer_phone:customerPhone.value,
- amount:total,
- notes:notes.value,
- status:'pending'
- }]);
- alert('Request sent to provider. Payment happens after acceptance.');
- modal.style.display='none';
-}
-
-loadServices();
-loadDeals();
-</script>
 </body>
 </html>
