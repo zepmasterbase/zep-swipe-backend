@@ -2,380 +2,157 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Growth System</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zep Swipe Waitlist V27</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-
-/* =========================
-   V16 MARKETPLACE THEME
-========================= */
-:root{
-  --bg:#070707;
-  --card:#141414;
-  --accent:#b8ff3b;
-  --text:#ffffff;
-  --muted:#aaaaaa;
-  --border:#262626;
-}
-
-body {
-  margin: 0;
-  font-family: system-ui, Arial;
-  background: var(--bg);
-  color: var(--text);
-  padding-bottom:80px;
-}
-
-/* HEADER */
-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 14px;
-  position: sticky;
-  top:0;
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-
-.logo {
-  color: var(--accent);
-  font-weight:700;
-}
-
-.small {
-  font-size:12px;
-  color: var(--muted);
-}
-
-/* CONTAINER */
-.container {
-  max-width: 900px;
-  margin:auto;
-  padding:14px;
-}
-
-/* PROGRESS */
-.progress-box {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 16px;
-  margin-top: 14px;
-  text-align:center;
-}
-
-.circle {
-  width:120px;
-  height:120px;
-  border-radius:50%;
-  margin:auto;
-  border: 6px solid rgba(184,255,59,0.2);
-  position: relative;
-}
-
-.circle-inner {
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform: translate(-50%, -50%);
-  text-align:center;
-}
-
-.big {
-  font-size:22px;
-  font-weight:700;
-  color: var(--accent);
-}
-
-/* CARDS */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 12px;
-  margin-top: 10px;
-  display:flex;
-  justify-content:space-between;
-}
-
-/* INVITE BOX */
-.invite {
-  margin-top: 12px;
-  background: var(--card);
-  padding: 14px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-}
-
-.invite input {
-  width:100%;
-  padding:10px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  margin-top:8px;
-  background:#0d0d0d;
-  color:var(--text);
-}
-
-/* BUTTONS */
-.btn {
-  width:100%;
-  margin-top:8px;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.primary {
-  background: var(--accent);
-  color:black;
-}
-
-.secondary {
-  background:#0d0d0d;
-  color:white;
-  border:1px solid var(--border);
-}
-
-/* LEADERBOARD */
-.leaderboard {
-  margin-top: 14px;
-}
-
-/* TIERS */
-.tiers {
-  margin-top: 14px;
-  font-size: 13px;
-  color: var(--muted);
-  line-height:1.6;
-}
-
-/* FLOAT */
-.fab {
-  position:fixed;
-  bottom:70px;
-  right:16px;
-  background: var(--accent);
-  color:black;
-  padding:14px 16px;
-  border-radius:50px;
-  font-weight:700;
-}
-
-/* =========================
-   FOOTER NAV (NEW)
-========================= */
-.footer {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:#0b0b0b;
-  border-top:1px solid var(--border);
-  display:flex;
-  justify-content:space-around;
-  padding:10px 0;
-  z-index:100;
-}
-
-.footer a {
-  color:var(--text);
-  text-decoration:none;
-  font-size:12px;
-  text-align:center;
-  opacity:0.8;
-}
-
-.footer a:hover {
-  opacity:1;
-  color:var(--accent);
-}
-
-.icon {
-  display:block;
-  font-size:18px;
-}
-
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff;--muted:#aaa;}
+*{box-sizing:border-box;font-family:Inter,sans-serif;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);padding-bottom:90px}
+header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:16px;display:flex;justify-content:space-between}
+.logo{color:var(--accent);font-weight:800}
+.container{max-width:1200px;margin:auto;padding:16px}
+.card,.stat{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-top:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+input,select{width:100%;padding:12px;margin-top:10px;background:#111;border:1px solid var(--border);border-radius:12px;color:#fff}
+.btn{width:100%;padding:12px;margin-top:10px;border:none;border-radius:12px;background:var(--accent);color:#000;font-weight:700;cursor:pointer}
+.badge{padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
+.small{font-size:12px;color:var(--muted)}
+.progress{height:10px;background:#111;border-radius:999px;overflow:hidden;margin-top:10px}
+.bar{height:100%;width:0;background:var(--accent)}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px}
+.footer a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
 </style>
 </head>
-
 <body>
-
 <header>
-  <div class="logo">⚡ Zep Swipe Waitlist V17</div>
-  <div class="small">Growth Engine Active</div>
+<div class="logo">⚡ Zep Swipe Waitlist V27</div>
+<div class="badge">Africa → Global</div>
 </header>
 
 <div class="container">
 
-<!-- PROGRESS -->
-<div class="progress-box">
+<div class="grid">
+<div class="stat"><h2 id="users">0</h2><p>Total Students</p></div>
+<div class="stat"><h2 id="countries">0</h2><p>Countries</p></div>
+<div class="stat"><h2 id="referrals">0</h2><p>Referrals</p></div>
+<div class="stat"><h2 id="ambassadors">0</h2><p>Ambassadors</p></div>
+</div>
 
-  <div class="circle">
-    <div class="circle-inner">
-      <div class="big" id="count">0 / 5</div>
-      <div class="small">Invites</div>
-    </div>
-  </div>
+<div class="card">
+<h2>🎓 Join The Student Economy</h2>
+<p class="small">South Africa Pilot • Ghana Next • Global Waitlist Open</p>
+<input id="name" placeholder="Full Name">
+<input id="email" placeholder="Email">
+<input id="phone" placeholder="Phone Number">
+<input id="city" placeholder="City">
+<input id="university" placeholder="University / College">
+<select id="country">
+<option>South Africa</option>
+<option>Ghana</option>
+<option>Nigeria</option>
+<option>Kenya</option>
+<option>Zambia</option>
+<option>Botswana</option>
+<option>Other</option>
+</select>
+<button class="btn" onclick="joinWaitlist()">Join Waitlist</button>
+<p id="status" class="small"></p>
+</div>
 
-  <p style="color:var(--muted);margin-top:10px;">
-    Invite friends to unlock marketplace access
-  </p>
+<div class="card">
+<h3>🚀 Referral Progress</h3>
+<div id="progressText">0 / 5 Referrals</div>
+<div class="progress"><div id="progressBar" class="bar"></div></div>
+<p id="tier">Starter</p>
+</div>
+
+<div class="card">
+<h3>🔗 Your Invite Link</h3>
+<input id="inviteLink" readonly>
+<button class="btn" onclick="copyLink()">Copy Invite Link</button>
+</div>
+
+<div class="grid">
+<div class="card">
+<h3>🌍 Expansion Roadmap</h3>
+<p>✅ South Africa Pilot</p>
+<p>🟡 Ghana Next</p>
+<p>🟡 Nigeria Waitlist</p>
+<p>🟡 Kenya Waitlist</p>
+<p>🟡 Global Expansion</p>
+</div>
+
+<div class="card">
+<h3>🏆 Reward Levels</h3>
+<p>5 Referrals → Priority Access 🚀</p>
+<p>10 Referrals → Ambassador 🔥</p>
+<p>25 Referrals → Founding Member ⭐</p>
+<p>50 Referrals → Champion 👑</p>
+</div>
+</div>
+
+<div class="card">
+<h3>🏅 Global Leaderboard</h3>
+<div id="leaderboard">Loading...</div>
+</div>
 
 </div>
 
-<!-- EARNINGS -->
-<div class="invite">
-  <b>Potential Earnings</b><br><br>
-  <span style="color:var(--accent);">R0 → R250/day</span><br><br>
-  ✔ Providers<br>
-  ✔ Jobs<br>
-  ✔ Deals access
-</div>
-
-<!-- INVITE -->
-<div class="invite">
-
-  <b>Your Invite Link</b>
-
-  <input id="link" readonly>
-
-  <button class="btn primary" onclick="copyLink()">Copy Link</button>
-  <button class="btn secondary" onclick="shareWA()">Share WhatsApp</button>
-
-</div>
-
-<!-- LEADERBOARD -->
-<div class="leaderboard">
-
-  <h3 style="color:var(--accent)">🏆 Leaderboard</h3>
-
-  <div id="board"></div>
-
-</div>
-
-<!-- TIERS -->
-<div class="tiers">
-  🎁 Reward Tiers:<br>
-  • 1 Invite → Starter<br>
-  • 3 Invites → Growth<br>
-  • 5 Invites → Unlock Access<br>
-  • 10 Invites → Viral Legend 🔥
-</div>
-
-</div>
-
-<div class="fab" onclick="alert('Keep sharing your invite link!')">
-  Growth Active
-</div>
-
-<!-- FOOTER NAV -->
 <nav class="footer">
-  <a href="index.html">
-    <span class="icon">🏠</span>
-    Home
-  </a>
-
-  <a href="marketplace.html">
-    <span class="icon">🛒</span>
-    Marketplace
-  </a>
-
-  <a href="waitlist.html">
-    <span class="icon">👥</span>
-    Waitlist
-  </a>
+<a href="index.html">🏠<br>Home</a>
+<a href="marketplace.html">🛒<br>Marketplace</a>
+<a href="waitlist.html">👥<br>Waitlist</a>
 </nav>
 
 <script>
-
-const SUPABASE_URL="https://ueohfftoowdrntwvtesy.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVlb2hmZnRvb3dkcm50d3Z0ZXN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMDEzNDIsImV4cCI6MjA5NzU3NzM0Mn0.jWpIMDluXL7CrINZo5f2beTc4tgB7lSFr3EjpOuG51M";
-
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
 const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-/* USER ID */
-let userId = localStorage.getItem("user_id");
-if(!userId){
-  userId = crypto.randomUUID();
-  localStorage.setItem("user_id", userId);
+async function joinWaitlist(){
+ const code=crypto.randomUUID().substring(0,8);
+
+ const {data,error}=await client.from("waitlist_users").insert([{
+  name:name.value,
+  email:email.value,
+  phone:phone.value,
+  city:city.value,
+  university:university.value,
+  country:country.value,
+  invite_code:code,
+  invites:0,
+  access_status:"waitlist"
+ }]).select().single();
+
+ if(error){status.innerText=error.message;return;}
+
+ inviteLink.value=window.location.origin+window.location.pathname+"?ref="+code;
+ status.innerText="Welcome to Zep Swipe!";
+ localStorage.setItem("zep_waitlist_user",JSON.stringify(data));
 }
 
-/* REF LINK */
-const base = window.location.origin + window.location.pathname;
-const inviteLink = `${base}?ref=${userId}`;
-document.getElementById("link").value = inviteLink;
+async function loadLeaderboard(){
+ try{
+  const {data=[]}=await client.from("waitlist_users")
+  .select("name,country,invites")
+  .order("invites",{ascending:false})
+  .limit(20);
 
-/* REF HANDLER */
-const urlParams = new URLSearchParams(window.location.search);
-const ref = urlParams.get("ref");
-
-if(ref && ref !== userId){
-  registerReferral(ref);
+  leaderboard.innerHTML=data.map(u =>
+  `<div style="padding:8px 0;border-bottom:1px solid #262626">${u.name||"User"} • ${u.country||""} • ${u.invites||0} referrals</div>`
+  ).join("");
+ }catch(e){
+  leaderboard.innerHTML="No data yet";
+ }
 }
 
-/* REGISTER REF */
-async function registerReferral(referrer){
-
-  const phone = localStorage.getItem("phone") || "unknown";
-
-  await client.from("referrals").insert([{
-    referrer_id: referrer,
-    referred_phone: phone,
-    status:"pending"
-  }]);
-
-  await client.from("growth_events").insert([{
-    user_id: referrer,
-    event_type:"invite_received",
-    meta:{from:userId}
-  }]);
-}
-
-/* LOAD LEADERBOARD */
-async function loadBoard(){
-
-  const {data} = await client
-    .from("leaderboard")
-    .select("*")
-    .order("invites",{ascending:false});
-
-  let html="";
-
-  (data||[]).forEach(u=>{
-    html += `
-      <div class="card">
-        <span>👤 User</span>
-        <span>${u.invites || 0} invites</span>
-      </div>
-    `;
-  });
-
-  document.getElementById("board").innerHTML = html;
-}
-
-/* COPY */
 function copyLink(){
-  navigator.clipboard.writeText(inviteLink);
-  alert("Copied!");
+ navigator.clipboard.writeText(inviteLink.value);
+ alert("Invite link copied");
 }
 
-/* SHARE */
-function shareWA(){
-  window.open(`https://wa.me/?text=Join%20Zep%20Swipe:%20${inviteLink}`);
-}
-
-/* INIT */
-loadBoard();
-
+loadLeaderboard();
 </script>
-
 </body>
 </html>
