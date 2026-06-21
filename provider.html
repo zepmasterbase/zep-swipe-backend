@@ -8,37 +8,41 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff;--muted:#aaa}
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,sans-serif}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:90px}
 .header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(12px);z-index:100}
 .brand{display:flex;gap:10px;align-items:center}
-.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800}
-.hero{margin:16px;padding:20px;border-radius:24px;background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;margin:16px}
+.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:#b8ff3b;font-weight:800}
+.actions{display:flex;gap:10px}
+.iconbtn{background:#141414;border:1px solid #262626;color:#fff;padding:10px;border-radius:12px}
+.hero{margin:16px;padding:24px;border-radius:24px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.card{background:#141414;border:1px solid #262626;border-radius:20px;padding:16px;margin:16px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.stat{background:#111;border:1px solid var(--border);border-radius:16px;padding:12px}
-input,select,textarea{width:100%;padding:12px;margin-top:8px;border-radius:12px;background:#101010;color:#fff;border:1px solid var(--border)}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;background:var(--accent);color:#000;font-weight:800;margin-top:10px;cursor:pointer}
+.stat{background:#111;border:1px solid #262626;border-radius:14px;padding:12px}
+input,select,textarea{width:100%;padding:12px;margin-top:8px;border-radius:12px;background:#101010;color:#fff;border:1px solid #262626}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800;margin-top:10px}
 .item{padding:10px 0;border-bottom:1px solid #222}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:10px}
 .nav a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
 </style>
 </head>
 <body>
-
 <div class="header">
 <div class="brand">
 <div class="logo">⚡</div>
 <div><b style="color:#b8ff3b">Zep Swipe</b><div style="font-size:12px;color:#aaa">Provider Dashboard</div></div>
 </div>
-<button onclick="logout()" style="background:none;border:none;color:white"><i data-lucide="log-out"></i></button>
+<div class="actions">
+<button class="iconbtn"><i data-lucide="bell"></i></button>
+<button class="iconbtn" onclick="logout()"><i data-lucide="log-out"></i></button>
+</div>
 </div>
 
 <div class="hero">
 <h2 id="welcome">Welcome Back 👋</h2>
 <p>Turn your skills into income today.</p>
-<h1 id="balance" style="color:#b8ff3b;margin-top:12px">R0.00</h1>
+<h1 id="balance" style="color:#b8ff3b;margin-top:10px">R0.00</h1>
 </div>
 
 <div class="card">
@@ -50,19 +54,21 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;border-radius:12px;
 </div>
 </div>
 
-<div class="card" id="createService">
+<div class="card" id="create-service">
 <h3>Create Service</h3>
-<select id="category">
-<option>Tutoring</option>
-<option>Graphic Design</option>
-<option>Photography</option>
-<option>Cleaning</option>
-<option>Tech Support</option>
-</select>
+<select id="category"><option>Tutoring</option><option>Graphic Design</option><option>Photography</option><option>Cleaning</option><option>Tech Support</option></select>
 <input id="serviceName" placeholder="Service Name">
 <input id="price" placeholder="Price">
 <textarea id="description" placeholder="Description"></textarea>
-<button class="btn" onclick="publishService()">Publish Service</button>
+<button class="btn">Publish Service</button>
+</div>
+
+<div class="card" id="wallet">
+<h3>💰 Withdraw Earnings</h3>
+<input placeholder="Bank Name">
+<input placeholder="Account Number">
+<input placeholder="Amount">
+<button class="btn">Request Withdrawal</button>
 </div>
 
 <div class="card">
@@ -75,99 +81,25 @@ input,select,textarea{width:100%;padding:12px;margin-top:8px;border-radius:12px;
 <div id="notifications"></div>
 </div>
 
-<div class="card" id="wallet">
-<h3>💰 Withdraw Earnings</h3>
-<p>Available Balance: <span id="withdrawBalance">R0.00</span></p>
-<input id="bankName" placeholder="Bank Name">
-<input id="accountName" placeholder="Account Holder Name">
-<input id="accountNumber" placeholder="Account Number">
-<input id="withdrawAmount" type="number" placeholder="Withdrawal Amount">
-<button class="btn" onclick="requestWithdrawal()">Request Withdrawal</button>
-<div id="withdrawStatus" style="margin-top:10px;color:#b8ff3b"></div>
+<div class="card" id="profile">
+<h3>Profile</h3>
+<input placeholder="Full Name">
+<input placeholder="University / College">
+<input placeholder="WhatsApp">
+<button class="btn">Save Profile</button>
 </div>
 
 <div class="nav">
 <a href="index.html">🏠<br>Home</a>
 <a href="marketplace.html">💼<br>Jobs</a>
-<a href="#createService">➕<br>Create</a>
+<a href="#create-service">➕<br>Create</a>
 <a href="#wallet">🏦<br>Withdraw</a>
 <a href="#profile">👤<br>Profile</a>
 </div>
 
 <script>
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let user=null;
-
-async function init(){
- const {data:{session}}=await client.auth.getSession();
- if(!session){location.href='login.html';return;}
- user=session.user;
-
- const {data:profile}=await client.from('providers').select('*').eq('user_id',user.id).maybeSingle();
- if(profile) welcome.textContent='Welcome Back, '+(profile.name||'Student')+' 👋';
-
- await loadServices();
- await loadNotifications();
- await loadWallet();
-
- client.channel('provider-live')
- .on('postgres_changes',{event:'*',schema:'public',table:'notifications'},loadNotifications)
- .subscribe();
-}
-
-async function publishService(){
- await client.from('services').insert([{
-  provider_id:user.id,
-  category:category.value,
-  service_name:serviceName.value,
-  price:price.value,
-  description:description.value,
-  active:true
- }]);
- loadServices();
-}
-
-async function loadServices(){
- const {data=[]}=await client.from('services').select('*').eq('provider_id',user.id);
- servicesCount.textContent=data.length;
- services.innerHTML=data.map(s=>`<div class="item">${s.service_name} - R${s.price}</div>`).join('');
-}
-
-async function loadNotifications(){
- const {data=[]}=await client.from('notifications').select('*').eq('user_id',user.id);
- notificationsCount.textContent=data.length;
- notifications.innerHTML=data.map(n=>`<div class="item">${n.title||'Notification'}</div>`).join('');
-}
-
-async function loadWallet(){
- const {data=[]}=await client.from('wallet_transactions').select('*').eq('user_id',user.id);
- let total=0;
- data.forEach(t=>total+=Number(t.amount||0));
- balance.innerText='R'+total.toFixed(2);
- withdrawBalance.innerText='R'+total.toFixed(2);
-}
-
-async function requestWithdrawal(){
- const {error}=await client.from('withdrawals').insert([{
-  user_id:user.id,
-  amount:Number(withdrawAmount.value),
-  bank_name:bankName.value,
-  account_name:accountName.value,
-  account_number:accountNumber.value,
-  status:'pending'
- }]);
- withdrawStatus.innerText=error?error.message:'Withdrawal request submitted successfully';
-}
-
-async function logout(){
- await client.auth.signOut();
- location.href='login.html';
-}
-
 lucide.createIcons();
-init();
+function logout(){ window.location.href='login.html'; }
 </script>
 </body>
 </html>
