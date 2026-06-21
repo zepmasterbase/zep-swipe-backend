@@ -2,52 +2,233 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V20</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zep Swipe Provider V21 Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
-body{background:var(--bg);color:var(--text);font-family:Inter,sans-serif;margin:0;padding:16px 16px 90px}
-.hero,.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;margin-bottom:14px}
-.hero h1{color:var(--accent)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.box{background:#101010;border:1px solid var(--border);border-radius:14px;padding:14px}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px}
+:root{
+--bg:#070707;
+--card:#141414;
+--accent:#b8ff3b;
+--text:#fff;
+--muted:#a0a0a0;
+--border:#262626;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--bg);color:var(--text);padding:16px;padding-bottom:90px}
+.hero{
+border:1px solid var(--border);
+border-radius:28px;
+overflow:hidden;
+min-height:520px;
+position:relative;
+background:
+linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.65)),
+url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80');
+background-size:cover;
+background-position:center;
+}
+.overlay{padding:32px}
+.brand{font-size:14px;letter-spacing:2px;color:#ddd}
+.hero h1{font-size:64px;line-height:1}
+.hero h1 span{color:var(--accent)}
+.sub{margin-top:12px;color:#d0d0d0;font-size:20px}
+.glass{
+background:rgba(20,20,20,.55);
+backdrop-filter:blur(12px);
+border:1px solid rgba(184,255,59,.15);
+border-radius:20px;
+}
+.wallet{
+margin-top:24px;
+padding:20px;
+width:320px;
+}
+.wallet h2{color:var(--accent);font-size:42px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.btn{
+padding:14px 20px;
+border:none;
+border-radius:16px;
+font-weight:700;
+cursor:pointer;
+}
+.primary{background:var(--accent);color:#000}
+.dark{background:rgba(0,0,0,.55);color:#fff;border:1px solid var(--border)}
+.float{
+position:absolute;
+padding:16px;
+min-width:190px;
+}
+.f1{top:70px;right:180px}
+.f2{top:190px;right:60px}
+.f3{top:320px;right:170px}
+.zlogo{
+position:absolute;
+right:300px;
+top:240px;
+width:110px;
+height:110px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:48px;
+font-weight:800;
+color:var(--accent);
+background:rgba(184,255,59,.12);
+box-shadow:0 0 40px rgba(184,255,59,.6);
+}
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:14px;
+margin-top:16px;
+}
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:22px;
+padding:18px;
+}
+.quick{
+text-align:center;
+transition:.25s;
+}
+.quick:hover{
+transform:translateY(-4px);
+border-color:var(--accent);
+}
+.icon{
+font-size:36px;
+margin-bottom:10px;
+}
+.row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+margin-top:16px;
+}
+.activity{
+padding:12px 0;
+border-bottom:1px solid #222;
+}
+.chart{
+height:180px;
+display:flex;
+align-items:flex-end;
+gap:10px;
+margin-top:20px;
+}
+.bar{
+flex:1;
+background:rgba(184,255,59,.35);
+border-radius:12px 12px 0 0;
+}
+.scroll{
+display:flex;
+overflow:auto;
+gap:12px;
+}
+.opportunity{
+min-width:240px;
+}
+.nav{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#0b0b0b;
+border-top:1px solid var(--border);
+display:flex;
+justify-content:space-around;
+padding:12px;
+}
 .active{color:var(--accent)}
+@media(max-width:900px){
+.hero h1{font-size:44px}
+.row{grid-template-columns:1fr}
+.wallet{width:100%}
+.f1,.f2,.f3,.zlogo{display:none}
+}
 </style>
 </head>
 <body>
+
 <div class="hero">
-<h1>⚡ Zep Swipe Provider V20</h1>
-<p>Production Ready Architecture</p>
+<div class="overlay">
+<div class="brand">ZEP SWIPE • STUDENT DASHBOARD</div>
+<h1>Good Morning,<br><span>Pericles 👋</span></h1>
+<p class="sub">Learn skills. Earn money. Build your future.</p>
+
+<div class="glass wallet">
+<div>ZAC BALANCE</div>
+<h2>1,250.75</h2>
+<div style="color:#bbb">Available for withdrawal</div>
+</div>
+
+<div class="actions">
+<button class="btn primary">Find Jobs</button>
+<button class="btn dark">My Jobs</button>
+<button class="btn dark">Send Funds</button>
+<button class="btn dark">Withdraw</button>
+</div>
+</div>
+
+<div class="glass float f1"><b>Graphic Design</b><br>12 Jobs Available</div>
+<div class="glass float f2"><b>Tutoring</b><br>8 Jobs Available</div>
+<div class="glass float f3"><b>Coding</b><br>15 Jobs Available</div>
+<div class="zlogo">Z</div>
 </div>
 
 <div class="grid">
-<div class="box"><h3>Wallet</h3><p id="wallet">R0.00</p></div>
-<div class="box"><h3>Jobs</h3><p id="jobs">0</p></div>
-<div class="box"><h3>Reviews</h3><p id="reviews">0</p></div>
-<div class="box"><h3>Notifications</h3><p id="notices">0</p></div>
+<div class="card quick"><div class="icon">🔍</div>Find Jobs</div>
+<div class="card quick"><div class="icon">➕</div>Post Service</div>
+<div class="card quick"><div class="icon">💸</div>Withdraw</div>
+<div class="card quick"><div class="icon">🎁</div>Refer & Earn</div>
+</div>
+
+<div class="row">
+<div class="card">
+<h3>Recent Activity</h3>
+<div class="activity">💰 Payment Received +R250</div>
+<div class="activity">✅ Tutoring Job Completed</div>
+<div class="activity">🎁 Referral Reward Earned</div>
+<div class="activity">🏷 Student Deal Redeemed</div>
 </div>
 
 <div class="card">
-<h3>V20 Upgrades</h3>
-<ul>
-<li>Supabase Authentication Ready</li>
-<li>Wallet Transactions Integration</li>
-<li>Withdrawals Integration</li>
-<li>Notifications Center</li>
-<li>Reviews & Ratings</li>
-<li>Referral Earnings Placeholder</li>
-<li>Featured Provider Ready</li>
-<li>Marketplace Booking Workflow Ready</li>
-<li>Paystack Withdrawal Architecture Ready</li>
-<li>Realtime Subscription Ready</li>
-</ul>
+<h3>Earnings Overview</h3>
+<h1 style="color:#b8ff3b">R2,450</h1>
+<p>+25% this month</p>
+<div class="chart">
+<div class="bar" style="height:40%"></div>
+<div class="bar" style="height:60%"></div>
+<div class="bar" style="height:50%"></div>
+<div class="bar" style="height:90%"></div>
+<div class="bar" style="height:75%"></div>
+</div>
+</div>
 </div>
 
-<div class="card">
-<h3>Expected Tables</h3>
-<p>providers, services, service_requests, wallet_transactions, withdrawals, reviews, notifications, deals</p>
+<div class="card" style="margin-top:16px">
+<h3>Recommended Opportunities</h3>
+<div class="scroll">
+<div class="card opportunity"><b>Tutoring</b><p>R400/job</p><button class="btn primary">Apply</button></div>
+<div class="card opportunity"><b>Graphic Design</b><p>R350/project</p><button class="btn primary">Apply</button></div>
+<div class="card opportunity"><b>Photography</b><p>R600/event</p><button class="btn primary">Apply</button></div>
+<div class="card opportunity"><b>Coding</b><p>R500/task</p><button class="btn primary">Apply</button></div>
+</div>
+</div>
+
+<div class="card" style="margin-top:16px">
+<h3>Student Deals</h3>
+<div class="scroll">
+<div class="card opportunity">🍔 Restaurant 50% Off</div>
+<div class="card opportunity">☕ Cafe 20% Off</div>
+<div class="card opportunity">💈 Barber Discount</div>
+<div class="card opportunity">🚌 Transport Discount</div>
+</div>
 </div>
 
 <div class="nav">
@@ -57,5 +238,6 @@ body{background:var(--bg);color:var(--text);font-family:Inter,sans-serif;margin:
 <div>💰 Wallet</div>
 <div>👤 Profile</div>
 </div>
+
 </body>
 </html>
