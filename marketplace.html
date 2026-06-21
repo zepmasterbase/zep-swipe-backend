@@ -3,37 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Marketplace V61 Cinematic</title>
+<title>Zep Swipe Marketplace V62</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:#fff;padding-bottom:90px}
-header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:14px 16px;z-index:100}
+header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:14px 16px}
 .brand{display:flex;align-items:center;gap:12px}
 .brand img{width:44px;height:44px}
-.logo{color:var(--accent);font-weight:800}
-.hero{
-margin:16px;padding:32px;border-radius:28px;
-background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),
-url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover;
-border:1px solid rgba(184,255,59,.2)
-}
-.badge{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
-.search{margin:16px;background:#141414;border:1px solid rgba(184,255,59,.25);border-radius:18px;padding:14px}
+.hero{margin:16px;padding:36px;border-radius:28px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
+.search{margin:16px;padding:14px;background:#141414;border:1px solid rgba(184,255,59,.25);border-radius:18px}
 .search input{width:100%;background:none;border:none;color:#fff;outline:none}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;padding:0 16px}
-.card{background:#141414;border:1px solid var(--border);border-radius:20px;padding:16px}
-.section{padding:16px;color:var(--accent);font-weight:700}
-.slider{display:flex;overflow-x:auto;gap:16px;padding:0 16px 16px 16px;scroll-behavior:smooth}
+.card{background:#141414;border:1px solid #262626;border-radius:20px;padding:16px}
+.section{padding:16px;color:#b8ff3b;font-weight:700}
+.slider{display:flex;overflow-x:auto;gap:16px;padding:0 16px 16px}
 .slider::-webkit-scrollbar{display:none}
-.item{min-width:280px;background:#141414;border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.item{min-width:280px;background:#141414;border:1px solid #262626;border-radius:20px;overflow:hidden}
 .item img{width:100%;height:180px;object-fit:cover}
 .content{padding:16px}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;background:var(--accent);color:#000;font-weight:800}
-.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0}
-.footer a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
+.footer a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
 </style>
 </head>
 <body>
@@ -41,14 +35,14 @@ border:1px solid rgba(184,255,59,.2)
 <header>
 <div class="brand">
 <img src="https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png">
-<div class="logo">Zep Swipe Marketplace</div>
+<h3 style="color:#b8ff3b">Zep Swipe Marketplace</h3>
 </div>
 </header>
 
 <div class="hero">
 <span class="badge">🎓 Africa's Student Economy</span>
-<h1 style="margin-top:12px">Find Student Talent.<br>Unlock Exclusive Deals.</h1>
-<p style="margin-top:10px">Hire tutors, designers, photographers and tech support from your local student community.</p>
+<h1 style="margin-top:12px">Find Student Talent. Hire With Confidence.</h1>
+<p style="margin-top:10px">Tutors, designers, photographers, tech support and exclusive student deals.</p>
 </div>
 
 <div class="search">
@@ -84,9 +78,6 @@ border:1px solid rgba(184,255,59,.2)
 <a href="#"><i data-lucide="user"></i><span>Profile</span></a>
 </footer>
 
-<script>
-lucide.createIcons();
-</script>
-
+<script>lucide.createIcons();</script>
 </body>
 </html>
