@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V37 Live</title>
+<title>Zep Swipe Provider V38</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -11,95 +11,87 @@
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:var(--text);padding-bottom:90px}
-.header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(12px);z-index:100}
-.brand{display:flex;gap:10px;align-items:center}
-.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:#b8ff3b;font-weight:800}
-.actions{display:flex;gap:10px}
-.iconbtn{background:#141414;border:1px solid #262626;color:#fff;padding:10px;border-radius:12px}
-.hero{margin:16px;padding:24px;border-radius:24px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.card{background:#141414;border:1px solid #262626;border-radius:20px;padding:16px;margin:16px}
+.header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;gap:10px;align-items:center}.logo{width:42px;height:42px;border-radius:12px;background:rgba(184,255,59,.15);display:flex;align-items:center;justify-content:center;color:#b8ff3b;font-weight:800}
+.actions{display:flex;gap:10px}.iconbtn{background:#141414;border:1px solid #262626;color:#fff;padding:10px;border-radius:12px}
+.hero,.card{background:#141414;border:1px solid #262626;border-radius:20px;margin:16px;padding:16px}
+.hero{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
 .stat{background:#111;border:1px solid #262626;border-radius:14px;padding:12px}
-input,select,textarea{width:100%;padding:12px;margin-top:8px;border-radius:12px;background:#101010;color:#fff;border:1px solid #262626}
+input,select,textarea{width:100%;padding:12px;margin-top:8px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
 .btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800;margin-top:10px}
-.item{padding:10px 0;border-bottom:1px solid #222}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:10px}
 .nav a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
+.small{font-size:12px;color:#aaa}
 </style>
 </head>
 <body>
 <div class="header">
-<div class="brand">
-<div class="logo">⚡</div>
-<div><b style="color:#b8ff3b">Zep Swipe</b><div style="font-size:12px;color:#aaa">Provider Dashboard</div></div>
-</div>
+<div class="brand"><div class="logo">⚡</div><div><b style="color:#b8ff3b">Zep Swipe</b><div class="small">Provider Dashboard</div></div></div>
 <div class="actions">
 <button class="iconbtn"><i data-lucide="bell"></i></button>
-<button class="iconbtn" onclick="logout()"><i data-lucide="log-out"></i></button>
+<button class="iconbtn"><i data-lucide="log-out"></i></button>
 </div>
 </div>
 
 <div class="hero">
-<h2 id="welcome">Welcome Back 👋</h2>
+<h2>Welcome Back 👋</h2>
 <p>Turn your skills into income today.</p>
-<h1 id="balance" style="color:#b8ff3b;margin-top:10px">R0.00</h1>
+<h1 style="color:#b8ff3b">R0.00</h1>
+<button class="btn">Withdraw Earnings</button>
+</div>
+
+<div class="card" id="referrals">
+<h3>🚀 Refer & Earn MARI</h3>
+<p>Earn <b style="color:#b8ff3b">25 MARI</b> per referral.</p>
+<p>1 MARI = $0.041</p>
+<p class="small">🔒 Rewards locked until token launch.</p>
+<input value="https://zepswipe.com/ref/example" readonly>
+<button class="btn">Copy Referral Link</button>
+<div class="grid" style="margin-top:12px">
+<div class="stat"><h3>0</h3><small>Referrals</small></div>
+<div class="stat"><h3>0</h3><small>MARI</small></div>
+<div class="stat"><h3>$0</h3><small>Value</small></div>
+</div>
 </div>
 
 <div class="card">
 <div class="grid">
-<div class="stat"><h3 id="servicesCount">0</h3><small>Services</small></div>
-<div class="stat"><h3 id="jobsCount">0</h3><small>Jobs</small></div>
-<div class="stat"><h3 id="reviewsCount">0</h3><small>Reviews</small></div>
-<div class="stat"><h3 id="notificationsCount">0</h3><small>Alerts</small></div>
+<div class="stat"><h3>0</h3><small>Services</small></div>
+<div class="stat"><h3>0</h3><small>Jobs</small></div>
+<div class="stat"><h3>0</h3><small>Reviews</small></div>
+<div class="stat"><h3>0</h3><small>Alerts</small></div>
 </div>
 </div>
 
-<div class="card" id="create-service">
+<div class="card" id="create">
 <h3>Create Service</h3>
-<select id="category"><option>Tutoring</option><option>Graphic Design</option><option>Photography</option><option>Cleaning</option><option>Tech Support</option></select>
-<input id="serviceName" placeholder="Service Name">
-<input id="price" placeholder="Price">
-<textarea id="description" placeholder="Description"></textarea>
+<select><option>Tutoring</option><option>Graphic Design</option><option>Photography</option><option>Cleaning</option><option>Tech Support</option></select>
+<input placeholder="Service Name">
+<input placeholder="Price">
+<textarea placeholder="Description"></textarea>
 <button class="btn">Publish Service</button>
 </div>
 
 <div class="card" id="wallet">
-<h3>💰 Withdraw Earnings</h3>
+<h3>💰 Withdraw</h3>
 <input placeholder="Bank Name">
 <input placeholder="Account Number">
 <input placeholder="Amount">
 <button class="btn">Request Withdrawal</button>
 </div>
 
-<div class="card">
-<h3>My Services</h3>
-<div id="services"></div>
-</div>
-
-<div class="card">
-<h3>Live Notifications</h3>
-<div id="notifications"></div>
-</div>
-
-<div class="card" id="profile">
-<h3>Profile</h3>
-<input placeholder="Full Name">
-<input placeholder="University / College">
-<input placeholder="WhatsApp">
-<button class="btn">Save Profile</button>
-</div>
+<div class="card"><h3>My Services</h3></div>
+<div class="card"><h3>Live Notifications</h3></div>
+<div class="card" id="profile"><h3>Profile</h3><input placeholder="Full Name"><input placeholder="University"><button class="btn">Save Profile</button></div>
 
 <div class="nav">
 <a href="index.html">🏠<br>Home</a>
 <a href="marketplace.html">💼<br>Jobs</a>
-<a href="#create-service">➕<br>Create</a>
+<a href="#create">➕<br>Create</a>
 <a href="#wallet">🏦<br>Withdraw</a>
 <a href="#profile">👤<br>Profile</a>
 </div>
-
-<script>
-lucide.createIcons();
-function logout(){ window.location.href='login.html'; }
-</script>
+<script>lucide.createIcons();</script>
 </body>
 </html>
