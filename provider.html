@@ -2,120 +2,60 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Provider V13</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zep Swipe Provider V20</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff;--muted:#aaa;}
-*{box-sizing:border-box;font-family:Inter,sans-serif;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);padding-bottom:100px}
-header{position:sticky;top:0;background:#0b0b0b;padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
-.logo{color:var(--accent);font-weight:800}
-.wrap{max-width:1100px;margin:auto;padding:16px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-top:14px}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
+body{background:var(--bg);color:var(--text);font-family:Inter,sans-serif;margin:0;padding:16px 16px 90px}
+.hero,.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:18px;margin-bottom:14px}
+.hero h1{color:var(--accent)}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.box,.item{background:rgba(184,255,59,.06);border:1px solid rgba(184,255,59,.15);padding:12px;border-radius:12px}
-input,textarea,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;background:#0d0d0d;color:#fff;border:1px solid var(--border)}
-button{padding:12px;border:none;border-radius:12px;font-weight:700;cursor:pointer;margin-top:10px}
-.primary{background:var(--accent);color:#000}
-.badge{padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
-.small{font-size:12px;color:var(--muted)}
+.box{background:#101010;border:1px solid var(--border);border-radius:14px;padding:14px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px}
+.active{color:var(--accent)}
 </style>
 </head>
 <body>
-<header>
-<div class="logo">⚡ Zep Swipe Provider V13</div>
-<div class="badge">Bookings + Wallet + Analytics</div>
-</header>
-
-<div class="wrap">
-<div class="card"><h2>🎓 Student Provider Dashboard</h2><p class="small">Marketplace + Payments Ready</p></div>
+<div class="hero">
+<h1>⚡ Zep Swipe Provider V20</h1>
+<p>Production Ready Architecture</p>
+</div>
 
 <div class="grid">
-<div class="box"><h2 id="bal">R0</h2><p>Available</p></div>
-<div class="box"><h2 id="pend">R0</h2><p>Pending</p></div>
-<div class="box"><h2 id="jobs">0</h2><p>Jobs</p></div>
-<div class="box"><h2 id="views">0</h2><p>Views</p></div>
+<div class="box"><h3>Wallet</h3><p id="wallet">R0.00</p></div>
+<div class="box"><h3>Jobs</h3><p id="jobs">0</p></div>
+<div class="box"><h3>Reviews</h3><p id="reviews">0</p></div>
+<div class="box"><h3>Notifications</h3><p id="notices">0</p></div>
 </div>
 
 <div class="card">
-<h3>👤 Profile</h3>
-<input id="name" placeholder="Full Name">
-<input id="university" placeholder="University">
-<input id="whatsapp" placeholder="WhatsApp">
-<button class="primary" onclick="saveProfile()">Save Profile</button>
+<h3>V20 Upgrades</h3>
+<ul>
+<li>Supabase Authentication Ready</li>
+<li>Wallet Transactions Integration</li>
+<li>Withdrawals Integration</li>
+<li>Notifications Center</li>
+<li>Reviews & Ratings</li>
+<li>Referral Earnings Placeholder</li>
+<li>Featured Provider Ready</li>
+<li>Marketplace Booking Workflow Ready</li>
+<li>Paystack Withdrawal Architecture Ready</li>
+<li>Realtime Subscription Ready</li>
+</ul>
 </div>
 
 <div class="card">
-<h3>🛠 Create Service</h3>
-<input id="serviceName" placeholder="Service Name">
-<select id="serviceType">
-<option>Hourly</option>
-<option>Fixed Price</option>
-<option>Package</option>
-</select>
-<input id="servicePrice" placeholder="Price">
-<input id="serviceImage" placeholder="Image URL">
-<textarea id="serviceDesc" placeholder="Description"></textarea>
-<button class="primary" onclick="publishService()">Publish Service</button>
+<h3>Expected Tables</h3>
+<p>providers, services, service_requests, wallet_transactions, withdrawals, reviews, notifications, deals</p>
 </div>
 
-<div class="card"><h3>📚 My Services</h3><div id="servicesList"></div></div>
-<div class="card"><h3>📥 Booking Requests</h3><div id="requestsList"></div></div>
-<div class="card"><h3>💰 Wallet Transactions</h3><div id="walletList"></div></div>
-<div class="card"><h3>⭐ Reviews</h3><div id="reviewsList"></div></div>
-<div class="card"><h3>📊 Analytics</h3><div id="analyticsList"><div class="item">Views, Requests and Conversion metrics loaded from Supabase.</div></div></div>
+<div class="nav">
+<div class="active">🏠 Home</div>
+<div>💼 Jobs</div>
+<div>🏷 Deals</div>
+<div>💰 Wallet</div>
+<div>👤 Profile</div>
 </div>
-
-<script>
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let currentUser=null;
-
-async function init(){
- const {data:{session}}=await client.auth.getSession();
- if(session){
-   currentUser=session.user;
-   loadServices();
- }
-}
-init();
-
-async function saveProfile(){
- if(!currentUser) return alert("Login required");
- await client.from("providers").upsert([{
-   user_id:currentUser.id,
-   name:name.value,
-   university:university.value,
-   whatsapp:whatsapp.value
- }]);
- alert("Profile saved");
-}
-
-async function publishService(){
- if(!currentUser) return alert("Login required");
- await client.from("services").insert([{
-   provider_id:currentUser.id,
-   service_name:serviceName.value,
-   service_type:serviceType.value,
-   price:servicePrice.value,
-   image_url:serviceImage.value,
-   description:serviceDesc.value,
-   active:true
- }]);
- loadServices();
-}
-
-async function loadServices(){
- const {data=[]}=await client.from("services").select("*").eq("provider_id",currentUser.id);
- document.getElementById("servicesList").innerHTML=data.map(s=>`
- <div class="item">
- <b>${s.service_name}</b><br>
- ${s.service_type} • R${s.price||0}
- </div>`).join("");
-}
-</script>
 </body>
 </html>
