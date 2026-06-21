@@ -3,118 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V46 Premium</title>
+<title>Zep Swipe Provider V48 Backend Ready</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:#fff;padding-bottom:100px}
-.header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
-.brand{display:flex;gap:10px;align-items:center}
-.logo img{width:52px;height:52px;object-fit:contain}
-.actions{display:flex;gap:10px}
-.iconbtn{width:44px;height:44px;border:1px solid var(--border);border-radius:12px;background:#141414;color:#fff;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
-.badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#ff3b30;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center}
-.hero,.card{background:#141414;border:1px solid var(--border);border-radius:20px;margin:16px;padding:16px}
-.hero{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.stat{background:#101010;border:1px solid var(--border);border-radius:14px;padding:12px}
-input,textarea,select{width:100%;padding:12px;margin-top:8px;background:#101010;color:#fff;border:1px solid var(--border);border-radius:12px}
+.card,.hero{background:#141414;border:1px solid #262626;border-radius:20px;margin:16px;padding:16px}
+.hero{background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+input,textarea,select{width:100%;padding:12px;margin-top:8px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
 .btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800;margin-top:10px}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0}
-.nav a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
+.header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #262626;background:#0b0b0b;position:sticky;top:0}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
+.nav a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}
 </style>
 </head>
 <body>
+
 <div class="header">
-<div class="brand">
-<div class="logo"><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"></div>
-<div><b style="color:#b8ff3b">Zep Swipe</b><div style="font-size:12px;color:#aaa">Provider Dashboard</div></div>
-</div>
-<div class="actions">
-<button class="iconbtn" onclick="toggleAlerts()"><i data-lucide="bell"></i><span class="badge">3</span></button>
-<button class="iconbtn" onclick="logout()"><i data-lucide="log-out"></i></button>
-</div>
+<h3 style="color:#b8ff3b">Zep Swipe Provider</h3>
+<button class="btn" style="width:auto" onclick="logout()">Logout</button>
 </div>
 
 <div class="hero">
-<h2>Welcome Back 👋</h2>
-<p>Turn your skills into income today.</p>
-<h1 style="color:#b8ff3b">R0.00</h1>
-<button class="btn">Withdraw Earnings</button>
+<h2 id="welcome">Welcome Back</h2>
+<h1 id="balance">R0.00</h1>
 </div>
 
 <div class="card">
-<h3>💰 Earnings Overview</h3>
-<div class="grid">
-<div class="stat"><h2>R0</h2><small>This Month</small></div>
-<div class="stat"><h2>R0</h2><small>Last Month</small></div>
-<div class="stat"><h2>R0</h2><small>Pending</small></div>
-</div>
-</div>
-
-<div class="card" id="alerts" style="display:none">
-<h3>New Job Alerts</h3>
-<p>Graphic Design Request • R350</p>
-<p>Math Tutor Needed • R250</p>
+<h3>Publish Service</h3>
+<input id="serviceName" placeholder="Service Name">
+<input id="servicePrice" placeholder="Price">
+<textarea id="serviceDesc" placeholder="Description"></textarea>
+<button class="btn" onclick="publishService()">Publish Service</button>
 </div>
 
 <div class="card">
-<h3>🚀 Refer & Earn MARI</h3>
-<p>Earn 15 MARI for every 5 friends that complete onboarding.</p>
-<input value="https://zepswipe.com/ref/example" readonly>
-<button class="btn">Share On WhatsApp</button>
+<h3>Incoming Jobs</h3>
+<div id="jobs">No jobs loaded.</div>
 </div>
 
-<div class="card" id="create">
-<h3>Service Listing Studio</h3>
-<select><option>Tutoring</option><option>Graphic Design</option><option>Photography</option><option>Cleaning</option><option>Tech Support</option></select>
-<input placeholder="Service Name">
-<input placeholder="Price">
-<textarea placeholder="Description"></textarea>
-<input type="file">
-<button class="btn">Publish Service</button>
-</div>
-
-<div class="card" id="wallet">
+<div class="card">
 <h3>Withdrawal Request</h3>
-<input placeholder="Bank Name">
-<input placeholder="Account Number">
-<input placeholder="Account Holder">
-<input placeholder="Amount">
-<button class="btn">Request Withdrawal</button>
-</div>
-
-<div class="card">
-<h3>Transaction History</h3>
-<div class="stat">Graphic Design Project +R250</div>
-<div class="stat" style="margin-top:8px">Tutoring Session +R150</div>
-</div>
-
-<div class="card" id="profile">
-<h3>Profile</h3>
-<input placeholder="Full Name">
-<input placeholder="Email">
-<input placeholder="University">
-<button class="btn">Save Profile</button>
+<input id="amount" placeholder="Amount">
+<button class="btn" onclick="requestWithdrawal()">Request Withdrawal</button>
 </div>
 
 <div class="nav">
-<a href="index.html"><i data-lucide="layout-dashboard"></i><span>Home</span></a>
-<a href="marketplace.html"><i data-lucide="store"></i><span>Marketplace</span></a>
-<a href="#create"><i data-lucide="square-plus"></i><span>Create</span></a>
-<a href="#wallet"><i data-lucide="landmark"></i><span>Withdraw</span></a>
-<a href="#profile"><i data-lucide="circle-user-round"></i><span>Profile</span></a>
+<a href="index.html">Home</a>
+<a href="marketplace.html">Marketplace</a>
 </div>
 
 <script>
-function logout(){window.location.href='index.html';}
-function toggleAlerts(){
-const a=document.getElementById('alerts');
-a.style.display=a.style.display==='none'?'block':'none';
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const PAYSTACK_PUBLIC_KEY="YOUR_PAYSTACK_PUBLIC_KEY";
+
+const client=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+async function publishService(){
+ alert("Connect services table in Supabase.");
 }
+
+async function loadJobs(){
+ // connect bookings table here
+}
+
+async function requestWithdrawal(){
+ alert("Connect withdrawals table and payout workflow.");
+}
+
+function logout(){
+ window.location.href='index.html';
+}
+
 lucide.createIcons();
 </script>
 </body>
