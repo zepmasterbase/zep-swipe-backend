@@ -3,64 +3,69 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V62 Backend Ready</title>
+<title>Zep Swipe Provider V63</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:#fff;padding-bottom:90px}
-.hero,.card,.header{background:#141414;border:1px solid var(--border);border-radius:20px}
+.header,.hero,.card{background:#141414;border:1px solid var(--border);border-radius:20px}
 .header{margin:12px;padding:14px}
 .hero{margin:16px;padding:28px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
 .card{margin:16px;padding:16px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
 .stat{background:#101010;border:1px solid var(--border);padding:12px;border-radius:14px}
 input,textarea,select{width:100%;padding:12px;margin-top:8px;background:#101010;color:#fff;border:1px solid var(--border);border-radius:12px}
-.btn{width:100%;padding:12px;margin-top:8px;border:none;border-radius:12px;background:var(--accent);font-weight:800}
+.btn{width:100%;padding:12px;margin-top:8px;border:none;border-radius:12px;background:var(--accent);font-weight:800;color:#000}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px}
-.nav a{color:#fff;text-decoration:none}
+.nav a{color:#fff;text-decoration:none;display:flex;flex-direction:column;align-items:center;font-size:12px}
 </style>
 </head>
 <body>
 
 <div class="header">
-<h2 style="color:#b8ff3b">Zep Swipe Provider</h2>
+<h2 style="color:#b8ff3b">Zep Swipe Provider Dashboard</h2>
 </div>
 
 <div class="hero">
-<h2>Good Morning 👋</h2>
-<h1 style="color:#b8ff3b">R0.00</h1>
+<h2 id="welcome">Welcome Provider 👋</h2>
+<h1 style="color:#b8ff3b">R<span id="wallet">0.00</span></h1>
 <p>Traditional Wallet Balance</p>
 <div class="grid" style="margin-top:12px">
-<div class="stat"><h3>0 MARI</h3><small>MARI Wallet</small></div>
-<div class="stat"><h3>0</h3><small>Completed Jobs</small></div>
+<div class="stat"><h3 id="mari">0 MARI</h3><small>MARI Wallet</small></div>
+<div class="stat"><h3 id="completedJobs">0</h3><small>Completed Jobs</small></div>
 </div>
 </div>
 
 <div class="card">
 <h3>📥 Incoming Jobs</h3>
 <div class="stat">
-<b>Graphic Design Flyer</b><br>
-Status: Pending<br><br>
-<button class="btn">Accept Job</button>
-<button class="btn">Start Job</button>
-<button class="btn">Mark Complete</button>
+<b id="jobTitle">Graphic Design Flyer</b><br>
+Status: <span id="jobStatus">Pending</span><br><br>
+<button class="btn" onclick="updateJob('Accepted')">Accept Job</button>
+<button class="btn" onclick="updateJob('In Progress')">Start Job</button>
+<button class="btn" onclick="updateJob('Completed')">Mark Complete</button>
 </div>
-<p style="margin-top:10px;color:#aaa">Workflow: Pending → Accepted → In Progress → Completed → Approved → Paid</p>
 </div>
 
 <div class="card" id="createService">
 <h3>➕ Service Listing Studio</h3>
-<select><option>Graphic Design</option><option>Tutoring</option><option>Photography</option></select>
-<input placeholder="Service Title">
-<input placeholder="Price">
-<textarea placeholder="Description"></textarea>
-<button class="btn">Publish Service</button>
+<select id="category">
+<option>Graphic Design</option>
+<option>Tutoring</option>
+<option>Photography</option>
+</select>
+<input id="title" placeholder="Service Title">
+<input id="price" placeholder="Price">
+<textarea id="description" placeholder="Description"></textarea>
+<button class="btn" onclick="publishService()">Publish Service</button>
 </div>
 
 <div class="card">
 <h3>🚀 Referral Engine</h3>
-<input value="https://zepswipe.com/ref/demo" readonly>
+<input id="refLink" value="https://zepswipe.com/ref/provider-demo" readonly>
 <button class="btn">Share Referral Link</button>
 </div>
 
@@ -74,19 +79,36 @@ Status: Pending<br><br>
 
 <div class="card">
 <h3>👤 My Profile</h3>
-<input placeholder="Full Name">
-<input placeholder="Email">
-<input placeholder="University">
-<textarea placeholder="Bio"></textarea>
+<input id="fullName" placeholder="Full Name">
+<input id="email" placeholder="Email">
+<input id="university" placeholder="University">
+<textarea id="bio" placeholder="Bio"></textarea>
 <button class="btn">Save Profile</button>
 </div>
 
 <div class="nav">
-<a href="index.html">Home</a>
-<a href="marketplace.html">Marketplace</a>
-<a href="#createService">Create</a>
-<a href="#">Profile</a>
+<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="briefcase"></i><span>Marketplace</span></a>
+<a href="#createService"><i data-lucide="plus-circle"></i><span>Create</span></a>
+<a href="#"><i data-lucide="user"></i><span>Profile</span></a>
 </div>
 
+<script>
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+
+const supabaseClient=window.supabase ?
+supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
+
+function updateJob(status){
+ document.getElementById('jobStatus').innerText=status;
+}
+
+async function publishService(){
+ alert('Connect Supabase and save service to services table.');
+}
+
+lucide.createIcons();
+</script>
 </body>
 </html>
