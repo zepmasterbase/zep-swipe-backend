@@ -3,23 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Waitlist V109</title>
+<title>Zep Swipe Waitlist V110</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+html{scroll-behavior:smooth}
 body{background:var(--bg);color:#fff;padding-bottom:90px}
 .hero{margin:16px;padding:36px;border-radius:28px;background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover;border:1px solid rgba(184,255,59,.2)}
-.card{margin:16px;padding:18px;background:#141414;border:1px solid #262626;border-radius:22px;transition:.3s}
-.card:hover{transform:translateY(-4px);box-shadow:0 0 30px rgba(184,255,59,.2)}
+.card{margin:16px;padding:18px;background:#141414;border:1px solid #262626;border-radius:22px}
+.card:hover{box-shadow:0 0 30px rgba(184,255,59,.2)}
 input{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
 .btn{width:100%;padding:14px;margin-top:12px;border:none;border-radius:14px;background:#b8ff3b;color:#000;font-weight:800}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
 .stat{background:#101010;padding:14px;border-radius:16px;text-align:center}
 .ring{width:160px;height:160px;border-radius:50%;border:12px solid #222;border-top-color:#b8ff3b;display:flex;align-items:center;justify-content:center;margin:auto;font-size:28px;font-weight:800}
 #wheel{width:280px;height:280px;border-radius:50%;margin:20px auto;background:conic-gradient(#00ff88,#b8ff3b,#ffd700,#00ffaa,#66ff33,#00ff88);display:flex;align-items:center;justify-content:center;transition:transform 5s ease-out;box-shadow:0 0 40px rgba(184,255,59,.45)}
-.center{width:110px;height:110px;border-radius:50%;background:#141414;display:flex;align-items:center;justify-content:center;font-weight:800;color:#b8ff3b}
+.center{width:110px;height:110px;border-radius:50%;background:#141414;display:flex;align-items:center;justify-content:center;font-weight:800;color:#b8ff3b;cursor:pointer}
 .coin{position:fixed;top:-40px;animation:fall 3s linear forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 .footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px}
@@ -34,6 +35,7 @@ input{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;bord
 <h1>Learn • Earn • Refer • Grow</h1>
 <p>Join Africa's Student Economy.</p>
 </div>
+
 <div class="card">
 <input id="name" placeholder="Full Name">
 <input id="email" placeholder="Email">
@@ -56,7 +58,7 @@ input{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;bord
 <div class="ring">60%</div>
 </div>
 
-<div class="card">
+<div class="card" id="spin-section">
 <h3>🎡 Daily Spin Wheel</h3>
 <div id="wheel"><div class="center" onclick="spin()">SPIN</div></div>
 <p id="result">Rewards: 3 • 5 • 7 • 10 • 15 • 20 MARI</p>
@@ -88,8 +90,8 @@ input{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;bord
 </div>
 
 <div class="footer">
-<a href="#"><i data-lucide="home"></i><span>Home</span></a>
-<a href="#"><i data-lucide="gift"></i><span>Spin</span></a>
+<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+<a href="#spin-section"><i data-lucide="gift"></i><span>Spin</span></a>
 <a href="#"><i data-lucide="wallet"></i><span>Wallet</span></a>
 <a href="#"><i data-lucide="trophy"></i><span>Rank</span></a>
 <a href="#"><i data-lucide="user"></i><span>Profile</span></a>
@@ -98,37 +100,76 @@ input{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;bord
 <script>
 const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-function registerStudent(){
- const n=document.getElementById('name').value||'Student';
- const sid='ZS-'+Math.floor(Math.random()*90000+10000);
- document.getElementById('signup').style.display='none';
- document.getElementById('dashboard').style.display='block';
- document.getElementById('welcome').innerHTML='Good Morning, '+n+' 👋';
- document.getElementById('refLink').value='https://zepswipe.com/ref/'+sid;
+function showDashboard(name,sid,walletBalance){
+document.getElementById('signup').style.display='none';
+document.getElementById('dashboard').style.display='block';
+document.getElementById('welcome').innerHTML='Good Morning, '+name+' 👋';
+document.getElementById('wallet').innerText=walletBalance;
+document.getElementById('refLink').value='https://zepswipe.com/ref/'+sid;
 }
+
+async function registerStudent(){
+const studentName=document.getElementById('name').value||'Student';
+const email=document.getElementById('email').value;
+const country=document.getElementById('country').value;
+const sid='ZS-'+Math.floor(Math.random()*90000+10000);
+
+try{
+await supabaseClient.from('students').insert({
+student_id:sid,
+full_name:studentName,
+email:email,
+country:country,
+mari_balance:0
+});
+}catch(e){}
+
+localStorage.setItem('studentId',sid);
+showDashboard(studentName,sid,0);
+}
+
+window.addEventListener('load',async()=>{
+const sid=localStorage.getItem('studentId');
+if(!sid)return;
+
+try{
+const {data}=await supabaseClient.from('students').select('*').eq('student_id',sid).single();
+if(data) showDashboard(data.full_name,data.student_id,data.mari_balance||0);
+}catch(e){}
+});
 
 function shareWhatsApp(){
- window.open('https://wa.me/?text='+encodeURIComponent(document.getElementById('refLink').value),'_blank');
+window.open('https://wa.me/?text='+encodeURIComponent(document.getElementById('refLink').value),'_blank');
 }
 
-function spin(){
- const rewards=[3,5,7,10,15,20];
- const win=rewards[Math.floor(Math.random()*rewards.length)];
- document.getElementById('wheel').style.transform='rotate('+(1800+Math.random()*720)+'deg)';
- setTimeout(()=>{
-   const w=document.getElementById('wallet');
-   w.innerText=parseInt(w.innerText)+win;
-   document.getElementById('result').innerText='🎉 You won '+win+' MARI';
-   for(let i=0;i<20;i++){
-    const c=document.createElement('div');
-    c.className='coin'; c.innerHTML='🪙';
-    c.style.left=Math.random()*100+'vw';
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),3000);
-   }
- },5000);
+async function spin(){
+const rewards=[3,5,7,10,15,20];
+const win=rewards[Math.floor(Math.random()*rewards.length)];
+document.getElementById('wheel').style.transform='rotate('+(1800+Math.random()*720)+'deg)';
+
+setTimeout(async()=>{
+const w=document.getElementById('wallet');
+const newBalance=parseInt(w.innerText)+win;
+w.innerText=newBalance;
+document.getElementById('result').innerText='🎉 You won '+win+' MARI';
+
+for(let i=0;i<20;i++){
+const c=document.createElement('div');
+c.className='coin';
+c.innerHTML='🪙';
+c.style.left=Math.random()*100+'vw';
+document.body.appendChild(c);
+setTimeout(()=>c.remove(),3000);
 }
+
+try{
+await supabaseClient.from('students').update({mari_balance:newBalance}).eq('student_id',localStorage.getItem('studentId'));
+}catch(e){}
+},5000);
+}
+
 lucide.createIcons();
 </script>
 </body>
