@@ -3,22 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Deals V40 Business Dashboard</title>
+<title>Zep Swipe Deals V41 Supabase Ready</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:var(--bg);color:var(--text);padding-bottom:90px}
+body{background:var(--bg);color:#fff;padding-bottom:90px}
 .hero{margin:16px;padding:34px;border-radius:28px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1600&q=80') center/cover}
-.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;margin:16px}
+.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
+.card{background:#141414;border:1px solid #262626;border-radius:20px;padding:16px;margin:16px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.stat{background:#101010;border:1px solid var(--border);border-radius:16px;padding:14px}
-input,select,textarea{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid var(--border);border-radius:12px}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;background:var(--accent);color:#000;font-weight:800;margin-top:12px}
-.deal{background:#101010;border:1px solid var(--border);border-radius:16px;padding:14px;margin-top:10px}
-.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0}
+.stat,.deal{background:#101010;border:1px solid #262626;border-radius:16px;padding:14px}
+input,select,textarea{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800;margin-top:12px}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
 .footer a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
 </style>
 </head>
@@ -32,67 +32,51 @@ input,select,textarea{width:100%;padding:12px;margin-top:10px;background:#101010
 
 <div class="card">
 <div class="grid">
-<div class="stat"><h2>4,320</h2><small>Views</small></div>
-<div class="stat"><h2>132</h2><small>Claims</small></div>
-<div class="stat"><h2>86</h2><small>Leads</small></div>
-<div class="stat"><h2>12</h2><small>Active Deals</small></div>
+<div class="stat"><h2 id="views">0</h2><small>Views</small></div>
+<div class="stat"><h2 id="claims">0</h2><small>Claims</small></div>
+<div class="stat"><h2 id="leads">0</h2><small>Leads</small></div>
+<div class="stat"><h2 id="activeDeals">0</h2><small>Active Deals</small></div>
 </div>
 </div>
 
 <div class="card">
 <h3>🏪 Business Profile</h3>
-<input placeholder="Business Name">
-<input placeholder="Owner Name">
-<input placeholder="Location">
-<input placeholder="WhatsApp Number">
-<button class="btn">Save Profile</button>
+<input id="businessName" placeholder="Business Name">
+<input id="ownerName" placeholder="Owner Name">
+<input id="location" placeholder="Location">
+<input id="whatsapp" placeholder="WhatsApp Number">
+<button class="btn" onclick="saveProfile()">Save Profile</button>
 </div>
 
 <div class="card">
 <h3>🚀 Create Deal</h3>
-<select>
+<select id="plan">
 <option>Free Listing</option>
 <option>Featured Deal</option>
 <option>Premium Deal</option>
 </select>
-<select>
+<select id="category">
 <option>Food & Drinks</option>
 <option>Salon & Barber</option>
 <option>Fashion</option>
 <option>Electronics</option>
 <option>Education</option>
 </select>
-<input placeholder="Deal Title">
-<textarea placeholder="Deal Description"></textarea>
-<input placeholder="Discount %">
-<input type="date">
-<input type="file">
-<button class="btn">Publish Deal</button>
-</div>
-
-<div class="card">
-<h3>✅ Verified Student Claims</h3>
-<p>Students enter Student ID before claiming.</p>
-<div class="deal">Sarah • UJ • Claimed 50% Student Meal</div>
-<div class="deal">David • Wits • Claimed Barber Discount</div>
+<input id="title" placeholder="Deal Title">
+<textarea id="description" placeholder="Deal Description"></textarea>
+<input id="discount" placeholder="Discount %">
+<input id="expiry" type="date">
+<button class="btn" onclick="publishDeal()">Publish Deal</button>
 </div>
 
 <div class="card">
 <h3>📦 My Deals</h3>
-<div class="deal">
-<b>50% Student Meal</b><br>
-420 Views • 34 Claims • 18 Leads
-</div>
-<div class="deal">
-<b>20% Barber Discount</b><br>
-210 Views • 18 Claims • 7 Leads
-</div>
+<div id="dealsContainer"></div>
 </div>
 
 <div class="card">
-<h3>🔔 Notifications</h3>
-<div class="deal">New deal claim received</div>
-<div class="deal">Featured deal approved</div>
+<h3>✅ Verified Student Claims</h3>
+<div id="claimsContainer"></div>
 </div>
 
 <div class="footer">
@@ -103,6 +87,34 @@ input,select,textarea{width:100%;padding:12px;margin-top:10px;background:#101010
 <a href="#"><i data-lucide="user-round"></i><span>Profile</span></a>
 </div>
 
-<script>lucide.createIcons();</script>
+<script>
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+async function saveProfile(){
+alert("Connect to businesses table.");
+}
+
+async function publishDeal(){
+alert("Connect to deals table.");
+}
+
+async function loadDeals(){
+try{
+const {data}=await db.from('deals').select('*').limit(20);
+const container=document.getElementById('dealsContainer');
+if(!data) return;
+document.getElementById('activeDeals').innerText=data.length;
+container.innerHTML='';
+data.forEach(d=>{
+container.innerHTML += `<div class="deal"><b>${d.title||'Deal'}</b><br>${d.discount||0}% Off</div>`;
+});
+}catch(e){}
+}
+
+loadDeals();
+lucide.createIcons();
+</script>
 </body>
 </html>
