@@ -1,120 +1,131 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V65 - Escrow</title>
+<title>Zep Swipe | My Business</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
-*{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;background:var(--bg);color:#fff;padding-bottom:90px}
-.card,.hero{margin:16px;padding:18px;border:1px solid var(--line);border-radius:20px;background:var(--card)}
-.hero{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.tile{background:#101010;border:1px solid var(--line);border-radius:14px;padding:14px}
-input,textarea,select,button{width:100%;margin-top:10px;padding:12px;border-radius:12px}
-input,textarea,select{background:#101010;color:#fff;border:1px solid var(--line)}
-button{background:var(--accent);border:none;font-weight:800}
-.timeline div{padding:10px;margin:8px 0;background:#101010;border-left:4px solid var(--accent);border-radius:8px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--bg);color:#fff;padding-bottom:90px}
+.wrap{max-width:760px;margin:auto}
+.hero,.card{margin:16px;border:1px solid var(--line);border-radius:22px;background:var(--card)}
+.hero{padding:24px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:#203600;color:var(--accent);font-weight:700}
+.balance{font-size:42px;font-weight:800;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.tile{background:#101010;border:1px solid var(--line);border-radius:16px;padding:14px}
+.card{padding:18px}
+h3{margin-bottom:12px}
+label{display:block;font-size:13px;color:#bbb;margin-top:12px}
+input,textarea,select{width:100%;padding:12px;background:#101010;border:1px solid var(--line);color:#fff;border-radius:12px}
+button{width:100%;padding:13px;margin-top:16px;border:none;border-radius:12px;background:var(--accent);font-weight:800}
+.info{background:#182a00;border:1px solid #365500;padding:14px;border-radius:14px}
+.job{background:#101010;border:1px solid var(--line);padding:16px;border-radius:16px}
+.row{display:flex;justify-content:space-between;margin:8px 0}
 .nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
-.nav a{color:#fff;text-decoration:none;font-size:12px;text-align:center}
-.notice{background:#1d3300;padding:12px;border-radius:12px}
+.nav a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}
+small{color:#aaa}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="hero">
-<h2>👋 Provider Dashboard</h2>
-<h1>Wallet: R<span id="wallet">0.00</span></h1>
-<p>Escrow-powered payouts</p>
+<section class="hero">
+<div class="badge">🛡 Escrow Protected</div>
+<h2 style="margin-top:14px">My Business</h2>
+<p>All customer payments are securely held by Zep Swipe Escrow until work is approved.</p>
+<div class="balance">R<span id="wallet">0.00</span></div>
+
 <div class="grid">
-<div class="tile"><h3>R0</h3><small>Available</small></div>
-<div class="tile"><h3>R0</h3><small>Pending Escrow</small></div>
-<div class="tile"><h3>0</h3><small>Completed Jobs</small></div>
-<div class="tile"><h3>5.0⭐</h3><small>Rating</small></div>
+<div class="tile"><strong>Available</strong><br><small>Ready to withdraw</small><h3>R0.00</h3></div>
+<div class="tile"><strong>Pending Escrow</strong><br><small>Awaiting release</small><h3>R0.00</h3></div>
+<div class="tile"><strong>Completed Jobs</strong><br><small>All time</small><h3>0</h3></div>
+<div class="tile"><strong>Rating</strong><br><small>Customer reviews</small><h3>⭐5.0</h3></div>
 </div>
-</div>
+</section>
 
-<div class="card">
-<h3>💰 Escrow Breakdown</h3>
-<div class="notice">
-Customer Paid: <b>R1000</b><br>
-Platform Fee (10%): <b>R100</b><br>
-Provider Receives: <b>R900</b>
+<section class="card">
+<h3>Current Job</h3>
+<div class="job">
+<div class="row"><span>Campus Logo Design</span><strong>R850</strong></div>
+<div class="row"><span>Status</span><strong>🟡 In Progress</strong></div>
+<div class="row"><span>Escrow</span><strong>Funds Secured</strong></div>
+<button>Open Job</button>
 </div>
-</div>
+</section>
 
-<div class="card">
-<h3>📋 Current Job</h3>
-<strong>Graphic Design Flyer</strong>
-<div class="timeline">
-<div>🟢 Job Accepted</div>
-<div>🟢 Customer Paid into Escrow</div>
-<div>🟡 Work In Progress</div>
-<div>⚪ Awaiting Customer Approval</div>
-<div>⚪ Escrow Release</div>
-<div>⚪ Wallet Credited</div>
+<section class="card">
+<h3>Wallet</h3>
+<div class="info">
+<div class="row"><span>This Month</span><strong>R0.00</strong></div>
+<div class="row"><span>Platform Fee (10%)</span><strong>R0.00</strong></div>
+<div class="row"><span>Paid Out</span><strong>R0.00</strong></div>
 </div>
-<button>Mark Work Submitted</button>
-</div>
+</section>
 
-<div class="card">
-<h3>➕ Publish Service</h3>
-<select><option>Graphic Design</option><option>Tutoring</option><option>Photography</option><option>Programming</option></select>
-<input placeholder="Service title">
-<input placeholder="Price">
-<textarea placeholder="Describe your service"></textarea>
+<section class="card">
+<h3>Publish Service</h3>
+<label>Category</label>
+<select><option>Graphic Design</option><option>Tutoring</option><option>Photography</option><option>Programming</option><option>Virtual Assistant</option></select>
+<label>Service Title</label>
+<input placeholder="Logo Design">
+<label>Description</label>
+<textarea rows="4" placeholder="Describe your service"></textarea>
+<label>Price (R)</label>
+<input placeholder="500">
+<label>Delivery Time</label>
+<select><option>24 Hours</option><option>2 Days</option><option>3 Days</option><option>7 Days</option></select>
+<label>Portfolio Images</label>
+<input type="file" multiple>
 <button>Publish Service</button>
-</div>
+</section>
 
-<div class="card">
-<h3>🏦 Withdraw</h3>
-<input placeholder="Bank">
-<input placeholder="Account Number">
-<input placeholder="Amount">
+<section class="card">
+<h3>Withdraw Funds</h3>
+<label>Available Balance</label>
+<input value="R0.00" readonly>
+<label>Bank</label>
+<input placeholder="Bank name">
+<label>Account Number</label>
+<input placeholder="Account number">
+<label>Amount</label>
+<input placeholder="Withdrawal amount">
 <button>Request Withdrawal</button>
+</section>
+
+<section class="card">
+<h3>Profile</h3>
+<label>Profile Photo</label><input type="file">
+<label>Full Name</label><input>
+<label>University</label><input>
+<label>Bio</label><textarea rows="3"></textarea>
+<label>Portfolio URL</label><input>
+<button>Save Changes</button>
+</section>
+
 </div>
 
-<div class="card">
-<h3>📊 Recommended Supabase Tables</h3>
-<ul>
-<li>providers</li>
-<li>services</li>
-<li>jobs</li>
-<li>escrow_payments</li>
-<li>provider_wallets</li>
-<li>withdrawals</li>
-<li>reviews</li>
-<li>notifications</li>
-</ul>
-</div>
-
-<div class="nav">
-<a href="index.html"><i data-lucide="home"></i><div>Home</div></a>
-<a href="marketplace.html"><i data-lucide="briefcase"></i><div>Marketplace</div></a>
-<a href="#"><i data-lucide="plus-circle"></i><div>Create</div></a>
-<a href="#"><i data-lucide="wallet"></i><div>Wallet</div></a>
-<a href="#"><i data-lucide="user"></i><div>Profile</div></a>
-</div>
+<nav class="nav">
+<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="briefcase"></i><span>Jobs</span></a>
+<a href="#"><i data-lucide="plus-circle"></i><span>Create</span></a>
+<a href="#"><i data-lucide="wallet"></i><span>Wallet</span></a>
+<a href="#"><i data-lucide="user"></i><span>Profile</span></a>
+</nav>
 
 <script>
 const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-
-// Backend TODO:
-// Authenticate providers
-// Save services
-// Create escrow_payments records
-// Release escrow after completion
-// Deduct 10% commission
-// Credit provider_wallets
-// Enable withdrawal workflow
-
 lucide.createIcons();
+// Connect:
+// auth, providers, services, jobs, escrow_payments,
+// provider_wallets, withdrawals, reviews.
 </script>
 </body>
 </html>
