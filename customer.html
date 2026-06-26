@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zep Swipe | My Zep Swipe</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
+*{box-sizing:border-box;font-family:Inter,sans-serif}
+body{margin:0;background:var(--bg);color:#fff;padding-bottom:88px}
+.wrap{max-width:760px;margin:auto}
+.hero,.card{margin:16px;background:var(--card);border:1px solid var(--line);border-radius:22px}
+.hero{padding:24px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88)),url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80') center/cover}
+.badge{display:inline-flex;padding:8px 14px;border-radius:999px;background:#203600;color:var(--accent);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.tile,.panel{background:#101010;border:1px solid var(--line);border-radius:16px;padding:14px}
+.card{padding:18px}
+.row{display:flex;justify-content:space-between;margin:8px 0}
+button{width:100%;padding:13px;margin-top:14px;background:var(--accent);border:none;border-radius:12px;font-weight:800}
+input{width:100%;padding:12px;background:#101010;color:#fff;border:1px solid var(--line);border-radius:12px;margin-top:8px}
+.timeline div{margin:8px 0;padding:10px;border-left:4px solid var(--accent);background:#101010;border-radius:8px}
+.nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
+.nav a{text-decoration:none;color:#fff;font-size:12px;display:flex;flex-direction:column;align-items:center}
+small{color:#aaa}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<section class="hero">
+<div class="badge">🛡 Escrow Protected</div>
+<h2 style="margin-top:14px">My Zep Swipe</h2>
+<p>Your payments are protected until you approve completed work.</p>
+
+<div class="grid" style="margin-top:18px">
+<div class="tile"><strong>Active Orders</strong><h2>1</h2></div>
+<div class="tile"><strong>Saved Providers</strong><h2>4</h2></div>
+<div class="tile"><strong>MARI Balance</strong><h2>50</h2></div>
+<div class="tile"><strong>Completed Orders</strong><h2>12</h2></div>
+</div>
+</section>
+
+<section class="card">
+<h3>📦 Current Order</h3>
+<div class="panel">
+<div class="row"><span>Campus Logo Design</span><strong>R850</strong></div>
+<div class="row"><span>Provider</span><strong>Pericles</strong></div>
+<div class="timeline">
+<div>🟢 Escrow Funded</div>
+<div>🟢 Provider Working</div>
+<div>🟢 Work Submitted</div>
+<div>🟡 Awaiting Your Approval</div>
+</div>
+<button>View Submitted Work</button>
+<button>✅ Approve & Release Escrow</button>
+<button style="background:#1f1f1f;color:#fff">🔄 Request Changes</button>
+</div>
+</section>
+
+<section class="card">
+<h3>💳 Escrow Centre</h3>
+<div class="panel">
+<div class="row"><span>Funds Protected</span><strong>R850</strong></div>
+<div class="row"><span>Status</span><strong>Awaiting Approval</strong></div>
+<div class="row"><span>Receipt</span><strong>#ZS-1001</strong></div>
+</div>
+</section>
+
+<section class="card">
+<h3>🪙 Mari Wallet</h3>
+<div class="panel">
+<div class="row"><span>Balance</span><strong>50 MARI</strong></div>
+<div class="row"><span>Reward Rule</span><strong>+50 MARI</strong></div>
+<p>Earn <strong>50 MARI</strong> every time a paid service is completed and escrow is released.</p>
+</div>
+</section>
+
+<section class="card">
+<h3>❤️ Saved Providers</h3>
+<input placeholder="Search saved providers">
+</section>
+
+<section class="card">
+<h3>👤 Profile</h3>
+<input placeholder="Full Name">
+<input placeholder="Email">
+<input placeholder="Phone">
+<button>Save Profile</button>
+</section>
+
+</div>
+
+<nav class="nav">
+<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="search"></i><span>Browse</span></a>
+<a href="#"><i data-lucide="package"></i><span>Orders</span></a>
+<a href="#"><i data-lucide="coins"></i><span>MARI</span></a>
+<a href="#"><i data-lucide="user"></i><span>Profile</span></a>
+</nav>
+
+<script>
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+// Suggested production flow:
+// - Customers browse without login.
+// - Login required for booking.
+// - Pay into escrow.
+// - Provider completes work.
+// - Customer approves or requests changes.
+// - Escrow releases payment.
+// - Provider receives payout.
+// - Customer receives +50 MARI.
+// - Provider receives +25 MARI.
+
+lucide.createIcons();
+</script>
+</body>
+</html>
