@@ -1,31 +1,28 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe | My Business</title>
+<title>Zep Swipe | My Business V67</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:var(--bg);color:#fff;padding-bottom:90px}
+*{box-sizing:border-box;font-family:Inter,sans-serif}
+body{margin:0;background:var(--bg);color:#fff;padding-bottom:88px}
 .wrap{max-width:760px;margin:auto}
 .hero,.card{margin:16px;border:1px solid var(--line);border-radius:22px;background:var(--card)}
 .hero{padding:24px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:#203600;color:var(--accent);font-weight:700}
-.balance{font-size:42px;font-weight:800;margin:14px 0}
+.badge{display:inline-flex;padding:8px 14px;border-radius:999px;background:#203600;color:var(--accent);font-weight:700}
+.balance{font-size:42px;font-weight:800;margin:12px 0}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .tile{background:#101010;border:1px solid var(--line);border-radius:16px;padding:14px}
 .card{padding:18px}
-h3{margin-bottom:12px}
-label{display:block;font-size:13px;color:#bbb;margin-top:12px}
-input,textarea,select{width:100%;padding:12px;background:#101010;border:1px solid var(--line);color:#fff;border-radius:12px}
-button{width:100%;padding:13px;margin-top:16px;border:none;border-radius:12px;background:var(--accent);font-weight:800}
-.info{background:#182a00;border:1px solid #365500;padding:14px;border-radius:14px}
-.job{background:#101010;border:1px solid var(--line);padding:16px;border-radius:16px}
+label{display:block;color:#bbb;font-size:13px;margin:10px 0 6px}
+input,textarea,select{width:100%;padding:12px;border-radius:12px;background:#101010;color:#fff;border:1px solid var(--line)}
+button{width:100%;padding:13px;border:none;border-radius:12px;background:var(--accent);font-weight:800;margin-top:14px}
+.job,.panel{background:#101010;border:1px solid var(--line);border-radius:16px;padding:14px}
 .row{display:flex;justify-content:space-between;margin:8px 0}
 .nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
 .nav a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}
@@ -34,80 +31,75 @@ small{color:#aaa}
 </head>
 <body>
 <div class="wrap">
-
 <section class="hero">
-<div class="badge">🛡 Escrow Protected</div>
+<span class="badge">🛡 Escrow Protected</span>
 <h2 style="margin-top:14px">My Business</h2>
-<p>All customer payments are securely held by Zep Swipe Escrow until work is approved.</p>
+<p>Payments are held in Zep Swipe Escrow and released after successful job completion.</p>
 <div class="balance">R<span id="wallet">0.00</span></div>
-
 <div class="grid">
 <div class="tile"><strong>Available</strong><br><small>Ready to withdraw</small><h3>R0.00</h3></div>
-<div class="tile"><strong>Pending Escrow</strong><br><small>Awaiting release</small><h3>R0.00</h3></div>
-<div class="tile"><strong>Completed Jobs</strong><br><small>All time</small><h3>0</h3></div>
-<div class="tile"><strong>Rating</strong><br><small>Customer reviews</small><h3>⭐5.0</h3></div>
+<div class="tile"><strong>Pending</strong><br><small>Escrow</small><h3>R0.00</h3></div>
+<div class="tile"><strong>Completed Jobs</strong><h3 id="jobs">0</h3></div>
+<div class="tile"><strong>Rating</strong><h3>⭐5.0</h3></div>
 </div>
 </section>
 
 <section class="card">
-<h3>Current Job</h3>
+<h3>🪙 Mari Rewards</h3>
+<div class="panel">
+<div class="row"><span>Mari Balance</span><strong><span id="mari">0</span> MARI</strong></div>
+<div class="row"><span>Reward Rule</span><strong>+25 MARI</strong></div>
+<p style="margin-top:10px">Providers earn <strong>25 MARI</strong> after a job is completed and escrow funds are successfully released.</p>
+</div>
+</section>
+
+<section class="card">
+<h3>💼 Current Job</h3>
 <div class="job">
 <div class="row"><span>Campus Logo Design</span><strong>R850</strong></div>
-<div class="row"><span>Status</span><strong>🟡 In Progress</strong></div>
+<div class="row"><span>Status</span><strong id="status">🟡 In Progress</strong></div>
 <div class="row"><span>Escrow</span><strong>Funds Secured</strong></div>
-<button>Open Job</button>
+<button onclick="submitJob()">Mark Work Submitted</button>
 </div>
 </section>
 
 <section class="card">
-<h3>Wallet</h3>
-<div class="info">
+<h3>📊 Wallet Summary</h3>
+<div class="panel">
 <div class="row"><span>This Month</span><strong>R0.00</strong></div>
 <div class="row"><span>Platform Fee (10%)</span><strong>R0.00</strong></div>
-<div class="row"><span>Paid Out</span><strong>R0.00</strong></div>
+<div class="row"><span>Net Paid Out</span><strong>R0.00</strong></div>
 </div>
 </section>
 
 <section class="card">
-<h3>Publish Service</h3>
+<h3>🚀 Publish Service</h3>
 <label>Category</label>
-<select><option>Graphic Design</option><option>Tutoring</option><option>Photography</option><option>Programming</option><option>Virtual Assistant</option></select>
-<label>Service Title</label>
-<input placeholder="Logo Design">
-<label>Description</label>
-<textarea rows="4" placeholder="Describe your service"></textarea>
-<label>Price (R)</label>
-<input placeholder="500">
-<label>Delivery Time</label>
-<select><option>24 Hours</option><option>2 Days</option><option>3 Days</option><option>7 Days</option></select>
-<label>Portfolio Images</label>
-<input type="file" multiple>
+<select><option>Graphic Design</option><option>Tutoring</option><option>Programming</option><option>Photography</option><option>Virtual Assistant</option></select>
+<label>Service Title</label><input placeholder="Logo Design">
+<label>Description</label><textarea rows="4"></textarea>
+<label>Price</label><input placeholder="500">
+<label>Delivery Time</label><select><option>24 Hours</option><option>2 Days</option><option>7 Days</option></select>
+<label>Portfolio</label><input type="file" multiple>
 <button>Publish Service</button>
 </section>
 
 <section class="card">
-<h3>Withdraw Funds</h3>
-<label>Available Balance</label>
-<input value="R0.00" readonly>
-<label>Bank</label>
-<input placeholder="Bank name">
-<label>Account Number</label>
-<input placeholder="Account number">
-<label>Amount</label>
-<input placeholder="Withdrawal amount">
+<h3>🏦 Withdraw</h3>
+<label>Bank</label><input>
+<label>Account Number</label><input>
+<label>Amount</label><input>
 <button>Request Withdrawal</button>
 </section>
 
 <section class="card">
-<h3>Profile</h3>
+<h3>👤 Profile</h3>
 <label>Profile Photo</label><input type="file">
 <label>Full Name</label><input>
 <label>University</label><input>
 <label>Bio</label><textarea rows="3"></textarea>
-<label>Portfolio URL</label><input>
 <button>Save Changes</button>
 </section>
-
 </div>
 
 <nav class="nav">
@@ -122,10 +114,22 @@ small{color:#aaa}
 const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+function submitJob(){
+  document.getElementById("status").textContent="🟢 Awaiting Escrow Release";
+}
+
+// Production flow:
+// 1. Customer pays into escrow.
+// 2. Provider completes work.
+// 3. Customer approves (or platform completes per policy).
+// 4. Escrow releases payment.
+// 5. Credit provider wallet (90%).
+// 6. Record 10% platform fee.
+// 7. Award +25 MARI.
+// 8. Update provider dashboard and MARI balance.
+
 lucide.createIcons();
-// Connect:
-// auth, providers, services, jobs, escrow_payments,
-// provider_wallets, withdrawals, reviews.
 </script>
 </body>
 </html>
