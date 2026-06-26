@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zep Swipe Business Auth</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
+*{box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+body{margin:0;background:radial-gradient(circle at top,#121212,#070707);display:flex;justify-content:center;align-items:center;min-height:100vh;color:#fff;padding:20px}
+.card{width:100%;max-width:420px;background:#141414;border:1px solid #262626;border-radius:22px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.logo{text-align:center;font-size:28px;font-weight:800;color:#b8ff3b}
+small{display:block;text-align:center;color:#aaa;margin:8px 0 22px}
+input{width:100%;padding:13px;margin:8px 0;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
+button{width:100%;padding:14px;border:none;border-radius:12px;font-weight:800;cursor:pointer;margin-top:10px}
+.primary{background:#b8ff3b;color:#000}
+.secondary{background:transparent;border:1px solid #b8ff3b;color:#b8ff3b}
+.link{color:#b8ff3b;text-align:center;display:block;margin-top:14px;text-decoration:none;font-size:14px}
+#msg{margin-top:14px;text-align:center;color:#b8ff3b;font-size:14px;min-height:20px}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="logo">🏪 Zep Swipe Business</div>
+<small>Create your business account or sign in.</small>
+
+<input id="businessName" placeholder="Business Name">
+<input id="ownerName" placeholder="Owner Name">
+<input id="location" placeholder="Location">
+<input id="whatsapp" placeholder="WhatsApp Number">
+<input id="email" type="email" placeholder="Business Email">
+<input id="password" type="password" placeholder="Password">
+
+<button class="primary" onclick="signup()">Create Business Account</button>
+<button class="secondary" onclick="login()">Login</button>
+
+<a class="link" href="#" onclick="resetPassword()">Forgot password?</a>
+
+<div id="msg"></div>
+</div>
+
+<script>
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+async function signup(){
+ const email=emailEl().value,password=passwordEl().value;
+ setMsg("Creating account...");
+ const {data,error}=await db.auth.signUp({email,password});
+ if(error){setMsg(error.message);return;}
+ await db.from("businesses").upsert({
+   user_id:data.user.id,
+   business_name:val("businessName"),
+   owner_name:val("ownerName"),
+   location:val("location"),
+   whatsapp:val("whatsapp"),
+   email:email
+ });
+ setMsg("Success! Redirecting...");
+ setTimeout(()=>location.href="business-deals.html",700);
+}
+
+async function login(){
+ setMsg("Signing in...");
+ const {error}=await db.auth.signInWithPassword({
+   email:emailEl().value,
+   password:passwordEl().value
+ });
+ if(error){setMsg(error.message);return;}
+ location.href="business-deals.html";
+}
+
+async function resetPassword(){
+ const email=emailEl().value;
+ if(!email){setMsg("Enter your email first.");return;}
+ const {error}=await db.auth.resetPasswordForEmail(email,{
+   redirectTo:location.origin+"/business-auth.html"
+ });
+ setMsg(error?error.message:"Password reset email sent.");
+}
+
+db.auth.getSession().then(({data})=>{
+ if(data.session){location.href="business-deals.html";}
+});
+
+function val(id){return document.getElementById(id).value;}
+function emailEl(){return document.getElementById("email");}
+function passwordEl(){return document.getElementById("password");}
+function setMsg(t){document.getElementById("msg").textContent=t;}
+</script>
+</body>
+</html>
