@@ -1,122 +1,97 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe Business Deals V70</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Zep Swipe Business Growth OS V71 - Premium Ready</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:rgba(18,20,22,.84);--line:#2a2a2a;--accent:#b8ff3b}
-*{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;color:#fff;background:#070707}
-.hero{min-height:55vh;padding:64px 24px;background:
-linear-gradient(rgba(5,5,5,.55),rgba(7,7,7,.95)),
-url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80') center/cover}
-.top{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;position:sticky;top:0;background:rgba(7,7,7,.7);backdrop-filter:blur(12px)}
-.brand{font-weight:800}
-.wrap{max-width:1280px;margin:auto;padding:24px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-top:-50px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;backdrop-filter:blur(10px)}
-.grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-top:20px}
-input,select,textarea,button{width:100%;padding:12px;border-radius:12px;margin-top:10px}
-input,select,textarea{background:#101010;color:#fff;border:1px solid #333}
-button{background:var(--accent);border:none;font-weight:800}
-.preview{border:1px dashed #4a4a4a;border-radius:16px;padding:16px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+body{margin:0;background:#070707;color:#fff;font-family:Inter,Arial,sans-serif}
+header{padding:22px;background:#111;border-bottom:1px solid #2d2d2d}
+.wrap{max-width:1100px;margin:auto;padding:20px}
+.card{background:#121416;border:1px solid #2d2d2d;border-radius:18px;padding:20px;margin:18px 0}
+button{background:#b8ff3b;color:#000;border:0;padding:14px 18px;border-radius:12px;font-weight:700;cursor:pointer}
+#premiumModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);align-items:center;justify-content:center}
+.modal{background:#141414;border:1px solid #444;padding:28px;border-radius:20px;max-width:420px}
+.badge{display:inline-block;padding:6px 12px;background:#1f3d00;color:#b8ff3b;border-radius:999px}
 </style>
 </head>
 <body>
-<div class="top">
-<div class="brand">Zep Swipe • Business Deals V70</div>
-<div><i data-lucide="bell-ring"></i></div>
-</div>
 
-<section class="hero">
-<div class="wrap">
-<h1>Launch student campaigns that drive real foot traffic.</h1>
-<p>Create online coupon codes and in-store QR promotions from one production-ready dashboard.</p>
-</div>
-</section>
+<header>
+<h1>Zep Swipe Business Growth OS V71</h1>
+<div class="badge">Supabase Realtime + Premium Subscription</div>
+</header>
 
 <div class="wrap">
-<div class="stats">
-<div class="card"><small>Active Deals</small><h2>18</h2></div>
-<div class="card"><small>Claimed Today</small><h2>142</h2></div>
-<div class="card"><small>Redeemed</small><h2>91</h2></div>
-<div class="card"><small>Conversion</small><h2>64%</h2></div>
-<div class="card"><small>Mari Wallet</small><h2>12,450</h2></div>
+<div class="card">
+<h2>Business Status</h2>
+<p>Total Coupon Redemptions: <strong id="redeemed">0</strong></p>
+<p>Subscription: <strong id="plan">FREE</strong></p>
+<p>Monthly Premium: <strong>R399/month</strong> after 100 validated coupon redemptions.</p>
 </div>
 
-<div class="grid">
 <div class="card">
-<h2>Create Campaign</h2>
-<select id="coupon_type">
-<option>Website Coupon</option>
-<option>In-store QR Coupon</option>
-</select>
-<input id="title" placeholder="Campaign title">
-<select id="category">
-<option>Food</option><option>Retail</option><option>Services</option>
-</select>
-<textarea id="description" placeholder="Description"></textarea>
-<input id="discount" placeholder="20% or R50 OFF">
-<input id="coupon_code" placeholder="Coupon code">
-<input id="website_url" placeholder="Website URL">
-<input id="daily_limit" type="number" placeholder="Daily coupon limit">
-<input id="expiry" type="date">
-<button id="publish">Publish Campaign</button>
-<p id="status"></p>
+<h2>Realtime Activity</h2>
+<div id="feed">Waiting for live coupon activity...</div>
+</div>
 </div>
 
-<div>
-<div class="card">
-<h3>Live Preview</h3>
-<div class="preview" id="preview"></div>
-</div>
-<div class="card">
-<h3>Merchant Insights</h3>
-<ul>
-<li>Best redemption window: 11:30–14:00</li>
-<li>Students near you are active now.</li>
-<li>Boost conversions with limited-time offers.</li>
-</ul>
-</div>
-</div>
+<div id="premiumModal">
+<div class="modal">
+<h2>🎉 Congratulations!</h2>
+<p>Your business has successfully reached <strong>100 validated coupon redemptions.</strong></p>
+<p>Upgrade to <strong>Premium</strong> to continue publishing new campaigns and unlock advanced analytics, AI Growth Coach, forecasting, staff tools and unlimited campaigns.</p>
+<h3>R399 / month</h3>
+<button onclick="startSubscription()">Upgrade with Paystack</button>
 </div>
 </div>
 
 <script>
-const db=supabase.createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");
-lucide.createIcons();
-function updatePreview(){
-preview.innerHTML=`<h3>${title.value||"Campaign"}</h3>
-<p>${description.value||"Description"}</p>
-<p><strong>${discount.value||""}</strong></p>
-<p>${coupon_type.value}</p>`;
+const supabase = window.supabase.createClient(
+ "YOUR_SUPABASE_URL",
+ "YOUR_SUPABASE_ANON_KEY"
+);
+
+let redeemedCount=0;
+let subscriptionStatus="FREE";
+
+function updateUI(){
+ document.getElementById("redeemed").textContent=redeemedCount;
+ document.getElementById("plan").textContent=subscriptionStatus;
+ if(redeemedCount>=100 && subscriptionStatus!=="ACTIVE"){
+   document.getElementById("premiumModal").style.display="flex";
+ }
 }
-["title","description","discount","coupon_type"].forEach(id=>document.getElementById(id).addEventListener("input",updatePreview));
-publish.onclick=async()=>{
-status.textContent="Publishing...";
-const payload={
-title:title.value,
-category:category.value,
-description:description.value,
-discount:discount.value,
-coupon_type:coupon_type.value,
-coupon_code:coupon_code.value,
-website_url:website_url.value,
-daily_coupon_limit:Number(daily_limit.value||0),
-coupons_remaining:Number(daily_limit.value||0),
-expiry_date:expiry.value||null,
-status:"LIVE"
-};
-const {error}=await db.from("deals").insert(payload);
-status.textContent=error?error.message:"Campaign published.";
-};
-updatePreview();
+
+async function loadBusiness(){
+ // Replace with authenticated business lookup
+ // Example:
+ // const {data}=await supabase.from("businesses").select("redeemed_count,subscription_status").single();
+ // redeemedCount=data.redeemed_count;
+ // subscriptionStatus=data.subscription_status;
+ updateUI();
+}
+
+supabase.channel("business-live")
+.on("postgres_changes",{
+ event:"*",
+ schema:"public",
+ table:"coupon_redemptions"
+},payload=>{
+ redeemedCount++;
+ document.getElementById("feed").innerHTML=
+ "<p>✅ Coupon redeemed in real time at "+new Date().toLocaleTimeString()+"</p>";
+ updateUI();
+}).subscribe();
+
+function startSubscription(){
+ // Redirect to your backend endpoint that initializes a Paystack subscription.
+ window.location.href="/paystack/subscribe?plan=premium";
+}
+
+loadBusiness();
 </script>
 </body>
 </html>
