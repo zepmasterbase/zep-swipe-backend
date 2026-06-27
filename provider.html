@@ -1,160 +1,161 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe Provider Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-body{margin:0;background:#070707;color:#fff;font-family:Inter,sans-serif}
-.wrap{max-width:1100px;margin:auto;padding:24px}
-.card{background:#121212;border:1px solid #2a2a2a;border-radius:18px;padding:20px;margin:18px 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
-input,select{width:100%;padding:12px;margin:8px 0;background:#0f0f0f;color:#fff;border:1px solid #2a2a2a;border-radius:10px}
-button{background:#b8ff3b;color:#000;border:none;padding:12px 16px;border-radius:10px;font-weight:700;cursor:pointer}
-.small{color:#aaa;font-size:13px}
-</style>
-</head>
-<body>
-<div class="wrap">
-<h1>Zep Swipe Provider Dashboard</h1>
-
-<div class="grid">
-<div class="card">
-<h2>Wallet</h2>
-<h1>R <span id="balance">0.00</span></h1>
-<button onclick="showWithdraw()">Withdraw Funds</button>
-</div>
-
-<div class="card">
-<h2>Bank Account Management</h2>
-
-<input id="holder" placeholder="Account Holder Name">
-<select id="bank">
-<option value="">Select Bank</option>
-<option>ABSA</option>
-<option>Capitec</option>
-<option>FNB</option>
-<option>Nedbank</option>
-<option>Standard Bank</option>
-<option>TymeBank</option>
-<option>Discovery Bank</option>
-</select>
-
-<input id="account_number" placeholder="Account Number">
-<select id="account_type">
-<option>Savings</option>
-<option>Cheque</option>
-<option>Business</option>
-</select>
-
-<input id="branch_code" placeholder="Branch Code (Optional)">
-<button onclick="saveBank()">Save Bank Details</button>
-
-<p class="small">Your bank details are securely stored and used for withdrawals.</p>
-</div>
-</div>
-
-<div class="card">
-<h2>Withdrawal History</h2>
-<table width="100%">
-<thead><tr><th align="left">Date</th><th align="left">Amount</th><th align="left">Status</th></tr></thead>
-<tbody id="history"></tbody>
-</table>
-</div>
-</div>
-
-<div id="withdrawModal" style="display:none;position:fixed;inset:0;background:#0009;align-items:center;justify-content:center">
-<div style="background:#121212;padding:20px;border-radius:16px;max-width:450px;width:90%">
-<h2>Withdrawal Request</h2>
-<p id="savedBank">Loading bank...</p>
-<input id="amount" type="number" placeholder="Withdrawal Amount">
-<input id="reference" placeholder="Reference (optional)">
-<button onclick="submitWithdrawal()">Submit Withdrawal</button>
-<button onclick="hideWithdraw()">Cancel</button>
-</div>
-</div>
-
-<script>
-const db=supabase.createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");
-let sessionUser=null;
-let bankId=null;
-
-async function init(){
- const {data:{session}}=await db.auth.getSession();
- if(!session)return;
- sessionUser=session.user;
- await loadProfile();
- await loadBank();
- await loadHistory();
-}
-
-async function loadProfile(){
- const {data}=await db.from("profiles").select("balance").eq("id",sessionUser.id).single();
- document.getElementById("balance").textContent=(data?.balance||0).toFixed(2);
-}
-
-async function saveBank(){
- const payload={
- user_id:sessionUser.id,
- holder_name:holder.value,
- bank_name:bank.value,
- account_number:account_number.value,
- account_type:account_type.value,
- branch_code:branch_code.value
- };
- if(bankId){
-   await db.from("bank_accounts").update(payload).eq("id",bankId);
- }else{
-   const {data,error}=await db.from("bank_accounts").insert(payload).select().single();
-   if(error){alert(error.message);return;}
-   bankId=data.id;
- }
- alert("Bank details saved.");
-}
-
-async function loadBank(){
- const {data}=await db.from("bank_accounts").select("*").eq("user_id",sessionUser.id).maybeSingle();
- if(!data)return;
- bankId=data.id;
- holder.value=data.holder_name||"";
- bank.value=data.bank_name||"";
- account_number.value=data.account_number||"";
- account_type.value=data.account_type||"Savings";
- branch_code.value=data.branch_code||"";
- savedBank.innerHTML="<b>"+data.bank_name+"</b><br>"+data.account_number;
-}
-
-function showWithdraw(){withdrawModal.style.display="flex";}
-function hideWithdraw(){withdrawModal.style.display="none";}
-
-async function submitWithdrawal(){
- if(!bankId){alert("Please save your bank account first.");return;}
- const amt=Number(amount.value);
- if(amt<50){alert("Minimum withdrawal is R50");return;}
- const {error}=await db.from("withdrawals").insert({
- user_id:sessionUser.id,
- bank_account_id:bankId,
- amount:amt,
- reference:reference.value,
- status:"pending"
- });
- if(error){alert(error.message);return;}
- alert("Withdrawal submitted.");
- hideWithdraw();
- loadHistory();
-}
-
-async function loadHistory(){
- const {data}=await db.from("withdrawals").select("*").eq("user_id",sessionUser.id).order("created_at",{ascending:false});
- history.innerHTML="";
- (data||[]).forEach(w=>{
- history.innerHTML+=`<tr><td>${new Date(w.created_at).toLocaleDateString()}</td><td>R ${Number(w.amount).toFixed(2)}</td><td>${w.status}</td></tr>`;
- });
-}
-init();
-</script>
-</body>
-</html>
+<!DOCTYPE html>    
+<html lang="en">    
+<head>    
+<meta charset="UTF-8">    
+<meta name="viewport" content="width=device-width,initial-scale=1.0">    
+<title>Zep Swipe Provider Dashboard</title>    
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">    
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>    
+<script src="https://unpkg.com/lucide@latest"></script>    
+<style>    
+:root{--bg:#070707;--card:#121212;--line:#2a2a2a;--accent:#b8ff3b}    
+*{box-sizing:border-box;font-family:Inter,sans-serif}    
+body{margin:0;background:var(--bg);color:#fff;padding-bottom:90px}    
+.container{max-width:1200px;margin:auto;padding:20px}    
+.header{display:flex;justify-content:space-between;align-items:center}    
+.brand{display:flex;align-items:center;gap:10px;color:var(--accent);font-weight:800}    
+.brand img{width:42px}    
+.hero{margin-top:16px;border:1px solid var(--line);border-radius:28px;padding:28px;background:#111}    
+.profile{display:flex;gap:18px;align-items:center;flex-wrap:wrap}    
+.avatar-wrap{position:relative;display:inline-block;cursor:pointer}    
+.avatar{width:96px;height:96px;border-radius:50%;border:3px solid var(--accent);object-fit:cover}    
+.edit{position:absolute;right:0;bottom:0;background:var(--accent);color:#000;padding:6px;border-radius:50%}    
+.wallet{margin-top:20px;background:#151515;border:1px solid #365509;border-radius:22px;padding:20px;display:grid;grid-template-columns:2fr 1fr;gap:18px}    
+.balance{font-size:46px;font-weight:800}    
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:18px}    
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}    
+.action{background:#101010;border:1px solid var(--line);padding:18px;border-radius:14px;text-align:center;cursor:pointer}    
+button{background:var(--accent);border:none;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}    
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);align-items:center;justify-content:center;padding:20px}    
+.sheet{width:100%;max-width:500px;background:#151515;border-radius:20px;padding:20px;border:1px solid var(--line)}    
+input,select,textarea{width:100%;padding:12px;margin:8px 0;background:#101010;color:#fff;border:1px solid var(--line);border-radius:12px}    
+.nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}    
+.nav a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}    
+@media(max-width:768px){.wallet{grid-template-columns:1fr}}    
+</style>    
+</head>    
+<body>    
+<div class="container">    
+<div class="header">    
+<div class="brand"><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"><span>ZEP SWIPE</span></div>    
+<i data-lucide="bell"></i>    
+</div>    
+    
+<section class="hero">    
+<div class="profile">    
+<label class="avatar-wrap">    
+<img id="avatar" class="avatar" src="https://i.pravatar.cc/200?img=12">    
+<input type="file" id="avatarUpload" hidden accept="image/*">    
+<div class="edit">✏️</div>    
+</label>    
+<div>    
+<h3>Welcome back</h3>    
+<h1 id="providerName">Loading...</h1>    
+<p>🏆 Level 3 Provider • ⭐4.9</p>    
+</div>    
+</div>    
+    
+<div class="wallet">    
+<div>    
+<div>AVAILABLE BALANCE</div>    
+<div class="balance">R <span id="balance">0.00</span></div>    
+<button onclick="openWithdraw()">Withdraw Funds</button>    
+</div>    
+<div>    
+<h2><span id="mari">0</span> MARI</h2>    
+<p>Pending: R<span id="pending">0.00</span></p>    
+<p>Total Earnings: R<span id="earnings">0.00</span></p>    
+</div>    
+</div>    
+</section>    
+    
+<div class="card">    
+<h3>Quick Actions</h3>    
+<div class="actions">    
+<div class="action">➕<br>Publish Service</div>    
+<div class="action">💼<br>Jobs</div>    
+<div class="action">📊<br>Analytics</div>    
+<div class="action" onclick="openWithdraw()">👛<br>Wallet</div>    
+</div>    
+</div>    
+</div>    
+    
+<div class="modal" id="withdrawModal">    
+<div class="sheet">    
+<h2>Withdrawal Request</h2>    
+<input id="availableBalance" readonly placeholder="Available Balance">    
+<input id="withdrawAmount" type="number" placeholder="Amount">    
+<select id="bankAccount">    
+<option>Select Bank Account</option>    
+</select>    
+<input id="withdrawReference" placeholder="Reference (optional)">    
+<button onclick="requestWithdrawal()">Submit Request</button>    
+<button style="margin-top:10px;background:#333;color:#fff" onclick="closeWithdraw()">Close</button>    
+</div>    
+</div>    
+    
+<nav class="nav">    
+<a href="#"><i data-lucide="home"></i><span>Home</span></a>    
+<a href="#"><i data-lucide="briefcase"></i><span>Jobs</span></a>    
+<a href="#"><i data-lucide="plus-circle"></i><span>Create</span></a>    
+<a href="#" onclick="openWithdraw()"><i data-lucide="wallet"></i><span>Wallet</span></a>    
+<a href="#"><i data-lucide="user"></i><span>Profile</span></a>    
+</nav>    
+    
+<script>    
+const db=supabase.createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");    
+    
+function openWithdraw(){withdrawModal.style.display="flex";}    
+function closeWithdraw(){withdrawModal.style.display="none";}    
+    
+async function loadProfile(){    
+ const {data:{session}}=await db.auth.getSession();    
+ if(!session)return;    
+ const {data}=await db.from("profiles").select("*").eq("id",session.user.id).single();    
+ if(!data)return;    
+ providerName.textContent=data.full_name||session.user.user_metadata?.full_name||"Provider";    
+ balance.textContent=(data.balance||0).toFixed(2);    
+ mari.textContent=data.mari_balance||0;    
+ pending.textContent=(data.pending_balance||0).toFixed(2);    
+ earnings.textContent=(data.total_earnings||0).toFixed(2);    
+ availableBalance.value="R "+(data.balance||0).toFixed(2);    
+ if(data.avatar_url) avatar.src=data.avatar_url;    
+}    
+    
+avatar.onclick=()=>avatarUpload.click();    
+    
+avatarUpload.addEventListener("change",async(e)=>{    
+ const file=e.target.files[0];    
+ if(!file)return;    
+ const {data:{session}}=await db.auth.getSession();    
+ const path=`avatars/${session.user.id}-${Date.now()}`;    
+ const upload=await db.storage.from("avatars").upload(path,file,{upsert:true});    
+ if(upload.error){alert(upload.error.message);return;}    
+ const {data:url}=db.storage.from("avatars").getPublicUrl(path);    
+ avatar.src=url.publicUrl;    
+ await db.from("profiles").update({avatar_url:url.publicUrl}).eq("id",session.user.id);    
+});    
+    
+async function requestWithdrawal(){    
+ const {data:{session}}=await db.auth.getSession();    
+ if(!session)return alert("Login required");    
+ const amount=Number(withdrawAmount.value);    
+ const bank=bankAccount.value;    
+ const ref=withdrawReference.value;    
+ const {error}=await db.from("withdrawals").insert({    
+ user_id:session.user.id,    
+ amount:amount,    
+ bank_account:bank,    
+ reference:ref,    
+ status:"pending"    
+ });    
+ if(error){alert(error.message);return;}    
+ alert("Withdrawal request submitted successfully.");    
+ closeWithdraw();    
+}    
+    
+lucide.createIcons();    
+loadProfile();    
+</script>    
+</body>    
+</html> 
