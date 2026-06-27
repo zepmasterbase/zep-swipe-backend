@@ -14,148 +14,97 @@ body{margin:0;background:var(--bg);color:#fff;padding-bottom:90px}
 .container{max-width:1200px;margin:auto;padding:20px}
 .header{display:flex;justify-content:space-between;align-items:center}
 .brand{display:flex;align-items:center;gap:10px;color:var(--accent);font-weight:800}
-.brand img{width:42px}
-.hero{margin-top:16px;border:1px solid var(--line);border-radius:28px;padding:28px;background:#111}
-.profile{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
-.avatar-wrap{position:relative;display:inline-block;cursor:pointer}
+.hero{position:relative;border-radius:24px;overflow:hidden;background:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop') center/cover;height:360px}
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,.65)}
+.content{position:relative;z-index:2;padding:24px}
+.profile{display:flex;gap:18px;align-items:center}
 .avatar{width:96px;height:96px;border-radius:50%;border:3px solid var(--accent);object-fit:cover}
-.edit{position:absolute;right:0;bottom:0;background:var(--accent);color:#000;padding:6px;border-radius:50%}
-.wallet{margin-top:20px;background:#151515;border:1px solid #365509;border-radius:22px;padding:20px;display:grid;grid-template-columns:2fr 1fr;gap:18px}
-.balance{font-size:46px;font-weight:800}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:18px}
-.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}
-.action{background:#101010;border:1px solid var(--line);padding:18px;border-radius:14px;text-align:center;cursor:pointer}
-button{background:var(--accent);border:none;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);align-items:center;justify-content:center;padding:20px}
-.sheet{width:100%;max-width:500px;background:#151515;border-radius:20px;padding:20px;border:1px solid var(--line)}
-input,select,textarea{width:100%;padding:12px;margin:8px 0;background:#101010;color:#fff;border:1px solid var(--line);border-radius:12px}
+.wallet{margin-top:20px;background:#111b;padding:18px;border:1px solid #365509;border-radius:18px;display:grid;grid-template-columns:2fr 1fr;gap:18px}
+.balance{font-size:44px;font-weight:800}
+.card{margin-top:20px;background:var(--card);padding:18px;border:1px solid var(--line);border-radius:18px}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.action{background:#0f0f0f;border:1px solid var(--line);padding:18px;border-radius:14px;text-align:center;cursor:pointer}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);align-items:center;justify-content:center;padding:20px}
+.sheet{width:100%;max-width:560px;background:#151515;border:1px solid var(--line);border-radius:18px;padding:20px}
+input,textarea,select{width:100%;margin:8px 0;padding:12px;background:#101010;color:#fff;border:1px solid var(--line);border-radius:10px}
+button{background:var(--accent);padding:12px 16px;border:0;border-radius:10px;font-weight:700;cursor:pointer}
 .nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
-.nav a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}
-@media(max-width:768px){.wallet{grid-template-columns:1fr}}
+.nav a{text-decoration:none;color:#fff;font-size:12px;display:flex;flex-direction:column;align-items:center}
+@media(max-width:768px){.wallet{grid-template-columns:1fr}.profile{flex-wrap:wrap}.hero{height:auto}}
 </style>
 </head>
 <body>
 <div class="container">
 <div class="header">
-<div class="brand"><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"><span>ZEP SWIPE</span></div>
-<i data-lucide="bell"></i>
+<div class="brand"><strong>ZEP SWIPE</strong></div><i data-lucide="bell"></i>
 </div>
-
-<section class="hero">
+<section class="hero"><div class="overlay"></div><div class="content">
 <div class="profile">
-<label class="avatar-wrap">
 <img id="avatar" class="avatar" src="https://i.pravatar.cc/200?img=12">
-<input type="file" id="avatarUpload" hidden accept="image/*">
-<div class="edit">✏️</div>
-</label>
-<div>
-<h3>Welcome back</h3>
-<h1 id="providerName">Loading...</h1>
-<p>🏆 Level 3 Provider • ⭐4.9</p>
+<div><h3>Welcome back</h3><h1 id="providerName">Loading...</h1></div>
 </div>
-</div>
-
 <div class="wallet">
-<div>
-<div>AVAILABLE BALANCE</div>
-<div class="balance">R <span id="balance">0.00</span></div>
-<button onclick="openWithdraw()">Withdraw Funds</button>
+<div><div>AVAILABLE BALANCE</div><div class="balance">R <span id="balance">0.00</span></div><button onclick="openWithdraw()">Withdraw Funds</button></div>
+<div><h2><span id="mari">0</span> MARI</h2><p>Pending: R<span id="pending">0.00</span></p><p>Total: R<span id="earnings">0.00</span></p></div>
 </div>
-<div>
-<h2><span id="mari">0</span> MARI</h2>
-<p>Pending: R<span id="pending">0.00</span></p>
-<p>Total Earnings: R<span id="earnings">0.00</span></p>
-</div>
-</div>
-</section>
+</div></section>
 
-<div class="card">
-<h3>Quick Actions</h3>
+<div class="card"><h3>Quick Actions</h3>
 <div class="actions">
-<div class="action">➕<br>Publish Service</div>
-<div class="action">💼<br>Jobs</div>
-<div class="action">📊<br>Analytics</div>
-<div class="action" onclick="openWithdraw()">👛<br>Wallet</div>
-</div>
-</div>
+<div class="action" onclick="openPublish()">Publish Service</div>
+<div class="action" onclick="location.href='my-services.html'">My Services</div>
+<div class="action" onclick="location.href='analytics.html'">Analytics</div>
+<div class="action" onclick="openWithdraw()">Wallet</div>
+</div></div>
 </div>
 
-<div class="modal" id="withdrawModal">
-<div class="sheet">
+<div class="modal" id="publishModal"><div class="sheet">
+<h2>Publish Service</h2>
+<input id="title" placeholder="Service title">
+<select id="category"><option>Graphic Design</option><option>Web Development</option><option>Tutoring</option></select>
+<textarea id="description" placeholder="Description"></textarea>
+<input id="price" type="number" placeholder="Price">
+<input id="location" placeholder="Location">
+<input id="image" type="file" accept="image/*">
+<button onclick="publishService()">Publish</button>
+<button onclick="closePublish()">Close</button>
+</div></div>
+
+<div class="modal" id="withdrawModal"><div class="sheet">
 <h2>Withdrawal Request</h2>
-<input id="availableBalance" readonly placeholder="Available Balance">
-<input id="withdrawAmount" type="number" placeholder="Amount">
-<select id="bankAccount">
-<option>Select Bank Account</option>
-</select>
-<input id="withdrawReference" placeholder="Reference (optional)">
-<button onclick="requestWithdrawal()">Submit Request</button>
-<button style="margin-top:10px;background:#333;color:#fff" onclick="closeWithdraw()">Close</button>
-</div>
-</div>
+<input placeholder="Amount">
+<button onclick="closeWithdraw()">Close</button>
+</div></div>
 
 <nav class="nav">
-<a href="#"><i data-lucide="home"></i><span>Home</span></a>
-<a href="#"><i data-lucide="briefcase"></i><span>Jobs</span></a>
-<a href="#"><i data-lucide="plus-circle"></i><span>Create</span></a>
+<a href="index.html"><i data-lucide="house"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="badge-percent"></i><span>Deals</span></a>
+<a href="#" onclick="openPublish()"><i data-lucide="plus-circle"></i><span>Create</span></a>
 <a href="#" onclick="openWithdraw()"><i data-lucide="wallet"></i><span>Wallet</span></a>
-<a href="#"><i data-lucide="user"></i><span>Profile</span></a>
+<a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a>
 </nav>
 
 <script>
 const db=supabase.createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");
-
-function openWithdraw(){withdrawModal.style.display="flex";}
-function closeWithdraw(){withdrawModal.style.display="none";}
-
+function openPublish(){publishModal.style.display='flex'}
+function closePublish(){publishModal.style.display='none'}
+function openWithdraw(){withdrawModal.style.display='flex'}
+function closeWithdraw(){withdrawModal.style.display='none'}
 async function loadProfile(){
  const {data:{session}}=await db.auth.getSession();
  if(!session)return;
- const {data}=await db.from("profiles").select("*").eq("id",session.user.id).single();
+ const {data}=await db.from('profiles').select('*').eq('id',session.user.id).single();
  if(!data)return;
- providerName.textContent=data.full_name||session.user.user_metadata?.full_name||"Provider";
+ providerName.textContent=data.full_name||'Provider';
  balance.textContent=(data.balance||0).toFixed(2);
  mari.textContent=data.mari_balance||0;
  pending.textContent=(data.pending_balance||0).toFixed(2);
  earnings.textContent=(data.total_earnings||0).toFixed(2);
- availableBalance.value="R "+(data.balance||0).toFixed(2);
- if(data.avatar_url) avatar.src=data.avatar_url;
+ if(data.avatar_url)avatar.src=data.avatar_url;
 }
-
-avatar.onclick=()=>avatarUpload.click();
-
-avatarUpload.addEventListener("change",async(e)=>{
- const file=e.target.files[0];
- if(!file)return;
- const {data:{session}}=await db.auth.getSession();
- const path=`avatars/${session.user.id}-${Date.now()}`;
- const upload=await db.storage.from("avatars").upload(path,file,{upsert:true});
- if(upload.error){alert(upload.error.message);return;}
- const {data:url}=db.storage.from("avatars").getPublicUrl(path);
- avatar.src=url.publicUrl;
- await db.from("profiles").update({avatar_url:url.publicUrl}).eq("id",session.user.id);
-});
-
-async function requestWithdrawal(){
- const {data:{session}}=await db.auth.getSession();
- if(!session)return alert("Login required");
- const amount=Number(withdrawAmount.value);
- const bank=bankAccount.value;
- const ref=withdrawReference.value;
- const {error}=await db.from("withdrawals").insert({
- user_id:session.user.id,
- amount:amount,
- bank_account:bank,
- reference:ref,
- status:"pending"
- });
- if(error){alert(error.message);return;}
- alert("Withdrawal request submitted successfully.");
- closeWithdraw();
+async function publishService(){
+ alert("Replace this stub with your services table insert after configuring Supabase.");
 }
-
-lucide.createIcons();
-loadProfile();
+lucide.createIcons();loadProfile();
 </script>
-</body>
-</html>
+</body></html>
