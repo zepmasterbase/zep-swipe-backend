@@ -4,39 +4,50 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Zep Swipe Business Dashboard - Supabase Ready</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
-body{margin:0;background:#070707;color:#fff;font-family:Inter,sans-serif}
-.wrap{max-width:900px;margin:auto;padding:24px}
-.card{background:#121416;border:1px solid #2a2a2a;border-radius:18px;padding:20px;margin:18px 0}
+:root{--bg:#070707;--card:#121416;--card2:#191c20;--line:rgba(255,255,255,.08);--accent:#b8ff3b}
+*{box-sizing:border-box;font-family:Inter,sans-serif}
+body{margin:0;background:linear-gradient(#0a0a0a,#070707);color:#fff}
+header{padding:16px 22px;display:flex;justify-content:space-between;align-items:center;background:#0b0b0bcc;border-bottom:1px solid var(--line);position:sticky;top:0;backdrop-filter:blur(16px)}
+main{max-width:1100px;margin:auto;padding:20px}
+.hero,.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;margin-bottom:18px}
+.hero{background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.8)),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1800&q=80') center/cover}
 input,textarea,button{width:100%;padding:12px;margin-top:10px;border-radius:12px}
-input,textarea{background:#0f1011;color:#fff;border:1px solid #333}
-button{background:#b8ff3b;border:0;font-weight:800}
-.deal{background:#181a1d;border:1px solid #333;border-radius:14px;padding:16px;margin-top:12px}
-small{color:#9aa0a6}
+input,textarea{background:#0d0d0d;border:1px solid #333;color:#fff}
+button{background:var(--accent);border:0;font-weight:800}
+.deal{background:var(--card2);border:1px solid var(--line);padding:16px;border-radius:18px;margin-top:12px}
+.badge{display:inline-block;background:#223800;color:var(--accent);padding:4px 10px;border-radius:999px}
 </style>
 </head>
 <body>
-<div class="wrap">
-<h1>Zep Swipe Business</h1>
-<p><small>Supabase-ready merchant dashboard starter. Replace the placeholders below with your project credentials.</small></p>
+<header>
+<div><strong>Zep Swipe Business</strong></div>
+<div><i data-lucide="bell-ring"></i></div>
+</header>
+<main>
+<section class="hero">
+<h1>Business Deals</h1>
+<p>Create and manage student deals.</p>
+</section>
 
-<div class="card">
+<section class="card">
 <h3>Create Deal</h3>
 <input id="title" placeholder="Deal title">
 <textarea id="description" placeholder="Description"></textarea>
 <input id="discount" placeholder="Discount e.g. 20%">
 <input id="expiry" type="date">
 <button id="publishBtn">Publish Deal</button>
-<div id="status"></div>
-</div>
+<p id="status"></p>
+</section>
 
-<div class="card">
-<h3>My Deals</h3>
-<div id="deals"></div>
-</div>
-</div>
+<section class="card">
+<h3>Active Deals</h3>
+<div id="dealList">Loading...</div>
+</section>
+</main>
 
 <script>
 const SUPABASE_URL="YOUR_SUPABASE_URL";
@@ -44,27 +55,19 @@ const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 async function loadDeals(){
-  const {data,error}=await db.from("deals")
-    .select("*")
-    .order("created_at",{ascending:false});
-
-  const box=document.getElementById("deals");
-  if(error){
-    box.innerHTML="<small>Unable to load deals. Check your Supabase connection, table name, and RLS policies.</small>";
-    return;
-  }
-  if(!data.length){
-    box.innerHTML="<small>No deals published yet.</small>";
-    return;
-  }
-  box.innerHTML=data.map(d=>`
-    <div class="deal">
-      <h3>${d.title}</h3>
-      <p>${d.description||""}</p>
-      <p><strong>${d.discount||""}</strong> ${d.expiry_date?("• Ends "+d.expiry_date):""}</p>
-      <button onclick="removeDeal('${d.id}')">Delete</button>
-    </div>
-  `).join("");
+ const {data,error}=await db.from("deals").select("*").order("created_at",{ascending:false});
+ const list=document.getElementById("dealList");
+ if(error){list.innerHTML="<p>"+error.message+"</p>";return;}
+ if(!data.length){list.innerHTML="<p>No deals yet.</p>";return;}
+ list.innerHTML=data.map(d=>`
+ <div class="deal">
+ <span class="badge">${d.status||"LIVE"}</span>
+ <h3>${d.title}</h3>
+ <p>${d.description||""}</p>
+ <p>${d.discount||""} ${d.expiry_date?("• Ends "+d.expiry_date):""}</p>
+ <button onclick="deleteDeal('${d.id}')">Delete</button>
+ </div>`).join("");
+ lucide.createIcons();
 }
 
 async function publishDeal(){
@@ -74,29 +77,24 @@ async function publishDeal(){
    discount:discount.value.trim(),
    expiry_date:expiry.value||null
  };
- if(!payload.title){
-   alert("Enter a title");
-   return;
- }
+ if(!payload.title){alert("Title required");return;}
  status.textContent="Publishing...";
  const {error}=await db.from("deals").insert(payload);
- if(error){
-   status.textContent=error.message;
-   return;
- }
- status.textContent="Deal published.";
+ if(error){status.textContent=error.message;return;}
+ status.textContent="Published.";
  title.value="";description.value="";discount.value="";expiry.value="";
  loadDeals();
 }
 
-async function removeDeal(id){
- if(!confirm("Delete this deal?")) return;
+async function deleteDeal(id){
+ if(!confirm("Delete deal?")) return;
  const {error}=await db.from("deals").delete().eq("id",id);
  if(error){alert(error.message);return;}
  loadDeals();
 }
 
-publishBtn.addEventListener("click",publishDeal);
+publishBtn.onclick=publishDeal;
+lucide.createIcons();
 loadDeals();
 </script>
 </body>
