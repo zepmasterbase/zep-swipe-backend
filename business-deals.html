@@ -1,169 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe Business Deals V45</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<title>Zep Swipe Business Deals V47</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{
---bg:#060606;--card:rgba(20,20,20,.78);--line:#2a2a2a;--accent:#b8ff3b;
---muted:#a0a0a0;--glass:blur(18px)
-}
-*{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;background:#060606;color:#fff;padding-bottom:90px;
-background-image:radial-gradient(circle at top,#1b2a08 0%,#060606 40%)}
-.hero,.card{margin:16px;border:1px solid rgba(255,255,255,.08);border-radius:26px;overflow:hidden}
-.hero{
-padding:38px;
-background:
-linear-gradient(135deg,rgba(0,0,0,.25),rgba(0,0,0,.85)),
-url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1600&q=80') center/cover;
-box-shadow:0 20px 60px rgba(0,0,0,.45)
-}
-.card{
-background:var(--card);
-backdrop-filter:blur(18px);
-padding:18px;
-box-shadow:0 10px 30px rgba(0,0,0,.35)
-}
-.badge{display:inline-flex;align-items:center;gap:8px;background:#1f3210;color:var(--accent);padding:10px 16px;border-radius:999px;font-weight:800}
-h1{margin:18px 0 10px;font-size:2rem}
-p{color:#d6d6d6;line-height:1.6}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
-.tile{
-background:linear-gradient(180deg,#171717,#111);
-border:1px solid #2f2f2f;
-border-radius:18px;padding:18px;
-transition:.25s
-}
-.tile:hover{transform:translateY(-3px);border-color:var(--accent)}
-.tile h2{margin:0 0 6px;color:var(--accent)}
-input,textarea,select,button{
-width:100%;padding:14px;border-radius:16px;margin-top:12px;font-size:15px
-}
-input,textarea,select{
-background:#101010;border:1px solid #2d2d2d;color:#fff;outline:none
-}
-input:focus,textarea:focus,select:focus{
-border-color:var(--accent);
-box-shadow:0 0 0 3px rgba(184,255,59,.12)
-}
-button{
-background:linear-gradient(135deg,#b8ff3b,#93e018);
-color:#111;font-weight:800;border:none;cursor:pointer
-}
-button:hover{transform:translateY(-1px)}
-button:disabled{opacity:.6;cursor:not-allowed}
-.progress{height:12px;background:#222;border-radius:999px;overflow:hidden}
-.progress>div{height:100%;width:0;background:linear-gradient(90deg,#84d400,#b8ff3b);transition:.4s}
-ul{padding-left:20px}
-.small{color:#aaa;font-size:13px}
-.footer{
-position:fixed;left:0;right:0;bottom:0;
-background:rgba(11,11,11,.95);
-backdrop-filter:blur(12px);
-border-top:1px solid #262626;
-display:flex;justify-content:space-around;padding:10px 0
-}
-.footer a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
-.footer i{display:block;margin:0 auto 6px;color:var(--accent)}
+:root{--bg:#070707;--card:#141414dd;--line:#2b2b2b;--accent:#b8ff3b}
+*{box-sizing:border-box;font-family:Inter,sans-serif}body{margin:0;background:#070707;color:#fff;padding:88px 16px 92px;background-image:radial-gradient(circle at top,#1b2d08,#070707 45%)}
+header{position:fixed;top:0;left:0;right:0;height:74px;background:#0c0c0ccc;backdrop-filter:blur(16px);display:flex;justify-content:space-between;align-items:center;padding:0 16px;border-bottom:1px solid #222;z-index:10}
+.brand{display:flex;gap:12px;align-items:center}.brand img{width:42px;height:42px;border-radius:10px}.brand b{display:block}.brand small{color:#aaa}
+.icon{width:42px;height:42px;border:1px solid #2d2d2d;border-radius:14px;display:grid;place-items:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px;margin-bottom:18px}
+.hero{background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1600&q=80') center/cover}
+.badge{display:inline-block;background:#213600;color:var(--accent);padding:8px 14px;border-radius:999px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}.tile{background:#101010;border:1px solid #2b2b2b;border-radius:18px;padding:16px}.tile h2{margin:0;color:var(--accent)}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.act{text-align:center;background:#101010;border:1px solid #2b2b2b;border-radius:16px;padding:14px}
+input,textarea,select,button{width:100%;margin-top:10px;padding:13px;border-radius:14px}
+input,textarea,select{background:#101010;color:#fff;border:1px solid #2b2b2b}
+button{background:var(--accent);border:none;font-weight:800}
+.progress{height:10px;background:#222;border-radius:999px;overflow:hidden}.progress div{height:100%;width:0;background:linear-gradient(90deg,#7fd200,#b8ff3b)}
+footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0bee;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #222}
+footer a{text-decoration:none;color:#fff;font-size:12px;text-align:center}footer i{display:block;margin-bottom:5px;color:var(--accent)}
+code{display:block;white-space:pre-wrap;background:#0e0e0e;padding:12px;border-radius:12px}
 </style>
 </head>
 <body>
-
-<section class="hero">
-<span class="badge">🚀 Founding Partner</span>
-<h1>Grow Your Business with Students</h1>
-<p>Free until <b>50 verified student redemptions</b>. Upgrade to <b>Featured Partner (R399/month)</b> once you've already seen measurable value.</p>
-</section>
-
-<section class="card">
-<div class="grid">
-<div class="tile"><h2 id="views">0</h2><small>Views</small></div>
-<div class="tile"><h2 id="redeem">0</h2><small>Verified Redemptions</small></div>
-<div class="tile"><h2 id="repeat">0</h2><small>Repeat Students</small></div>
-<div class="tile"><h2 id="revenue">R0</h2><small>Estimated Revenue</small></div>
-<div class="tile"><h2 id="active">0</h2><small>Active Deals</small></div>
-<div class="tile"><h2 id="rate">0%</h2><small>Conversion</small></div>
+<header>
+<div class="brand">
+<img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png">
+<div><b>Zep Swipe Business</b><small>Business Deals Dashboard</small></div>
 </div>
+<div class="icon"><i data-lucide="bell"></i></div>
+</header>
+
+<section class="card hero">
+<span class="badge">🚀 Founding Partner</span>
+<h1>Grow Your Business</h1>
+<p>Create coupons, monitor redemptions and embed offers on your own website.</p>
 </section>
 
-<section class="card">
-<h3>🏪 Business Profile</h3>
-<input placeholder="Business Name">
-<input placeholder="Owner">
-<input placeholder="WhatsApp">
-<input placeholder="Address">
-<input placeholder="Google Maps URL">
-<button>Save Profile</button>
-</section>
+<section class="card"><div class="grid">
+<div class="tile"><h2 id="views">0</h2><small>Views</small></div>
+<div class="tile"><h2 id="redeem">0</h2><small>Redeemed</small></div>
+<div class="tile"><h2 id="active">0</h2><small>Deals</small></div>
+<div class="tile"><h2 id="revenue">R0</h2><small>Revenue</small></div>
+</div></section>
+
+<section class="card"><div class="actions">
+<div class="act"><i data-lucide="plus-circle"></i><div>New Deal</div></div>
+<div class="act"><i data-lucide="qr-code"></i><div>QR</div></div>
+<div class="act"><i data-lucide="globe"></i><div>Widget</div></div>
+<div class="act"><i data-lucide="bar-chart-3"></i><div>Reports</div></div>
+</div></section>
 
 <section class="card">
-<h3>🎁 Create Deal</h3>
+<h3>Create Coupon</h3>
 <select><option>Free Launch Partner</option><option>Featured Partner</option></select>
-<input placeholder="Deal title">
-<textarea placeholder="Describe the offer"></textarea>
+<input placeholder="Coupon title">
+<textarea placeholder="Offer description"></textarea>
 <input placeholder="Discount %">
+<input placeholder="Coupon code">
 <input type="date">
-<button>Publish Deal</button>
+<button>Publish Coupon</button>
 </section>
 
 <section class="card">
-<h3>📈 Progress to Featured Partner</h3>
+<h3>Website Coupon Widget</h3>
+<code>&lt;div id="zep-coupon"&gt;&lt;/div&gt;
+&lt;script src="https://cdn.zepswipe.com/widget.js"&gt;&lt;/script&gt;</code>
+<button>Copy Embed Code</button>
+</section>
+
+<section class="card">
+<h3>Featured Partner Progress</h3>
 <div class="progress"><div id="bar"></div></div>
 <p><b id="count">0</b>/50 verified redemptions</p>
+<button disabled>Unlock Monthly Subscription After 50 Student Redemptions</button>
 </section>
-
-<section class="card">
-<h3>🎟 QR Coupon Workflow</h3>
-<button>Generate Coupon QR (backend required)</button>
-<p class="small">Student scans → Business verifies → Save to <code>coupon_redemptions</code>.</p>
-</section>
-
-<section class="card">
-<h3>⭐ Featured Partner – R399/month</h3>
-<ul>
-<li>Priority placement</li>
-<li>Unlimited active deals</li>
-<li>Push notifications</li>
-<li>Advanced analytics</li>
-<li>Founding Partner badge</li>
-<li>Monthly PDF report</li>
-</ul>
-<button disabled>Unlock after 50 verified redemptions</button>
-</section>
-
-<section class="card">
-<h3>🗄 Suggested Supabase Tables</h3>
-<ul>
-<li>businesses</li><li>deals</li><li>coupon_redemptions</li>
-<li>subscriptions</li><li>business_analytics</li><li>notifications</li>
-</ul>
-</section>
-
-<div class="footer">
-<a href="index.html"><i data-lucide="home"></i>Home</a>
-<a href="marketplace.html"><i data-lucide="briefcase-business"></i>Services</a>
-<a href="business-deals.html"><i data-lucide="ticket-percent"></i>Deals</a>
-<a href="provider.html"><i data-lucide="coins"></i>Earn</a>
-<a href="#"><i data-lucide="user-round"></i>Profile</a>
-</div>
 
 <script>
 const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 async function refreshDashboard(){
-const verified=0;
-document.getElementById("redeem").textContent=verified;
-document.getElementById("count").textContent=verified;
-document.getElementById("bar").style.width=Math.min(verified,50)*2+"%";
+ const verified=0;
+ count.textContent=verified;
+ redeem.textContent=verified;
+ bar.style.width=(Math.min(verified,50)*2)+"%";
 }
 refreshDashboard();
 lucide.createIcons();
 </script>
-</body>
-</html>
+
+<footer>
+<a href="index.html"><i data-lucide="house"></i>Home</a>
+<a href="marketplace.html"><i data-lucide="layout-dashboard"></i>Dashboard</a>
+<a href="business-deals.html"><i data-lucide="ticket-percent"></i>Coupons</a>
+<a href="provider.html"><i data-lucide="badge-percent"></i>Deals</a>
+<a href="#"><i data-lucide="user-round"></i>Profile</a>
+</footer>
+</body></html>
