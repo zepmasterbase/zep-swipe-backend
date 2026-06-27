@@ -2,129 +2,76 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe Business Deals V45</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zep Swipe Business Deals V47</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
-:root{
---bg:#070707;--card:#141414;--card2:#1a1a1a;--border:#292929;
---accent:#b8ff3b;--text:#fff;--muted:#9aa0a6;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,sans-serif;background:
-radial-gradient(circle at top,#163500 0,#070707 38%);
-color:var(--text)}
-.container{max-width:1100px;margin:auto;padding:22px}
-.hero{background:linear-gradient(135deg,#181818,#111,#1d2b08);
-border:1px solid var(--border);border-radius:24px;padding:28px;
-box-shadow:0 20px 50px rgba(0,0,0,.4)}
-.badge{display:inline-block;background:rgba(184,255,59,.12);color:var(--accent);
-padding:8px 14px;border:1px solid rgba(184,255,59,.35);border-radius:999px;font-size:13px}
-h1{margin:14px 0 8px;font-size:2rem}
-p{color:var(--muted);line-height:1.6}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin:24px 0}
-.stat,.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px}
-.stat h2{margin:8px 0 0;font-size:1.8rem;color:var(--accent)}
-.section{margin-top:22px}
-.card h3{margin-top:0}
-input,textarea,select{width:100%;margin:8px 0 14px;padding:12px 14px;border-radius:12px;
-border:1px solid var(--border);background:var(--card2);color:#fff}
-button{background:var(--accent);color:#000;border:0;padding:14px 18px;border-radius:14px;
-font-weight:700;cursor:pointer}
-button:hover{transform:translateY(-1px)}
-.progress{height:12px;background:#222;border-radius:999px;overflow:hidden}
-.bar{height:100%;width:0%;background:linear-gradient(90deg,#7eff00,#b8ff3b)}
-ul{padding-left:20px}
-.footer{position:sticky;bottom:0;background:#0c0c0c;border-top:1px solid var(--border);
-display:grid;grid-template-columns:repeat(5,1fr);text-align:center;padding:12px 0;margin-top:30px}
-.footer a{color:#fff;text-decoration:none;font-size:.9rem}
-.small{font-size:.9rem;color:var(--muted)}
+body{margin:0;font-family:Inter,sans-serif;background:#070707;color:#fff}
+.hero{padding:70px 24px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.8)),url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1800&q=80') center/cover}
+.container{max-width:1100px;margin:auto;padding:24px}
+.card{background:#151515;border:1px solid #2a2a2a;border-radius:20px;padding:22px;margin-bottom:20px}
+.btn{background:#b8ff3b;color:#000;border:none;padding:14px 18px;border-radius:14px;font-weight:700;cursor:pointer}
+.note{color:#b8b8b8}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0d0d0d;display:grid;grid-template-columns:repeat(5,1fr);padding:10px;border-top:1px solid #222}
+.footer a{text-decoration:none;color:#fff;text-align:center;font-size:.8rem}
 </style>
 </head>
 <body>
+<section class="hero">
+<h1>Zep Swipe Business Deals V47</h1>
+<p>Featured Partner (R399/month) becomes available only after <strong>50 verified student coupon redemptions</strong>.</p>
+</section>
+
 <div class="container">
-<div class="hero">
-<span class="badge">🚀 Founding Partner</span>
-<h1>Zep Swipe Business Deals V45</h1>
-<p>Grow Your Business with Students</p>
-<p>Free until <strong>50 verified student redemptions</strong>. Upgrade to <strong>Featured Partner (R399/month)</strong> when you've already seen value.</p>
+<div class="card">
+<h2>⭐ Featured Partner</h2>
+<p>Current Progress: <strong>0 / 50</strong> verified redemptions.</p>
+<p class="note">In production, your backend should enable this button only after verifying 50 coupon redemptions.</p>
+<button id="subscribeBtn" class="btn" disabled>Unlock Subscription After 50 Redemptions</button>
 </div>
 
-<div class="grid">
-<div class="stat"><div>Views</div><h2>0</h2></div>
-<div class="stat"><div>Verified Redemptions</div><h2>0</h2></div>
-<div class="stat"><div>Repeat Students</div><h2>0</h2></div>
-<div class="stat"><div>Estimated Revenue</div><h2>R0</h2></div>
-<div class="stat"><div>Active Deals</div><h2>0</h2></div>
-<div class="stat"><div>Conversion</div><h2>0%</h2></div>
-</div>
-
-<div class="section card">
-<h3>🏪 Business Profile</h3>
-<input placeholder="Business Name">
-<input placeholder="Contact Email">
-<input placeholder="Phone">
-<textarea placeholder="Business Description"></textarea>
-<button>Save Profile</button>
-</div>
-
-<div class="section card">
-<h3>🎁 Create Deal</h3>
-<select>
-<option>Free Launch Partner</option>
-<option>Featured Partner</option>
-</select>
-<input placeholder="Deal Title">
-<textarea placeholder="Deal Description"></textarea>
-<button>Publish Deal</button>
-</div>
-
-<div class="section card">
-<h3>📈 Progress to Featured Partner</h3>
-<p><strong>0</strong>/50 verified redemptions</p>
-<div class="progress"><div class="bar"></div></div>
-</div>
-
-<div class="section card">
-<h3>🎟 QR Coupon Workflow</h3>
-<button>Generate Coupon QR (backend required)</button>
-<p class="small">Recommended flow: Student scans → Business verifies → Record saved to <code>coupon_redemptions</code>.</p>
-</div>
-
-<div class="section card">
-<h3>⭐ Featured Partner – R399/month</h3>
-<ul>
-<li>Priority placement</li>
-<li>Unlimited active deals</li>
-<li>Push notifications</li>
-<li>Advanced analytics</li>
-<li>Founding Partner badge</li>
-<li>Monthly PDF report</li>
-</ul>
-<button>Unlock after 50 verified redemptions</button>
-</div>
-
-<div class="section card">
-<h3>🗄 Suggested Supabase Tables</h3>
-<ul>
-<li>businesses</li>
-<li>deals</li>
-<li>coupon_redemptions</li>
-<li>subscriptions</li>
-<li>business_analytics</li>
-<li>notifications</li>
-</ul>
+<div class="card">
+<h3>Paystack Integration (Production)</h3>
+<p>Replace the placeholders below with your Paystack Public Key and a server-generated subscription or transaction flow.</p>
+<pre style="white-space:pre-wrap;background:#0c0c0c;padding:12px;border-radius:12px;color:#9f9;">
+const PAYSTACK_PUBLIC_KEY = "pk_live_xxxxxxxxxxxxxxxxx";
+const BUSINESS_EMAIL = "business@example.com";
+const AMOUNT = 39900; // R399.00 in cents
+</pre>
+<button class="btn" onclick="payNow()">Demo Paystack Checkout</button>
 </div>
 </div>
 
 <nav class="footer">
-<a href="#">🏠<br>Home</a>
-<a href="#">🛠<br>Services</a>
-<a href="#">🏷<br>Deals</a>
-<a href="#">💸<br>Earn</a>
-<a href="#">👤<br>Profile</a>
+<a href="#"><i data-lucide="house"></i><br>Home</a>
+<a href="#"><i data-lucide="briefcase-business"></i><br>Services</a>
+<a href="#"><i data-lucide="badge-percent"></i><br>Deals</a>
+<a href="#"><i data-lucide="wallet"></i><br>Earn</a>
+<a href="#"><i data-lucide="user"></i><br>Profile</a>
 </nav>
+
+<script>
+lucide.createIcons();
+
+function payNow(){
+ const handler = PaystackPop.setup({
+   key:"pk_test_replace_with_your_public_key",
+   email:"business@example.com",
+   amount:39900,
+   currency:"ZAR",
+   callback:function(response){
+      alert("Payment successful. Reference: "+response.reference);
+      // Send reference to your backend for verification.
+   },
+   onClose:function(){
+      alert("Payment cancelled.");
+   }
+ });
+ handler.openIframe();
+}
+</script>
 </body>
 </html>
