@@ -1,78 +1,103 @@
 
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe Business Growth Dashboard V62</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zep Swipe Business Growth Dashboard V65</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
-body{margin:0;background:#070707;color:#fff;font-family:Inter,sans-serif}
-header{padding:16px 20px;background:#111;position:sticky;top:0;border-bottom:1px solid #2a2a2a}
-.wrap{max-width:1300px;margin:auto;padding:20px}
-.hero{padding:32px;border-radius:24px;background:linear-gradient(135deg,#182000,#070707)}
-.grid{display:grid;gap:16px}.kpi{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin:18px 0}
-.card{background:#141414;border:1px solid #2c2c2c;border-radius:20px;padding:18px}
-.big{font-size:2rem;font-weight:800;color:#b8ff3b}
-.two{grid-template-columns:2fr 1fr}
-input,textarea,button{width:100%;padding:12px;margin-top:10px;border-radius:12px}
-input,textarea{background:#0d0d0d;color:#fff;border:1px solid #333}
-button{background:#b8ff3b;border:0;font-weight:800}
-@media(max-width:900px){.two{grid-template-columns:1fr}}
+:root{--bg:#070707;--card:#121416;--line:#2d2d2d;--accent:#b8ff3b}
+*{box-sizing:border-box;font-family:Inter,sans-serif}body{margin:0;background:var(--bg);color:#fff}
+header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:14px 22px;backdrop-filter:blur(16px);z-index:99}
+.brand{display:flex;gap:12px;align-items:center}.brand img{width:48px;height:48px;border-radius:12px}
+.tools{display:flex;gap:10px}.tool{background:#171717;border:1px solid var(--line);padding:10px;border-radius:12px;position:relative}
+.badge{position:absolute;top:-4px;right:-4px;background:#ff3b30;color:#fff;border-radius:999px;padding:2px 6px;font-size:10px}
+.wrap{max-width:1400px;margin:auto;padding:20px}
+.hero{padding:34px;border-radius:24px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.82)),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1800&q=80') center/cover}
+.stats,.layout{display:grid;gap:16px}.stats{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin:18px 0}.layout{grid-template-columns:2fr 1fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+.big{font-size:2rem;color:var(--accent);font-weight:800}
+input,textarea,select,button{width:100%;padding:12px;margin-top:10px;border-radius:12px}
+input,textarea,select{background:#0d0d0d;color:#fff;border:1px solid #333}
+button{background:var(--accent);border:none;font-weight:800}
+.preview{background:#1a1d22;border-radius:16px;padding:14px;margin-top:10px}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:900px){.layout,.actions{grid-template-columns:1fr}}
 </style></head><body>
-<header><b>Zep Swipe Business Growth Dashboard V62</b></header>
+<header>
+<div class="brand">
+<img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png">
+<div><div style="font-weight:800">Zep Swipe</div><small style="color:#999">Business Growth Dashboard</small></div>
+</div>
+<div class="tools">
+<div class="tool"><i data-lucide="bell-ring"></i><span class="badge">7</span></div>
+<div class="tool"><i data-lucide="layout-dashboard"></i></div>
+<div class="tool"><i data-lucide="user-round"></i></div>
+</div>
+</header>
 <div class="wrap">
-<div class="hero"><h1>Business Growth Centre</h1><p>Monitor, promote and grow from one dashboard.</p></div>
-<div class="grid kpi">
+<div class="hero"><h1>Welcome back 👋</h1><p>Everything you need to grow your business with students.</p></div>
+<div class="stats">
 <div class="card"><div class="big">18.5K</div>Reach</div>
 <div class="card"><div class="big">4.3K</div>Views</div>
-<div class="card"><div class="big">267</div>Redeemed</div>
+<div class="card"><div class="big">267</div>Redemptions</div>
 <div class="card"><div class="big">R19.8K</div>Revenue</div>
 <div class="card"><div class="big">94%</div>Conversion</div>
-<div class="card"><div class="big">#8</div>Campus Rank</div>
+<div class="card"><div class="big">12</div>Live Deals</div>
 </div>
 
-<div class="grid two">
+<div class="layout">
 <div>
 <div class="card">
 <h2>Publish Deal</h2>
 <input id="title" placeholder="Deal title">
+<select id="category"><option>Food</option><option>Retail</option><option>Services</option></select>
 <textarea id="description" placeholder="Description"></textarea>
 <input id="discount" placeholder="Discount">
+<input id="price" placeholder="Sale price">
+<input id="coupon" placeholder="Coupon code">
 <input id="expiry" type="date">
-<button id="publish">Publish Deal</button>
-<p id="msg"></p>
+<input type="file">
+<div class="actions">
+<button type="button">Save Draft</button>
+<button type="button" onclick="updatePreview()">Preview</button>
+<button id="publish">Publish Live</button>
 </div>
-<div class="card">
-<h2>Revenue Trend</h2>
-<canvas id="chart" height="110"></canvas>
+<p id="status"></p>
 </div>
-<div class="card"><h2>Deals</h2><div id="list"></div></div>
+
+<div class="card"><h2>Live Preview</h2><div id="preview" class="preview"></div></div>
+<div class="card"><h2>Performance</h2><canvas id="chart"></canvas></div>
+<div class="card"><h2>Deals</h2><div id="list">Loading...</div></div>
 </div>
+
 <div>
-<div class="card"><h3>AI Recommendations</h3><ul><li>Increase lunch discount by 5%.</li><li>Upload a banner image.</li><li>Run a Friday special.</li></ul></div>
-<div class="card"><h3>QR Coupon</h3><p>Placeholder for QR generation.</p></div>
-<div class="card"><h3>Subscription</h3><p>Growth Plan</p><button>Manage Billing</button></div>
-<div class="card"><h3>Notifications</h3><p>Realtime-ready via Supabase.</p></div>
+<div class="card"><h3>Quick Actions</h3><button>Generate QR</button><button>Upload Banner</button><button>Manage Subscription</button><button>Business Profile</button></div>
+<div class="card"><h3>Realtime Ready</h3><p>Prepared for Supabase Auth, Storage and Realtime channels.</p></div>
+<div class="card"><h3>AI Recommendation</h3><p>Your Friday promotions outperform weekdays by 24%. Schedule another lunchtime campaign.</p></div>
 </div>
 </div>
 </div>
+
 <script>
 const db=supabase.createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");
-new Chart(document.getElementById('chart'),{
-type:'line',
-data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Revenue',data:[5,8,7,12,18,20,25]}]},
-options:{responsive:true,plugins:{legend:{labels:{color:'white'}}},scales:{x:{ticks:{color:'white'}},y:{ticks:{color:'white'}}}}
-});
-async function load(){
-const {data,error}=await db.from("deals").select("*").order("created_at",{ascending:false});
-const l=document.getElementById("list");
-if(error){l.textContent=error.message;return;}
-l.innerHTML=(data||[]).map(d=>`<div style="padding:10px;margin:10px 0;background:#1c1c1c;border-radius:12px"><b>${d.title}</b><br>${d.description||""}</div>`).join("")||"No deals.";
+lucide.createIcons();
+new Chart(document.getElementById('chart'),{type:'line',data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],datasets:[{label:'Deal Views',data:[30,44,38,57,90,82,75]}]},options:{plugins:{legend:{labels:{color:'white'}}},scales:{x:{ticks:{color:'white'}},y:{ticks:{color:'white'}}}}});
+function updatePreview(){preview.innerHTML=`<h3>${title.value||'Deal title'}</h3><p>${description.value||'Description'}</p><b>${discount.value||''}</b>`;}
+['title','description','discount'].forEach(id=>document.getElementById(id).addEventListener('input',updatePreview));
+async function loadDeals(){
+ const {data,error}=await db.from('deals').select('*').order('created_at',{ascending:false});
+ if(error){list.textContent=error.message;return;}
+ list.innerHTML=(data||[]).map(d=>`<div class="preview"><b>${d.title}</b><br>${d.description||''}<br><small>${d.status||'LIVE'}</small></div>`).join('')||'No deals found.';
 }
 publish.onclick=async()=>{
-const {error}=await db.from("deals").insert({title:title.value,description:description.value,discount:discount.value,expiry_date:expiry.value||null});
-msg.textContent=error?error.message:"Published!";
-title.value=description.value=discount.value=expiry.value="";
-load();
+ const payload={title:title.value.trim(),category:category.value,description:description.value.trim(),discount:discount.value.trim(),sale_price:price.value.trim(),coupon_code:coupon.value.trim(),expiry_date:expiry.value||null,status:'LIVE'};
+ status.textContent='Publishing...';
+ const {error}=await db.from('deals').insert(payload);
+ status.textContent=error?error.message:'Deal published successfully.';
+ if(!error){loadDeals();}
 }
-load();
-</script></body></html>
+updatePreview();loadDeals();
+</script>
+</body></html>
