@@ -1,125 +1,122 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe Business Dashboard V66</title>
+<title>Zep Swipe Business Deals V70</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:#121416;--line:#2d2d2d;--accent:#b8ff3b}
+:root{--bg:#070707;--card:rgba(18,20,22,.84);--line:#2a2a2a;--accent:#b8ff3b}
 *{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;background:var(--bg);color:#fff;padding-bottom:80px}
-header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:14px 18px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand img{width:46px;height:46px;border-radius:12px}
-.wrap{max-width:1200px;margin:auto;padding:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:18px}
-.grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}
-input,textarea,select,button{width:100%;padding:12px;margin-top:10px;border-radius:12px}
-input,textarea,select{background:#111;border:1px solid #333;color:#fff}
+body{margin:0;color:#fff;background:#070707}
+.hero{min-height:55vh;padding:64px 24px;background:
+linear-gradient(rgba(5,5,5,.55),rgba(7,7,7,.95)),
+url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1600&q=80') center/cover}
+.top{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;position:sticky;top:0;background:rgba(7,7,7,.7);backdrop-filter:blur(12px)}
+.brand{font-weight:800}
+.wrap{max-width:1280px;margin:auto;padding:24px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-top:-50px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;backdrop-filter:blur(10px)}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-top:20px}
+input,select,textarea,button{width:100%;padding:12px;border-radius:12px;margin-top:10px}
+input,select,textarea{background:#101010;color:#fff;border:1px solid #333}
 button{background:var(--accent);border:none;font-weight:800}
-.footer{position:fixed;left:0;right:0;bottom:0;background:#111;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px 0}
-.footer a{text-decoration:none;color:#fff;font-size:12px;display:flex;flex-direction:column;align-items:center}
+.preview{border:1px dashed #4a4a4a;border-radius:16px;padding:16px}
 @media(max-width:900px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header>
-<div class="brand">
-<img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png">
-<div><b>Zep Swipe</b><br><small>Business Dashboard</small></div>
-</div>
+<div class="top">
+<div class="brand">Zep Swipe • Business Deals V70</div>
 <div><i data-lucide="bell-ring"></i></div>
-</header>
+</div>
+
+<section class="hero">
+<div class="wrap">
+<h1>Launch student campaigns that drive real foot traffic.</h1>
+<p>Create online coupon codes and in-store QR promotions from one production-ready dashboard.</p>
+</div>
+</section>
 
 <div class="wrap">
+<div class="stats">
+<div class="card"><small>Active Deals</small><h2>18</h2></div>
+<div class="card"><small>Claimed Today</small><h2>142</h2></div>
+<div class="card"><small>Redeemed</small><h2>91</h2></div>
+<div class="card"><small>Conversion</small><h2>64%</h2></div>
+<div class="card"><small>Mari Wallet</small><h2>12,450</h2></div>
+</div>
+
 <div class="grid">
-<div>
 <div class="card">
-<h2>Create Weekly Deal Campaign</h2>
+<h2>Create Campaign</h2>
+<select id="coupon_type">
+<option>Website Coupon</option>
+<option>In-store QR Coupon</option>
+</select>
 <input id="title" placeholder="Campaign title">
-<select id="category"><option>Food</option><option>Retail</option><option>Services</option></select>
-<textarea id="description" placeholder="Campaign description"></textarea>
-<input id="discount" placeholder="Discount e.g. 20%">
-<input id="coupons" type="number" placeholder="Coupons available today">
-<label>Open Time</label>
-<input id="open_time" type="time">
-<label>Close Time</label>
-<input id="close_time" type="time">
-<label>Campaign Ends</label>
+<select id="category">
+<option>Food</option><option>Retail</option><option>Services</option>
+</select>
+<textarea id="description" placeholder="Description"></textarea>
+<input id="discount" placeholder="20% or R50 OFF">
+<input id="coupon_code" placeholder="Coupon code">
+<input id="website_url" placeholder="Website URL">
+<input id="daily_limit" type="number" placeholder="Daily coupon limit">
 <input id="expiry" type="date">
 <button id="publish">Publish Campaign</button>
 <p id="status"></p>
 </div>
 
-<div class="card">
-<h3>Campaign Preview</h3>
-<div id="preview">Your campaign preview appears here.</div>
-</div>
-</div>
-
 <div>
 <div class="card">
-<h3>🤖 Zep AI Sales Coach</h3>
-<p><b>Today's Advice</b></p>
-<p>Lunch promotions are trending. Consider running a limited-time offer between 11:30 and 14:00 with 100 coupons.</p>
-<input placeholder="Ask Zep AI...">
-<button type="button">Send</button>
+<h3>Live Preview</h3>
+<div class="preview" id="preview"></div>
 </div>
-
 <div class="card">
-<h3>Mari Wallet</h3>
-<h2>12,450 Mari</h2>
-<p>+50 Mari is earned for each validated coupon redemption.</p>
-<p><b>Withdrawals:</b> Locked</p>
-</div>
-
-<div class="card">
-<h3>Coupon Flow</h3>
-<p>Students claim a code in the marketplace, visit your store, and staff validate the code before redemption.</p>
+<h3>Merchant Insights</h3>
+<ul>
+<li>Best redemption window: 11:30–14:00</li>
+<li>Students near you are active now.</li>
+<li>Boost conversions with limited-time offers.</li>
+</ul>
 </div>
 </div>
 </div>
 </div>
-
-<nav class="footer">
-<a href="index.html"><i data-lucide="house"></i><span>Home</span></a>
-<a href="marketplace.html"><i data-lucide="store"></i><span>Student Market</span></a>
-<a href="#publish"><i data-lucide="circle-plus"></i><span>Publish Deal</span></a>
-<a href="profile.html"><i data-lucide="user-round"></i><span>Profile</span></a>
-</nav>
 
 <script>
 const db=supabase.createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");
 lucide.createIcons();
-
-function refreshPreview(){
-preview.innerHTML="<h3>"+(title.value||"Campaign")+"</h3><p>"+(description.value||"Description")+"</p><p><b>"+(discount.value||"")+" off</b></p><p>Coupons Today: "+(coupons.value||0)+"</p><p>"+(open_time.value||"--:--")+" - "+(close_time.value||"--:--")+"</p>";
+function updatePreview(){
+preview.innerHTML=`<h3>${title.value||"Campaign"}</h3>
+<p>${description.value||"Description"}</p>
+<p><strong>${discount.value||""}</strong></p>
+<p>${coupon_type.value}</p>`;
 }
-["title","description","discount","coupons","open_time","close_time"].forEach(id=>document.getElementById(id).addEventListener("input",refreshPreview));
-
+["title","description","discount","coupon_type"].forEach(id=>document.getElementById(id).addEventListener("input",updatePreview));
 publish.onclick=async()=>{
- const payload={
-  title:title.value.trim(),
-  category:category.value,
-  description:description.value.trim(),
-  discount:discount.value.trim(),
-  daily_coupon_limit:Number(coupons.value||0),
-  coupons_remaining:Number(coupons.value||0),
-  open_time:open_time.value,
-  close_time:close_time.value,
-  expiry_date:expiry.value||null,
-  status:"LIVE"
- };
- status.textContent="Publishing...";
- const {error}=await db.from("deals").insert(payload);
- status.textContent=error?error.message:"Campaign published.";
+status.textContent="Publishing...";
+const payload={
+title:title.value,
+category:category.value,
+description:description.value,
+discount:discount.value,
+coupon_type:coupon_type.value,
+coupon_code:coupon_code.value,
+website_url:website_url.value,
+daily_coupon_limit:Number(daily_limit.value||0),
+coupons_remaining:Number(daily_limit.value||0),
+expiry_date:expiry.value||null,
+status:"LIVE"
 };
-
-refreshPreview();
+const {error}=await db.from("deals").insert(payload);
+status.textContent=error?error.message:"Campaign published.";
+};
+updatePreview();
 </script>
 </body>
 </html>
