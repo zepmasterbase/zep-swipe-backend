@@ -1,115 +1,89 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe Business Dashboard V50</title>
+<title>Zep Swipe Business Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#060606;--card:#121212;--card2:#171717;--line:rgba(255,255,255,.07);--accent:#b8ff3b;--muted:#9c9c9c}
-*{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;background:linear-gradient(#0b0b0b,#060606);color:#fff;padding-bottom:90px}
-header{position:sticky;top:0;z-index:99;height:74px;background:rgba(8,8,8,.88);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:12px}
-.brand img{width:42px;height:42px;border-radius:12px}
-.brand b{font-size:17px}.brand small{display:block;color:var(--muted)}
-.icon{width:42px;height:42px;border-radius:14px;background:var(--card2);display:grid;place-items:center;border:1px solid var(--line)}
-main{max-width:1180px;margin:auto;padding:20px}
-.hero{background:linear-gradient(135deg,rgba(184,255,59,.12),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:28px;padding:30px}
-.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:#233800;color:var(--accent);font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin:20px 0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px}
-.kpi h2{margin:10px 0;color:var(--accent);font-size:2rem}
-.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px}
-.action{background:var(--card2);border:1px solid var(--line);border-radius:18px;padding:18px;text-align:center}
-.action i{color:var(--accent)}
-.layout{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+:root{--bg:#070707;--surface:#121416;--surface2:#191c20;--border:rgba(255,255,255,.08);--accent:#b8ff3b;--muted:#98a2b3}
+*{box-sizing:border-box;font-family:Inter,sans-serif}body{margin:0;background:var(--bg);color:#fff}
+header{position:sticky;top:0;z-index:50;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(8,8,8,.86);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:12px}.brand img{width:44px;height:44px;border-radius:12px}
+.brand small{color:var(--muted)}
+.notify{width:46px;height:46px;border-radius:16px;background:var(--surface2);border:1px solid var(--border);display:grid;place-items:center}
+.notify i{color:var(--accent)}
+main{max-width:1240px;margin:auto;padding:22px 18px 110px}
+.hero{min-height:320px;padding:40px;border-radius:30px;border:1px solid var(--border);display:flex;flex-direction:column;justify-content:flex-end;background:
+linear-gradient(rgba(0,0,0,.25),rgba(0,0,0,.82)),
+url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1800&q=80') center/cover}
+.badge{display:inline-block;width:max-content;padding:8px 14px;border-radius:999px;background:#223800;color:var(--accent);font-weight:700}
+.grid{display:grid;gap:18px}.kpis{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin:22px 0}.layout{grid-template-columns:2fr 1fr}
 @media(max-width:900px){.layout{grid-template-columns:1fr}}
-.coupon{background:var(--card2);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:14px}
-.live{display:inline-block;background:#233800;color:var(--accent);padding:5px 10px;border-radius:999px;font-size:12px}
-.progress{height:10px;background:#222;border-radius:999px;overflow:hidden}.progress>div{height:100%;width:0;background:linear-gradient(90deg,#89df00,#b8ff3b)}
-.feed div{padding:12px 0;border-bottom:1px solid var(--line)}
-input,textarea,select,button{width:100%;margin-top:12px;padding:14px;border-radius:14px}
-input,textarea,select{background:#0d0d0d;color:#fff;border:1px solid var(--line)}
-button{background:var(--accent);border:none;color:#111;font-weight:800}
-footer{position:fixed;bottom:0;left:0;right:0;height:76px;background:#0a0a0a;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center}
-footer a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
-footer i{display:block;margin:0 auto 5px;color:var(--accent)}
+.card,.kpi,.action,.coupon{background:var(--surface);border:1px solid var(--border);border-radius:22px}
+.card{padding:22px}.kpi{padding:22px}.value{font-size:2rem;color:var(--accent);font-weight:800}.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}
+.action{padding:18px;text-align:center;background:var(--surface2)}.action i{color:var(--accent)}
+.coupon{padding:18px;margin-top:14px;background:var(--surface2)}
+.tag{display:inline-block;padding:5px 10px;border-radius:999px;background:#223800;color:var(--accent);font-size:12px}
+.btn{width:100%;padding:14px;margin-top:14px;border:0;border-radius:14px;background:var(--accent);color:#111;font-weight:800}
+.progress{height:10px;background:#262626;border-radius:999px;overflow:hidden}.progress div{height:100%;width:0;background:linear-gradient(90deg,#7fd300,#b8ff3b)}
+.feed div{padding:12px 0;border-bottom:1px solid var(--border)}
+footer{position:fixed;left:0;right:0;bottom:0;height:78px;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center}
+footer a{text-decoration:none;color:#fff;font-size:12px;text-align:center}footer i{display:block;margin-bottom:5px;color:var(--accent)}
 </style>
 </head>
 <body>
 <header>
 <div class="brand">
 <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png">
-<div><b>Zep Swipe Business</b><small>Merchant Dashboard</small></div>
+<div><strong>Zep Swipe Business</strong><br><small>Merchant Dashboard</small></div>
 </div>
-<div class="icon"><i data-lucide="bell"></i></div>
+<div class="notify"><i data-lucide="bell-ring"></i></div>
 </header>
 
 <main>
 <section class="hero">
 <span class="badge">🚀 Founding Partner</span>
-<h1>Good morning 👋</h1>
-<p>Track your student campaigns, publish offers and monitor business growth from one clean dashboard.</p>
+<h1>Grow your business with students.</h1>
+<p>Launch offers, monitor verified redemptions and measure campaign performance from one dashboard.</p>
 </section>
 
-<section class="grid">
-<div class="card kpi"><i data-lucide="wallet"></i><h2>R0</h2><small>Revenue</small></div>
-<div class="card kpi"><i data-lucide="ticket-percent"></i><h2 id="redeem">0</h2><small>Redemptions</small></div>
-<div class="card kpi"><i data-lucide="eye"></i><h2>0</h2><small>Views</small></div>
-<div class="card kpi"><i data-lucide="users"></i><h2>0</h2><small>Students</small></div>
-</section>
+<section class="grid kpis" id="kpis"></section>
 
-<div class="layout">
+<section class="grid layout">
 <div>
 <div class="card">
 <h3>Quick Actions</h3>
-<div class="actions">
-<div class="action"><i data-lucide="plus-circle"></i><div>New Coupon</div></div>
-<div class="action"><i data-lucide="qr-code"></i><div>QR Code</div></div>
-<div class="action"><i data-lucide="megaphone"></i><div>Promote</div></div>
-<div class="action"><i data-lucide="bar-chart-3"></i><div>Analytics</div></div>
-</div>
+<div class="actions" id="actions"></div>
 </div>
 
 <div class="card" style="margin-top:18px">
 <h3>Active Coupons</h3>
-<div class="coupon">
-<span class="live">LIVE</span>
-<h4>20% Student Discount</h4>
-<p>134 views • 0 redeemed • Ends Sunday</p>
-<button>Edit Coupon</button>
-</div>
-<div class="coupon">
-<span class="live">DRAFT</span>
-<h4>Create your next campaign</h4>
-<p>Launch another offer to attract more students.</p>
-<button>Create Coupon</button>
-</div>
+<div id="coupons"></div>
 </div>
 </div>
 
 <div>
 <div class="card">
-<h3>Featured Partner</h3>
+<h3>Featured Partner Progress</h3>
 <div class="progress"><div id="bar"></div></div>
 <p><b id="count">0</b>/50 verified redemptions</p>
-<button disabled>Unlock After 50 Redemptions</button>
+<button class="btn" disabled>Unlock After 50 Redemptions</button>
 </div>
 
 <div class="card" style="margin-top:18px">
 <h3>Recent Activity</h3>
 <div class="feed">
-<div>🎟 Waiting for your first redemption.</div>
-<div>⭐ Student reviews will appear here.</div>
-<div>📈 Daily insights will appear automatically.</div>
+<div>🎟 Waiting for your first verified redemption.</div>
+<div>📈 Live analytics will appear from Supabase.</div>
+<div>⭐ Reviews will appear automatically.</div>
 </div>
 </div>
 </div>
-</div>
+</section>
 </main>
 
 <footer>
@@ -123,14 +97,31 @@ footer i{display:block;margin:0 auto 5px;color:var(--accent)}
 <script>
 const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-async function refreshDashboard(){
- const verified=0;
- document.getElementById("redeem").textContent=verified;
- document.getElementById("count").textContent=verified;
- document.getElementById("bar").style.width=(Math.min(verified,50)*2)+"%";
-}
-refreshDashboard();
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+// Replace demo arrays with Supabase queries when backend is connected.
+const KPI=[
+["wallet","R0","Revenue"],
+["ticket-percent","0","Redemptions"],
+["eye","0","Views"],
+["users","0","Students"]
+];
+const ACTIONS=[
+["plus-circle","New Coupon"],
+["qr-code","QR Code"],
+["megaphone","Promote"],
+["chart-column","Analytics"]
+];
+const COUPONS=[
+{title:"20% Student Discount",meta:"134 views • 0 redeemed • Ends Sunday"}
+];
+
+document.getElementById("kpis").innerHTML=KPI.map(x=>`<div class="kpi"><i data-lucide="${x[0]}"></i><div class="value">${x[1]}</div><small>${x[2]}</small></div>`).join("");
+document.getElementById("actions").innerHTML=ACTIONS.map(x=>`<div class="action"><i data-lucide="${x[0]}"></i><div>${x[1]}</div></div>`).join("");
+document.getElementById("coupons").innerHTML=COUPONS.map(c=>`<div class="coupon"><span class="tag">LIVE</span><h4>${c.title}</h4><p>${c.meta}</p><button class="btn">Manage Coupon</button></div>`).join("");
+const verified=0;
+count.textContent=verified;
+bar.style.width=(Math.min(verified,50)*2)+"%";
 lucide.createIcons();
 </script>
 </body>
