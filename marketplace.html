@@ -3,23 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Marketplace SPA</title>
+<title>Zep Swipe Marketplace</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#151515;--line:#2b2b2b;--accent:#b8ff3b}
 *{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;background:var(--bg);color:#fff;padding-bottom:82px}
-header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--line);z-index:99}
-.header{display:flex;justify-content:space-between;align-items:center;max-width:1400px;margin:auto;padding:16px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--accent)}
-.logo img{width:38px;height:38px}
+body{margin:0;background:var(--bg);color:#fff;padding-bottom:84px}
+header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--line);z-index:100}
+.header{max-width:1400px;margin:auto;padding:16px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:10px;color:var(--accent);font-weight:800}
+.logo img{width:40px;height:40px}
 .wrap{max-width:1400px;margin:auto;padding:16px}
-.hero{padding:36px;border-radius:22px;background:#141414}
-.btn{display:inline-block;background:var(--accent);padding:12px 18px;border-radius:10px;color:#000;text-decoration:none;font-weight:800}
+.hero{padding:52px 34px;border-radius:24px;background:
+linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),
+url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1800&q=80') center/cover}
+.btn{display:inline-block;background:var(--accent);padding:13px 20px;border-radius:12px;color:#000;text-decoration:none;font-weight:800}
 .search input{width:100%;padding:14px;background:#111;border:1px solid var(--line);border-radius:12px;color:#fff}
-.row{display:flex;gap:14px;overflow:auto;padding:8px 0}
+.row{display:flex;gap:14px;overflow:auto;padding:10px 0}
 .card{min-width:220px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
 .card img{width:100%;height:130px;object-fit:cover}.c{padding:12px}
 button{width:100%;padding:10px;background:var(--accent);border:none;border-radius:10px;font-weight:700}
@@ -34,40 +36,38 @@ footer a{text-decoration:none;color:#fff;font-size:12px;display:flex;flex-direct
 </div></header>
 
 <div class="wrap">
-<div id="homeView">
 <section class="hero">
 <h1>Hire trusted student talent.</h1>
 <p>Verified providers • Escrow protected • Student deals.</p>
 <p><a class="btn" href="auth.html">Post Job / Hire Now</a></p>
 </section>
-<div class="search"><input id="search" placeholder="Search services"></div>
+
+<div class="search" style="margin:20px 0"><input id="search" placeholder="Search services"></div>
+
+<div id="homeView">
 <h2>Popular Services</h2><div id="services" class="row"></div>
 <h2>Top Providers</h2><div id="providers" class="row"></div>
 </div>
 
 <div id="servicesView" style="display:none">
-<h2>All Services</h2>
-<div id="allServices" class="row" style="flex-wrap:wrap;overflow:visible"></div>
+<h2>All Services</h2><div id="allServices" class="row" style="flex-wrap:wrap;overflow:visible"></div>
 </div>
 
 <div id="dealsView" style="display:none">
-<h2>All Deals</h2>
-<div id="allDeals" class="row" style="flex-wrap:wrap;overflow:visible"></div>
+<h2>All Deals</h2><div id="allDeals" class="row" style="flex-wrap:wrap;overflow:visible"></div>
 </div>
 </div>
 
 <footer>
-<a href="#" onclick="showHome()"><i data-lucide="home"></i><span>Home</span></a>
-<a href="#" onclick="showServices()"><i data-lucide="briefcase"></i><span>Services</span></a>
-<a href="#" onclick="showDeals()"><i data-lucide="ticket-percent"></i><span>Deals</span></a>
-<a href="provider.html"><i data-lucide="coins"></i><span>Earn</span></a>
+<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+<a href="#" onclick="showServices();return false;"><i data-lucide="briefcase"></i><span>Services</span></a>
+<a href="#" onclick="showDeals();return false;"><i data-lucide="ticket-percent"></i><span>Deals</span></a>
+<a href="auth.html"><i data-lucide="coins"></i><span>Earn</span></a>
 <a href="auth.html"><i data-lucide="user"></i><span>Account</span></a>
 </footer>
 
 <script>
 const db=supabase.createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");
-
-function showHome(){homeView.style.display="block";servicesView.style.display="none";dealsView.style.display="none";}
 function showServices(){homeView.style.display="none";servicesView.style.display="block";dealsView.style.display="none";}
 function showDeals(){homeView.style.display="none";servicesView.style.display="none";dealsView.style.display="block";}
 
@@ -75,33 +75,31 @@ async function loadMarketplace(q=""){
  let query=db.from("services").select("*").order("created_at",{ascending:false});
  if(q) query=query.ilike("title","%"+q+"%");
  const {data:items=[]}=await query;
-
- services.innerHTML="";providers.innerHTML="";allServices.innerHTML="";
+ services.innerHTML=providers.innerHTML=allServices.innerHTML="";
  items.forEach(s=>{
-   const service=`<div class="card"><img src="${s.image_url||'https://picsum.photos/400/240'}"><div class="c"><h3>${s.title||'Service'}</h3><p>R${s.price||0}</p><button onclick="bookService('${s.id}')">Book Service</button></div></div>`;
-   services.insertAdjacentHTML("beforeend",service);
-   allServices.insertAdjacentHTML("beforeend",service);
-   providers.insertAdjacentHTML("beforeend",`<div class="card"><img src="${s.image_url||'https://picsum.photos/401/240'}"><div class="c"><h3>${s.provider_name||'Student Provider'}</h3><p>⭐ ${s.rating||'New'}</p></div></div>`);
+ const card=`<div class="card"><img src="${s.image_url||'https://picsum.photos/400/240'}"><div class="c"><h3>${s.title}</h3><p>R${s.price||0}</p><button onclick="bookService('${s.id}')">Book Service</button></div></div>`;
+ services.insertAdjacentHTML("beforeend",card);
+ allServices.insertAdjacentHTML("beforeend",card);
+ providers.insertAdjacentHTML("beforeend",`<div class="card"><img src="${s.image_url||'https://picsum.photos/401/240'}"><div class="c"><h3>${s.provider_name||'Student Provider'}</h3><p>⭐ ${s.rating||'New'}</p></div></div>`);
  });
-
  const {data:deals=[]}=await db.from("deals").select("*").order("created_at",{ascending:false});
  allDeals.innerHTML="";
  deals.forEach(d=>{
-   allDeals.insertAdjacentHTML("beforeend",`<div class="card"><img src="${d.image_url||'https://picsum.photos/402/240'}"><div class="c"><h3>${d.title||'Deal'}</h3><p>${d.discount||''}</p><button>View Deal</button></div></div>`);
+ allDeals.insertAdjacentHTML("beforeend",`<div class="card"><img src="${d.image_url||'https://picsum.photos/402/240'}"><div class="c"><h3>${d.title}</h3><p>${d.discount||''}</p><button onclick="claimDeal('${d.id}')">Claim Deal</button></div></div>`);
  });
 }
 async function bookService(id){
  const {data}=await db.auth.getSession();
- if(!data.session){
-   localStorage.setItem("zep_booking_service",id);
-   location.href="auth.html";
-   return;
- }
+ if(!data.session){localStorage.setItem("zep_booking_service",id);location.href="auth.html";return;}
  location.href="customer.html?service="+encodeURIComponent(id);
+}
+async function claimDeal(id){
+ const {data}=await db.auth.getSession();
+ if(!data.session){localStorage.setItem("zep_claim_deal",id);location.href="auth.html";return;}
+ location.href="deal.html?id="+encodeURIComponent(id);
 }
 search.addEventListener("input",e=>loadMarketplace(e.target.value));
 loadMarketplace();
 lucide.createIcons();
 </script>
-</body>
-</html>
+</body></html>
