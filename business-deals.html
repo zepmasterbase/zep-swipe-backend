@@ -1,85 +1,125 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe Business Dashboard V68 Foundation</title>
+<title>Zep Swipe Business Dashboard V66</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
-body{margin:0;background:#070707;color:#fff;font-family:Inter,sans-serif}
-header{padding:16px 20px;background:#111;position:sticky;top:0}
-main{max-width:1280px;margin:auto;padding:20px}
-.card{background:#141414;border:1px solid #2c2c2c;border-radius:18px;padding:18px;margin-bottom:18px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
-input,select,textarea,button{width:100%;padding:12px;margin-top:10px;border-radius:10px}
-button{background:#b8ff3b;border:0;font-weight:700}
-code{display:block;white-space:pre-wrap}
+:root{--bg:#070707;--card:#121416;--line:#2d2d2d;--accent:#b8ff3b}
+*{box-sizing:border-box;font-family:Inter,sans-serif}
+body{margin:0;background:var(--bg);color:#fff;padding-bottom:80px}
+header{position:sticky;top:0;background:#0b0b0bee;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:14px 18px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:46px;height:46px;border-radius:12px}
+.wrap{max-width:1200px;margin:auto;padding:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+input,textarea,select,button{width:100%;padding:12px;margin-top:10px;border-radius:12px}
+input,textarea,select{background:#111;border:1px solid #333;color:#fff}
+button{background:var(--accent);border:none;font-weight:800}
+.footer{position:fixed;left:0;right:0;bottom:0;background:#111;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px 0}
+.footer a{text-decoration:none;color:#fff;font-size:12px;display:flex;flex-direction:column;align-items:center}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><h2>Zep Swipe Business Dashboard V68 (Production Foundation)</h2></header>
-<main>
-<div class="grid">
-<div class="card">
-<h3>Merchant Login</h3>
-<p>Connect Supabase Auth here.</p>
-<button>Sign In</button>
+<header>
+<div class="brand">
+<img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png">
+<div><b>Zep Swipe</b><br><small>Business Dashboard</small></div>
 </div>
+<div><i data-lucide="bell-ring"></i></div>
+</header>
+
+<div class="wrap">
+<div class="grid">
+<div>
+<div class="card">
+<h2>Create Weekly Deal Campaign</h2>
+<input id="title" placeholder="Campaign title">
+<select id="category"><option>Food</option><option>Retail</option><option>Services</option></select>
+<textarea id="description" placeholder="Campaign description"></textarea>
+<input id="discount" placeholder="Discount e.g. 20%">
+<input id="coupons" type="number" placeholder="Coupons available today">
+<label>Open Time</label>
+<input id="open_time" type="time">
+<label>Close Time</label>
+<input id="close_time" type="time">
+<label>Campaign Ends</label>
+<input id="expiry" type="date">
+<button id="publish">Publish Campaign</button>
+<p id="status"></p>
+</div>
+
+<div class="card">
+<h3>Campaign Preview</h3>
+<div id="preview">Your campaign preview appears here.</div>
+</div>
+</div>
+
+<div>
+<div class="card">
+<h3>🤖 Zep AI Sales Coach</h3>
+<p><b>Today's Advice</b></p>
+<p>Lunch promotions are trending. Consider running a limited-time offer between 11:30 and 14:00 with 100 coupons.</p>
+<input placeholder="Ask Zep AI...">
+<button type="button">Send</button>
+</div>
+
 <div class="card">
 <h3>Mari Wallet</h3>
-<p>Balance: <strong>0 Mari</strong></p>
-<p>Withdrawals: Locked</p>
-</div>
-<div class="card">
-<h3>Campaign</h3>
-<p>Daily coupons, opening hours, expiry, redemption analytics.</p>
-</div>
+<h2>12,450 Mari</h2>
+<p>+50 Mari is earned for each validated coupon redemption.</p>
+<p><b>Withdrawals:</b> Locked</p>
 </div>
 
 <div class="card">
-<h3>Create Weekly Campaign</h3>
-<input placeholder="Campaign title">
-<select><option>Food</option><option>Retail</option></select>
-<input type="number" placeholder="Daily coupon limit">
-<input type="time"><input type="time">
-<textarea placeholder="Description"></textarea>
-<button>Publish</button>
+<h3>Coupon Flow</h3>
+<p>Students claim a code in the marketplace, visit your store, and staff validate the code before redemption.</p>
+</div>
+</div>
+</div>
 </div>
 
-<div class="card">
-<h3>Recommended Backend Tables</h3>
-<code>
-business_profiles
-deals
-coupon_claims
-coupon_redemptions
-mari_wallets
-mari_transactions
-notifications
-business_staff
-deal_images
-analytics_daily
-</code>
-</div>
+<nav class="footer">
+<a href="index.html"><i data-lucide="house"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="store"></i><span>Student Market</span></a>
+<a href="#publish"><i data-lucide="circle-plus"></i><span>Publish Deal</span></a>
+<a href="profile.html"><i data-lucide="user-round"></i><span>Profile</span></a>
+</nav>
 
-<div class="card">
-<h3>Production TODO</h3>
-<ul>
-<li>Supabase Auth</li>
-<li>Row Level Security policies</li>
-<li>Storage for logos and deal images</li>
-<li>Edge Functions for coupon generation and validation</li>
-<li>Realtime notifications</li>
-<li>QR scanning</li>
-<li>Paystack subscription</li>
-</ul>
-</div>
-</main>
 <script>
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const db=supabase.createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");
+lucide.createIcons();
+
+function refreshPreview(){
+preview.innerHTML="<h3>"+(title.value||"Campaign")+"</h3><p>"+(description.value||"Description")+"</p><p><b>"+(discount.value||"")+" off</b></p><p>Coupons Today: "+(coupons.value||0)+"</p><p>"+(open_time.value||"--:--")+" - "+(close_time.value||"--:--")+"</p>";
+}
+["title","description","discount","coupons","open_time","close_time"].forEach(id=>document.getElementById(id).addEventListener("input",refreshPreview));
+
+publish.onclick=async()=>{
+ const payload={
+  title:title.value.trim(),
+  category:category.value,
+  description:description.value.trim(),
+  discount:discount.value.trim(),
+  daily_coupon_limit:Number(coupons.value||0),
+  coupons_remaining:Number(coupons.value||0),
+  open_time:open_time.value,
+  close_time:close_time.value,
+  expiry_date:expiry.value||null,
+  status:"LIVE"
+ };
+ status.textContent="Publishing...";
+ const {error}=await db.from("deals").insert(payload);
+ status.textContent=error?error.message:"Campaign published.";
+};
+
+refreshPreview();
 </script>
 </body>
 </html>
