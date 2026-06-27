@@ -3,40 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Marketplace V64</title>
+<title>Zep Swipe Marketplace V65</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
-*{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;background:var(--bg);color:#fff;padding-bottom:90px}
-header{position:sticky;top:0;background:#0b0b0b;padding:16px;border-bottom:1px solid var(--line);z-index:5}
-header h2{color:var(--accent);margin:0}
-.hero{margin:16px;padding:28px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.badge{background:#203600;color:var(--accent);padding:8px 12px;border-radius:999px;font-size:12px}
-.search{margin:16px}
-.search input{width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:#101010;color:#fff}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
-.section{padding:16px 16px 0}
-.slider{display:flex;gap:16px;overflow:auto;padding:16px}
-.card{min-width:300px;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
-.card img{width:100%;height:180px;object-fit:cover}
-.content{padding:16px}
-.meta{display:flex;justify-content:space-between;color:#bbb;font-size:13px;margin:8px 0}
-.escrow{background:#182a00;color:#dfff96;padding:8px;border-radius:10px;font-size:12px;margin:10px 0}
-button{width:100%;padding:12px;border:none;border-radius:12px;background:var(--accent);font-weight:800;cursor:pointer}
-.deals{display:flex;gap:12px;overflow:auto;padding:16px}
-.deal{min-width:220px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
-.footer{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
-.footer a{text-decoration:none;color:#fff;font-size:12px;display:flex;flex-direction:column;align-items:center}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--bg);color:#fff;padding-bottom:90px}
+header{position:sticky;top:0;z-index:20;background:#0b0b0b;border-bottom:1px solid var(--line);padding:16px}
+.wrap{max-width:1400px;margin:auto}
+.hero{margin:18px 0;border-radius:24px;overflow:hidden;padding:48px 28px;background:
+linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88)),
+url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.hero h1{font-size:clamp(2rem,4vw,3.4rem);margin-bottom:10px}
+.hero p{max-width:700px;color:#ddd}
+.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.badge{background:#203600;color:var(--accent);padding:8px 14px;border-radius:999px;font-size:.85rem}
+.search{margin:18px 0}
+.search input{width:100%;padding:15px;border-radius:14px;border:1px solid var(--line);background:#101010;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{background:var(--card);border:1px solid var(--line);padding:18px;border-radius:18px;text-align:center}
+.section{margin-top:30px}
+.slider,.deals{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-top:16px}
+.card,.deal{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:.25s}
+.card:hover,.deal:hover{transform:translateY(-4px)}
+.card img{width:100%;height:190px;object-fit:cover}
+.content{padding:18px}
+.meta{display:flex;justify-content:space-between;color:#bbb;font-size:.9rem;margin:10px 0}
+.escrow{background:#182a00;color:#dfff96;padding:10px;border-radius:10px;margin:12px 0;font-size:.85rem}
+button{width:100%;padding:13px;border:none;border-radius:12px;background:var(--accent);font-weight:800;cursor:pointer}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
+.footer a{text-decoration:none;color:#fff;font-size:.8rem;display:flex;flex-direction:column;align-items:center;gap:4px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.hero{padding:34px 20px}}
+@media(max-width:520px){.stats{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><h2>⚡ Zep Swipe Marketplace</h2></header>
+<header><div class="wrap"><h2 style="color:#b8ff3b">⚡ Zep Swipe Marketplace</h2></div></header>
 
+<div class="wrap" style="padding:0 16px">
 <section class="hero">
 <h1>Hire trusted student talent.</h1>
 <p>Every payment is protected by Zep Swipe Escrow.</p>
@@ -48,25 +54,25 @@ button{width:100%;padding:12px;border:none;border-radius:12px;background:var(--a
 </div>
 </section>
 
-<div class="search">
-<input placeholder="Search services, providers or categories">
-</div>
+<div class="search"><input placeholder="Search services, providers or categories"></div>
 
 <section class="stats">
 <div class="stat"><h3 id="servicesCount">0</h3><small>Services</small></div>
 <div class="stat"><h3 id="providersCount">0</h3><small>Providers</small></div>
 <div class="stat"><h3 id="businessCount">0</h3><small>Businesses</small></div>
-<div class="stat"><h3 id="dealsCount">0</h3><small>Deals</small></div>
+<div class="stat"><h3 id="dealsCount">3</h3><small>Deals</small></div>
 </section>
 
-<div class="section"><h3>Featured Providers</h3></div>
-<div class="slider" id="servicesContainer"></div>
+<div class="section"><h2>Featured Providers</h2>
+<div class="slider" id="servicesContainer"></div></div>
 
-<div class="section"><h3>Today's Student Deals</h3></div>
+<div class="section"><h2>Today's Student Deals</h2>
 <div class="deals">
-<div class="deal"><strong>Coffee Shop</strong><p>15% Student Discount</p></div>
-<div class="deal"><strong>Pizza</strong><p>Buy 1 Get 1</p></div>
-<div class="deal"><strong>Salon</strong><p>20% Off Students</p></div>
+<div class="deal"><div class="content"><h3>☕ Coffee Shop</h3><p>15% Student Discount</p></div></div>
+<div class="deal"><div class="content"><h3>🍕 Pizza</h3><p>Buy 1 Get 1</p></div></div>
+<div class="deal"><div class="content"><h3>💇 Salon</h3><p>20% Off Students</p></div></div>
+</div>
+</div>
 </div>
 
 <nav class="footer">
@@ -79,39 +85,36 @@ button{width:100%;padding:12px;border:none;border-radius:12px;background:var(--a
 
 <script>
 const db=supabase.createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");
-
 async function loadMarketplace(){
- try{
-   const {data:services}=await db.from("services").select("*");
-   const c=document.getElementById("servicesContainer");
-   c.innerHTML="";
-   document.getElementById("servicesCount").textContent=services?.length||0;
-   (services||[]).forEach(s=>{
-      c.innerHTML+=`
-      <div class="card">
-        <img src="${s.image_url||'https://picsum.photos/600/400'}">
-        <div class="content">
-          <h3>${s.title||'Service'}</h3>
-          <div class="meta"><span>⭐ ${s.rating||'New'}</span><span>R${s.price||0}</span></div>
-          <div class="meta"><span>${s.provider_name||'Student Provider'}</span><span>${s.delivery_time||'24 Hours'}</span></div>
-          <div class="escrow">🛡 Protected by Zep Swipe Escrow</div>
-          <button onclick="bookService('${s.id||""}')">Hire Now</button>
-        </div>
-      </div>`;
-   });
- }catch(e){console.log(e);}
+try{
+const {data:services}=await db.from("services").select("*");
+const c=document.getElementById("servicesContainer");
+c.innerHTML="";
+document.getElementById("servicesCount").textContent=services?.length||0;
+document.getElementById("providersCount").textContent=services?.length||0;
+(services||[]).forEach(s=>{
+c.innerHTML+=`<div class="card">
+<img src="${s.image_url||'https://picsum.photos/600/400'}">
+<div class="content">
+<h3>${s.title||'Service'}</h3>
+<div class="meta"><span>⭐ ${s.rating||'New'}</span><span>R${s.price||0}</span></div>
+<div class="meta"><span>${s.provider_name||'Student Provider'}</span><span>${s.delivery_time||'24 Hours'}</span></div>
+<div class="escrow">🛡 Protected by Zep Swipe Escrow</div>
+<button onclick="bookService('${s.id||""}')">Hire Now</button>
+</div></div>`;
+});
+if((services||[]).length===0){c.innerHTML="<p>No services available yet.</p>";}
+}catch(e){console.log(e);}
 }
-
 async function bookService(id){
- const {data}=await db.auth.getSession();
- if(!data.session){
-   localStorage.setItem("zep_booking_service",id);
-   location.href="auth.html";
-   return;
- }
- location.href="customer.html?service="+encodeURIComponent(id);
+const {data}=await db.auth.getSession();
+if(!data.session){
+localStorage.setItem("zep_booking_service",id);
+location.href="auth.html";
+return;
 }
-
+location.href="customer.html?service="+encodeURIComponent(id);
+}
 loadMarketplace();
 lucide.createIcons();
 </script>
