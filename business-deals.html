@@ -1,100 +1,102 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe Business Deals Demo</title>
+<title>Zep Swipe Business Dashboard - Supabase Ready</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-body{font-family:Inter,sans-serif;background:#070707;color:#fff;margin:0;padding:20px}
-.card{max-width:1100px;margin:18px auto;background:#131313;border:1px solid #2a2a2a;border-radius:18px;padding:20px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:800px){.grid{grid-template-columns:1fr}}
-input,textarea,button{width:100%;padding:12px;border-radius:12px;margin-top:10px}
-input,textarea{background:#0d0d0d;color:#fff;border:1px solid #333}
+body{margin:0;background:#070707;color:#fff;font-family:Inter,sans-serif}
+.wrap{max-width:900px;margin:auto;padding:24px}
+.card{background:#121416;border:1px solid #2a2a2a;border-radius:18px;padding:20px;margin:18px 0}
+input,textarea,button{width:100%;padding:12px;margin-top:10px;border-radius:12px}
+input,textarea{background:#0f1011;color:#fff;border:1px solid #333}
 button{background:#b8ff3b;border:0;font-weight:800}
-.deal{border:1px solid #2d2d2d;border-radius:16px;padding:16px;margin-top:14px;background:#181818}
-.badge{display:inline-block;background:#203600;color:#b8ff3b;padding:4px 10px;border-radius:999px;font-size:12px}
-small{color:#aaa}
+.deal{background:#181a1d;border:1px solid #333;border-radius:14px;padding:16px;margin-top:12px}
+small{color:#9aa0a6}
 </style>
 </head>
 <body>
-
-<div class="card">
-<h2>Zep Swipe Business</h2>
-<p>This demo shows the complete deal publishing flow on the frontend. Replace the save/load functions with Supabase queries when your backend is connected.</p>
-</div>
+<div class="wrap">
+<h1>Zep Swipe Business</h1>
+<p><small>Supabase-ready merchant dashboard starter. Replace the placeholders below with your project credentials.</small></p>
 
 <div class="card">
 <h3>Create Deal</h3>
-<div class="grid">
-<div>
 <input id="title" placeholder="Deal title">
-<input id="discount" placeholder="Discount (e.g. 20%)">
+<textarea id="description" placeholder="Description"></textarea>
+<input id="discount" placeholder="Discount e.g. 20%">
 <input id="expiry" type="date">
-</div>
-<div>
-<textarea id="description" rows="6" placeholder="Describe your offer"></textarea>
-</div>
-</div>
-<button onclick="publishDeal()">Publish Deal</button>
+<button id="publishBtn">Publish Deal</button>
+<div id="status"></div>
 </div>
 
 <div class="card">
 <h3>My Deals</h3>
 <div id="deals"></div>
 </div>
+</div>
 
 <script>
-const STORAGE_KEY="zep_business_deals_demo";
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-function loadDeals(){
- const deals=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
- const container=document.getElementById("deals");
- if(!deals.length){
-   container.innerHTML="<small>No deals yet. Publish your first deal.</small>";
-   return;
- }
- container.innerHTML=deals.map((d,i)=>`
- <div class="deal">
- <span class="badge">LIVE</span>
- <h3>${d.title}</h3>
- <p>${d.description}</p>
- <p><strong>${d.discount}</strong> • Ends ${d.expiry||"No expiry"}</p>
- <button onclick="deleteDeal(${i})">Delete</button>
- </div>`).join("");
+async function loadDeals(){
+  const {data,error}=await db.from("deals")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  const box=document.getElementById("deals");
+  if(error){
+    box.innerHTML="<small>Unable to load deals. Check your Supabase connection, table name, and RLS policies.</small>";
+    return;
+  }
+  if(!data.length){
+    box.innerHTML="<small>No deals published yet.</small>";
+    return;
+  }
+  box.innerHTML=data.map(d=>`
+    <div class="deal">
+      <h3>${d.title}</h3>
+      <p>${d.description||""}</p>
+      <p><strong>${d.discount||""}</strong> ${d.expiry_date?("• Ends "+d.expiry_date):""}</p>
+      <button onclick="removeDeal('${d.id}')">Delete</button>
+    </div>
+  `).join("");
 }
 
-function publishDeal(){
- const title=document.getElementById("title").value.trim();
- const discount=document.getElementById("discount").value.trim();
- const expiry=document.getElementById("expiry").value;
- const description=document.getElementById("description").value.trim();
-
- if(!title||!description){
-   alert("Enter a title and description.");
+async function publishDeal(){
+ const payload={
+   title:title.value.trim(),
+   description:description.value.trim(),
+   discount:discount.value.trim(),
+   expiry_date:expiry.value||null
+ };
+ if(!payload.title){
+   alert("Enter a title");
    return;
  }
-
- const deals=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
- deals.unshift({title,discount,expiry,description});
- localStorage.setItem(STORAGE_KEY,JSON.stringify(deals));
-
- document.getElementById("title").value="";
- document.getElementById("discount").value="";
- document.getElementById("expiry").value="";
- document.getElementById("description").value="";
+ status.textContent="Publishing...";
+ const {error}=await db.from("deals").insert(payload);
+ if(error){
+   status.textContent=error.message;
+   return;
+ }
+ status.textContent="Deal published.";
+ title.value="";description.value="";discount.value="";expiry.value="";
  loadDeals();
 }
 
-function deleteDeal(index){
- const deals=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
- deals.splice(index,1);
- localStorage.setItem(STORAGE_KEY,JSON.stringify(deals));
+async function removeDeal(id){
+ if(!confirm("Delete this deal?")) return;
+ const {error}=await db.from("deals").delete().eq("id",id);
+ if(error){alert(error.message);return;}
  loadDeals();
 }
 
+publishBtn.addEventListener("click",publishDeal);
 loadDeals();
 </script>
 </body>
