@@ -1,97 +1,129 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe Business Growth OS V71 - Premium Ready</title>
+<title>Zep Swipe Business Deals V44</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
-body{margin:0;background:#070707;color:#fff;font-family:Inter,Arial,sans-serif}
-header{padding:22px;background:#111;border-bottom:1px solid #2d2d2d}
-.wrap{max-width:1100px;margin:auto;padding:20px}
-.card{background:#121416;border:1px solid #2d2d2d;border-radius:18px;padding:20px;margin:18px 0}
-button{background:#b8ff3b;color:#000;border:0;padding:14px 18px;border-radius:12px;font-weight:700;cursor:pointer}
-#premiumModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);align-items:center;justify-content:center}
-.modal{background:#141414;border:1px solid #444;padding:28px;border-radius:20px;max-width:420px}
-.badge{display:inline-block;padding:6px 12px;background:#1f3d00;color:#b8ff3b;border-radius:999px}
+:root{--bg:#070707;--card:#141414;--line:#282828;--accent:#b8ff3b}
+*{box-sizing:border-box;font-family:Inter,sans-serif}body{margin:0;background:var(--bg);color:#fff;padding-bottom:90px}
+.hero,.card{margin:16px;border:1px solid var(--line);border-radius:22px}
+.hero{padding:28px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.9)),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1400&q=80') center/cover}
+.card{padding:16px;background:var(--card)}
+.badge{display:inline-block;padding:8px 12px;border-radius:999px;background:#203600;color:var(--accent);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.tile{background:#101010;border:1px solid var(--line);padding:14px;border-radius:16px}
+input,textarea,select,button{width:100%;padding:12px;margin-top:10px;border-radius:12px}
+input,textarea,select{background:#101010;color:#fff;border:1px solid var(--line)}
+button{background:var(--accent);border:none;font-weight:800}
+.progress{height:10px;background:#202020;border-radius:99px;overflow:hidden}.progress>div{height:100%;width:0;background:var(--accent)}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
+.footer a{color:#fff;text-decoration:none;font-size:12px;text-align:center}
+.small{font-size:13px;color:#aaa}
 </style>
 </head>
 <body>
 
-<header>
-<h1>Zep Swipe Business Growth OS V71</h1>
-<div class="badge">Supabase Realtime + Premium Subscription</div>
-</header>
+<section class="hero">
+<span class="badge">🚀 Founding Partner</span>
+<h1>Grow Your Business with Students</h1>
+<p>Free until <b>50 verified student redemptions</b>. Upgrade to <b>Featured Partner (R399/month)</b> when you've already seen value.</p>
+</section>
 
-<div class="wrap">
-<div class="card">
-<h2>Business Status</h2>
-<p>Total Coupon Redemptions: <strong id="redeemed">0</strong></p>
-<p>Subscription: <strong id="plan">FREE</strong></p>
-<p>Monthly Premium: <strong>R399/month</strong> after 100 validated coupon redemptions.</p>
+<section class="card">
+<div class="grid">
+<div class="tile"><h2 id="views">0</h2><small>Views</small></div>
+<div class="tile"><h2 id="redeem">0</h2><small>Verified Redemptions</small></div>
+<div class="tile"><h2 id="repeat">0</h2><small>Repeat Students</small></div>
+<div class="tile"><h2 id="revenue">R0</h2><small>Estimated Revenue</small></div>
+<div class="tile"><h2 id="active">0</h2><small>Active Deals</small></div>
+<div class="tile"><h2 id="rate">0%</h2><small>Conversion</small></div>
 </div>
+</section>
 
-<div class="card">
-<h2>Realtime Activity</h2>
-<div id="feed">Waiting for live coupon activity...</div>
-</div>
-</div>
+<section class="card">
+<h3>🏪 Business Profile</h3>
+<input placeholder="Business Name">
+<input placeholder="Owner">
+<input placeholder="WhatsApp">
+<input placeholder="Address">
+<input placeholder="Google Maps URL">
+<button>Save Profile</button>
+</section>
 
-<div id="premiumModal">
-<div class="modal">
-<h2>🎉 Congratulations!</h2>
-<p>Your business has successfully reached <strong>100 validated coupon redemptions.</strong></p>
-<p>Upgrade to <strong>Premium</strong> to continue publishing new campaigns and unlock advanced analytics, AI Growth Coach, forecasting, staff tools and unlimited campaigns.</p>
-<h3>R399 / month</h3>
-<button onclick="startSubscription()">Upgrade with Paystack</button>
-</div>
+<section class="card">
+<h3>🎁 Create Deal</h3>
+<select><option>Free Launch Partner</option><option>Featured Partner</option></select>
+<input placeholder="Deal title">
+<textarea placeholder="Describe the offer"></textarea>
+<input placeholder="Discount %">
+<input type="date">
+<button>Publish Deal</button>
+</section>
+
+<section class="card">
+<h3>📈 Progress to Featured Partner</h3>
+<div class="progress"><div id="bar"></div></div>
+<p><b id="count">0</b>/50 verified redemptions</p>
+</section>
+
+<section class="card">
+<h3>🎟 QR Coupon Workflow</h3>
+<button>Generate Coupon QR (backend required)</button>
+<p class="small">Recommended flow: Student scans → Business verifies → Record saved to <code>coupon_redemptions</code>.</p>
+</section>
+
+<section class="card">
+<h3>⭐ Featured Partner – R399/month</h3>
+<ul>
+<li>Priority placement</li>
+<li>Unlimited active deals</li>
+<li>Push notifications</li>
+<li>Advanced analytics</li>
+<li>Founding Partner badge</li>
+<li>Monthly PDF report</li>
+</ul>
+<button disabled>Unlock after 50 verified redemptions</button>
+</section>
+
+<section class="card">
+<h3>🗄 Suggested Supabase Tables</h3>
+<ul>
+<li>businesses</li>
+<li>deals</li>
+<li>coupon_redemptions</li>
+<li>subscriptions</li>
+<li>business_analytics</li>
+<li>notifications</li>
+</ul>
+</section>
+
+<div class="footer">
+<a href="index.html"><i data-lucide="home"></i><div>Home</div></a>
+<a href="marketplace.html"><i data-lucide="briefcase-business"></i><div>Services</div></a>
+<a href="business-deals.html"><i data-lucide="ticket-percent"></i><div>Deals</div></a>
+<a href="provider.html"><i data-lucide="coins"></i><div>Earn</div></a>
+<a href="#"><i data-lucide="user-round"></i><div>Profile</div></a>
 </div>
 
 <script>
-const supabase = window.supabase.createClient(
- "YOUR_SUPABASE_URL",
- "YOUR_SUPABASE_ANON_KEY"
-);
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-let redeemedCount=0;
-let subscriptionStatus="FREE";
-
-function updateUI(){
- document.getElementById("redeemed").textContent=redeemedCount;
- document.getElementById("plan").textContent=subscriptionStatus;
- if(redeemedCount>=100 && subscriptionStatus!=="ACTIVE"){
-   document.getElementById("premiumModal").style.display="flex";
- }
+async function refreshDashboard(){
+  // Replace with real Supabase queries.
+  const verified=0;
+  document.getElementById("redeem").textContent=verified;
+  document.getElementById("count").textContent=verified;
+  document.getElementById("bar").style.width=Math.min(verified,50)*2+"%";
 }
-
-async function loadBusiness(){
- // Replace with authenticated business lookup
- // Example:
- // const {data}=await supabase.from("businesses").select("redeemed_count,subscription_status").single();
- // redeemedCount=data.redeemed_count;
- // subscriptionStatus=data.subscription_status;
- updateUI();
-}
-
-supabase.channel("business-live")
-.on("postgres_changes",{
- event:"*",
- schema:"public",
- table:"coupon_redemptions"
-},payload=>{
- redeemedCount++;
- document.getElementById("feed").innerHTML=
- "<p>✅ Coupon redeemed in real time at "+new Date().toLocaleTimeString()+"</p>";
- updateUI();
-}).subscribe();
-
-function startSubscription(){
- // Redirect to your backend endpoint that initializes a Paystack subscription.
- window.location.href="/paystack/subscribe?plan=premium";
-}
-
-loadBusiness();
+refreshDashboard();
+lucide.createIcons();
 </script>
+
 </body>
 </html>
