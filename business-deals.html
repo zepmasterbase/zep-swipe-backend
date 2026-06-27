@@ -1,77 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Zep Swipe Business Deals V47</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zep Swipe Business Deals V45</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
-<script src="https://js.paystack.co/v1/inline.js"></script>
 <style>
-body{margin:0;font-family:Inter,sans-serif;background:#070707;color:#fff}
-.hero{padding:70px 24px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.8)),url('https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1800&q=80') center/cover}
-.container{max-width:1100px;margin:auto;padding:24px}
-.card{background:#151515;border:1px solid #2a2a2a;border-radius:20px;padding:22px;margin-bottom:20px}
-.btn{background:#b8ff3b;color:#000;border:none;padding:14px 18px;border-radius:14px;font-weight:700;cursor:pointer}
-.note{color:#b8b8b8}
-.footer{position:fixed;bottom:0;left:0;right:0;background:#0d0d0d;display:grid;grid-template-columns:repeat(5,1fr);padding:10px;border-top:1px solid #222}
-.footer a{text-decoration:none;color:#fff;text-align:center;font-size:.8rem}
+:root{
+--bg:#060606;--card:rgba(20,20,20,.78);--line:#2a2a2a;--accent:#b8ff3b;
+--muted:#a0a0a0;--glass:blur(18px)
+}
+*{box-sizing:border-box;font-family:Inter,sans-serif}
+body{margin:0;background:#060606;color:#fff;padding-bottom:90px;
+background-image:radial-gradient(circle at top,#1b2a08 0%,#060606 40%)}
+.hero,.card{margin:16px;border:1px solid rgba(255,255,255,.08);border-radius:26px;overflow:hidden}
+.hero{
+padding:38px;
+background:
+linear-gradient(135deg,rgba(0,0,0,.25),rgba(0,0,0,.85)),
+url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1600&q=80') center/cover;
+box-shadow:0 20px 60px rgba(0,0,0,.45)
+}
+.card{
+background:var(--card);
+backdrop-filter:blur(18px);
+padding:18px;
+box-shadow:0 10px 30px rgba(0,0,0,.35)
+}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#1f3210;color:var(--accent);padding:10px 16px;border-radius:999px;font-weight:800}
+h1{margin:18px 0 10px;font-size:2rem}
+p{color:#d6d6d6;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+.tile{
+background:linear-gradient(180deg,#171717,#111);
+border:1px solid #2f2f2f;
+border-radius:18px;padding:18px;
+transition:.25s
+}
+.tile:hover{transform:translateY(-3px);border-color:var(--accent)}
+.tile h2{margin:0 0 6px;color:var(--accent)}
+input,textarea,select,button{
+width:100%;padding:14px;border-radius:16px;margin-top:12px;font-size:15px
+}
+input,textarea,select{
+background:#101010;border:1px solid #2d2d2d;color:#fff;outline:none
+}
+input:focus,textarea:focus,select:focus{
+border-color:var(--accent);
+box-shadow:0 0 0 3px rgba(184,255,59,.12)
+}
+button{
+background:linear-gradient(135deg,#b8ff3b,#93e018);
+color:#111;font-weight:800;border:none;cursor:pointer
+}
+button:hover{transform:translateY(-1px)}
+button:disabled{opacity:.6;cursor:not-allowed}
+.progress{height:12px;background:#222;border-radius:999px;overflow:hidden}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,#84d400,#b8ff3b);transition:.4s}
+ul{padding-left:20px}
+.small{color:#aaa;font-size:13px}
+.footer{
+position:fixed;left:0;right:0;bottom:0;
+background:rgba(11,11,11,.95);
+backdrop-filter:blur(12px);
+border-top:1px solid #262626;
+display:flex;justify-content:space-around;padding:10px 0
+}
+.footer a{text-decoration:none;color:#fff;font-size:12px;text-align:center}
+.footer i{display:block;margin:0 auto 6px;color:var(--accent)}
 </style>
 </head>
 <body>
+
 <section class="hero">
-<h1>Zep Swipe Business Deals V47</h1>
-<p>Featured Partner (R399/month) becomes available only after <strong>50 verified student coupon redemptions</strong>.</p>
+<span class="badge">🚀 Founding Partner</span>
+<h1>Grow Your Business with Students</h1>
+<p>Free until <b>50 verified student redemptions</b>. Upgrade to <b>Featured Partner (R399/month)</b> once you've already seen measurable value.</p>
 </section>
 
-<div class="container">
-<div class="card">
-<h2>⭐ Featured Partner</h2>
-<p>Current Progress: <strong>0 / 50</strong> verified redemptions.</p>
-<p class="note">In production, your backend should enable this button only after verifying 50 coupon redemptions.</p>
-<button id="subscribeBtn" class="btn" disabled>Unlock Subscription After 50 Redemptions</button>
+<section class="card">
+<div class="grid">
+<div class="tile"><h2 id="views">0</h2><small>Views</small></div>
+<div class="tile"><h2 id="redeem">0</h2><small>Verified Redemptions</small></div>
+<div class="tile"><h2 id="repeat">0</h2><small>Repeat Students</small></div>
+<div class="tile"><h2 id="revenue">R0</h2><small>Estimated Revenue</small></div>
+<div class="tile"><h2 id="active">0</h2><small>Active Deals</small></div>
+<div class="tile"><h2 id="rate">0%</h2><small>Conversion</small></div>
 </div>
+</section>
 
-<div class="card">
-<h3>Paystack Integration (Production)</h3>
-<p>Replace the placeholders below with your Paystack Public Key and a server-generated subscription or transaction flow.</p>
-<pre style="white-space:pre-wrap;background:#0c0c0c;padding:12px;border-radius:12px;color:#9f9;">
-const PAYSTACK_PUBLIC_KEY = "pk_live_xxxxxxxxxxxxxxxxx";
-const BUSINESS_EMAIL = "business@example.com";
-const AMOUNT = 39900; // R399.00 in cents
-</pre>
-<button class="btn" onclick="payNow()">Demo Paystack Checkout</button>
-</div>
-</div>
+<section class="card">
+<h3>🏪 Business Profile</h3>
+<input placeholder="Business Name">
+<input placeholder="Owner">
+<input placeholder="WhatsApp">
+<input placeholder="Address">
+<input placeholder="Google Maps URL">
+<button>Save Profile</button>
+</section>
 
-<nav class="footer">
-<a href="#"><i data-lucide="house"></i><br>Home</a>
-<a href="#"><i data-lucide="briefcase-business"></i><br>Services</a>
-<a href="#"><i data-lucide="badge-percent"></i><br>Deals</a>
-<a href="#"><i data-lucide="wallet"></i><br>Earn</a>
-<a href="#"><i data-lucide="user"></i><br>Profile</a>
-</nav>
+<section class="card">
+<h3>🎁 Create Deal</h3>
+<select><option>Free Launch Partner</option><option>Featured Partner</option></select>
+<input placeholder="Deal title">
+<textarea placeholder="Describe the offer"></textarea>
+<input placeholder="Discount %">
+<input type="date">
+<button>Publish Deal</button>
+</section>
+
+<section class="card">
+<h3>📈 Progress to Featured Partner</h3>
+<div class="progress"><div id="bar"></div></div>
+<p><b id="count">0</b>/50 verified redemptions</p>
+</section>
+
+<section class="card">
+<h3>🎟 QR Coupon Workflow</h3>
+<button>Generate Coupon QR (backend required)</button>
+<p class="small">Student scans → Business verifies → Save to <code>coupon_redemptions</code>.</p>
+</section>
+
+<section class="card">
+<h3>⭐ Featured Partner – R399/month</h3>
+<ul>
+<li>Priority placement</li>
+<li>Unlimited active deals</li>
+<li>Push notifications</li>
+<li>Advanced analytics</li>
+<li>Founding Partner badge</li>
+<li>Monthly PDF report</li>
+</ul>
+<button disabled>Unlock after 50 verified redemptions</button>
+</section>
+
+<section class="card">
+<h3>🗄 Suggested Supabase Tables</h3>
+<ul>
+<li>businesses</li><li>deals</li><li>coupon_redemptions</li>
+<li>subscriptions</li><li>business_analytics</li><li>notifications</li>
+</ul>
+</section>
+
+<div class="footer">
+<a href="index.html"><i data-lucide="home"></i>Home</a>
+<a href="marketplace.html"><i data-lucide="briefcase-business"></i>Services</a>
+<a href="business-deals.html"><i data-lucide="ticket-percent"></i>Deals</a>
+<a href="provider.html"><i data-lucide="coins"></i>Earn</a>
+<a href="#"><i data-lucide="user-round"></i>Profile</a>
+</div>
 
 <script>
-lucide.createIcons();
-
-function payNow(){
- const handler = PaystackPop.setup({
-   key:"pk_test_replace_with_your_public_key",
-   email:"business@example.com",
-   amount:39900,
-   currency:"ZAR",
-   callback:function(response){
-      alert("Payment successful. Reference: "+response.reference);
-      // Send reference to your backend for verification.
-   },
-   onClose:function(){
-      alert("Payment cancelled.");
-   }
- });
- handler.openIframe();
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+async function refreshDashboard(){
+const verified=0;
+document.getElementById("redeem").textContent=verified;
+document.getElementById("count").textContent=verified;
+document.getElementById("bar").style.width=Math.min(verified,50)*2+"%";
 }
+refreshDashboard();
+lucide.createIcons();
 </script>
 </body>
 </html>
