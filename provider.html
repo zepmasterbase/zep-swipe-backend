@@ -1,110 +1,160 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Zep Swipe Provider Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:#121212;--line:#2a2a2a;--accent:#b8ff3b}
-*{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;background:var(--bg);color:#fff;padding-bottom:90px}
-.container{max-width:1200px;margin:auto;padding:20px}
-.header{display:flex;justify-content:space-between;align-items:center}
-.brand{display:flex;align-items:center;gap:10px;color:var(--accent);font-weight:800}
-.hero{position:relative;border-radius:24px;overflow:hidden;background:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1600&auto=format&fit=crop') center/cover;height:360px}
-.overlay{position:absolute;inset:0;background:rgba(0,0,0,.65)}
-.content{position:relative;z-index:2;padding:24px}
-.profile{display:flex;gap:18px;align-items:center}
-.avatar{width:96px;height:96px;border-radius:50%;border:3px solid var(--accent);object-fit:cover}
-.wallet{margin-top:20px;background:#111b;padding:18px;border:1px solid #365509;border-radius:18px;display:grid;grid-template-columns:2fr 1fr;gap:18px}
-.balance{font-size:44px;font-weight:800}
-.card{margin-top:20px;background:var(--card);padding:18px;border:1px solid var(--line);border-radius:18px}
-.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
-.action{background:#0f0f0f;border:1px solid var(--line);padding:18px;border-radius:14px;text-align:center;cursor:pointer}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);align-items:center;justify-content:center;padding:20px}
-.sheet{width:100%;max-width:560px;background:#151515;border:1px solid var(--line);border-radius:18px;padding:20px}
-input,textarea,select{width:100%;margin:8px 0;padding:12px;background:#101010;color:#fff;border:1px solid var(--line);border-radius:10px}
-button{background:var(--accent);padding:12px 16px;border:0;border-radius:10px;font-weight:700;cursor:pointer}
-.nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
-.nav a{text-decoration:none;color:#fff;font-size:12px;display:flex;flex-direction:column;align-items:center}
-@media(max-width:768px){.wallet{grid-template-columns:1fr}.profile{flex-wrap:wrap}.hero{height:auto}}
+body{margin:0;background:#070707;color:#fff;font-family:Inter,sans-serif}
+.wrap{max-width:1100px;margin:auto;padding:24px}
+.card{background:#121212;border:1px solid #2a2a2a;border-radius:18px;padding:20px;margin:18px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+input,select{width:100%;padding:12px;margin:8px 0;background:#0f0f0f;color:#fff;border:1px solid #2a2a2a;border-radius:10px}
+button{background:#b8ff3b;color:#000;border:none;padding:12px 16px;border-radius:10px;font-weight:700;cursor:pointer}
+.small{color:#aaa;font-size:13px}
 </style>
 </head>
 <body>
-<div class="container">
-<div class="header">
-<div class="brand"><strong>ZEP SWIPE</strong></div><i data-lucide="bell"></i>
-</div>
-<section class="hero"><div class="overlay"></div><div class="content">
-<div class="profile">
-<img id="avatar" class="avatar" src="https://i.pravatar.cc/200?img=12">
-<div><h3>Welcome back</h3><h1 id="providerName">Loading...</h1></div>
-</div>
-<div class="wallet">
-<div><div>AVAILABLE BALANCE</div><div class="balance">R <span id="balance">0.00</span></div><button onclick="openWithdraw()">Withdraw Funds</button></div>
-<div><h2><span id="mari">0</span> MARI</h2><p>Pending: R<span id="pending">0.00</span></p><p>Total: R<span id="earnings">0.00</span></p></div>
-</div>
-</div></section>
+<div class="wrap">
+<h1>Zep Swipe Provider Dashboard</h1>
 
-<div class="card"><h3>Quick Actions</h3>
-<div class="actions">
-<div class="action" onclick="openPublish()">Publish Service</div>
-<div class="action" onclick="location.href='my-services.html'">My Services</div>
-<div class="action" onclick="location.href='analytics.html'">Analytics</div>
-<div class="action" onclick="openWithdraw()">Wallet</div>
-</div></div>
+<div class="grid">
+<div class="card">
+<h2>Wallet</h2>
+<h1>R <span id="balance">0.00</span></h1>
+<button onclick="showWithdraw()">Withdraw Funds</button>
 </div>
 
-<div class="modal" id="publishModal"><div class="sheet">
-<h2>Publish Service</h2>
-<input id="title" placeholder="Service title">
-<select id="category"><option>Graphic Design</option><option>Web Development</option><option>Tutoring</option></select>
-<textarea id="description" placeholder="Description"></textarea>
-<input id="price" type="number" placeholder="Price">
-<input id="location" placeholder="Location">
-<input id="image" type="file" accept="image/*">
-<button onclick="publishService()">Publish</button>
-<button onclick="closePublish()">Close</button>
-</div></div>
+<div class="card">
+<h2>Bank Account Management</h2>
 
-<div class="modal" id="withdrawModal"><div class="sheet">
+<input id="holder" placeholder="Account Holder Name">
+<select id="bank">
+<option value="">Select Bank</option>
+<option>ABSA</option>
+<option>Capitec</option>
+<option>FNB</option>
+<option>Nedbank</option>
+<option>Standard Bank</option>
+<option>TymeBank</option>
+<option>Discovery Bank</option>
+</select>
+
+<input id="account_number" placeholder="Account Number">
+<select id="account_type">
+<option>Savings</option>
+<option>Cheque</option>
+<option>Business</option>
+</select>
+
+<input id="branch_code" placeholder="Branch Code (Optional)">
+<button onclick="saveBank()">Save Bank Details</button>
+
+<p class="small">Your bank details are securely stored and used for withdrawals.</p>
+</div>
+</div>
+
+<div class="card">
+<h2>Withdrawal History</h2>
+<table width="100%">
+<thead><tr><th align="left">Date</th><th align="left">Amount</th><th align="left">Status</th></tr></thead>
+<tbody id="history"></tbody>
+</table>
+</div>
+</div>
+
+<div id="withdrawModal" style="display:none;position:fixed;inset:0;background:#0009;align-items:center;justify-content:center">
+<div style="background:#121212;padding:20px;border-radius:16px;max-width:450px;width:90%">
 <h2>Withdrawal Request</h2>
-<input placeholder="Amount">
-<button onclick="closeWithdraw()">Close</button>
-</div></div>
-
-<nav class="nav">
-<a href="index.html"><i data-lucide="house"></i><span>Home</span></a>
-<a href="marketplace.html"><i data-lucide="badge-percent"></i><span>Deals</span></a>
-<a href="#" onclick="openPublish()"><i data-lucide="plus-circle"></i><span>Create</span></a>
-<a href="#" onclick="openWithdraw()"><i data-lucide="wallet"></i><span>Wallet</span></a>
-<a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a>
-</nav>
+<p id="savedBank">Loading bank...</p>
+<input id="amount" type="number" placeholder="Withdrawal Amount">
+<input id="reference" placeholder="Reference (optional)">
+<button onclick="submitWithdrawal()">Submit Withdrawal</button>
+<button onclick="hideWithdraw()">Cancel</button>
+</div>
+</div>
 
 <script>
 const db=supabase.createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");
-function openPublish(){publishModal.style.display='flex'}
-function closePublish(){publishModal.style.display='none'}
-function openWithdraw(){withdrawModal.style.display='flex'}
-function closeWithdraw(){withdrawModal.style.display='none'}
-async function loadProfile(){
+let sessionUser=null;
+let bankId=null;
+
+async function init(){
  const {data:{session}}=await db.auth.getSession();
  if(!session)return;
- const {data}=await db.from('profiles').select('*').eq('id',session.user.id).single();
+ sessionUser=session.user;
+ await loadProfile();
+ await loadBank();
+ await loadHistory();
+}
+
+async function loadProfile(){
+ const {data}=await db.from("profiles").select("balance").eq("id",sessionUser.id).single();
+ document.getElementById("balance").textContent=(data?.balance||0).toFixed(2);
+}
+
+async function saveBank(){
+ const payload={
+ user_id:sessionUser.id,
+ holder_name:holder.value,
+ bank_name:bank.value,
+ account_number:account_number.value,
+ account_type:account_type.value,
+ branch_code:branch_code.value
+ };
+ if(bankId){
+   await db.from("bank_accounts").update(payload).eq("id",bankId);
+ }else{
+   const {data,error}=await db.from("bank_accounts").insert(payload).select().single();
+   if(error){alert(error.message);return;}
+   bankId=data.id;
+ }
+ alert("Bank details saved.");
+}
+
+async function loadBank(){
+ const {data}=await db.from("bank_accounts").select("*").eq("user_id",sessionUser.id).maybeSingle();
  if(!data)return;
- providerName.textContent=data.full_name||'Provider';
- balance.textContent=(data.balance||0).toFixed(2);
- mari.textContent=data.mari_balance||0;
- pending.textContent=(data.pending_balance||0).toFixed(2);
- earnings.textContent=(data.total_earnings||0).toFixed(2);
- if(data.avatar_url)avatar.src=data.avatar_url;
+ bankId=data.id;
+ holder.value=data.holder_name||"";
+ bank.value=data.bank_name||"";
+ account_number.value=data.account_number||"";
+ account_type.value=data.account_type||"Savings";
+ branch_code.value=data.branch_code||"";
+ savedBank.innerHTML="<b>"+data.bank_name+"</b><br>"+data.account_number;
 }
-async function publishService(){
- alert("Replace this stub with your services table insert after configuring Supabase.");
+
+function showWithdraw(){withdrawModal.style.display="flex";}
+function hideWithdraw(){withdrawModal.style.display="none";}
+
+async function submitWithdrawal(){
+ if(!bankId){alert("Please save your bank account first.");return;}
+ const amt=Number(amount.value);
+ if(amt<50){alert("Minimum withdrawal is R50");return;}
+ const {error}=await db.from("withdrawals").insert({
+ user_id:sessionUser.id,
+ bank_account_id:bankId,
+ amount:amt,
+ reference:reference.value,
+ status:"pending"
+ });
+ if(error){alert(error.message);return;}
+ alert("Withdrawal submitted.");
+ hideWithdraw();
+ loadHistory();
 }
-lucide.createIcons();loadProfile();
+
+async function loadHistory(){
+ const {data}=await db.from("withdrawals").select("*").eq("user_id",sessionUser.id).order("created_at",{ascending:false});
+ history.innerHTML="";
+ (data||[]).forEach(w=>{
+ history.innerHTML+=`<tr><td>${new Date(w.created_at).toLocaleDateString()}</td><td>R ${Number(w.amount).toFixed(2)}</td><td>${w.status}</td></tr>`;
+ });
+}
+init();
 </script>
-</body></html>
+</body>
+</html>
