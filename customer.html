@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe | My Zep Swipe</title>
+<title>Zep Swipe | My Zep Swipe V20</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -11,92 +11,65 @@
 :root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
 *{box-sizing:border-box;font-family:Inter,sans-serif}
 body{margin:0;background:var(--bg);color:#fff;padding-bottom:90px}
-.wrap{max-width:760px;margin:auto}
+.wrap{max-width:820px;margin:auto}
 .hero,.card{margin:16px;background:var(--card);border:1px solid var(--line);border-radius:22px}
 .hero{padding:24px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88)),url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80') center/cover}
-.badge{display:inline-flex;padding:8px 14px;border-radius:999px;background:#203600;color:var(--accent);font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+.badge{display:inline-flex;padding:8px 14px;border-radius:999px;background:#203600;color:#b8ff3b;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}
 .tile,.panel{background:#101010;border:1px solid var(--line);border-radius:16px;padding:14px}
 .card{padding:18px}
 .row{display:flex;justify-content:space-between;margin:10px 0}
+.timeline div{padding:10px;margin:8px 0;background:#101010;border-left:4px solid #b8ff3b;border-radius:8px}
+input{width:100%;padding:12px;border-radius:12px;background:#101010;border:1px solid var(--line);color:#fff;margin-top:10px}
 button{width:100%;padding:13px;border:none;border-radius:12px;font-weight:800;margin-top:12px}
-.primary{background:var(--accent);color:#000}
-.secondary{background:#222;color:#fff}
-.timeline{margin-top:12px}
-.timeline div{padding:10px;margin:8px 0;background:#101010;border-left:4px solid var(--accent);border-radius:8px}
-input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:#101010;color:#fff;margin-top:10px}
+.primary{background:#b8ff3b;color:#000}.secondary{background:#222;color:#fff}
 .nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
 .nav a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}
-small{color:#aaa}
 </style>
 </head>
 <body>
 <div class="wrap">
-
 <section class="hero">
 <div class="badge">🛡 Protected by Zep Swipe Escrow</div>
-<h2 style="margin-top:14px">My Zep Swipe</h2>
-<p>Track orders, approve completed work and earn MARI rewards.</p>
-
+<h2 id="welcome">Welcome</h2>
+<p>Track orders, approve work and earn 50 MARI after completed escrow releases.</p>
 <div class="grid">
-<div class="tile"><strong>Active Orders</strong><h2>1</h2></div>
-<div class="tile"><strong>MARI Balance</strong><h2>50</h2></div>
-<div class="tile"><strong>Saved Providers</strong><h2>4</h2></div>
-<div class="tile"><strong>Completed Orders</strong><h2>12</h2></div>
+<div class="tile"><strong>Active Orders</strong><h2 id="activeOrders">0</h2></div>
+<div class="tile"><strong>MARI Balance</strong><h2 id="mariBalance">0</h2></div>
+<div class="tile"><strong>Saved Providers</strong><h2 id="savedCount">0</h2></div>
+<div class="tile"><strong>Completed Orders</strong><h2 id="completedOrders">0</h2></div>
 </div>
 </section>
 
 <section class="card">
 <h3>📦 Current Order</h3>
 <div class="panel">
-<div class="row"><span>Service</span><strong>Campus Logo Design</strong></div>
-<div class="row"><span>Provider</span><strong>Pericles</strong></div>
-<div class="row"><span>Amount Paid</span><strong>R850</strong></div>
-
-<div class="timeline">
-<div>✅ Escrow Funded</div>
-<div>✅ Provider Working</div>
-<div>✅ Work Submitted</div>
-<div>🟡 Awaiting Your Approval</div>
+<div class="row"><span>Service</span><strong id="serviceTitle">No active order</strong></div>
+<div class="row"><span>Provider</span><strong id="providerName">—</strong></div>
+<div class="row"><span>Amount</span><strong id="amountPaid">R0</strong></div>
+<div class="timeline" id="timeline">
+<div>Waiting for your first booking.</div>
 </div>
-
-<button class="primary">View Submitted Work</button>
-<button class="primary">Approve & Release Escrow</button>
-<button class="secondary">Request Changes</button>
-</div>
-</section>
-
-<section class="card">
-<h3>💳 Escrow Centre</h3>
-<div class="panel">
-<div class="row"><span>Status</span><strong>Awaiting Approval</strong></div>
-<div class="row"><span>Protected Amount</span><strong>R850</strong></div>
-<div class="row"><span>Receipt</span><strong>#ZS1001</strong></div>
+<button class="primary" id="approveBtn">Approve & Release Escrow</button>
+<button class="secondary" id="changesBtn">Request Changes</button>
 </div>
 </section>
 
 <section class="card">
 <h3>🪙 Mari Wallet</h3>
 <div class="panel">
-<div class="row"><span>Balance</span><strong>50 MARI</strong></div>
-<div class="row"><span>Latest Reward</span><strong>+50 MARI</strong></div>
-<p>Receive <strong>50 MARI</strong> whenever a paid service is completed and escrow is successfully released.</p>
+<div class="row"><span>Balance</span><strong id="walletMari">0 MARI</strong></div>
+<div class="row"><span>Reward</span><strong>+50 MARI after completed service</strong></div>
 </div>
 </section>
 
 <section class="card">
-<h3>❤️ Saved Providers</h3>
-<input placeholder="Search saved providers">
-</section>
-
-<section class="card">
 <h3>👤 Profile</h3>
-<input placeholder="Full Name">
-<input placeholder="Email">
-<input placeholder="Phone Number">
-<button class="primary">Save Profile</button>
+<input id="fullName" placeholder="Full Name">
+<input id="email" placeholder="Email" disabled>
+<input id="phone" placeholder="Phone">
+<button class="primary" id="saveProfile">Save Profile</button>
 </section>
-
 </div>
 
 <nav class="nav">
@@ -112,17 +85,34 @@ const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-// Recommended production flow:
-// Browse marketplace without login.
-// Login only when booking.
-// Pay into escrow.
-// Provider completes work.
-// Customer approves or requests changes.
-// Backend releases escrow.
-// Customer awarded +50 MARI.
-// Provider awarded +25 MARI.
-
+async function init(){
+ const {data:{session}}=await db.auth.getSession();
+ if(!session){ location.replace("auth.html"); return; }
+ const user=session.user;
+ document.getElementById("email").value=user.email||"";
+ const prof=await db.from("profiles").select("*").eq("id",user.id).maybeSingle();
+ if(prof.data){
+   fullName.value=prof.data.full_name||"";
+   phone.value=prof.data.phone||"";
+   welcome.textContent="Welcome, "+(prof.data.full_name||"Customer");
+ }
+ // TODO: Load orders, escrow, wallet, saved providers, notifications from Supabase.
+}
+saveProfile.onclick=async()=>{
+ const {data:{session}}=await db.auth.getSession();
+ await db.from("profiles").upsert({
+   id:session.user.id,
+   email:session.user.email,
+   full_name:fullName.value,
+   phone:phone.value,
+   role:"customer"
+ });
+ alert("Profile saved.");
+};
+approveBtn.onclick=()=>alert("Connect this button to your escrow release backend.");
+changesBtn.onclick=()=>alert("Connect this button to update the order status to changes_requested.");
 lucide.createIcons();
+init();
 </script>
 </body>
 </html>
