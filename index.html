@@ -2,108 +2,82 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zep Swipe | Earn. Learn. Get Hired.</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:#fff;overflow-x:hidden}
-header{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(7,7,7,.85);backdrop-filter:blur(12px);border-bottom:1px solid #202020;z-index:99}
-.logo{display:flex;align-items:center;gap:10px;color:var(--accent);font-weight:800}
-.logo img{width:36px;height:36px;border-radius:8px}
-nav a{color:#fff;text-decoration:none;margin-left:14px}
-.hero{min-height:92vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.88)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.hero h1{font-size:clamp(2.4rem,6vw,4.6rem)}
+header{position:fixed;top:0;left:0;right:0;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(7,7,7,.72);backdrop-filter:blur(16px);border-bottom:1px solid rgba(184,255,59,.15);z-index:1000}
+header img{height:42px}
+.wait{padding:11px 18px;border-radius:999px;background:transparent;border:1px solid var(--accent);color:var(--accent);font-weight:800;text-decoration:none}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:110px 20px 60px;background:
+linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88)),
+url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1800&q=80') center/cover}
+.hero h1{font-size:clamp(3rem,8vw,5.4rem);line-height:1}
 .hero span{color:var(--accent)}
-.hero p{max-width:720px;margin:18px auto;line-height:1.6;color:#d0d0d0}
-.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.btn{padding:14px 22px;border-radius:14px;text-decoration:none;font-weight:800}
+.hero p{max-width:760px;margin:20px auto;color:#ddd;line-height:1.7}
+.btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{padding:15px 24px;border-radius:14px;text-decoration:none;font-weight:800}
 .primary{background:var(--accent);color:#000}
 .secondary{border:1px solid var(--accent);color:var(--accent)}
-.container{max-width:1200px;margin:auto;padding:20px}
-.section{margin:32px 0}
-.title{font-size:1.5rem;margin-bottom:18px;color:var(--accent)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
-.card img{width:100%;height:180px;object-fit:cover}
+.container{max-width:1200px;margin:auto;padding:28px 18px}
+h2{margin:36px 0 18px;color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.card{background:linear-gradient(180deg,#181818,#111);border:1px solid var(--line);border-radius:22px;overflow:hidden;transition:.3s}
+.card:hover{transform:translateY(-6px);box-shadow:0 0 30px rgba(184,255,59,.12)}
+.card img{width:100%;height:190px;object-fit:cover}
 .content{padding:18px}
-.badge{display:inline-block;background:#203600;color:var(--accent);padding:6px 10px;border-radius:999px;font-size:.8rem;margin-bottom:10px}
-.footer{margin-top:40px;background:#0b0b0b;border-top:1px solid var(--line);padding:40px 20px}
-.footergrid{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
-.footer a{display:block;color:#cfcfcf;text-decoration:none;margin:8px 0}
-.footer h3,.footer h4{color:var(--accent)}
-.copy{text-align:center;color:#888;margin-top:25px}
+.badge{display:inline-block;background:#203600;color:var(--accent);padding:6px 10px;border-radius:999px;margin-bottom:10px;font-size:12px}
+footer{margin-top:50px;background:#0b0b0b;border-top:1px solid var(--line);padding:40px 20px 100px}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;max-width:1200px;margin:auto}
+.links a{display:block;color:#ccc;text-decoration:none;margin:8px 0}
+.mobile{position:fixed;bottom:0;left:0;right:0;height:66px;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center}
+.mobile a{text-decoration:none;color:#fff;font-size:12px}
+@media(min-width:900px){.mobile{display:none}}
 </style>
 </head>
 <body>
-
 <header>
-<div class="logo">
-<img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png">
-<div>Zep Swipe</div>
-</div>
-<nav>
-<a href="marketplace.html">Marketplace</a>
-<a href="auth.html">Login</a>
-<a href="waitlist.html">Waitlist</a>
-</nav>
+<img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+<a class="wait" href="waitlist.html">Join Waitlist</a>
 </header>
 
 <section class="hero">
 <div>
-<h1>Earn. Learn. <span>Get Hired.</span></h1>
-<p>Find trusted student services, discover exclusive business deals, pay securely with Zep Swipe Escrow and earn MARI rewards—all in one place.</p>
+<h1>Earn.<br>Learn.<br><span>Get Hired.</span></h1>
+<p>Discover trusted student services, exclusive business deals, secure escrow payments and MARI rewards in one place.</p>
 <div class="btns">
 <a class="btn primary" href="auth.html">Start Earning</a>
-<a class="btn secondary" href="marketplace.html">Browse Services</a>
+<a class="btn secondary" href="marketplace.html">Find Services</a>
 </div>
 </div>
 </section>
 
 <div class="container">
-
-<section class="section">
-<h2 class="title">Popular Services</h2>
+<h2>🔥 Trending Services</h2>
 <div class="grid">
-<div class="card"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80"><div class="content"><span class="badge">Tutoring</span><h3>Math Tutor</h3></div></div>
-<div class="card"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80"><div class="content"><span class="badge">Design</span><h3>Graphic Design</h3></div></div>
-<div class="card"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80"><div class="content"><span class="badge">Photography</span><h3>Photography</h3></div></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80"><div class="content"><span class="badge">Verified</span><h3>Math Tutor</h3><p>Affordable tutoring from trusted students.</p></div></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80"><div class="content"><span class="badge">Popular</span><h3>Graphic Design</h3><p>Logos, posters and social media content.</p></div></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80"><div class="content"><span class="badge">Top Rated</span><h3>Photography</h3><p>Professional student photography.</p></div></div>
 </div>
-</section>
 
-<section class="section">
-<h2 class="title">Student Deals</h2>
+<h2>🎟 Student Deals</h2>
 <div class="grid">
-<div class="card"><div class="content"><span class="badge">50% OFF</span><h3>Burger Deal</h3><p>Exclusive student savings.</p></div></div>
-<div class="card"><div class="content"><span class="badge">Printing</span><h3>Campus Printing</h3><p>Discounted printing services.</p></div></div>
+<div class="card"><div class="content"><span class="badge">50% OFF</span><h3>Burger Deal</h3><p>Exclusive student discount.</p></div></div>
+<div class="card"><div class="content"><span class="badge">30% OFF</span><h3>Printing</h3><p>Campus printing specials.</p></div></div>
+<div class="card"><div class="content"><span class="badge">Earn MARI</span><h3>Secure Escrow</h3><p>Eligible bookings are protected through Zep Swipe Escrow.</p></div></div>
 </div>
-</section>
-
-<section class="section">
-<h2 class="title">Why Zep Swipe?</h2>
-<div class="grid">
-<div class="card"><div class="content"><h3>🛡 Escrow Protected</h3><p>Secure payments for eligible services.</p></div></div>
-<div class="card"><div class="content"><h3>🪙 MARI Rewards</h3><p>Earn rewards for eligible completed activities.</p></div></div>
-<div class="card"><div class="content"><h3>🏪 Business Growth</h3><p>Reach students and publish deals.</p></div></div>
-</div>
-</section>
-
 </div>
 
-<footer class="footer">
-<div class="footergrid">
-<div>
-<h3>Zep Swipe</h3>
-<p>Connecting students, businesses and customers.</p>
-</div>
-<div>
-<h4>Company</h4>
+<footer>
+<div class="links">
+<div><strong style="color:#b8ff3b">Company</strong>
 <a href="about.html">About</a>
 <a href="contact.html">Contact</a>
 </div>
-<div>
-<h4>Legal</h4>
+<div><strong style="color:#b8ff3b">Legal</strong>
 <a href="terms.html">Terms</a>
 <a href="privacy.html">Privacy</a>
 <a href="escrow-policy.html">Escrow Policy</a>
@@ -112,8 +86,15 @@ nav a{color:#fff;text-decoration:none;margin-left:14px}
 <a href="community-guidelines.html">Community Guidelines</a>
 </div>
 </div>
-<div class="copy">© 2026 Zep Swipe. All rights reserved.</div>
+<p style="text-align:center;color:#888;margin-top:28px">© 2026 Zep Swipe. All rights reserved.</p>
 </footer>
 
+<nav class="mobile">
+<a href="index.html">Home</a>
+<a href="marketplace.html">Services</a>
+<a href="business-deals.html">Deals</a>
+<a href="provider.html">Earn</a>
+<a href="auth.html">Profile</a>
+</nav>
 </body>
 </html>
