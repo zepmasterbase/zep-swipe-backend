@@ -1,161 +1,92 @@
-<!DOCTYPE html>    
-<html lang="en">    
-<head>    
-<meta charset="UTF-8">    
-<meta name="viewport" content="width=device-width,initial-scale=1.0">    
-<title>Zep Swipe Provider Dashboard</title>    
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">    
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>    
-<script src="https://unpkg.com/lucide@latest"></script>    
-<style>    
-:root{--bg:#070707;--card:#121212;--line:#2a2a2a;--accent:#b8ff3b}    
-*{box-sizing:border-box;font-family:Inter,sans-serif}    
-body{margin:0;background:var(--bg);color:#fff;padding-bottom:90px}    
-.container{max-width:1200px;margin:auto;padding:20px}    
-.header{display:flex;justify-content:space-between;align-items:center}    
-.brand{display:flex;align-items:center;gap:10px;color:var(--accent);font-weight:800}    
-.brand img{width:42px}    
-.hero{margin-top:16px;border:1px solid var(--line);border-radius:28px;padding:28px;background:#111}    
-.profile{display:flex;gap:18px;align-items:center;flex-wrap:wrap}    
-.avatar-wrap{position:relative;display:inline-block;cursor:pointer}    
-.avatar{width:96px;height:96px;border-radius:50%;border:3px solid var(--accent);object-fit:cover}    
-.edit{position:absolute;right:0;bottom:0;background:var(--accent);color:#000;padding:6px;border-radius:50%}    
-.wallet{margin-top:20px;background:#151515;border:1px solid #365509;border-radius:22px;padding:20px;display:grid;grid-template-columns:2fr 1fr;gap:18px}    
-.balance{font-size:46px;font-weight:800}    
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:18px}    
-.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px}    
-.action{background:#101010;border:1px solid var(--line);padding:18px;border-radius:14px;text-align:center;cursor:pointer}    
-button{background:var(--accent);border:none;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}    
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);align-items:center;justify-content:center;padding:20px}    
-.sheet{width:100%;max-width:500px;background:#151515;border-radius:20px;padding:20px;border:1px solid var(--line)}    
-input,select,textarea{width:100%;padding:12px;margin:8px 0;background:#101010;color:#fff;border:1px solid var(--line);border-radius:12px}    
-.nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}    
-.nav a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}    
-@media(max-width:768px){.wallet{grid-template-columns:1fr}}    
-</style>    
-</head>    
-<body>    
-<div class="container">    
-<div class="header">    
-<div class="brand"><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"><span>ZEP SWIPE</span></div>    
-<i data-lucide="bell"></i>    
-</div>    
-    
-<section class="hero">    
-<div class="profile">    
-<label class="avatar-wrap">    
-<img id="avatar" class="avatar" src="https://i.pravatar.cc/200?img=12">    
-<input type="file" id="avatarUpload" hidden accept="image/*">    
-<div class="edit">✏️</div>    
-</label>    
-<div>    
-<h3>Welcome back</h3>    
-<h1 id="providerName">Loading...</h1>    
-<p>🏆 Level 3 Provider • ⭐4.9</p>    
-</div>    
-</div>    
-    
-<div class="wallet">    
-<div>    
-<div>AVAILABLE BALANCE</div>    
-<div class="balance">R <span id="balance">0.00</span></div>    
-<button onclick="openWithdraw()">Withdraw Funds</button>    
-</div>    
-<div>    
-<h2><span id="mari">0</span> MARI</h2>    
-<p>Pending: R<span id="pending">0.00</span></p>    
-<p>Total Earnings: R<span id="earnings">0.00</span></p>    
-</div>    
-</div>    
-</section>    
-    
-<div class="card">    
-<h3>Quick Actions</h3>    
-<div class="actions">    
-<div class="action">➕<br>Publish Service</div>    
-<div class="action">💼<br>Jobs</div>    
-<div class="action">📊<br>Analytics</div>    
-<div class="action" onclick="openWithdraw()">👛<br>Wallet</div>    
-</div>    
-</div>    
-</div>    
-    
-<div class="modal" id="withdrawModal">    
-<div class="sheet">    
-<h2>Withdrawal Request</h2>    
-<input id="availableBalance" readonly placeholder="Available Balance">    
-<input id="withdrawAmount" type="number" placeholder="Amount">    
-<select id="bankAccount">    
-<option>Select Bank Account</option>    
-</select>    
-<input id="withdrawReference" placeholder="Reference (optional)">    
-<button onclick="requestWithdrawal()">Submit Request</button>    
-<button style="margin-top:10px;background:#333;color:#fff" onclick="closeWithdraw()">Close</button>    
-</div>    
-</div>    
-    
-<nav class="nav">    
-<a href="#"><i data-lucide="home"></i><span>Home</span></a>    
-<a href="#"><i data-lucide="briefcase"></i><span>Jobs</span></a>    
-<a href="#"><i data-lucide="plus-circle"></i><span>Create</span></a>    
-<a href="#" onclick="openWithdraw()"><i data-lucide="wallet"></i><span>Wallet</span></a>    
-<a href="#"><i data-lucide="user"></i><span>Profile</span></a>    
-</nav>    
-    
-<script>    
-const db=supabase.createClient("YOUR_SUPABASE_URL","YOUR_SUPABASE_ANON_KEY");    
-    
-function openWithdraw(){withdrawModal.style.display="flex";}    
-function closeWithdraw(){withdrawModal.style.display="none";}    
-    
-async function loadProfile(){    
- const {data:{session}}=await db.auth.getSession();    
- if(!session)return;    
- const {data}=await db.from("profiles").select("*").eq("id",session.user.id).single();    
- if(!data)return;    
- providerName.textContent=data.full_name||session.user.user_metadata?.full_name||"Provider";    
- balance.textContent=(data.balance||0).toFixed(2);    
- mari.textContent=data.mari_balance||0;    
- pending.textContent=(data.pending_balance||0).toFixed(2);    
- earnings.textContent=(data.total_earnings||0).toFixed(2);    
- availableBalance.value="R "+(data.balance||0).toFixed(2);    
- if(data.avatar_url) avatar.src=data.avatar_url;    
-}    
-    
-avatar.onclick=()=>avatarUpload.click();    
-    
-avatarUpload.addEventListener("change",async(e)=>{    
- const file=e.target.files[0];    
- if(!file)return;    
- const {data:{session}}=await db.auth.getSession();    
- const path=`avatars/${session.user.id}-${Date.now()}`;    
- const upload=await db.storage.from("avatars").upload(path,file,{upsert:true});    
- if(upload.error){alert(upload.error.message);return;}    
- const {data:url}=db.storage.from("avatars").getPublicUrl(path);    
- avatar.src=url.publicUrl;    
- await db.from("profiles").update({avatar_url:url.publicUrl}).eq("id",session.user.id);    
-});    
-    
-async function requestWithdrawal(){    
- const {data:{session}}=await db.auth.getSession();    
- if(!session)return alert("Login required");    
- const amount=Number(withdrawAmount.value);    
- const bank=bankAccount.value;    
- const ref=withdrawReference.value;    
- const {error}=await db.from("withdrawals").insert({    
- user_id:session.user.id,    
- amount:amount,    
- bank_account:bank,    
- reference:ref,    
- status:"pending"    
- });    
- if(error){alert(error.message);return;}    
- alert("Withdrawal request submitted successfully.");    
- closeWithdraw();    
-}    
-    
-lucide.createIcons();    
-loadProfile();    
-</script>    
-</body>    
-</html> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zep Swipe Provider V62 Backend Ready</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--bg);color:#fff;padding-bottom:90px}
+.hero,.card,.header{background:#141414;border:1px solid var(--border);border-radius:20px}
+.header{margin:12px;padding:14px}
+.hero{margin:16px;padding:28px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.card{margin:16px;padding:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat{background:#101010;border:1px solid var(--border);padding:12px;border-radius:14px}
+input,textarea,select{width:100%;padding:12px;margin-top:8px;background:#101010;color:#fff;border:1px solid var(--border);border-radius:12px}
+.btn{width:100%;padding:12px;margin-top:8px;border:none;border-radius:12px;background:var(--accent);font-weight:800}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px}
+.nav a{color:#fff;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h2 style="color:#b8ff3b">Zep Swipe Provider</h2>
+</div>
+
+<div class="hero">
+<h2>Good Morning 👋</h2>
+<h1 style="color:#b8ff3b">R0.00</h1>
+<p>Traditional Wallet Balance</p>
+<div class="grid" style="margin-top:12px">
+<div class="stat"><h3>0 MARI</h3><small>MARI Wallet</small></div>
+<div class="stat"><h3>0</h3><small>Completed Jobs</small></div>
+</div>
+</div>
+
+<div class="card">
+<h3>📥 Incoming Jobs</h3>
+<div class="stat">
+<b>Graphic Design Flyer</b><br>
+Status: Pending<br><br>
+<button class="btn">Accept Job</button>
+<button class="btn">Start Job</button>
+<button class="btn">Mark Complete</button>
+</div>
+<p style="margin-top:10px;color:#aaa">Workflow: Pending → Accepted → In Progress → Completed → Approved → Paid</p>
+</div>
+
+<div class="card" id="createService">
+<h3>➕ Service Listing Studio</h3>
+<select><option>Graphic Design</option><option>Tutoring</option><option>Photography</option></select>
+<input placeholder="Service Title">
+<input placeholder="Price">
+<textarea placeholder="Description"></textarea>
+<button class="btn">Publish Service</button>
+</div>
+
+<div class="card">
+<h3>🚀 Referral Engine</h3>
+<input value="https://zepswipe.com/ref/demo" readonly>
+<button class="btn">Share Referral Link</button>
+</div>
+
+<div class="card">
+<h3>🏦 Withdraw To Bank</h3>
+<input placeholder="Bank Name">
+<input placeholder="Account Number">
+<input placeholder="Amount">
+<button class="btn">Request Withdrawal</button>
+</div>
+
+<div class="card">
+<h3>👤 My Profile</h3>
+<input placeholder="Full Name">
+<input placeholder="Email">
+<input placeholder="University">
+<textarea placeholder="Bio"></textarea>
+<button class="btn">Save Profile</button>
+</div>
+
+<div class="nav">
+<a href="index.html">Home</a>
+<a href="marketplace.html">Marketplace</a>
+<a href="#createService">Create</a>
+<a href="#">Profile</a>
+</div>
+
+</body>
+</html>
