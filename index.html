@@ -2,463 +2,118 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe | Earn. Learn. Get Hired</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zep Swipe | Earn. Learn. Get Hired.</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
 <style>
-
-/* =========================
-   BASE
-========================= */
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Inter,sans-serif;
-}
-
-body{
-background:#070707;
-color:white;
-overflow-x:hidden;
-}
-
-/* =========================
-   🔥 GLOWING HEADER (NEW)
-========================= */
-header{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-z-index:999;
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:12px 16px;
-background:rgba(10,10,10,0.6);
-backdrop-filter:blur(14px);
-border-bottom:1px solid rgba(184,255,59,0.15);
-animation: glowPulse 3.5s infinite ease-in-out;
-}
-
-@keyframes glowPulse{
-0%,100%{
-box-shadow:0 0 0 rgba(184,255,59,0);
-}
-50%{
-box-shadow:0 0 25px rgba(184,255,59,0.25);
-}
-}
-
-.logo{
-display:flex;
-align-items:center;
-gap:10px;
-font-weight:800;
-color:#b8ff3b;
-font-size:16px;
-letter-spacing:0.5px;
-}
-
-.logo img{
-width:32px;
-height:32px;
-border-radius:8px;
-object-fit:cover;
-}
-
-/* WAITLIST BUTTON */
-.waitlist-btn{
-padding:8px 12px;
-border-radius:10px;
-border:1px solid #b8ff3b;
-background:transparent;
-color:#b8ff3b;
-font-weight:700;
-font-size:12px;
-cursor:pointer;
-transition:0.2s;
-}
-
-.waitlist-btn:hover{
-background:#b8ff3b;
-color:black;
-transform:scale(1.05);
-}
-
-/* =========================
-   HERO
-========================= */
-.hero{
-position:relative;
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:20px;
-background:url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f") center/cover no-repeat;
-}
-
-.hero::before{
-content:"";
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.65);
-}
-
-.hero-content{
-position:relative;
-z-index:2;
-max-width:600px;
-}
-
-.hero h1{
-font-size:42px;
-font-weight:800;
-line-height:1.1;
-}
-
-.hero span{
-color:#b8ff3b;
-}
-
-.hero p{
-margin-top:10px;
-opacity:0.85;
-font-size:15px;
-}
-
-/* BUTTONS */
-.btns{
-display:flex;
-gap:10px;
-margin-top:20px;
-flex-wrap:wrap;
-justify-content:center;
-}
-
-.btn{
-padding:12px 16px;
-border-radius:12px;
-border:none;
-cursor:pointer;
-font-weight:700;
-text-decoration:none;
-}
-
-.primary{
-background:#b8ff3b;
-color:black;
-}
-
-.secondary{
-background:transparent;
-border:1px solid #b8ff3b;
-color:#b8ff3b;
-}
-
-/* =========================
-   SECTION
-========================= */
-.section{
-padding:30px 16px;
-}
-
-.title{
-font-size:18px;
-margin-bottom:12px;
-font-weight:700;
-}
-
-/* =========================
-   SWIPE ROW
-========================= */
-.scrollRow{
-display:flex;
-overflow-x:auto;
-gap:12px;
-scroll-snap-type:x mandatory;
-padding-bottom:10px;
-}
-
-.scrollCard{
-min-width:240px;
-background:#141414;
-border:1px solid #262626;
-border-radius:14px;
-padding:14px;
-scroll-snap-align:start;
-transition:.2s;
-}
-
-.scrollCard:active{
-transform:scale(0.97);
-}
-
-/* =========================
-   GRID CARDS
-========================= */
-.grid{
-display:grid;
-grid-template-columns:1fr;
-gap:12px;
-}
-
-.card{
-background:#141414;
-border:1px solid #262626;
-border-radius:16px;
-overflow:hidden;
-opacity:0;
-transform:translateY(20px);
-transition:all .6s ease;
-}
-
-.card.show{
-opacity:1;
-transform:translateY(0);
-}
-
-.card img{
-width:100%;
-height:160px;
-object-fit:cover;
-}
-
-.content{
-padding:14px;
-}
-
-.badge{
-display:inline-block;
-font-size:11px;
-padding:5px 10px;
-background:rgba(184,255,59,.15);
-color:#b8ff3b;
-border-radius:999px;
-margin-bottom:8px;
-}
-
-/* =========================
-   EARN CARD
-========================= */
-.earn{
-display:flex;
-gap:12px;
-background:#111;
-border:1px solid #262626;
-border-radius:16px;
-overflow:hidden;
-}
-
-.earn img{
-width:120px;
-height:120px;
-object-fit:cover;
-}
-
-.earn div{
-padding:12px;
-}
-
-/* =========================
-   FLOAT CTA
-========================= */
-.fab{
-position:fixed;
-bottom:16px;
-right:16px;
-background:#b8ff3b;
-color:black;
-padding:14px 16px;
-border-radius:50px;
-font-weight:800;
-box-shadow:0 10px 25px rgba(184,255,59,.25);
-}
-
-/* FIX HEADER SPACE */
-body{
-padding-top:60px;
-}
-
+:root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--bg);color:#fff;overflow-x:hidden}
+header{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(7,7,7,.85);backdrop-filter:blur(12px);border-bottom:1px solid #202020;z-index:99}
+.logo{display:flex;align-items:center;gap:10px;color:var(--accent);font-weight:800}
+.logo img{width:36px;height:36px;border-radius:8px}
+nav a{color:#fff;text-decoration:none;margin-left:14px}
+.hero{min-height:92vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.88)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.hero h1{font-size:clamp(2.4rem,6vw,4.6rem)}
+.hero span{color:var(--accent)}
+.hero p{max-width:720px;margin:18px auto;line-height:1.6;color:#d0d0d0}
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{padding:14px 22px;border-radius:14px;text-decoration:none;font-weight:800}
+.primary{background:var(--accent);color:#000}
+.secondary{border:1px solid var(--accent);color:var(--accent)}
+.container{max-width:1200px;margin:auto;padding:20px}
+.section{margin:32px 0}
+.title{font-size:1.5rem;margin-bottom:18px;color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.card img{width:100%;height:180px;object-fit:cover}
+.content{padding:18px}
+.badge{display:inline-block;background:#203600;color:var(--accent);padding:6px 10px;border-radius:999px;font-size:.8rem;margin-bottom:10px}
+.footer{margin-top:40px;background:#0b0b0b;border-top:1px solid var(--line);padding:40px 20px}
+.footergrid{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+.footer a{display:block;color:#cfcfcf;text-decoration:none;margin:8px 0}
+.footer h3,.footer h4{color:var(--accent)}
+.copy{text-align:center;color:#888;margin-top:25px}
 </style>
 </head>
-
 <body>
 
-<!-- =========================
-   🔥 HEADER (UPDATED)
-========================= -->
 <header>
-
 <div class="logo">
 <img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jpitama61nopisi19aqb041vvo15.png">
-<span>Zep Swipe</span>
+<div>Zep Swipe</div>
 </div>
-
-<button class="waitlist-btn" onclick="window.location.href='waitlist.html'">
-Join Waitlist
-</button>
-
+<nav>
+<a href="marketplace.html">Marketplace</a>
+<a href="auth.html">Login</a>
+<a href="waitlist.html">Waitlist</a>
+</nav>
 </header>
 
-<!-- =========================
-   HERO
-========================= -->
 <section class="hero">
-
-<div class="hero-content">
-
-<h1>Earn. Learn. <span>Get Hired.</span></h1>
-
-<p>
-Find trusted college and university students offering services near you, fast and simple.
-</p>
-
-<div class="btns">
-
-<a href="login.html" class="btn primary">Start Earning</a>
-<a href="marketplace.html" class="btn secondary">Find Services</a>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- =========================
-   SWIPE SERVICES
-========================= -->
-<section class="section">
-
-<div class="title">🔥 Popular Near You</div>
-
-<div class="scrollRow">
-
-<div class="scrollCard">📚 Tutoring<br><small>Most booked service</small></div>
-<div class="scrollCard">🎨 Design<br><small>Fast growing</small></div>
-<div class="scrollCard">📸 Photography<br><small>Top rated</small></div>
-<div class="scrollCard">💻 Tech Help<br><small>In demand</small></div>
-
-</div>
-
-</section>
-
-<!-- =========================
-   EARN CARD
-========================= -->
-<section class="section">
-
-<div class="earn">
-
-<img src="https://payhip.com/cdn-cgi/image/format=auto/https://pe56d.s3.amazonaws.com/o_1jrg40d1f1srq1v5l1m4omlrpjt1a.png">
-
 <div>
-
-<div class="badge">💰 Earn on the Side</div>
-
-<h3>Offer your skill. Make money.</h3>
-<p style="font-size:13px;opacity:.8;">
-Help your community and earn real income.
-</p>
-
-<a href="login.html" class="btn primary" style="display:inline-block;margin-top:10px;">
-Start Earning
-</a>
-
+<h1>Earn. Learn. <span>Get Hired.</span></h1>
+<p>Find trusted student services, discover exclusive business deals, pay securely through Zep Swipe Escrow and earn MARI rewards.</p>
+<div class="btns">
+<a class="btn primary" href="auth.html">Start Earning</a>
+<a class="btn secondary" href="marketplace.html">Browse Services</a>
 </div>
-
 </div>
-
 </section>
 
-<!-- =========================
-   SERVICES PREVIEW
-========================= -->
+<div class="container">
+
 <section class="section">
-
-<div class="title">🛠️ Trending Services</div>
-
-<div class="grid" id="services"></div>
-
+<h2 class="title">Popular Services</h2>
+<div class="grid">
+<div class="card"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80"><div class="content"><span class="badge">Tutoring</span><h3>Math Tutor</h3></div></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80"><div class="content"><span class="badge">Design</span><h3>Graphic Design</h3></div></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=900&q=80"><div class="content"><span class="badge">Photography</span><h3>Photography</h3></div></div>
+</div>
 </section>
 
-<!-- =========================
-   DEALS PREVIEW
-========================= -->
 <section class="section">
-
-<div class="title"> 🔖 Student Deals</div>
-
-<div class="grid" id="deals"></div>
-
+<h2 class="title">Student Deals</h2>
+<div class="grid">
+<div class="card"><div class="content"><span class="badge">50% OFF</span><h3>Burger Deal</h3><p>Exclusive student savings.</p></div></div>
+<div class="card"><div class="content"><span class="badge">Printing</span><h3>Campus Printing</h3><p>Discounted printing services.</p></div></div>
+</div>
 </section>
 
-<!-- FLOAT BUTTON -->
-<div class="fab" onclick="window.location.href='marketplace.html'">
-Explore
+<section class="section">
+<h2 class="title">Why Zep Swipe?</h2>
+<div class="grid">
+<div class="card"><div class="content"><h3>🛡 Escrow Protected</h3><p>Secure payments for eligible services.</p></div></div>
+<div class="card"><div class="content"><h3>🪙 MARI Rewards</h3><p>Earn rewards for eligible completed activities.</p></div></div>
+<div class="card"><div class="content"><h3>🏪 Business Growth</h3><p>Reach students and publish deals.</p></div></div>
+</div>
+</section>
+
 </div>
 
-<script>
-
-const services = [
-{title:"Math Tutor",img:"https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrg40ll0rmnvj215qr12o2331g.png"},
-{title:"Graphic Design",img:"https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrn2b8mieed1h51p981ndg1bf91n.png"},
-{title:"Web Dev Help",img:"https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrn29gsf17lcr7b8cp1ug0ke615.png"}
-];
-
-const deals = [
-{title:"50% Burger Deal",img:"https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrn2a7ab6tbg6eai245u5sj1b.png"},
-{title:"Student Printing",img:"https://images.unsplash.com/photo-1524995997946-a1c2e315a42f"}
-];
-
-function render(){
-document.getElementById("services").innerHTML =
-services.map(s=>`
-<div class="card">
-<img src="${s.img}">
-<div class="content">
-<div class="badge">Service</div>
-<h3>${s.title}</h3>
+<footer class="footer">
+<div class="footergrid">
+<div>
+<h3>Zep Swipe</h3>
+<p>Connecting students, businesses and customers.</p>
+</div>
+<div>
+<h4>Company</h4>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+</div>
+<div>
+<h4>Legal</h4>
+<a href="terms.html">Terms</a>
+<a href="privacy.html">Privacy</a>
+<a href="escrow-policy.html">Escrow Policy</a>
+<a href="mari-policy.html">MARI Policy</a>
+<a href="refund-policy.html">Refund Policy</a>
+<a href="community-guidelines.html">Community Guidelines</a>
 </div>
 </div>
-`).join("");
-
-document.getElementById("deals").innerHTML =
-deals.map(d=>`
-<div class="card">
-<img src="${d.img}">
-<div class="content">
-<div class="badge">Deal</div>
-<h3>${d.title}</h3>
-</div>
-</div>
-`).join("");
-}
-
-function reveal(){
-document.querySelectorAll(".card").forEach(card=>{
-const top = card.getBoundingClientRect().top;
-if(top < window.innerHeight - 80){
-card.classList.add("show");
-}
-});
-}
-
-window.addEventListener("scroll",reveal);
-
-render();
-reveal();
-
-</script>
+<div class="copy">© 2026 Zep Swipe. All rights reserved.</div>
+</footer>
 
 </body>
 </html>
