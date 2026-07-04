@@ -3,45 +3,69 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe Customer Dashboard</title>
+<title>Zep Swipe Customer Dashboard V40</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
-*{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;background:var(--bg);color:#fff;padding-bottom:90px}
-.wrap{max-width:920px;margin:auto}
-.hero,.card{margin:16px;padding:20px;border-radius:22px;background:var(--card);border:1px solid var(--line)}
-.hero{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88))}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+html,body{overflow-x:hidden;background:var(--bg);color:#fff}
+body{padding-bottom:90px}
+header{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:rgba(7,7,7,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--accent)}
+.logo img{height:34px}
+.wrap{max-width:1100px;margin:auto}
+.hero{margin:18px;padding:28px;border-radius:28px;border:1px solid var(--line);
+background:
+linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88)),
+url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80') center/cover}
 .badge{display:inline-block;padding:8px 14px;border-radius:999px;background:#203600;color:var(--accent);font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}
-.tile,.action{background:#101010;border:1px solid var(--line);border-radius:16px;padding:16px}
-.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.action{text-decoration:none;color:#fff;text-align:center}
-button,input{width:100%;padding:12px;border-radius:12px;margin-top:10px}
-button{background:var(--accent);border:none;font-weight:800}
-input{background:#101010;border:1px solid var(--line);color:#fff}
-.timeline div{padding:10px;margin:8px 0;border-left:4px solid var(--accent);background:#101010;border-radius:8px}
-.nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
-.nav a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}
+.hero h1{margin:14px 0}
+.wallet{margin-top:18px;padding:18px;border-radius:20px;background:rgba(184,255,59,.08);border:1px solid rgba(184,255,59,.25)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:18px}
+.card,.tile{background:var(--card);border:1px solid var(--line);border-radius:22px}
+.tile{padding:18px}
+.card{margin:18px;padding:20px}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+.action{background:#101010;border:1px solid var(--line);border-radius:18px;padding:18px;text-align:center;text-decoration:none;color:#fff;transition:.25s}
+.action:hover{transform:translateY(-3px);border-color:var(--accent)}
+.timeline div{margin:10px 0;padding:12px;background:#101010;border-left:4px solid var(--accent);border-radius:10px}
+input{width:100%;margin-top:12px;padding:13px;border-radius:12px;background:#101010;color:#fff;border:1px solid var(--line)}
+button{width:100%;margin-top:14px;padding:14px;border:none;border-radius:14px;background:var(--accent);font-weight:800}
+.nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:12px;background:#0b0b0b;border-top:1px solid var(--line)}
+.nav a{text-decoration:none;color:#fff;font-size:12px;display:flex;flex-direction:column;align-items:center}
 </style>
 </head>
 <body>
+<header>
+<div class="logo">
+<img src="https://placehold.co/120x120/070707/b8ff3b?text=Z" alt="Zep Swipe Logo">
+<div><div>Zep Swipe</div><small style="color:#aaa">Customer Dashboard</small></div>
+</div>
+<i data-lucide="bell"></i>
+</header>
+
 <div class="wrap">
 <section class="hero">
 <span class="badge">🛡 Escrow Protected</span>
-<h2 id="welcome">Welcome</h2>
-<p>Complete services securely and earn <b>50 MARI</b> after escrow is released.</p>
-<div class="grid">
-<div class="tile"><strong>MARI</strong><h2 id="mariBalance">0</h2></div>
-<div class="tile"><strong>Active Orders</strong><h2 id="activeOrders">0</h2></div>
-<div class="tile"><strong>Completed</strong><h2 id="completedOrders">0</h2></div>
-<div class="tile"><strong>Saved</strong><h2 id="savedProviders">0</h2></div>
+<h1 id="welcome">Welcome</h1>
+<p>Book trusted student services. Approve completed work. Earn <b>50 MARI</b> after successful escrow release.</p>
+<div class="wallet">
+<h2 id="mariBalance">0 MARI</h2>
+<small>Next reward: +50 MARI after your next completed order.</small>
 </div>
 </section>
 
+<div class="grid">
+<div class="tile"><h3 id="activeOrders">0</h3><small>Active Orders</small></div>
+<div class="tile"><h3 id="completedOrders">0</h3><small>Completed</small></div>
+<div class="tile"><h3 id="savedProviders">0</h3><small>Saved Providers</small></div>
+<div class="tile"><h3 id="notifications">0</h3><small>Notifications</small></div>
+</div>
+
 <section class="card">
+<h3>Quick Actions</h3>
 <div class="actions">
 <a class="action" href="marketplace.html">🔍<br>Browse</a>
 <a class="action" href="#">📦<br>Orders</a>
@@ -52,33 +76,30 @@ input{background:#101010;border:1px solid var(--line);color:#fff}
 
 <section class="card">
 <h3>Current Order</h3>
-<div id="orderCard">
-<p>No active order.</p>
 <div class="timeline">
-<div>Payment Protected</div>
-<div>Provider Working</div>
-<div>Awaiting Approval</div>
-<div>Escrow Released</div>
+<div>✅ Payment Protected</div>
+<div>✅ Provider Working</div>
+<div>🟡 Awaiting Approval</div>
+<div>⬜ Escrow Release</div>
 </div>
 <button id="approveBtn">Approve & Release Escrow</button>
-</div>
 </section>
 
 <section class="card">
 <h3>Profile</h3>
-<input id="fullName" placeholder="Full name">
+<input id="fullName" placeholder="Full Name">
 <input id="email" disabled placeholder="Email">
-<input id="phone" placeholder="Phone">
+<input id="phone" placeholder="Phone Number">
 <button id="saveBtn">Save Profile</button>
 </section>
 </div>
 
 <nav class="nav">
-<a href="index.html">Home</a>
-<a href="marketplace.html">Services</a>
-<a href="#">Orders</a>
-<a href="#">MARI</a>
-<a href="#">Profile</a>
+<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="search"></i><span>Services</span></a>
+<a href="#"><i data-lucide="package"></i><span>Orders</span></a>
+<a href="#"><i data-lucide="coins"></i><span>MARI</span></a>
+<a href="#"><i data-lucide="user"></i><span>Profile</span></a>
 </nav>
 
 <script>
@@ -86,41 +107,36 @@ const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-async function requireSession(){
+async function init(){
  const {data:{session}}=await db.auth.getSession();
- if(!session){location.replace("auth.html");return null;}
- return session;
-}
-async function loadProfile(session){
+ if(!session){location.replace("auth.html");return;}
  email.value=session.user.email||"";
- const {data}=await db.from("profiles").select("*").eq("id",session.user.id).maybeSingle();
- if(data){
-  fullName.value=data.full_name||"";
-  phone.value=data.phone||"";
-  welcome.textContent="Welcome, "+(data.full_name||"Customer");
+ const {data:profile}=await db.from("profiles").select("*").eq("id",session.user.id).maybeSingle();
+ if(profile){
+   fullName.value=profile.full_name||"";
+   phone.value=profile.phone||"";
+   welcome.textContent="Welcome, "+(profile.full_name||"Customer");
  }
-}
-async function saveProfile(){
- const s=await requireSession(); if(!s) return;
- await db.from("profiles").upsert({
-  id:s.user.id,
-  email:s.user.email,
-  full_name:fullName.value,
-  phone:phone.value,
-  role:"customer"
- });
- alert("Profile saved");
-}
-async function loadDashboard(){
- // Connect production queries:
+ // Production integration points:
  // orders, escrow_payments, customer_wallets,
  // customer_mari_transactions, saved_providers,
- // notifications.
+ // notifications, reviews.
 }
-saveBtn.onclick=saveProfile;
-approveBtn.onclick=()=>alert("Connect to a secure backend function that verifies ownership, releases escrow, updates the order, and awards MARI.");
+saveBtn.onclick=async()=>{
+ const {data:{session}}=await db.auth.getSession();
+ if(!session) return;
+ await db.from("profiles").upsert({
+   id:session.user.id,
+   email:session.user.email,
+   full_name:fullName.value,
+   phone:phone.value,
+   role:"customer"
+ });
+ alert("Profile saved");
+};
+approveBtn.onclick=()=>alert("Connect this button to your secure escrow release backend.");
 lucide.createIcons();
-requireSession().then(s=>{if(s){loadProfile(s);loadDashboard();}});
+init();
 </script>
 </body>
 </html>
