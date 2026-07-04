@@ -2,107 +2,128 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Deals V40 Business Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zep Swipe Business Dashboard V46</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:var(--bg);color:var(--text);padding-bottom:90px}
-.hero{margin:16px;padding:34px;border-radius:28px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1600&q=80') center/cover}
-.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}
-.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;margin:16px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.stat{background:#101010;border:1px solid var(--border);border-radius:16px;padding:14px}
-input,select,textarea{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid var(--border);border-radius:12px}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;background:var(--accent);color:#000;font-weight:800;margin-top:12px}
-.deal{background:#101010;border:1px solid var(--border);border-radius:16px;padding:14px;margin-top:10px}
-.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0}
-.footer a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
+:root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
+*{box-sizing:border-box;font-family:Inter,sans-serif}
+body{margin:0;background:var(--bg);color:#fff;padding-bottom:90px}
+.hero,.card{margin:16px;padding:20px;border-radius:22px;background:var(--card);border:1px solid var(--line)}
+.hero{background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.9)),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1600&q=80') center/cover}
+.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:#203600;color:var(--accent);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.tile,.deal,.wallet{background:#101010;border:1px solid var(--line);border-radius:16px;padding:14px}
+.wallet{background:rgba(184,255,59,.08)}
+input,select,textarea{width:100%;padding:12px;margin-top:10px;background:#101010;border:1px solid var(--line);border-radius:12px;color:#fff}
+button{width:100%;padding:13px;margin-top:10px;background:var(--accent);border:none;border-radius:12px;font-weight:800}
+nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
+nav a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}
+canvas{max-height:220px}
 </style>
 </head>
 <body>
-
-<div class="hero">
-<span class="badge">🏷 Student Deals Network</span>
-<h1 style="margin-top:12px">Create Deals. Get Customers.</h1>
-<p>Publish student offers, track claims and grow your business.</p>
+<section class="hero">
+<div class="badge">🚀 Founding Partner</div>
+<h1 id="businessName">Welcome Business</h1>
+<p>Reach more students, earn <b>50 MARI</b> for every verified redemption and grow your business.</p>
+<div class="wallet">
+<h2 id="mariBalance">0 MARI</h2>
+<div>Business Mari Wallet</div>
 </div>
+</section>
 
-<div class="card">
+<section class="card">
 <div class="grid">
-<div class="stat"><h2>4,320</h2><small>Views</small></div>
-<div class="stat"><h2>132</h2><small>Claims</small></div>
-<div class="stat"><h2>86</h2><small>Leads</small></div>
-<div class="stat"><h2>12</h2><small>Active Deals</small></div>
+<div class="tile"><h3 id="reach">0</h3><small>Student Reach</small></div>
+<div class="tile"><h3 id="redeem">0</h3><small>Verified Redemptions</small></div>
+<div class="tile"><h3 id="repeat">0</h3><small>Repeat Students</small></div>
+<div class="tile"><h3 id="revenue">R0</h3><small>Estimated Revenue</small></div>
+<div class="tile"><h3 id="active">0</h3><small>Active Deals</small></div>
+<div class="tile"><h3 id="conversion">0%</h3><small>Conversion</small></div>
 </div>
-</div>
+</section>
 
-<div class="card">
-<h3>🏪 Business Profile</h3>
-<input placeholder="Business Name">
-<input placeholder="Owner Name">
-<input placeholder="Location">
-<input placeholder="WhatsApp Number">
-<button class="btn">Save Profile</button>
-</div>
+<section class="card">
+<h3>📈 Business Growth</h3>
+<canvas id="growthChart"></canvas>
+</section>
 
-<div class="card">
-<h3>🚀 Create Deal</h3>
-<select>
-<option>Free Listing</option>
-<option>Featured Deal</option>
-<option>Premium Deal</option>
-</select>
-<select>
-<option>Food & Drinks</option>
-<option>Salon & Barber</option>
-<option>Fashion</option>
-<option>Electronics</option>
-<option>Education</option>
-</select>
-<input placeholder="Deal Title">
-<textarea placeholder="Deal Description"></textarea>
+<section class="card" id="createDeal">
+<h3>➕ Create Deal</h3>
+<select><option>Free Launch Partner</option><option>Featured Partner</option></select>
+<select><option>Food</option><option>Salon</option><option>Fashion</option><option>Education</option></select>
+<input placeholder="Deal title">
+<textarea placeholder="Deal description"></textarea>
 <input placeholder="Discount %">
 <input type="date">
 <input type="file">
-<button class="btn">Publish Deal</button>
-</div>
+<button>Publish Deal</button>
+</section>
 
-<div class="card">
-<h3>✅ Verified Student Claims</h3>
-<p>Students enter Student ID before claiming.</p>
-<div class="deal">Sarah • UJ • Claimed 50% Student Meal</div>
-<div class="deal">David • Wits • Claimed Barber Discount</div>
-</div>
-
-<div class="card">
+<section class="card">
 <h3>📦 My Deals</h3>
-<div class="deal">
-<b>50% Student Meal</b><br>
-420 Views • 34 Claims • 18 Leads
-</div>
-<div class="deal">
-<b>20% Barber Discount</b><br>
-210 Views • 18 Claims • 7 Leads
-</div>
-</div>
+<div class="deal">No deals yet.</div>
+</section>
 
-<div class="card">
-<h3>🔔 Notifications</h3>
-<div class="deal">New deal claim received</div>
-<div class="deal">Featured deal approved</div>
-</div>
+<section class="card">
+<h3>🎟 Verified Redemptions</h3>
+<div class="deal">Verified student redemptions will appear here.</div>
+</section>
 
-<div class="footer">
+<section class="card">
+<h3>👤 Business Profile</h3>
+<input id="owner" placeholder="Owner">
+<input id="phone" placeholder="WhatsApp">
+<button id="saveProfile">Save Profile</button>
+</section>
+
+<nav>
 <a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
 <a href="marketplace.html"><i data-lucide="briefcase-business"></i><span>Services</span></a>
-<a href="business-deals.html"><i data-lucide="ticket-percent"></i><span>Deals</span></a>
-<a href="provider.html"><i data-lucide="coins"></i><span>Earn</span></a>
+<a href="#createDeal"><i data-lucide="coins"></i><span>Earn</span></a>
+<a href="#"><i data-lucide="chart-column"></i><span>Analytics</span></a>
 <a href="#"><i data-lucide="user-round"></i><span>Profile</span></a>
-</div>
+</nav>
 
-<script>lucide.createIcons();</script>
+<script>
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+new Chart(document.getElementById("growthChart"),{
+type:"line",
+data:{labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],datasets:[{data:[0,0,0,0,0,0,0],borderColor:"#b8ff3b",backgroundColor:"rgba(184,255,59,.15)",fill:true}]},
+options:{plugins:{legend:{display:false}}}
+});
+
+async function init(){
+ const {data:{session}}=await db.auth.getSession();
+ if(!session){location.replace("business-auth.html");return;}
+ const {data}=await db.from("businesses").select("*").eq("user_id",session.user.id).maybeSingle();
+ if(data){
+   document.getElementById("businessName").textContent="Welcome, "+(data.business_name||"Business");
+   owner.value=data.owner_name||"";
+   phone.value=data.whatsapp||"";
+ }
+ // TODO: Load deals, analytics, Mari wallet, notifications and redemption metrics.
+}
+
+saveProfile.onclick=async()=>{
+ const {data:{session}}=await db.auth.getSession();
+ await db.from("businesses").upsert({
+   user_id:session.user.id,
+   owner_name:owner.value,
+   whatsapp:phone.value
+ });
+ alert("Profile saved");
+};
+
+lucide.createIcons();
+init();
+</script>
 </body>
 </html>
