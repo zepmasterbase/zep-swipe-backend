@@ -2,32 +2,37 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Auth V90</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zep Swipe | Sign In</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
 *{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#070707;color:#fff;padding:20px}
-.card{width:100%;max-width:430px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px}
-.role{padding:12px;border:1px solid var(--line);border-radius:12px;margin:8px 0;cursor:pointer}
-.active{border-color:var(--accent)}
-input{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid var(--line);border-radius:10px}
-button{width:100%;padding:12px;margin-top:12px;border:none;border-radius:10px;font-weight:700}
-.primary{background:var(--accent)}
-.secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}
-#msg{margin-top:12px;min-height:20px;color:var(--accent)}
+body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:radial-gradient(circle at top,#111,#070707);color:#fff;padding:20px}
+.card{width:100%;max-width:430px;background:#141414;border:1px solid var(--line);border-radius:22px;padding:24px}
+.logo{text-align:center;color:var(--accent);font-size:30px;font-weight:800}
+.sub{text-align:center;color:#aaa;margin:8px 0 20px}
+.roles{display:grid;grid-template-columns:1fr;gap:10px}
+.role{padding:14px;border:1px solid var(--line);border-radius:14px;background:#101010;cursor:pointer}
+.role.active{border-color:var(--accent);background:#1a2508}
+input{width:100%;padding:13px;margin-top:12px;border-radius:12px;border:1px solid var(--line);background:#101010;color:#fff}
+button{width:100%;padding:14px;margin-top:12px;border:none;border-radius:12px;font-weight:800;cursor:pointer}
+.primary{background:var(--accent);color:#000}.secondary{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+#msg{margin-top:14px;color:#b8ff3b;min-height:20px;text-align:center}
+small{color:#aaa}
 </style>
 </head>
 <body>
 <div class="card">
-<h2>⚡ Zep Swipe</h2>
-<p>Select account type</p>
+<div class="logo">⚡ Zep Swipe</div>
+<div class="sub">Choose your account type when creating a new account.</div>
 
-<div id="customer" class="role active">👤 Customer</div>
-<div id="provider" class="role">💼 Provider</div>
-<div id="business" class="role">🏪 Business</div>
+<div class="roles">
+<div class="role active" data-role="customer"><strong>👤 Customer</strong><br><small>Book services & redeem deals</small></div>
+<div class="role" data-role="provider"><strong>💼 Student Provider</strong><br><small>Sell services & earn</small></div>
+<div class="role" data-role="business"><strong>🏪 Business</strong><br><small>Create student deals</small></div>
+</div>
 
 <input id="email" type="email" placeholder="Email">
 <input id="password" type="password" placeholder="Password">
@@ -44,39 +49,36 @@ const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 let role="customer";
-["customer","provider","business"].forEach(r=>{
- document.getElementById(r).onclick=()=>{
+document.querySelectorAll(".role").forEach(el=>{
+ el.onclick=()=>{
    document.querySelectorAll(".role").forEach(x=>x.classList.remove("active"));
-   document.getElementById(r).classList.add("active");
-   role=r;
+   el.classList.add("active");
+   role=el.dataset.role;
  };
 });
+
 const msg=t=>document.getElementById("msg").textContent=t;
 
 async function signup(){
+ const email=emailEl().value.trim(),password=passEl().value;
  msg("Creating account...");
- const {data,error}=await db.auth.signUp({
-   email:email.value.trim(),
-   password:password.value
- });
+ const {data,error}=await db.auth.signUp({email,password});
  if(error){msg(error.message);return;}
  if(data.user){
    await db.from("profiles").upsert({
-      id:data.user.id,
-      email:data.user.email,
-      role:role
+     id:data.user.id,
+     email,
+     role
    });
  }
+ msg(data.session?"Success! Redirecting...":"Account created. Verify your email then login.");
  if(data.session) redirect(role);
- else msg("Account created. Verify your email then login.");
 }
 
 async function login(){
+ const email=emailEl().value.trim(),password=passEl().value;
  msg("Signing in...");
- const {data,error}=await db.auth.signInWithPassword({
-   email:email.value.trim(),
-   password:password.value
- });
+ const {data,error}=await db.auth.signInWithPassword({email,password});
  if(error){msg(error.message);return;}
  const {data:profile}=await db.from("profiles").select("role").eq("id",data.user.id).single();
  redirect(profile?.role||"customer");
@@ -85,8 +87,11 @@ async function login(){
 function redirect(r){
  if(r==="customer") location.replace("customer.html");
  else if(r==="provider") location.replace("provider.html");
- else location.replace("business-deals.html");
+ else if(r==="business") location.replace("business-deals.html");
 }
+
+function emailEl(){return document.getElementById("email")}
+function passEl(){return document.getElementById("password")}
 </script>
 </body>
 </html>
