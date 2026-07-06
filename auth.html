@@ -60,22 +60,43 @@ document.querySelectorAll(".role").forEach(el=>{
 const msg=t=>document.getElementById("msg").textContent=t;
 
 async function signup(){
- const email=emailEl().value.trim(),password=passEl().value;
+
+ const email = emailEl().value.trim();
+ const password = passEl().value.trim();
+
+ console.log("SUPABASE URL:", SUPABASE_URL);
+
  msg("Creating account...");
- const {data,error}=await db.auth.signUp({email,password});
- if(error){msg(error.message);return;}
+
+ const { data, error } = await db.auth.signUp({
+   email,
+   password
+ });
+
+ console.log("DATA:", data);
+ console.log("ERROR:", error);
+
+ if(error){
+   msg(error.message);
+   alert(error.message);
+   return;
+ }
+
  if(data.user){
    await db.from("profiles").upsert({
-     id:data.user.id,
-     email,
-     role
+      id: data.user.id,
+      email,
+      role
    });
  }
- msg(data.session?"Success! Redirecting...":"Account created. Verify your email then login.");
- if(data.session) redirect(role);
-}
 
-async function login(){
+ msg(data.session ? "Success! Redirecting..." : "Account created. Verify your email then login.");
+
+ if(data.session){
+   redirect(role);
+ }
+
+}
  const email=emailEl().value.trim(),password=passEl().value;
  msg("Signing in...");
  const {data,error}=await db.auth.signInWithPassword({email,password});
