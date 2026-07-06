@@ -3,71 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Provider V90</title>
+<title>Zep Swipe | My Business V67</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 :root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
 *{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;background:var(--bg);color:#fff;padding:16px 16px 90px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:16px}
-.hero{background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.tile{background:#101010;border:1px solid var(--line);border-radius:14px;padding:12px}
-input,textarea,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid var(--line);border-radius:10px}
-button{width:100%;padding:12px;margin-top:10px;background:var(--accent);border:none;border-radius:10px;font-weight:700}
-nav{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:12px}
-nav a{color:#fff;text-decoration:none;font-size:12px}
+body{margin:0;background:var(--bg);color:#fff;padding-bottom:88px}
+.wrap{max-width:760px;margin:auto}
+.hero,.card{margin:16px;border:1px solid var(--line);border-radius:22px;background:var(--card)}
+.hero{padding:24px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
+.badge{display:inline-flex;padding:8px 14px;border-radius:999px;background:#203600;color:var(--accent);font-weight:700}
+.balance{font-size:42px;font-weight:800;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.tile{background:#101010;border:1px solid var(--line);border-radius:16px;padding:14px}
+.card{padding:18px}
+label{display:block;color:#bbb;font-size:13px;margin:10px 0 6px}
+input,textarea,select{width:100%;padding:12px;border-radius:12px;background:#101010;color:#fff;border:1px solid var(--line)}
+button{width:100%;padding:13px;border:none;border-radius:12px;background:var(--accent);font-weight:800;margin-top:14px}
+.job,.panel{background:#101010;border:1px solid var(--line);border-radius:16px;padding:14px}
+.row{display:flex;justify-content:space-between;margin:8px 0}
+.nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
+.nav a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}
+small{color:#aaa}
 </style>
 </head>
 <body>
-
-<section class="card hero">
-<h2 id="welcome">Welcome Provider</h2>
-<p>Publish services, manage jobs and grow your earnings.</p>
-<h1 id="cashBalance">R0.00</h1>
-<p id="mariBalance">0 MARI</p>
-</section>
-
-<section class="card">
+<div class="wrap">
+<section class="hero">
+<span class="badge">🛡 Escrow Protected</span>
+<h2 style="margin-top:14px">My Business</h2>
+<p>Payments are held in Zep Swipe Escrow and released after successful job completion.</p>
+<div class="balance">R<span id="wallet">0.00</span></div>
 <div class="grid">
-<div class="tile"><b id="activeJobs">0</b><br>Active Jobs</div>
-<div class="tile"><b id="completedJobs">0</b><br>Completed</div>
-<div class="tile"><b id="serviceCount">0</b><br>Services</div>
-<div class="tile"><b id="rating">New</b><br>Rating</div>
+<div class="tile"><strong>Available</strong><br><small>Ready to withdraw</small><h3>R0.00</h3></div>
+<div class="tile"><strong>Pending</strong><br><small>Escrow</small><h3>R0.00</h3></div>
+<div class="tile"><strong>Completed Jobs</strong><h3 id="jobs">0</h3></div>
+<div class="tile"><strong>Rating</strong><h3>⭐5.0</h3></div>
 </div>
 </section>
 
 <section class="card">
-<h3>Profile</h3>
-<input id="fullName" placeholder="Full Name">
-<input id="university" placeholder="University">
-<textarea id="bio" placeholder="Bio"></textarea>
-<button id="saveProfile">Save Profile</button>
+<h3>🪙 Mari Rewards</h3>
+<div class="panel">
+<div class="row"><span>Mari Balance</span><strong><span id="mari">0</span> MARI</strong></div>
+<div class="row"><span>Reward Rule</span><strong>+25 MARI</strong></div>
+<p style="margin-top:10px">Providers earn <strong>25 MARI</strong> after a job is completed and escrow funds are successfully released.</p>
+</div>
 </section>
 
 <section class="card">
-<h3>Create Service</h3>
-<select id="category">
-<option>Graphic Design</option>
-<option>Tutoring</option>
-<option>Photography</option>
-</select>
-<input id="title" placeholder="Service Title">
-<input id="price" type="number" placeholder="Price">
-<textarea id="description" placeholder="Description"></textarea>
-<button id="publishService">Publish Service</button>
+<h3>💼 Current Job</h3>
+<div class="job">
+<div class="row"><span>Campus Logo Design</span><strong>R850</strong></div>
+<div class="row"><span>Status</span><strong id="status">🟡 In Progress</strong></div>
+<div class="row"><span>Escrow</span><strong>Funds Secured</strong></div>
+<button onclick="submitJob()">Mark Work Submitted</button>
+</div>
 </section>
 
 <section class="card">
-<h3>My Services</h3>
-<div id="services"></div>
+<h3>📊 Wallet Summary</h3>
+<div class="panel">
+<div class="row"><span>This Month</span><strong>R0.00</strong></div>
+<div class="row"><span>Platform Fee (10%)</span><strong>R0.00</strong></div>
+<div class="row"><span>Net Paid Out</span><strong>R0.00</strong></div>
+</div>
 </section>
 
-<nav>
-<a href="index.html">Home</a>
-<a href="marketplace.html">Marketplace</a>
-<a href="#top">Profile</a>
+<section class="card">
+<h3>🚀 Publish Service</h3>
+<label>Category</label>
+<select><option>Graphic Design</option><option>Tutoring</option><option>Programming</option><option>Photography</option><option>Virtual Assistant</option></select>
+<label>Service Title</label><input placeholder="Logo Design">
+<label>Description</label><textarea rows="4"></textarea>
+<label>Price</label><input placeholder="500">
+<label>Delivery Time</label><select><option>24 Hours</option><option>2 Days</option><option>7 Days</option></select>
+<label>Portfolio</label><input type="file" multiple>
+<button>Publish Service</button>
+</section>
+
+<section class="card">
+<h3>🏦 Withdraw</h3>
+<label>Bank</label><input>
+<label>Account Number</label><input>
+<label>Amount</label><input>
+<button>Request Withdrawal</button>
+</section>
+
+<section class="card">
+<h3>👤 Profile</h3>
+<label>Profile Photo</label><input type="file">
+<label>Full Name</label><input>
+<label>University</label><input>
+<label>Bio</label><textarea rows="3"></textarea>
+<button>Save Changes</button>
+</section>
+</div>
+
+<nav class="nav">
+<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="briefcase"></i><span>Jobs</span></a>
+<a href="#"><i data-lucide="plus-circle"></i><span>Create</span></a>
+<a href="#"><i data-lucide="wallet"></i><span>Wallet</span></a>
+<a href="#"><i data-lucide="user"></i><span>Profile</span></a>
 </nav>
 
 <script>
@@ -75,31 +115,21 @@ const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-async function init(){
- const {data:{session}}=await db.auth.getSession();
- if(!session){ location.replace("auth.html"); return; }
- document.getElementById("welcome").textContent="Welcome, "+(session.user.email||"Provider");
-
- const {data:profile}=await db.from("profiles").select("*").eq("id",session.user.id).maybeSingle();
- if(profile){
-   fullName.value=profile.full_name||"";
-   university.value=profile.university||"";
-   bio.value=profile.bio||"";
- }
-
- loadServices(session.user.id);
+function submitJob(){
+  document.getElementById("status").textContent="🟢 Awaiting Escrow Release";
 }
 
-async function loadServices(uid){
- const {data}=await db.from("services").select("*").eq("provider_id",uid).order("created_at",{ascending:false});
- serviceCount.textContent=(data||[]).length;
- services.innerHTML="";
- (data||[]).forEach(s=>{
-   services.innerHTML+=`<div class="tile"><b>${s.title}</b><br>R${s.price}<br>${s.category||""}</div>`;
- });
-}
+// Production flow:
+// 1. Customer pays into escrow.
+// 2. Provider completes work.
+// 3. Customer approves (or platform completes per policy).
+// 4. Escrow releases payment.
+// 5. Credit provider wallet (90%).
+// 6. Record 10% platform fee.
+// 7. Award +25 MARI.
+// 8. Update provider dashboard and MARI balance.
 
-init();
+lucide.createIcons();
 </script>
 </body>
 </html>
