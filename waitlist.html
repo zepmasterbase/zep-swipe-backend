@@ -212,9 +212,19 @@ setTimeout(()=>c.remove(),3000);
 }
 
 try{
-await supabaseClient.from('students').update({mari_balance:newBalance}).eq('student_id',localStorage.getItem('studentId'));
-}catch(e){}
-},5000);
+
+const {data:{user}}=await supabaseClient.auth.getUser();
+
+await supabaseClient
+.from("waitlist")
+.update({
+mari_balance:newBalance,
+last_spin:new Date().toISOString().slice(0,10)
+})
+.eq("user_id",user.id);
+
+}catch(e){
+console.log(e);
 }
 
 lucide.createIcons();
