@@ -130,17 +130,122 @@ Publish Deal
 <script>
 const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+const db=supabase.createClient(
+SUPABASE_URL,
+SUPABASE_ANON_KEY
+);
+
+let currentUser=null;
+
+async function init(){
+
+const {data:{session}}=
+await db.auth.getSession();
+
+if(!session){
+
+location.replace("auth.html");
+
+return;
+
+}
+
+currentUser=session.user;
+
+loadBusinessProfile();
+
+refreshDashboard();
+
+}
+
+async function loadBusinessProfile(){
+
+const {data}=await db
+.from("businesses")
+.select("*")
+.eq("user_id",currentUser.id)
+.maybeSingle();
+
+if(!data) return;
+
+businessName.value=data.business_name||"";
+
+ownerName.value=data.owner_name||"";
+
+whatsapp.value=data.whatsapp||"";
+
+address.value=data.address||"";
+
+mapsUrl.value=data.maps_url||"";
+
+}
+
+saveProfile.onclick=async()=>{
+
+const {error}=await db
+.from("businesses")
+.upsert({
+
+user_id:currentUser.id,
+
+business_name:businessName.value,
+
+owner_name:ownerName.value,
+
+whatsapp:whatsapp.value,
+
+address:address.value,
+
+maps_url:mapsUrl.value
+
+});
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+alert("Business profile saved.");
+
+};
 
 async function refreshDashboard(){
-  // Replace with real Supabase queries.
-  const verified=0;
-  document.getElementById("redeem").textContent=verified;
-  document.getElementById("count").textContent=verified;
-  document.getElementById("bar").style.width=Math.min(verified,50)*2+"%";
+
+const {count}=await db
+
+.from("deals")
+
+.select("*",{
+
+count:"exact",
+
+head:true
+
+})
+
+.eq("business_id",currentUser.id);
+
+document.getElementById("active").textContent=count||0;
+
+const verified=0;
+
+document.getElementById("redeem").textContent=verified;
+
+document.getElementById("count").textContent=verified;
+
+document.getElementById("bar").style.width=
+
+Math.min(verified,50)*2+"%";
+
 }
-refreshDashboard();
+
 lucide.createIcons();
+
+init();
 </script>
 
 </body>
