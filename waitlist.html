@@ -111,23 +111,53 @@ document.getElementById('refLink').value='https://zepswipe.com/ref/'+sid;
 }
 
 async function registerStudent(){
-const studentName=document.getElementById('name').value||'Student';
-const email=document.getElementById('email').value;
-const country=document.getElementById('country').value;
-const sid='ZS-'+Math.floor(Math.random()*90000+10000);
 
-try{
-await supabaseClient.from('students').insert({
-student_id:sid,
+const {data:{user}}=await supabaseClient.auth.getUser();
+
+if(!user){
+alert("Please login first.");
+location.href="auth.html";
+return;
+}
+
+const studentName=document.getElementById("name").value;
+
+const country=document.getElementById("country").value;
+
+const referral=document.getElementById("referral").value;
+
+const referralCode="ZS"+Math.floor(Math.random()*999999);
+
+const {error}=await supabaseClient
+.from("waitlist")
+.upsert({
+
+user_id:user.id,
+
 full_name:studentName,
-email:email,
-country:country,
-mari_balance:0
-});
-}catch(e){}
 
-localStorage.setItem('studentId',sid);
-showDashboard(studentName,sid,0);
+email:user.email,
+
+country:country,
+
+referral_code:referralCode,
+
+referred_by:referral,
+
+mari_balance:0
+
+});
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+showDashboard(studentName,referralCode,0);
+
 }
 
 window.addEventListener('load',async()=>{
