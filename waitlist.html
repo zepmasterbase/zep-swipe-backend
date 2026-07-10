@@ -160,14 +160,31 @@ showDashboard(studentName,referralCode,0);
 
 }
 
-window.addEventListener('load',async()=>{
-const sid=localStorage.getItem('studentId');
-if(!sid)return;
+window.addEventListener("load",async()=>{
 
-try{
-const {data}=await supabaseClient.from('students').select('*').eq('student_id',sid).single();
-if(data) showDashboard(data.full_name,data.student_id,data.mari_balance||0);
-}catch(e){}
+const {data:{user}}=await supabaseClient.auth.getUser();
+
+if(!user){
+location.href="auth.html";
+return;
+}
+
+const {data}=await supabaseClient
+.from("waitlist")
+.select("*")
+.eq("user_id",user.id)
+.single();
+
+if(data){
+
+showDashboard(
+data.full_name,
+data.referral_code,
+data.mari_balance
+);
+
+}
+
 });
 
 function shareWhatsApp(){
