@@ -128,8 +128,8 @@ No deals published yet.
 </div>  
   
 <script>  
-const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";  
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpZWVrY2VsY2F0aHR1bHV3Y2ZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyOTk3MzAsImV4cCI6MjA5ODg3NTczMH0.qAwf6TtqwLLMD2pnLDIwIYqwoHM2rF31ehqa5TDqnJI";  
+const SUPABASE_URL="YOUR SUPABASE URL";  
+const SUPABASE_ANON_KEY="YOUR SUPABASE AMON KEY";  
   
 const db=supabase.createClient(  
 SUPABASE_URL,  
@@ -138,26 +138,28 @@ SUPABASE_ANON_KEY
   
 let currentUser=null;  
   
-async function init(){  
-  
-const {data:{session}}=  
-await db.auth.getSession();  
-  
-if(!session){  
-  
-location.replace("auth.html");  
-  
-return;  
-  
-}  
-  
-currentUser=session.user;
+async function init(){
+
+const {data:{session}}=
+await db.auth.getSession();
+
+if(!session){
+
+location.replace("auth.html");
+
+return;
+
+}
+
+currentUser = session.user;
 
 await loadBusinessProfile();
 
 await loadDeals();
 
-await refreshDashboard();  
+await refreshDashboard();
+
+}  
   
 }  
   
