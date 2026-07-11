@@ -151,11 +151,13 @@ return;
   
 }  
   
-currentUser=session.user;  
-  
-loadBusinessProfile();  
-  
-refreshDashboard();  
+currentUser=session.user;
+
+await loadBusinessProfile();
+
+await loadDeals();
+
+await refreshDashboard();  
   
 }  
   
