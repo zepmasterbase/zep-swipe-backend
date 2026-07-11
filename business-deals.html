@@ -1,97 +1,86 @@
-<!DOCTYPE html>  
-<html lang="en">  
-<head>  
-<meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width,initial-scale=1">  
-<title>Zep Swipe Business Dashboard V45</title>  
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">  
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
-<script src="https://unpkg.com/lucide@latest"></script>  
-<style>  
-:root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}  
-*{box-sizing:border-box;font-family:Inter,sans-serif}  
-body{margin:0;background:var(--bg);color:#fff;padding-bottom:90px}  
-header{position:sticky;top:0;background:#0b0b0bf0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:16px}  
-.hero,.card{margin:16px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px}  
-.hero{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.9)),linear-gradient(135deg,#191919,#111)}  
-.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:#203600;color:var(--accent);font-weight:700}  
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}  
-.tile{background:#101010;border:1px solid var(--line);border-radius:16px;padding:16px}  
-.wallet{background:rgba(184,255,59,.08);border:1px solid rgba(184,255,59,.25)}  
-.progress{height:12px;background:#222;border-radius:999px;overflow:hidden}  
-.progress>div{height:100%;width:0;background:var(--accent)}  
-button{width:100%;padding:13px;border:none;border-radius:12px;background:var(--accent);font-weight:800}  
-.bottom{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}  
-.bottom a{text-decoration:none;color:#fff;font-size:12px;text-align:center}  
-canvas{max-height:260px}  
-</style>  
-</head>  
-<body>  
-<header>  
-<div><h2 style="margin:0;color:#b8ff3b">⚡ Zep Swipe Business</h2><small>Growth Dashboard</small></div>  
-<div><i data-lucide="bell"></i></div>  
-</header>  
-  
-<section class="hero">  
-<div class="badge">🚀 Founding Partner</div>  
-<h1>Grow Your Business With Students</h1>  
-<p>Earn <b>50 MARI</b> for every verified student redemption.</p>  
-<div class="tile wallet">  
-<h2 id="mariBalance">0 MARI</h2>  
-<div>Mari Wallet</div>  
-</div>  
-</section>  
-  
-<section class="card">  
-<div class="grid">  
-<div class="tile"><h2 id="reach">0</h2><small>Student Reach</small></div>  
-<div class="tile"><h2 id="redeem">0</h2><small>Verified Redemptions</small></div>  
-<div class="tile"><h2 id="repeat">0</h2><small>Repeat Students</small></div>  
-<div class="tile"><h2 id="revenue">R0</h2><small>Estimated Revenue</small></div>  
-<div class="tile"><h2 id="deals">0</h2><small>Active Deals</small></div>  
-<div class="tile"><h2 id="conversion">0%</h2><small>Conversion</small></div>  
-</div>  
-</section>  
-  
-<section class="card">  
-<h3>⭐ Featured Partner Progress</h3>  
-<div class="progress"><div id="bar"></div></div>  
-<p><span id="count">0</span>/50 verified redemptions</p>  
-</section>  
-  
-<section class="card">  
-<h3>📈 Business Growth</h3>  
-<canvas id="growthChart"></canvas>  
-</section>  
-  
-<section class="card" id="createDealSection">  
-<h3>💰 Create Deal & Earn MARI</h3>  
-<input style="width:100%;padding:12px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px" placeholder="Deal title">  
-<button style="margin-top:12px">Create Deal</button>  
-</section>  
-  
-<nav class="bottom">  
-<a href="index.html"><i data-lucide="home"></i><div>Home</div></a>  
-<a href="#"><i data-lucide="ticket-percent"></i><div>Deals</div></a>  
-<a href="#createDealSection"><i data-lucide="coins"></i><div>Earn</div></a>  
-<a href="#"><i data-lucide="chart-column"></i><div>Analytics</div></a>  
-<a href="#"><i data-lucide="user-round"></i><div>Profile</div></a>  
-</nav>  
-  
-<script>  
-const SUPABASE_URL="YOUR_SUPABASE_URL";  
-const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";  
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);  
-  
-new Chart(document.getElementById('growthChart'),{  
-type:'line',  
-data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],  
-datasets:[{data:[0,0,0,0,0,0,0],borderColor:'#b8ff3b',backgroundColor:'rgba(184,255,59,.15)',fill:true}]},  
-options:{plugins:{legend:{display:false}}}  
-});  
-  
-lucide.createIcons();  
-</script>  
-</body>  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zep Swipe Business Deals</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body{margin:0;font-family:Inter,sans-serif;background:#070707;color:#fff}
+header{position:sticky;top:0;background:rgba(20,20,20,.7);backdrop-filter:blur(12px);padding:16px;border-bottom:1px solid #262626;display:flex;justify-content:space-between;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;padding:24px}
+.card{background:#141414;border:1px solid #262626;border-radius:22px;padding:20px;box-shadow:0 0 20px rgba(184,255,59,.08)}
+.hero{margin:24px}
+button{background:#b8ff3b;border:none;padding:12px 18px;border-radius:14px;font-weight:700}
+input,textarea,select{width:100%;margin:8px 0;padding:10px;border-radius:10px;background:#0f0f0f;border:1px solid #262626;color:#fff}
+footer{padding:30px;text-align:center;color:#aaa}
+</style>
+</head>
+<body>
+<header><strong>Zep Swipe Business</strong><div>Business Dashboard</div><div>🔔 2,450 MARI 👤</div></header>
+
+<section class="hero card">
+<h1>🚀 Founding Business Partner</h1>
+<p>Grow your business with students. Earn <b>50 MARI</b> for every verified redeemed deal.</p>
+<button>Create New Deal</button>
+<button style="background:#222;color:#fff">View Analytics</button>
+</section>
+
+<section class="grid">
+<div class="card"><h3>Student Reach</h3><h2 id=a>0</h2></div>
+<div class="card"><h3>Verified Redemptions</h3><h2 id=b>0</h2></div>
+<div class="card"><h3>Conversion</h3><h2 id=c>0%</h2></div>
+<div class="card"><h3>Mari Wallet</h3><h2>2450 MARI</h2><progress value="36" max="50"></progress></div>
+</section>
+
+<section class="grid">
+<div class="card">
+<h2>Create Deal</h2>
+<input placeholder="Deal title">
+<input placeholder="Category">
+<textarea placeholder="Description"></textarea>
+<input placeholder="Discount">
+<input placeholder="Coupon quantity">
+<input type="date">
+<textarea placeholder="Terms"></textarea>
+<input type="file">
+<input type="file">
+<button>Preview</button>
+<button>Publish</button>
+<button>Save Draft</button>
+<button>Generate QR</button>
+</div>
+
+<div class="card">
+<h2>Live Preview</h2>
+<img src="https://placehold.co/500x250" style="width:100%;border-radius:16px">
+<h3>50% OFF Lunch</h3>
+<p>Verified ✅ • Reward +50 MARI • 2km away</p>
+<button>Redeem</button>
+</div>
+</section>
+
+<section class="grid">
+<div class="card"><canvas id="chart"></canvas></div>
+<div class="card"><h2>Notifications</h2><p>🎉 Deal redeemed +50 MARI</p><p>⏰ Deal expires tomorrow</p></div>
+</section>
+
+<footer>About • Contact • Terms • Privacy • Escrow • Refund • Mari Policy • Community Guidelines
+<!-- Supabase Ready:
+Auth, profiles, businesses, deals, deal_images, deal_redemptions,
+coupon_redemptions, business_wallets, mari_transactions,
+notifications, analytics, storage, realtime, RLS -->
+</footer>
+
+<script>
+function anim(id,target,suffix=""){let v=0;let e=document.getElementById(id);let i=setInterval(()=>{v++;e.textContent=v+suffix;if(v>=target)clearInterval(i)},20)}
+anim("a",12840);anim("b",36);anim("c",18,"%");
+new Chart(document.getElementById("chart"),{
+type:"line",
+data:{labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+datasets:[{label:"Views",data:[10,22,19,30,42,51,65]}]}
+});
+</script>
+</body>
 </html>
