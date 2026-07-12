@@ -2,414 +2,119 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zep Swipe Business Dashboard V45 - Part 1</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Zep Swipe Deals V41 Supabase Ready</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{
---bg:#070707;--card:#141414;--border:#262626;--accent:#b8ff3b;
-}
-*{box-sizing:border-box}
-body{
-margin:0;font-family:Inter,sans-serif;background:var(--bg);color:#fff;
-overflow-x:hidden;
-}
-.bg{
-position:fixed;inset:0;
-background:
-radial-gradient(circle at 20% 20%,rgba(184,255,59,.10),transparent 35%),
-radial-gradient(circle at 80% 70%,rgba(184,255,59,.08),transparent 30%);
-animation:float 10s ease-in-out infinite alternate;
-z-index:-1;
-}
-@keyframes float{to{transform:translateY(-20px) scale(1.05)}}
-header{
-position:sticky;top:0;
-display:flex;justify-content:space-between;align-items:center;
-padding:18px 24px;
-background:rgba(20,20,20,.7);
-backdrop-filter:blur(18px);
-border-bottom:1px solid var(--border);
-}
-.logo{font-weight:800}
-.hero,.card{
-margin:24px;
-padding:28px;
-border-radius:22px;
-background:rgba(20,20,20,.88);
-border:1px solid var(--border);
-box-shadow:0 0 30px rgba(184,255,59,.08);
-}
-.hero h1{font-size:2rem}
-.btn{
-display:inline-block;
-padding:14px 22px;
-border-radius:14px;
-text-decoration:none;
-margin:8px 8px 0 0;
-font-weight:700;
-}
-.primary{background:var(--accent);color:#111}
-.secondary{border:1px solid var(--accent);color:var(--accent)}
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-padding:0 24px 24px;
-}
-.value{font-size:2rem;font-weight:800;color:var(--accent)}
+:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+body{background:var(--bg);color:#fff;padding-bottom:90px}
+.hero{margin:16px;padding:34px;border-radius:28px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1600&q=80') center/cover}
+.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
+.card{background:#141414;border:1px solid #262626;border-radius:20px;padding:16px;margin:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat,.deal{background:#101010;border:1px solid #262626;border-radius:16px;padding:14px}
+input,select,textarea{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
+.btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800;margin-top:12px}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
+.footer a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
 </style>
 </head>
 <body>
-<div class="bg"></div>
 
-<header>
-<div class="logo">Zep Swipe Business</div>
-<div>Business Name</div>
-<div>🔔 2,450 MARI 👤</div>
-</header>
+<div class="hero">
+<span class="badge">🏷 Student Deals Network</span>
+<h1 style="margin-top:12px">Create Deals. Get Customers.</h1>
+<p>Publish student offers, track claims and grow your business.</p>
+</div>
 
-<section class="hero">
-<h1>🚀 Founding Business Partner</h1>
-<p>Grow your business with students. Create student deals, increase foot traffic and earn <strong>50 MARI</strong> for every verified redeemed deal.</p>
-<a class="btn primary" href="#">+ Create New Deal</a>
-<a class="btn secondary" href="#">View Analytics</a>
-<div style="font-size:90px;margin-top:20px">🪙</div>
-</section>
+<div class="card">
+<div class="grid">
+<div class="stat"><h2 id="views">0</h2><small>Views</small></div>
+<div class="stat"><h2 id="claims">0</h2><small>Claims</small></div>
+<div class="stat"><h2 id="leads">0</h2><small>Leads</small></div>
+<div class="stat"><h2 id="activeDeals">0</h2><small>Active Deals</small></div>
+</div>
+</div>
 
-<section class="grid">
-<div class="card"><h3>Student Reach</h3><div class="value" data-count="12540">0</div></div>
-<div class="card"><h3>Verified Deal Redemptions</h3><div class="value" data-count="243">0</div></div>
-<div class="card"><h3>Conversion Rate</h3><div class="value">18%</div></div>
-<div class="card"><h3>Repeat Customers</h3><div class="value">64%</div></div>
-<div class="card"><h3>Active Deals</h3><div class="value">8</div></div>
-<div class="card"><h3>Estimated Revenue</h3><div class="value">R48,000</div></div>
-</section>
+<div class="card">
+<h3>🏪 Business Profile</h3>
+<input id="businessName" placeholder="Business Name">
+<input id="ownerName" placeholder="Owner Name">
+<input id="location" placeholder="Location">
+<input id="whatsapp" placeholder="WhatsApp Number">
+<button class="btn" onclick="saveProfile()">Save Profile</button>
+</div>
+
+<div class="card">
+<h3>🚀 Create Deal</h3>
+<select id="plan">
+<option>Free Listing</option>
+<option>Featured Deal</option>
+<option>Premium Deal</option>
+</select>
+<select id="category">
+<option>Food & Drinks</option>
+<option>Salon & Barber</option>
+<option>Fashion</option>
+<option>Electronics</option>
+<option>Education</option>
+</select>
+<input id="title" placeholder="Deal Title">
+<textarea id="description" placeholder="Deal Description"></textarea>
+<input id="discount" placeholder="Discount %">
+<input id="expiry" type="date">
+<button class="btn" onclick="publishDeal()">Publish Deal</button>
+</div>
+
+<div class="card">
+<h3>📦 My Deals</h3>
+<div id="dealsContainer"></div>
+</div>
+
+<div class="card">
+<h3>✅ Verified Student Claims</h3>
+<div id="claimsContainer"></div>
+</div>
+
+<div class="footer">
+<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+<a href="marketplace.html"><i data-lucide="briefcase-business"></i><span>Services</span></a>
+<a href="business-deals.html"><i data-lucide="ticket-percent"></i><span>Deals</span></a>
+<a href="provider.html"><i data-lucide="coins"></i><span>Earn</span></a>
+<a href="#"><i data-lucide="user-round"></i><span>Profile</span></a>
+</div>
 
 <script>
-document.querySelectorAll("[data-count]").forEach(el=>{
-let end=+el.dataset.count,n=0;
-const t=setInterval(()=>{
-n+=Math.ceil(end/60);
-if(n>=end){n=end;clearInterval(t);}
-el.textContent=n.toLocaleString();
-},16);
-});
-// Supabase integration starts in later parts.
-</script>
+const SUPABASE_URL="YOUR_SUPABASE_URL";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-<!-- Part 2 snippet to append inside <body> after dashboard cards -->
-<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;padding:24px">
-<div style="background:#141414;border:1px solid #262626;border-radius:22px;padding:24px">
-<h2>Mari Wallet</h2>
-<p>Current Balance</p><h1 style="color:#b8ff3b">2,450 MARI</h1>
-<p>Today's Earnings: +150 MARI</p>
-<p>This Month: 1,200 MARI</p>
-<p>Lifetime: 12,850 MARI</p>
-<progress max="50" value="24" style="width:100%"></progress>
-<p>24 / 50 verified redemptions to unlock Featured Partner.</p>
-</div>
-
-<div id="create-deal" style="background:#141414;border:1px solid #262626;border-radius:22px;padding:24px">
-<h2>Create Deal</h2>
-<input placeholder="Deal title"><br><br>
-<input placeholder="Business category"><br><br>
-<textarea placeholder="Deal description"></textarea><br><br>
-<input placeholder="Discount"><br><br>
-<input placeholder="Coupon quantity"><br><br>
-<input type="date"><br><br>
-<textarea placeholder="Terms"></textarea><br><br>
-<label>Featured image <input type="file"></label><br><br>
-<label>Business logo <input type="file"></label><br><br>
-<button>Preview</button>
-<button>Publish Deal</button>
-<button>Save Draft</button>
-<button>Generate QR</button>
-</div>
-
-<div style="background:#141414;border:1px solid #262626;border-radius:22px;padding:24px">
-<h2>Live Preview</h2>
-<div style="border:1px solid #262626;border-radius:18px;padding:18px">
-<div style="height:160px;background:#222;border-radius:14px;display:flex;align-items:center;justify-content:center">Deal Image</div>
-<h3>50% Student Lunch Special</h3>
-<p>Business Logo ✓ Verified</p>
-<p><strong style="color:#b8ff3b">+50 MARI Reward</strong></p>
-<p>Expires: 30 Jul • Distance: 1.2 km</p>
-<button>Redeem</button>
-</div>
-</div>
-</section>
-
-<!-- Supabase Integration Points
-auth.getUser()
-storage.from('deal_images')
-table: deals
-table: deal_images
-RLS: business owns deal before update/delete
-Realtime subscriptions for new redemptions
--->
-
-<section style="padding:24px">
-<h2>Published Deals</h2>
-
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px">
-
-<div style="background:#141414;border:1px solid #262626;border-radius:22px;padding:20px">
-<div style="height:170px;background:#222;border-radius:16px;display:flex;align-items:center;justify-content:center">Deal Image</div>
-<h3>50% Student Lunch</h3>
-<p>👀 3,482 Views</p>
-<p>🎟 248 Redemptions</p>
-<p>📈 21% Conversion</p>
-<p><span style="color:#b8ff3b">● Active</span> &nbsp; ⭐ Featured</p>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button>Edit</button>
-<button>Duplicate</button>
-<button>Pause</button>
-<button>Delete</button>
-<button>Analytics</button>
-</div>
-</div>
-
-<div style="background:#141414;border:1px solid #262626;border-radius:22px;padding:20px">
-<div style="height:170px;background:#222;border-radius:16px;display:flex;align-items:center;justify-content:center">Deal Image</div>
-<h3>Free Coffee Friday</h3>
-<p>👀 1,904 Views</p>
-<p>🎟 126 Redemptions</p>
-<p>📈 18% Conversion</p>
-<p><span style="color:#ffb347">● Paused</span></p>
-<div style="display:flex;gap:8px;flex-wrap:wrap">
-<button>Edit</button>
-<button>Duplicate</button>
-<button>Publish</button>
-<button>Delete</button>
-<button>Analytics</button>
-</div>
-</div>
-
-</div>
-
-<div style="margin-top:24px;background:#141414;border:1px solid #262626;border-radius:22px;padding:20px">
-<h2>QR Redemption Status</h2>
-<p>✔ QR generated for all active deals.</p>
-<p>✔ Student verification enabled.</p>
-<p>✔ Mari reward credited after verification.</p>
-</div>
-
-</section>
-
-<!-- Supabase:
-tables:
-published_deals
-deal_redemptions
-coupon_redemptions
-analytics
-
-Business rules:
-Only owner can edit/delete/pause.
-Only active deals visible to students.
-Credit 50 MARI after verified redemption.
--->
-<section style="padding:24px">
-<h2>Analytics Dashboard</h2>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px">
-<div style="background:#141414;border:1px solid #262626;border-radius:22px;padding:20px"><h3>Daily Views</h3><canvas id="viewsChart"></canvas></div>
-<div style="background:#141414;border:1px solid #262626;border-radius:22px;padding:20px"><h3>Redemptions</h3><canvas id="redeemChart"></canvas></div>
-<div style="background:#141414;border:1px solid #262626;border-radius:22px;padding:20px"><h3>Conversion</h3><canvas id="convChart"></canvas></div>
-<div style="background:#141414;border:1px solid #262626;border-radius:22px;padding:20px">
-<h3>Top Insights</h3>
-<p>🏆 Highest Earning Deal: Student Lunch Special</p>
-<p>🔥 Most Popular Deal: Free Coffee Friday</p>
-<p>🔁 Repeat Customers: 64%</p>
-</div>
-</div>
-
-<div style="margin-top:24px;background:#141414;border:1px solid #262626;border-radius:22px;padding:20px">
-<h2>Redemption Timeline</h2>
-<ul>
-<li>Student redeemed coupon</li>
-<li>Business verified redemption</li>
-<li>+50 MARI credited</li>
-<li>Transaction completed</li>
-</ul>
-</div>
-</section>
-
-<script>
-const labels=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-const cfg=(id,data)=>new Chart(document.getElementById(id),{
-type:"line",
-data:{labels,datasets:[{data,borderColor:"#b8ff3b",tension:.35}]},
-options:{plugins:{legend:{display:false}}}
-});
-cfg("viewsChart",[120,180,240,220,300,420,510]);
-cfg("redeemChart",[10,18,22,30,34,46,52]);
-cfg("convChart",[8,10,12,13,15,17,19]);
-</script>
-
-<!-- Supabase analytics integration:
-analytics table
-Realtime chart updates
-Aggregated business metrics
--->
-
-<section style="padding:24px;display:grid;gap:24px">
-
-<div style="background:#141414;border:1px solid #262626;border-radius:22px;padding:20px">
-<h2>Notification Centre</h2>
-<div>🎉 Your deal was redeemed. <strong>+50 MARI credited.</strong></div><hr>
-<div>💚 A student saved your deal.</div><hr>
-<div>⏰ Your deal expires tomorrow.</div>
-</div>
-
-<div style="background:#141414;border:1px solid #262626;border-radius:22px;padding:20px">
-<h2>Business Profile</h2>
-<input placeholder="Business Name"><br><br>
-<input placeholder="Owner"><br><br>
-<input placeholder="WhatsApp"><br><br>
-<input placeholder="Address"><br><br>
-<input placeholder="Google Maps Link"><br><br>
-<input placeholder="Trading Hours"><br><br>
-<input placeholder="Categories"><br><br>
-<input placeholder="Website"><br><br>
-<button>Save Profile</button>
-</div>
-
-<div style="background:#141414;border:1px solid #262626;border-radius:22px;padding:20px">
-<h2>Featured Partner</h2>
-<ul>
-<li>Priority placement</li>
-<li>Push notifications</li>
-<li>Unlimited deals</li>
-<li>Advanced analytics</li>
-<li>Monthly business reports</li>
-</ul>
-<p>Unlock after <strong>50 verified redemptions</strong>.</p>
-<progress max="50" value="24" style="width:100%"></progress>
-<p>24 / 50 complete</p>
-</div>
-
-</section>
-
-<nav style="position:sticky;bottom:0;background:#141414;border-top:1px solid #262626;padding:14px;display:flex;justify-content:space-around">
-<a href="#">🏠<br>Home</a>
-<a href="#">🏷️<br>Deals</a>
-<a href="#create-deal">💰<br>Earn</a>
-<a href="#">📊<br>Analytics</a>
-<a href="#">👤<br>Profile</a>
-</nav>
-
-<footer style="padding:28px;text-align:center">
-<a href="#">About</a> |
-<a href="#">Contact</a> |
-<a href="#">Terms</a> |
-<a href="#">Privacy</a> |
-<a href="#">Escrow</a> |
-<a href="#">Refund</a> |
-<a href="#">Mari Policy</a> |
-<a href="#">Community Guidelines</a>
-</footer>
-
-<!-- Supabase:
-profiles
-businesses
-notifications
-business_wallets
-mari_transactions
-featured_partner eligibility
--->
-<!-- Part 6: JavaScript and Supabase Integration Notes -->
-<script>
-// ---------- Animated Counters ----------
-document.querySelectorAll("[data-count]").forEach(el=>{
-  const end = Number(el.dataset.count)||0;
-  let value = 0;
-  const step = Math.max(1, Math.ceil(end/60));
-  const timer = setInterval(()=>{
-    value += step;
-    if(value>=end){ value=end; clearInterval(timer); }
-    el.textContent = value.toLocaleString();
-  },16);
-});
-
-// ---------- Live Deal Preview ----------
-const titleInput = document.querySelector('input[placeholder="Deal title"]');
-const previewTitle = document.querySelector('#live-preview-title');
-if(titleInput && previewTitle){
-  titleInput.addEventListener("input",()=>previewTitle.textContent=titleInput.value||"Your Deal Title");
+async function saveProfile(){
+alert("Connect to businesses table.");
 }
 
-// ---------- Smooth Scroll ----------
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener("click",e=>{
-    const id=a.getAttribute("href");
-    const target=document.querySelector(id);
-    if(target){
-      e.preventDefault();
-      target.scrollIntoView({behavior:"smooth"});
-    }
-  });
+async function publishDeal(){
+alert("Connect to deals table.");
+}
+
+async function loadDeals(){
+try{
+const {data}=await db.from('deals').select('*').limit(20);
+const container=document.getElementById('dealsContainer');
+if(!data) return;
+document.getElementById('activeDeals').innerText=data.length;
+container.innerHTML='';
+data.forEach(d=>{
+container.innerHTML += `<div class="deal"><b>${d.title||'Deal'}</b><br>${d.discount||0}% Off</div>`;
 });
+}catch(e){}
+}
 
-// ---------- Placeholder QR Button ----------
-document.querySelectorAll("button").forEach(btn=>{
-  if(btn.textContent.includes("Generate QR")){
-    btn.addEventListener("click",()=>alert("QR generation will be connected to your backend."));
-  }
-});
-
-/*
-======================
-SUPABASE INTEGRATION
-======================
-
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-
-Auth:
-- signInWithPassword()
-- signUp()
-- signOut()
-- auth.getUser()
-
-Tables:
-profiles
-businesses
-deals
-deal_images
-deal_redemptions
-coupon_redemptions
-business_wallets
-mari_transactions
-notifications
-analytics
-
-Storage:
-deal_images bucket
-business_logos bucket
-
-Realtime:
-Subscribe to:
-deal_redemptions
-notifications
-wallet updates
-
-Row Level Security:
-Businesses may only:
-- create their own deals
-- edit their own deals
-- delete their own deals
-- pause their own deals
-
-Business Rules:
-+50 MARI after verified redemption only.
-Students only see published active deals.
-Featured Partner unlocks after 50 verified redemptions.
-*/
+loadDeals();
+lucide.createIcons();
 </script>
-
 </body>
 </html>
