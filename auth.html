@@ -38,47 +38,20 @@ body{
   padding:24px;
   box-shadow:0 20px 60px rgba(0,0,0,.35);
 }
-.logo{
-  text-align:center;
-  color:var(--accent);
-  font-size:30px;
-  font-weight:800;
-}
-.sub{
-  text-align:center;
-  color:var(--muted);
-  margin:8px 0 22px;
-  line-height:1.5;
-}
-.roles{
-  display:grid;
-  gap:10px;
-}
+.logo{text-align:center;color:var(--accent);font-size:30px;font-weight:800}
+.sub{text-align:center;color:var(--muted);margin:8px 0 22px;line-height:1.5}
+.roles{display:grid;gap:10px}
 .role{
   padding:14px;
   border:1px solid var(--line);
   border-radius:14px;
   background:#101010;
   cursor:pointer;
-  transition:.15s ease;
 }
-.role:hover{border-color:#555}
-.role.active{
-  border-color:var(--accent);
-  background:#1a2508;
-}
+.role.active{border-color:var(--accent);background:#1a2508}
 .role strong{font-size:16px}
-.role small{
-  display:block;
-  color:var(--muted);
-  margin-top:4px;
-}
-label{
-  display:block;
-  margin-top:16px;
-  font-size:13px;
-  color:#ccc;
-}
+.role small{display:block;color:var(--muted);margin-top:4px}
+label{display:block;margin-top:16px;font-size:13px;color:#ccc}
 input{
   width:100%;
   padding:14px;
@@ -98,35 +71,12 @@ button{
   font-weight:800;
   cursor:pointer;
 }
-.primary{
-  border:none;
-  background:var(--accent);
-  color:#000;
-}
-.secondary{
-  background:transparent;
-  border:1px solid var(--accent);
-  color:var(--accent);
-}
-button:disabled{
-  opacity:.55;
-  cursor:not-allowed;
-}
-#msg{
-  margin-top:16px;
-  min-height:22px;
-  text-align:center;
-  color:var(--accent);
-  line-height:1.45;
-}
+.primary{border:none;background:var(--accent);color:#000}
+.secondary{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+button:disabled{opacity:.55;cursor:not-allowed}
+#msg{margin-top:16px;min-height:22px;text-align:center;color:var(--accent);line-height:1.45}
 #msg.error{color:var(--danger)}
-.footer-note{
-  margin-top:18px;
-  text-align:center;
-  color:#777;
-  font-size:12px;
-  line-height:1.5;
-}
+.footer-note{margin-top:18px;text-align:center;color:#777;font-size:12px;line-height:1.5}
 </style>
 </head>
 
@@ -160,7 +110,7 @@ button:disabled{
   <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
 
   <label for="password">Password</label>
-  <input id="password" type="password" autocomplete="new-password" placeholder="At least 6 characters">
+  <input id="password" type="password" autocomplete="current-password" placeholder="Your password">
 
   <button id="signupBtn" class="primary" type="button">Create Account</button>
   <button id="loginBtn" class="secondary" type="button">Login</button>
@@ -168,20 +118,33 @@ button:disabled{
   <div id="msg"></div>
 
   <div class="footer-note">
-    By creating an account, you agree to use Zep Swipe responsibly and provide accurate information.
+    Zep Swipe connects customers, student providers and businesses.
   </div>
 </div>
 
 <script>
 /* =========================================================
    ZEP SWIPE SUPABASE CONFIGURATION
-   GitHub Pages development environment
+   Replace ONLY the two values below.
    ========================================================= */
 
-const SUPABASE_URL = "20https://mccsctmgkokkcrkmjuvw.supabase.co";
+const SUPABASE_URL =
+  "PASTE_YOUR_SUPABASE_PROJECT_URL_HERE";
 
 const SUPABASE_ANON_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jY3NjdG1na29ra2Nya21qdXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5Nzg0NjcsImV4cCI6MjEwMjU1NDQ2N30.uQrPeROFDjxxiVDPh0vnAyS3TSN6igVTEbbOXkCBx_U";
+  "PASTE_YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY_HERE";
+
+/*
+   Example format:
+
+   const SUPABASE_URL =
+     "https://xxxxxxxx.supabase.co";
+
+   const SUPABASE_ANON_KEY =
+     "your-public-anon-or-publishable-key";
+
+   NEVER put a service_role/secret key in this HTML file.
+*/
 
 const db = supabase.createClient(
   SUPABASE_URL,
@@ -195,16 +158,14 @@ const db = supabase.createClient(
   }
 );
 
-/* =========================================================
-   APP SETTINGS
-   ========================================================= */
-
+/*
+   DEVELOPMENT REDIRECT
+   Replace this with your ACTUAL GitHub Pages auth.html URL.
+*/
 const AUTH_REDIRECT_URL =
   "https://masterbase.github.io/auth.html";
 
-/* =========================================================
-   ELEMENTS
-   ========================================================= */
+let selectedRole = "customer";
 
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
@@ -212,46 +173,27 @@ const signupBtn = document.getElementById("signupBtn");
 const loginBtn = document.getElementById("loginBtn");
 const msgEl = document.getElementById("msg");
 
-let selectedRole = "customer";
-
-/* =========================================================
-   ROLE SELECTION
-   ========================================================= */
-
-document.querySelectorAll(".role").forEach(roleEl => {
-
-  roleEl.addEventListener("click", () => {
-
+document.querySelectorAll(".role").forEach(el => {
+  el.addEventListener("click", () => {
     document.querySelectorAll(".role")
-      .forEach(el => el.classList.remove("active"));
+      .forEach(x => x.classList.remove("active"));
 
-    roleEl.classList.add("active");
+    el.classList.add("active");
+    selectedRole = el.dataset.role;
 
-    selectedRole = roleEl.dataset.role;
+    localStorage.setItem("zep_selected_role", selectedRole);
   });
-
 });
 
-/* =========================================================
-   MESSAGE HELPERS
-   ========================================================= */
-
-function showMessage(message, error=false){
-  msgEl.textContent = message;
+function showMessage(text, error=false){
+  msgEl.textContent = text;
   msgEl.className = error ? "error" : "";
 }
 
-function setLoading(button, loading, text){
+function setLoading(button, loading, loadingText, normalText){
   button.disabled = loading;
-  button.textContent = loading ? text : button.dataset.default;
+  button.textContent = loading ? loadingText : normalText;
 }
-
-signupBtn.dataset.default = "Create Account";
-loginBtn.dataset.default = "Login";
-
-/* =========================================================
-   VALIDATION
-   ========================================================= */
 
 function validateForm(){
 
@@ -279,22 +221,29 @@ function validateForm(){
   return true;
 }
 
-/* =========================================================
-   CREATE / UPDATE PROFILE
-   =========================================================
-   The selected role is stored in Supabase Auth metadata.
-   This is important when email confirmation is enabled because
-   a new signup may not have an authenticated database session
-   until the email is verified.
-   ========================================================= */
+/*
+   Create/update the user's profile.
 
+   IMPORTANT:
+   With email confirmation enabled, a new signup may not have
+   an authenticated database session yet. Therefore the role
+   is also stored in Auth user metadata during signup.
+
+   After verification + login, this function safely creates
+   the profiles row.
+*/
 async function ensureProfile(user){
 
   if(!user) return false;
 
+  const metadataRole = user.user_metadata?.role;
+
+  const savedRole =
+    localStorage.getItem("zep_selected_role");
+
   const role =
-    user.user_metadata?.role ||
-    localStorage.getItem("zep_selected_role") ||
+    metadataRole ||
+    savedRole ||
     "customer";
 
   const cleanRole =
@@ -312,10 +261,12 @@ async function ensureProfile(user){
 
   if(error){
     console.error("Profile error:", error);
+
     showMessage(
-      "Your account is active, but your profile could not be saved. Please try logging in again.",
+      "Your account is active, but your profile could not be saved.",
       true
     );
+
     return false;
   }
 
@@ -325,7 +276,7 @@ async function ensureProfile(user){
 }
 
 /* =========================================================
-   CREATE ACCOUNT
+   SIGN UP
    ========================================================= */
 
 async function signup(){
@@ -337,12 +288,16 @@ async function signup(){
 
   localStorage.setItem("zep_selected_role", selectedRole);
 
-  setLoading(signupBtn, true, "Creating...");
+  setLoading(
+    signupBtn,
+    true,
+    "Creating...",
+    "Create Account"
+  );
 
   showMessage("Creating your Zep Swipe account...");
 
   const {data,error} = await db.auth.signUp({
-
     email,
     password,
 
@@ -353,7 +308,6 @@ async function signup(){
         role:selectedRole
       }
     }
-
   });
 
   if(error){
@@ -362,42 +316,53 @@ async function signup(){
 
     showMessage(error.message, true);
 
-    setLoading(signupBtn, false);
+    setLoading(
+      signupBtn,
+      false,
+      "",
+      "Create Account"
+    );
 
     return;
   }
 
   /*
-    If email confirmation is disabled, Supabase may return
-    an active session immediately. In that case create the
-    profile now.
+     If email confirmation is disabled, a session may be
+     returned immediately.
   */
-
   if(data.session && data.user){
 
-    const profileOK = await ensureProfile(data.user);
+    const profileOK =
+      await ensureProfile(data.user);
 
     if(profileOK){
       showMessage("Account created. Redirecting...");
       redirectByRole(selectedRole);
     }
 
-    setLoading(signupBtn, false);
+    setLoading(
+      signupBtn,
+      false,
+      "",
+      "Create Account"
+    );
 
     return;
   }
 
   /*
-    If email confirmation is enabled, there may be no session.
-    The role is already stored in Auth metadata and will be
-    recovered after the user verifies and logs in.
+     Email confirmation is enabled.
   */
-
   showMessage(
     "Account created. Check your email and verify your account before logging in."
   );
 
-  setLoading(signupBtn, false);
+  setLoading(
+    signupBtn,
+    false,
+    "",
+    "Create Account"
+  );
 }
 
 /* =========================================================
@@ -411,7 +376,12 @@ async function login(){
   const email = emailInput.value.trim();
   const password = passwordInput.value;
 
-  setLoading(loginBtn, true, "Signing in...");
+  setLoading(
+    loginBtn,
+    true,
+    "Signing in...",
+    "Login"
+  );
 
   showMessage("Signing you in...");
 
@@ -427,43 +397,62 @@ async function login(){
 
     showMessage(error.message, true);
 
-    setLoading(loginBtn, false);
+    setLoading(
+      loginBtn,
+      false,
+      "",
+      "Login"
+    );
 
     return;
   }
 
   if(!data.user){
 
-    showMessage("Login succeeded, but no user session was returned.", true);
+    showMessage(
+      "Login succeeded, but no user session was returned.",
+      true
+    );
 
-    setLoading(loginBtn, false);
+    setLoading(
+      loginBtn,
+      false,
+      "",
+      "Login"
+    );
 
     return;
   }
 
   /*
-    Make sure the profile exists and has the correct role.
+     Ensure the profile exists.
   */
-
-  const profileOK = await ensureProfile(data.user);
+  const profileOK =
+    await ensureProfile(data.user);
 
   if(!profileOK){
 
-    setLoading(loginBtn, false);
+    setLoading(
+      loginBtn,
+      false,
+      "",
+      "Login"
+    );
 
     return;
   }
 
   /*
-    Get the role from the database after profile sync.
+     Get the authoritative role from the database.
   */
-
-  const {data:profile,error:profileError} =
-    await db
-      .from("profiles")
-      .select("role")
-      .eq("id",data.user.id)
-      .maybeSingle();
+  const {
+    data:profile,
+    error:profileError
+  } = await db
+    .from("profiles")
+    .select("role")
+    .eq("id",data.user.id)
+    .maybeSingle();
 
   if(profileError){
 
@@ -474,7 +463,12 @@ async function login(){
       true
     );
 
-    setLoading(loginBtn, false);
+    setLoading(
+      loginBtn,
+      false,
+      "",
+      "Login"
+    );
 
     return;
   }
@@ -490,7 +484,7 @@ async function login(){
 }
 
 /* =========================================================
-   REDIRECT BY ROLE
+   ROLE REDIRECTS
    ========================================================= */
 
 function redirectByRole(role){
@@ -509,19 +503,7 @@ function redirectByRole(role){
 }
 
 /* =========================================================
-   AUTH STATE LISTENER
-   ========================================================= */
-
-db.auth.onAuthStateChange((event, session) => {
-
-  if(event === "SIGNED_OUT"){
-    localStorage.removeItem("zep_selected_role");
-  }
-
-});
-
-/* =========================================================
-   BUTTON EVENTS
+   BUTTONS
    ========================================================= */
 
 signupBtn.addEventListener("click", signup);
@@ -540,32 +522,41 @@ loginBtn.addEventListener("click", login);
 });
 
 /* =========================================================
-   HANDLE RETURN FROM EMAIL VERIFICATION
+   AUTH STATE
    ========================================================= */
 
-async function checkExistingSession(){
+db.auth.onAuthStateChange((event) => {
 
-  const {data:{session},error} =
+  if(event === "SIGNED_OUT"){
+    localStorage.removeItem("zep_selected_role");
+  }
+
+});
+
+/* =========================================================
+   CHECK CURRENT SESSION
+   ========================================================= */
+
+async function checkSession(){
+
+  const {data,error} =
     await db.auth.getSession();
 
   if(error){
-    console.error(error);
+    console.error("Session check error:",error);
     return;
   }
 
-  /*
-    Do not automatically redirect an already logged-in user
-    from this page. The user can still see the login screen.
-    This keeps the page predictable during testing.
-  */
-
-  if(session?.user){
-    console.log("Active Zep Swipe session:", session.user.id);
+  if(data.session){
+    console.log(
+      "Zep Swipe session active:",
+      data.session.user.id
+    );
   }
 
 }
 
-checkExistingSession();
+checkSession();
 </script>
 
 </body>
