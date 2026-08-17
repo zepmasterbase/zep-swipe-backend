@@ -3,88 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Deals V41 Supabase Ready</title>
+<title>Zep Swipe Business Deals V42</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
+:root{--bg:#070707;--card:#141414;--card2:#101010;--accent:#b8ff3b;--border:#262626;--muted:#9a9a9a;--danger:#ff6464}
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{background:var(--bg);color:#fff;padding-bottom:90px}
-.hero{margin:16px;padding:34px;border-radius:28px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1600&q=80') center/cover}
-.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(184,255,59,.15);color:#b8ff3b}
-.card{background:#141414;border:1px solid #262626;border-radius:20px;padding:16px;margin:16px}
+.hero{margin:16px;padding:30px;border-radius:28px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.9)),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1600&q=80') center/cover}
+.badge{display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent);font-size:12px;font-weight:800}
+h1{font-size:clamp(28px,7vw,48px);margin-top:12px;line-height:1.05}
+h2,h3{margin-bottom:10px}
+p,small{color:#bbb;line-height:1.5}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px;margin:16px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-.stat,.deal{background:#101010;border:1px solid #262626;border-radius:16px;padding:14px}
-input,select,textarea{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid #262626;border-radius:12px}
-.btn{width:100%;padding:12px;border:none;border-radius:12px;background:#b8ff3b;color:#000;font-weight:800;margin-top:12px}
-.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid #262626;display:flex;justify-content:space-around;padding:12px 0}
-.footer a{display:flex;flex-direction:column;align-items:center;color:#fff;text-decoration:none;font-size:12px}
+.stat,.deal,.plan{background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:14px}
+.stat h2{color:var(--accent);margin:0 0 4px}
+input,select,textarea{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid var(--border);border-radius:12px;outline:none}
+textarea{min-height:100px;resize:vertical}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;background:var(--accent);color:#000;font-weight:800;margin-top:12px;cursor:pointer}
+.btn.secondary{background:#242424;color:#fff}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.status{padding:12px;border-radius:12px;margin-top:12px;background:#0e0e0e;border:1px solid var(--border)}
+.status strong{color:var(--accent)}
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.plan h3{margin-bottom:4px}.price{font-size:24px;font-weight:800;margin:8px 0}
+.plan.active{border-color:var(--accent);box-shadow:0 0 0 1px rgba(184,255,59,.25)}
+.featured{display:inline-block;font-size:10px;padding:4px 8px;border-radius:999px;background:var(--accent);color:#000;font-weight:800}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.hidden{display:none!important}
+.footer{position:fixed;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0;z-index:20}
+.footer a{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;text-decoration:none;font-size:12px}
+.notice{font-size:12px;color:var(--muted);margin-top:10px}
 </style>
 </head>
 <body>
 
 <div class="hero">
-<span class="badge">🏷 Student Deals Network</span>
-<h1 style="margin-top:12px">Create Deals. Get Customers.</h1>
-<p>Publish student offers, track claims and grow your business.</p>
+  <span class="badge">🏷 ZEP SWIPE BUSINESS NETWORK</span>
+  <h1>Create Deals. Get Customers.</h1>
+  <p>Publish student offers, track claims, grow your business and upgrade when you're ready.</p>
+  <div id="subscriptionStatus" class="status">Subscription: <strong>Loading...</strong></div>
 </div>
 
 <div class="card">
-<div class="grid">
-<div class="stat"><h2 id="views">0</h2><small>Views</small></div>
-<div class="stat"><h2 id="claims">0</h2><small>Claims</small></div>
-<div class="stat"><h2 id="leads">0</h2><small>Leads</small></div>
-<div class="stat"><h2 id="activeDeals">0</h2><small>Active Deals</small></div>
-</div>
-</div>
-
-<div class="card">
-<h3>🏪 Business Profile</h3>
-<input id="businessName" placeholder="Business Name">
-<input id="ownerName" placeholder="Owner Name">
-<input id="location" placeholder="Location">
-<input id="whatsapp" placeholder="WhatsApp Number">
-<button class="btn" onclick="saveProfile()">Save Profile</button>
+  <div class="grid">
+    <div class="stat"><h2 id="views">0</h2><small>Views</small></div>
+    <div class="stat"><h2 id="claims">0</h2><small>Claims</small></div>
+    <div class="stat"><h2 id="leads">0</h2><small>Leads</small></div>
+    <div class="stat"><h2 id="activeDeals">0</h2><small>Active Deals</small></div>
+  </div>
 </div>
 
 <div class="card">
-<h3>🚀 Create Deal</h3>
-<select id="plan">
-<option>Free Listing</option>
-<option>Featured Deal</option>
-<option>Premium Deal</option>
-</select>
-<select id="category">
-<option>Food & Drinks</option>
-<option>Salon & Barber</option>
-<option>Fashion</option>
-<option>Electronics</option>
-<option>Education</option>
-</select>
-<input id="title" placeholder="Deal Title">
-<textarea id="description" placeholder="Deal Description"></textarea>
-<input id="discount" placeholder="Discount %">
-<input id="expiry" type="date">
-<button class="btn" onclick="publishDeal()">Publish Deal</button>
+  <h3>🏪 Business Profile</h3>
+  <input id="businessName" placeholder="Business Name">
+  <input id="ownerName" placeholder="Owner Name">
+  <input id="location" placeholder="Location">
+  <input id="whatsapp" placeholder="WhatsApp Number">
+  <button class="btn" onclick="saveProfile()">Save Profile</button>
 </div>
 
 <div class="card">
-<h3>📦 My Deals</h3>
-<div id="dealsContainer"></div>
+  <div class="row">
+    <div>
+      <h3>💳 Business Plans</h3>
+      <p>First month free for eligible new businesses. Upgrade when you want more visibility.</p>
+    </div>
+  </div>
+  <div id="plans" class="plan-grid" style="margin-top:12px"></div>
+  <div id="paymentStatus" class="status hidden"></div>
+  <p class="notice">Payments are initiated by your secure backend. Never put your Paystack secret key in this page.</p>
 </div>
 
 <div class="card">
-<h3>✅ Verified Student Claims</h3>
-<div id="claimsContainer"></div>
+  <h3>🚀 Create Deal</h3>
+  <select id="plan">
+    <option value="free">Free Listing</option>
+    <option value="featured">Featured Deal</option>
+    <option value="premium">Premium Deal</option>
+  </select>
+  <select id="category">
+    <option>Food & Drinks</option>
+    <option>Salon & Barber</option>
+    <option>Fashion</option>
+    <option>Electronics</option>
+    <option>Education</option>
+  </select>
+  <input id="title" placeholder="Deal Title">
+  <textarea id="description" placeholder="Deal Description"></textarea>
+  <input id="discount" placeholder="Discount %" type="number" min="0" max="100">
+  <input id="expiry" type="date">
+  <button class="btn" onclick="publishDeal()">Publish Deal</button>
+</div>
+
+<div class="card">
+  <h3>📦 My Deals</h3>
+  <div id="dealsContainer"><p>Loading...</p></div>
+</div>
+
+<div class="card">
+  <h3>✅ Verified Student Claims</h3>
+  <div id="claimsContainer"><p>Connect your claims table to display verified redemptions.</p></div>
 </div>
 
 <div class="footer">
-<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
-<a href="marketplace.html"><i data-lucide="briefcase-business"></i><span>Services</span></a>
-<a href="business-deals.html"><i data-lucide="ticket-percent"></i><span>Deals</span></a>
-<a href="provider.html"><i data-lucide="coins"></i><span>Earn</span></a>
-<a href="#"><i data-lucide="user-round"></i><span>Profile</span></a>
+  <a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+  <a href="marketplace.html"><i data-lucide="briefcase-business"></i><span>Services</span></a>
+  <a href="business-deals.html"><i data-lucide="ticket-percent"></i><span>Deals</span></a>
+  <a href="provider.html"><i data-lucide="coins"></i><span>Earn</span></a>
+  <a href="#"><i data-lucide="user-round"></i><span>Profile</span></a>
 </div>
 
 <script>
@@ -92,29 +121,268 @@ const SUPABASE_URL="YOUR_SUPABASE_URL";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
+/*
+BACKEND CONTRACT
+Create a Supabase Edge Function named "paystack-checkout".
+POST JSON:
+{ business_id, plan_id, email }
+
+Expected response:
+{ authorization_url, reference }
+
+The Edge Function should:
+1. Authenticate the user.
+2. Validate business ownership.
+3. Read the plan price from your database (never trust a browser price).
+4. Initialize Paystack server-side.
+5. Store a pending payment.
+6. Return Paystack's authorization_url and reference.
+
+Create another Edge Function named "paystack-webhook".
+It should verify the Paystack webhook signature, verify successful transactions,
+record the payment, and activate/extend the subscription.
+Never place the Paystack secret key in this HTML.
+*/
+
+const PLANS=[
+  {id:"free",name:"Founding Business",price:0,currency:"ZAR",interval:"month",features:["First month free","Basic business profile","Deal publishing"]},
+  {id:"featured",name:"Featured Partner",price:399,currency:"ZAR",interval:"month",features:["Featured placement","Enhanced profile","Deal promotion","Basic analytics"]},
+  {id:"premium",name:"Premium Partner",price:799,currency:"ZAR",interval:"month",features:["Everything in Featured","Premium placement","Advanced promotion","Advanced analytics"]}
+];
+
+let currentUser=null;
+let currentBusiness=null;
+
+function money(plan){
+  return plan.price===0 ? "FREE" : `${plan.currency} ${plan.price.toLocaleString()}/month`;
+}
+
+function renderPlans(activePlan){
+  const box=document.getElementById("plans");
+  box.innerHTML=PLANS.map(p=>`
+    <div class="plan ${activePlan===p.id?'active':''}">
+      ${p.id==="featured"?'<span class="featured">POPULAR</span>':''}
+      <h3>${escapeHtml(p.name)}</h3>
+      <div class="price">${money(p)}</div>
+      <small>${p.features.map(escapeHtml).join(" • ")}</small>
+      ${p.id==="free"
+        ? '<button class="btn secondary" disabled>Included</button>'
+        : `<button class="btn" onclick="startCheckout('${p.id}')">Upgrade</button>`}
+    </div>`).join("");
+}
+
+async function getSession(){
+  const {data,error}=await db.auth.getSession();
+  if(error) throw error;
+  currentUser=data.session?.user || null;
+  return currentUser;
+}
+
+async function loadBusiness(){
+  if(!currentUser){
+    currentBusiness=null;
+    renderPlans("free");
+    setSubscriptionStatus("Sign in to manage your business subscription.");
+    return;
+  }
+
+  const {data,error}=await db.from("businesses")
+    .select("*")
+    .eq("owner_id",currentUser.id)
+    .maybeSingle();
+
+  if(error){ console.error(error); return; }
+  currentBusiness=data;
+
+  if(data){
+    businessName.value=data.name || "";
+    ownerName.value=data.owner_name || "";
+    location.value=data.location || "";
+    whatsapp.value=data.whatsapp || "";
+  }
+
+  await loadSubscription();
+}
+
+async function loadSubscription(){
+  if(!currentBusiness){
+    renderPlans("free");
+    setSubscriptionStatus("No business profile found.");
+    return;
+  }
+
+  const {data,error}=await db.from("subscriptions")
+    .select("plan_id,status,expires_at")
+    .eq("business_id",currentBusiness.id)
+    .order("created_at",{ascending:false})
+    .limit(1)
+    .maybeSingle();
+
+  if(error){
+    console.warn("Subscription query:",error.message);
+    renderPlans("free");
+    setSubscriptionStatus("Subscription status unavailable until your subscriptions table is connected.");
+    return;
+  }
+
+  const active=data?.status==="active";
+  const planId=active ? data.plan_id : "free";
+  renderPlans(planId);
+
+  if(active){
+    const date=data.expires_at ? new Date(data.expires_at).toLocaleDateString() : "—";
+    setSubscriptionStatus(`Active: <strong>${escapeHtml(planName(planId))}</strong> · Renews/expires: ${date}`);
+  }else{
+    setSubscriptionStatus("Founding Business: <strong>FREE</strong> for the first month.");
+  }
+}
+
+function planName(id){ return PLANS.find(p=>p.id===id)?.name || id; }
+
+function setSubscriptionStatus(html){
+  document.getElementById("subscriptionStatus").innerHTML=`Subscription: <strong>${html}</strong>`;
+}
+
+async function startCheckout(planId){
+  if(!currentUser){
+    alert("Please sign in before upgrading.");
+    return;
+  }
+  if(!currentBusiness){
+    alert("Please save your business profile first.");
+    return;
+  }
+
+  const plan=PLANS.find(p=>p.id===planId);
+  if(!plan || plan.price<=0) return;
+
+  const status=document.getElementById("paymentStatus");
+  status.classList.remove("hidden");
+  status.innerHTML="Starting secure Paystack checkout...";
+
+  try{
+    const {data,error}=await db.functions.invoke("paystack-checkout",{
+      body:{
+        business_id:currentBusiness.id,
+        plan_id:plan.id,
+        email:currentUser.email
+      }
+    });
+    if(error) throw error;
+    if(!data?.authorization_url) throw new Error("Checkout URL was not returned.");
+    window.location.href=data.authorization_url;
+  }catch(err){
+    console.error(err);
+    status.innerHTML=`Payment could not be started. ${escapeHtml(err.message || "Please try again.")}`;
+  }
+}
+
 async function saveProfile(){
-alert("Connect to businesses table.");
+  if(!currentUser){
+    alert("Please sign in first.");
+    return;
+  }
+
+  const payload={
+    owner_id:currentUser.id,
+    name:businessName.value.trim(),
+    owner_name:ownerName.value.trim(),
+    location:location.value.trim(),
+    whatsapp:whatsapp.value.trim()
+  };
+
+  if(!payload.name){
+    alert("Enter your business name.");
+    return;
+  }
+
+  const {data,error}=await db.from("businesses")
+    .upsert(payload,{onConflict:"owner_id"})
+    .select()
+    .single();
+
+  if(error){
+    alert("Could not save profile: "+error.message);
+    return;
+  }
+
+  currentBusiness=data;
+  alert("Business profile saved.");
+  await loadSubscription();
 }
 
 async function publishDeal(){
-alert("Connect to deals table.");
+  if(!currentUser || !currentBusiness){
+    alert("Please sign in and save your business profile first.");
+    return;
+  }
+
+  const payload={
+    business_id:currentBusiness.id,
+    title:title.value.trim(),
+    description:description.value.trim(),
+    discount:Number(discount.value||0),
+    expiry:expiry.value || null,
+    category:category.value,
+    plan:plan.value,
+    status:"active"
+  };
+
+  if(!payload.title){
+    alert("Enter a deal title.");
+    return;
+  }
+
+  const {error}=await db.from("deals").insert(payload);
+  if(error){
+    alert("Could not publish deal: "+error.message);
+    return;
+  }
+
+  alert("Deal published.");
+  await loadDeals();
 }
 
 async function loadDeals(){
-try{
-const {data}=await db.from('deals').select('*').limit(20);
-const container=document.getElementById('dealsContainer');
-if(!data) return;
-document.getElementById('activeDeals').innerText=data.length;
-container.innerHTML='';
-data.forEach(d=>{
-container.innerHTML += `<div class="deal"><b>${d.title||'Deal'}</b><br>${d.discount||0}% Off</div>`;
-});
-}catch(e){}
+  const container=document.getElementById("dealsContainer");
+  if(!currentBusiness){ container.innerHTML="<p>Sign in to view your deals.</p>"; return; }
+
+  const {data,error}=await db.from("deals")
+    .select("*")
+    .eq("business_id",currentBusiness.id)
+    .order("created_at",{ascending:false})
+    .limit(50);
+
+  if(error){
+    container.innerHTML=`<p>Could not load deals: ${escapeHtml(error.message)}</p>`;
+    return;
+  }
+
+  document.getElementById("activeDeals").innerText=(data||[]).filter(d=>d.status==="active").length;
+  container.innerHTML=(data||[]).length
+    ? data.map(d=>`<div class="deal"><div class="row"><b>${escapeHtml(d.title||"Deal")}</b><span>${Number(d.discount||0)}% Off</span></div><small>${escapeHtml(d.category||"")}</small></div>`).join("")
+    : "<p>No deals yet.</p>";
 }
 
-loadDeals();
-lucide.createIcons();
+function escapeHtml(value){
+  return String(value ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));
+}
+
+async function init(){
+  try{
+    await getSession();
+    await loadBusiness();
+    await loadDeals();
+  }catch(e){
+    console.error(e);
+    setSubscriptionStatus("Connect Supabase to enable dashboard features.");
+    renderPlans("free");
+  }
+  lucide.createIcons();
+}
+
+db.auth.onAuthStateChange(async()=>{ await init(); });
+init();
 </script>
 </body>
 </html>
