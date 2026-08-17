@@ -45,12 +45,11 @@ h1{font-size:27px;letter-spacing:-1.5px;margin:0 0 6px}.intro{font-size:11px;lin
 .divider{display:flex;align-items:center;gap:9px;color:#4f554d;font-size:8px;margin:17px 0}.divider:before,.divider:after{content:"";height:1px;background:#20241f;flex:1}
 .footer-note{text-align:center;color:#626960;font-size:9px;line-height:1.5}#msg{min-height:19px;text-align:center;margin-top:11px;color:var(--accent);font-size:10.5px;line-height:1.45}#msg.error{color:var(--danger)}
 .busy{opacity:.58;pointer-events:none}
-#gate{display:none}.gate{text-align:center}.gate-icon{font-size:42px}.gate h2{font-size:24px;letter-spacing:-1px;margin:5px 0 8px}.gate p{color:var(--muted);font-size:11px;line-height:1.55}.link{color:var(--accent);text-decoration:none;font-weight:800}
+#gate{display:none}.gate{text-align:center}.gate-icon{font-size:42px}.gate h2{font-size:24px;letter-spacing:-1px;margin:5px 0 8px}.gate p{color:var(--muted);font-size:11px;line-height:1.55}
 @media(max-width:420px){body{padding:13px}.panel{padding:18px;border-radius:24px}.logo-orbit{width:96px;height:96px}.logo-orbit img{width:65px;height:65px}h1{font-size:24px}}
 </style>
 </head>
 <body>
-
 <div class="shell" id="authShell">
   <div class="brand">
     <div class="logo-orbit">
@@ -66,7 +65,7 @@ h1{font-size:27px;letter-spacing:-1.5px;margin:0 0 6px}.intro{font-size:11px;lin
     <p class="intro">Choose how you'll use Zep Swipe. You can create an account or sign in below.</p>
 
     <div class="role-title"><span>Choose account type</span><span id="selectedLabel">Customer selected</span></div>
-    <div class="roles" id="roles">
+    <div class="roles">
       <button type="button" class="role active" data-role="customer" aria-pressed="true"><strong>👤 Customer</strong><small>Book trusted student services & redeem deals</small><span class="tick">✓</span></button>
       <button type="button" class="role" data-role="provider" aria-pressed="false"><strong>💼 Student Provider</strong><small>Offer your skills, complete services & earn</small><span class="tick">✓</span></button>
       <button type="button" class="role" data-role="business" aria-pressed="false"><strong>🏪 Business</strong><small>Reach students through deals & opportunities</small><span class="tick">✓</span></button>
@@ -75,8 +74,8 @@ h1{font-size:27px;letter-spacing:-1.5px;margin:0 0 6px}.intro{font-size:11px;lin
     <div class="field"><label for="email">EMAIL</label><input id="email" type="email" autocomplete="email" placeholder="you@example.com"></div>
     <div class="field"><label for="password">PASSWORD</label><div class="input-wrap"><input id="password" type="password" autocomplete="current-password" placeholder="Enter your password"><button type="button" class="eye" onclick="togglePassword()">◉</button></div></div>
 
-    <button type="button" class="primary" onclick="login()">ENTER ZEP SWIPE →</button>
-    <button type="button" class="secondary" onclick="signup()">CREATE NEW ACCOUNT</button>
+    <button type="button" class="primary" id="loginBtn" onclick="login()">ENTER ZEP SWIPE →</button>
+    <button type="button" class="secondary" id="signupBtn" onclick="signup()">CREATE NEW ACCOUNT</button>
 
     <div class="divider">SECURE ACCESS</div>
     <div class="footer-note">🛡 <b>Persistent login enabled.</b> Your session remains active until you sign out.</div>
@@ -95,85 +94,182 @@ h1{font-size:27px;letter-spacing:-1.5px;margin:0 0 6px}.intro{font-size:11px;lin
 </div>
 
 <script>
-const SUPABASE_URL="20https://mccsctmgkokkcrkmjuvw.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jY3NjdG1na29ra2Nya21qdXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5Nzg0NjcsImV4cCI6MjEwMjU1NDQ2N30.uQrPeROFDjxxiVDPh0vnAyS3TSN6igVTEbbOXkCBx_U";
+const SUPABASE_URL="https://tqxfkijetudtzldflrjb.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0cXhmamlldHVkdHpsZGZscmpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxMDgyNywiZXhwIjoxNzg4Njg2MjcxfQ.FHCgU6h911ghgI3k9MSo0GKaasFcwpjN_82H-4pyfd8";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-let role="customer",regionChecked=false;
+
+let role="customer";
+let regionChecked=false;
+let authListenerStarted=false;
+
 const roleNames={customer:"Customer selected",provider:"Student Provider selected",business:"Business selected"};
 
 document.querySelectorAll(".role").forEach(button=>{
   button.addEventListener("click",()=>{
-    document.querySelectorAll(".role").forEach(x=>{x.classList.remove("active");x.setAttribute("aria-pressed","false")});
-    button.classList.add("active");button.setAttribute("aria-pressed","true");
+    document.querySelectorAll(".role").forEach(x=>{
+      x.classList.remove("active");
+      x.setAttribute("aria-pressed","false");
+    });
+    button.classList.add("active");
+    button.setAttribute("aria-pressed","true");
     role=button.dataset.role;
     document.getElementById("selectedLabel").textContent=roleNames[role];
   });
 });
-function setMsg(text,error=false){const el=document.getElementById("msg");el.textContent=text;el.classList.toggle("error",error)}
-function setBusy(on){document.getElementById("authPanel").classList.toggle("busy",on)}
-function togglePassword(){const i=document.getElementById("password");i.type=i.type==="password"?"text":"password"}
-function showGate(){document.getElementById("authShell").style.display="none";document.getElementById("gate").style.display="block"}
+
+function setMsg(text,error=false){
+  const el=document.getElementById("msg");
+  el.textContent=text;
+  el.classList.toggle("error",error);
+}
+
+function setBusy(on){
+  document.getElementById("authPanel").classList.toggle("busy",on);
+  document.getElementById("loginBtn").disabled=on;
+  document.getElementById("signupBtn").disabled=on;
+}
+
+function togglePassword(){
+  const input=document.getElementById("password");
+  input.type=input.type==="password"?"text":"password";
+}
+
+function showGate(){
+  document.getElementById("authShell").style.display="none";
+  document.getElementById("gate").style.display="block";
+}
 
 async function checkSouthAfrica(){
   if(regionChecked)return true;
   try{
-    const c=new AbortController(),timer=setTimeout(()=>c.abort(),5000);
-    const r=await fetch("https://ipwho.is/",{signal:c.signal,cache:"no-store"});
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),5000);
+    const response=await fetch("https://ipwho.is/",{signal:controller.signal,cache:"no-store"});
     clearTimeout(timer);
-    if(!r.ok)throw new Error("Location check failed");
-    const geo=await r.json();
-    if(!geo || !geo.success || String(geo.country_code).toUpperCase()!=="ZA"){showGate();return false}
-    regionChecked=true;return true;
-  }catch(e){showGate();return false}
+    if(!response.ok){regionChecked=true;return true;}
+    const geo=await response.json();
+    if(!geo || !geo.success){regionChecked=true;return true;}
+    if(String(geo.country_code).toUpperCase()!=="ZA"){showGate();return false;}
+    regionChecked=true;
+    return true;
+  }catch(error){
+    console.warn("Location check unavailable:",error);
+    regionChecked=true;
+    return true;
+  }
 }
-async function getRole(id){
-  const {data}=await db.from("profiles").select("role").eq("id",id).maybeSingle();
+
+async function getRole(userId){
+  const {data,error}=await db.from("profiles").select("role").eq("id",userId).maybeSingle();
+  if(error){console.error("Role lookup error:",error);return "customer";}
   return data?.role||"customer";
 }
-function redirect(r){
-  if(r==="customer")location.replace("customer.html");
-  else if(r==="provider")location.replace("provider.html");
-  else if(r==="business")location.replace("business-deals.html");
+
+function redirect(userRole){
+  if(userRole==="customer")location.replace("customer.html");
+  else if(userRole==="provider")location.replace("provider.html");
+  else if(userRole==="business")location.replace("business-deals.html");
   else location.replace("customer.html");
 }
+
+function getAuthRedirect(){
+  return "https://masterbase.github.io/auth.html";
+}
+
 async function init(){
   if(!(await checkSouthAfrica()))return;
+
   const {data:{session}}=await db.auth.getSession();
-  if(session){redirect(await getRole(session.user.id));return}
-  db.auth.onAuthStateChange(async(event,session)=>{
-    if(event==="SIGNED_IN"&&session)redirect(await getRole(session.user.id));
-  });
+
+  if(session?.user){
+    redirect(await getRole(session.user.id));
+    return;
+  }
+
+  if(!authListenerStarted){
+    authListenerStarted=true;
+    db.auth.onAuthStateChange(async(event,session)=>{
+      if(event==="SIGNED_IN"&&session?.user){
+        redirect(await getRole(session.user.id));
+      }
+    });
+  }
 }
+
 async function login(){
   if(!(await checkSouthAfrica()))return;
-  const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;
-  if(!email||!password){setMsg("Enter your email and password.",true);return}
-  setBusy(true);setMsg("Authenticating...");
+
+  const email=document.getElementById("email").value.trim();
+  const password=document.getElementById("password").value;
+
+  if(!email||!password){
+    setMsg("Enter your email and password.",true);
+    return;
+  }
+
+  setBusy(true);
+  setMsg("Authenticating...");
+
   try{
     const {data,error}=await db.auth.signInWithPassword({email,password});
     if(error)throw error;
-    redirect(await getRole(data.user.id));
-  }catch(e){setMsg(e.message||"Login failed.",true)}
-  finally{setBusy(false)}
+    if(!data?.user)throw new Error("No user session was returned.");
+    const userRole=await getRole(data.user.id);
+    setMsg("Login successful. Redirecting...");
+    redirect(userRole);
+  }catch(error){
+    console.error("Login error:",error);
+    setMsg(error.message||"Login failed.",true);
+  }finally{
+    setBusy(false);
+  }
 }
+
 async function signup(){
   if(!(await checkSouthAfrica()))return;
-  const email=document.getElementById("email").value.trim(),password=document.getElementById("password").value;
-  if(!email||!password){setMsg("Enter your email and password.",true);return}
-  if(password.length<6){setMsg("Password must be at least 6 characters.",true);return}
-  setBusy(true);setMsg("Creating your Zep Swipe account...");
+
+  const email=document.getElementById("email").value.trim();
+  const password=document.getElementById("password").value;
+
+  if(!email||!password){
+    setMsg("Enter your email and password.",true);
+    return;
+  }
+
+  if(password.length<6){
+    setMsg("Password must be at least 6 characters.",true);
+    return;
+  }
+
+  setBusy(true);
+  setMsg("Creating your Zep Swipe account...");
+
   try{
-    const {data,error}=await db.auth.signUp({email,password});
+    const {data,error}=await db.auth.signUp({
+      email,
+      password,
+      options:{
+        emailRedirectTo:getAuthRedirect(),
+        data:{role:role}
+      }
+    });
+
     if(error)throw error;
-    if(data.user){
-      const {error:profileError}=await db.from("profiles").upsert({id:data.user.id,email,role},{onConflict:"id"});
-      if(profileError)throw profileError;
+
+    if(data?.session&&data?.user){
+      redirect(role);
+      return;
     }
-    if(data.session)redirect(role);
-    else setMsg("Account created. Verify your email, then return here to log in.");
-  }catch(e){setMsg(e.message||"Could not create account.",true)}
-  finally{setBusy(false)}
+
+    setMsg("Account created successfully. Check your email, verify your account, then return here and log in.");
+  }catch(error){
+    console.error("Signup error:",error);
+    setMsg(error.message||"Could not create account.",true);
+  }finally{
+    setBusy(false);
+  }
 }
+
 init();
 </script>
 </body>
