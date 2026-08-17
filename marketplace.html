@@ -3,103 +3,254 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Marketplace</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Zep Swipe | Marketplace V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:#151515;--line:#2b2b2b;--accent:#b8ff3b}
+:root{--bg:#050505;--card:#111;--card2:#0b0b0b;--line:#252525;--accent:#b8ff3b;--muted:#999}
 *{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;background:var(--bg);color:#fff;padding-bottom:84px}
-header{position:sticky;top:0;background:#0b0b0b;border-bottom:1px solid var(--line);z-index:100}
-.header{max-width:1400px;margin:auto;padding:16px;display:flex;justify-content:space-between;align-items:center}
-.logo{display:flex;align-items:center;gap:10px;color:var(--accent);font-weight:800}
-.logo img{width:40px;height:40px}
-.wrap{max-width:1400px;margin:auto;padding:16px}
-.hero{padding:52px 34px;border-radius:24px;background:
-linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.85)),
-url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1800&q=80') center/cover}
-.btn{display:inline-block;background:var(--accent);padding:13px 20px;border-radius:12px;color:#000;text-decoration:none;font-weight:800}
-.search input{width:100%;padding:14px;background:#111;border:1px solid var(--line);border-radius:12px;color:#fff}
-.row{display:flex;gap:14px;overflow:auto;padding:10px 0}
-.card{min-width:220px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
-.card img{width:100%;height:130px;object-fit:cover}.c{padding:12px}
-button{width:100%;padding:10px;background:var(--accent);border:none;border-radius:10px;font-weight:700}
-footer{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
-footer a{text-decoration:none;color:#fff;font-size:12px;display:flex;flex-direction:column;align-items:center}
+html,body{margin:0;background:var(--bg);color:#fff;overflow-x:hidden}
+body{padding-bottom:86px}.wrap{max-width:1200px;margin:auto}
+.top{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:rgba(5,5,5,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.logo{font-weight:800;letter-spacing:-.6px}.logo span{color:var(--accent)}
+.top-actions{display:flex;gap:8px}.icon{width:40px;height:40px;border:1px solid var(--line);border-radius:50%;background:#101010;color:#fff;display:grid;place-items:center;cursor:pointer}
+.hero{margin:14px;min-height:510px;border:1px solid var(--line);border-radius:30px;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.94)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=2000&q=90') center/cover}
+.hero:after{content:"";position:absolute;inset:auto -20% -40% -20%;height:60%;background:radial-gradient(circle,rgba(184,255,59,.14),transparent 62%);pointer-events:none}
+.content{position:relative;z-index:2}.eyebrow{display:inline-flex;width:max-content;padding:7px 10px;border-radius:999px;background:rgba(184,255,59,.12);color:var(--accent);font-size:10px;font-weight:800}
+.hero h1{font-size:clamp(36px,7vw,72px);line-height:.95;letter-spacing:-3px;max-width:760px;margin:16px 0 10px}.hero p{max-width:620px;color:#c3c3c3;font-size:14px;line-height:1.55}
+.search{margin-top:18px;display:flex;align-items:center;gap:9px;background:rgba(8,8,8,.88);border:1px solid #333;border-radius:16px;padding:14px}.search input{border:0;background:transparent;color:#fff;outline:0;width:100%;font-size:14px}
+.chips{display:flex;gap:8px;overflow:auto;padding:14px 14px 3px}.chip{flex:none;border:1px solid var(--line);background:#101010;color:#fff;padding:10px 13px;border-radius:999px;font-size:11px;cursor:pointer}.chip.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:800}
+.section{margin:14px}.head{display:flex;align-items:end;justify-content:space-between;gap:10px;margin:22px 0 11px}.head h2{margin:0;font-size:21px}.muted{color:var(--muted);font-size:11px;line-height:1.5}.badge{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(184,255,59,.1);color:var(--accent);font-size:10px;font-weight:800}
+.pulse{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.pulse-card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px}.pulse-card strong{display:block;color:var(--accent);font-size:19px;margin-bottom:4px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.service{background:var(--card);border:1px solid var(--line);border-radius:19px;overflow:hidden;transition:.2s}.service:hover{transform:translateY(-3px);border-color:#3a3a3a}.image{height:190px;position:relative;background:#161616}.image img{width:100%;height:100%;object-fit:cover}.available{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.78);padding:6px 8px;border-radius:999px;font-size:9px;color:var(--accent);font-weight:800}.save{position:absolute;right:10px;top:10px;width:35px;height:35px;border-radius:50%;border:1px solid #444;background:rgba(0,0,0,.7);color:#fff;display:grid;place-items:center;cursor:pointer}.service-body{padding:14px}.service h3{margin:0 0 5px;font-size:15px}.price{font-size:22px;font-weight:800}.rating{font-size:10px;color:#ccc}.match{display:inline-flex;padding:5px 8px;border-radius:999px;background:rgba(184,255,59,.08);color:var(--accent);font-size:9px}.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:11px}.btn{display:inline-block;border:0;border-radius:11px;padding:10px 13px;background:var(--accent);color:#000;font-weight:800;font-size:11px;text-decoration:none;cursor:pointer}.btn.secondary{background:#252525;color:#fff;border:1px solid #333}
+.provider-row{display:flex;gap:10px;overflow:auto}.provider{min-width:190px;background:var(--card);border:1px solid var(--line);border-radius:17px;padding:13px}.avatar{width:46px;height:46px;border-radius:50%;object-fit:cover;float:left;margin-right:10px}.provider h3{margin:4px 0 3px;font-size:13px}.clear{clear:both}.provider-meta{margin-top:12px;font-size:10px;color:#aaa}
+.swipe-area{display:flex;justify-content:center}.swipe-card{width:min(430px,100%);background:var(--card);border:1px solid var(--line);border-radius:25px;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,.35)}.swipe-image{height:300px;position:relative}.swipe-image img{width:100%;height:100%;object-fit:cover}.swipe-body{padding:18px}.swipe-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+.deal{background:linear-gradient(135deg,#151b0c,#101010);border:1px solid rgba(184,255,59,.2);border-radius:19px;padding:16px}
+.footer{position:fixed;z-index:60;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:9px}.footer a{color:#fff;text-decoration:none;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px}.footer a:hover{color:var(--accent)}
+.hidden{display:none!important}.empty{padding:18px;text-align:center;border:1px dashed #333;border-radius:15px;color:#999;font-size:11px}
+@media(max-width:850px){.cards{grid-template-columns:repeat(2,1fr)}.pulse{grid-template-columns:1fr 1fr}.pulse-card:last-child{display:none}}
+@media(max-width:560px){.cards{grid-template-columns:1fr 1fr}.image{height:145px}.hero{min-height:540px}.hero h1{letter-spacing:-2px}.swipe-image{height:270px}}
 </style>
 </head>
 <body>
-<header><div class="header">
-<div class="logo"><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"><span>ZEP SWIPE</span></div>
-<div><i data-lucide="bell"></i></div>
-</div></header>
+
+<header class="top">
+  <div class="logo">ZEP <span>SWIPE</span></div>
+  <div class="top-actions">
+    <button class="icon" onclick="alert('Notifications will appear here when connected.')"><i data-lucide="bell"></i></button>
+    <button class="icon" onclick="location.href='auth.html'"><i data-lucide="user"></i></button>
+  </div>
+</header>
 
 <div class="wrap">
+
 <section class="hero">
-<h1>Hire trusted student talent.</h1>
-<p>Verified providers • Escrow protected • Student deals.</p>
-<p><a class="btn" href="auth.html">Post Job / Hire Now</a></p>
+  <div class="content">
+    <span class="eyebrow">⚡ THE STUDENT-POWERED MARKETPLACE</span>
+    <h1>Find your next solution.</h1>
+    <p>Discover trusted student skills, services and local deals. Pay securely, get the work done and earn MARI after verified completion.</p>
+    <div class="search">
+      <i data-lucide="search" size="18"></i>
+      <input id="search" placeholder="What do you need done?" onkeydown="if(event.key==='Enter')searchNow()">
+      <button class="btn" onclick="searchNow()">Search</button>
+    </div>
+  </div>
 </section>
 
-<div class="search" style="margin:20px 0"><input id="search" placeholder="Search services"></div>
-
-<div id="homeView">
-<h2>Popular Services</h2><div id="services" class="row"></div>
-<h2>Top Providers</h2><div id="providers" class="row"></div>
+<div class="chips">
+  <button class="chip active" onclick="filterCategory('All',this)">All</button>
+  <button class="chip" onclick="filterCategory('Graphic Design',this)">🎨 Design</button>
+  <button class="chip" onclick="filterCategory('Web Development',this)">💻 Web</button>
+  <button class="chip" onclick="filterCategory('Tutoring',this)">📚 Tutors</button>
+  <button class="chip" onclick="filterCategory('Social Media',this)">📱 Social</button>
+  <button class="chip" onclick="filterCategory('Photography',this)">📸 Photo</button>
+  <button class="chip" onclick="filterCategory('Writing',this)">✍️ Writing</button>
+  <button class="chip" onclick="filterCategory('AI Services',this)">🤖 AI</button>
 </div>
 
-<div id="servicesView" style="display:none">
-<h2>All Services</h2><div id="allServices" class="row" style="flex-wrap:wrap;overflow:visible"></div>
+<section class="section">
+  <div class="head"><div><h2>🌐 Marketplace Pulse</h2><p class="muted">What's happening on Zep Swipe right now.</p></div></div>
+  <div class="pulse">
+    <div class="pulse-card"><strong id="liveServices">0</strong><span class="muted">Live services</span></div>
+    <div class="pulse-card"><strong id="availableProviders">0</strong><span class="muted">Available providers</span></div>
+    <div class="pulse-card"><strong id="completedToday">0</strong><span class="muted">Completed today</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="head"><div><h2>🔥 Discover</h2><p class="muted">Services matched to what customers are looking for.</p></div><span class="badge" id="resultCount">LIVE</span></div>
+  <div id="services" class="cards"></div>
+</section>
+
+<section class="section">
+  <div class="head"><div><h2>👋 Meet Available Providers</h2><p class="muted">Students who are currently open to new opportunities.</p></div></div>
+  <div id="providers" class="provider-row"></div>
+</section>
+
+<section class="section">
+  <div class="head"><div><h2>↔️ Zep Swipe</h2><p class="muted">Swipe-style discovery for fast browsing.</p></div><span class="badge">OPTIONAL</span></div>
+  <div class="swipe-area"><div id="swipeCard" class="swipe-card"></div></div>
+</section>
+
+<section class="section">
+  <div class="head"><div><h2>🏷 Student Deals</h2><p class="muted">Local offers available through the Zep Swipe network.</p></div></div>
+  <div id="deals" class="cards"></div>
+</section>
+
+<section class="section">
+  <div class="head"><div><h2>🛡️ Why Zep Swipe</h2><p class="muted">Built around trust between customers and student providers.</p></div></div>
+  <div class="pulse">
+    <div class="pulse-card"><strong>✓</strong><span class="muted">Verified providers</span></div>
+    <div class="pulse-card"><strong>🛡</strong><span class="muted">Escrow protected</span></div>
+    <div class="pulse-card"><strong>🪙</strong><span class="muted">MARI rewards</span></div>
+  </div>
+</section>
+
 </div>
 
-<div id="dealsView" style="display:none">
-<h2>All Deals</h2><div id="allDeals" class="row" style="flex-wrap:wrap;overflow:visible"></div>
-</div>
-</div>
-
-<footer>
-<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
-<a href="#" onclick="showServices();return false;"><i data-lucide="briefcase"></i><span>Services</span></a>
-<a href="#" onclick="showDeals();return false;"><i data-lucide="ticket-percent"></i><span>Deals</span></a>
-<a href="auth.html"><i data-lucide="coins"></i><span>Earn</span></a>
-<a href="auth.html"><i data-lucide="user"></i><span>Account</span></a>
+<footer class="footer">
+  <a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+  <a href="marketplace.html"><i data-lucide="compass"></i><span>Discover</span></a>
+  <a href="auth.html"><i data-lucide="plus-circle"></i><span>Post</span></a>
+  <a href="customer.html"><i data-lucide="coins"></i><span>MARI</span></a>
+  <a href="auth.html"><i data-lucide="user"></i><span>Account</span></a>
 </footer>
 
 <script>
-const db=supabase.createClient("https://tieekcelcathtuluwcfc.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpZWVrY2VsY2F0aHR1bHV3Y2ZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyOTk3MzAsImV4cCI6MjA5ODg3NTczMH0.qAwf6TtqwLLMD2pnLDIwIYqwoHM2rF31ehqa5TDqnJI");
-function showServices(){homeView.style.display="none";servicesView.style.display="block";dealsView.style.display="none";}
-function showDeals(){homeView.style.display="none";servicesView.style.display="none";dealsView.style.display="block";}
+const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+let allServiceData=[];
+let swipeIndex=0;
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+function money(v){return Number(v||0).toLocaleString("en-ZA",{minimumFractionDigits:0,maximumFractionDigits:2});}
+
+function serviceCard(s){
+ const image=s.image_url||"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80";
+ const title=esc(s.title||"Student Service");
+ const category=esc(s.category||"Student Service");
+ const provider=esc(s.provider_name||"Verified Student Provider");
+ const price=money(s.price);
+ const rating=esc(s.rating||"New");
+ const available=s.is_available!==false;
+ return `<article class="service" data-category="${category}">
+   <div class="image">
+    <img src="${image}" alt="${title}" loading="lazy">
+    ${available?'<span class="available">🟢 AVAILABLE NOW</span>':''}
+    <button class="save" onclick="saveService('${esc(s.id)}')" aria-label="Save service"><i data-lucide="heart" size="16"></i></button>
+   </div>
+   <div class="service-body">
+    <h3>${title}</h3>
+    <div class="rating">⭐ ${rating} · ${category}</div>
+    <div class="meta"><span class="price">R${price}</span><span class="match">${s.match_percent||"90"}% MATCH</span></div>
+    <div class="meta"><span class="muted">⚡ ${esc(s.delivery_time||"Flexible delivery")}</span><a class="btn" href="customer.html?service=${encodeURIComponent(s.id||"")}">View</a></div>
+    <div class="muted" style="margin-top:8px">🪙 +50 MARI after verified completion</div>
+   </div>
+ </article>`;
+}
+
+function providerCard(s){
+ const image=s.provider_avatar||s.image_url||"https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=300&q=80";
+ return `<div class="provider">
+   <img class="avatar" src="${image}" alt="">
+   <h3>${esc(s.provider_name||"Student Provider")}</h3>
+   <div class="rating">⭐ ${esc(s.rating||"New")} · ✓ Verified</div>
+   <div class="clear"></div>
+   <div class="provider-meta">🟢 ${s.is_available!==false?"Available now":"Currently away"}</div>
+   <a class="btn" href="customer.html?provider=${encodeURIComponent(s.provider_id||"")} " style="display:block;text-align:center;margin-top:10px">View Profile</a>
+ </div>`;
+}
+
+function dealCard(d){
+ const image=d.image_url||"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80";
+ return `<article class="service">
+  <div class="image"><img src="${image}" alt="${esc(d.title||"Deal")}" loading="lazy"></div>
+  <div class="service-body"><h3>${esc(d.title||"Student Deal")}</h3><p class="muted">${esc(d.discount||"Special student offer")}</p><div class="meta"><span class="match">STUDENT DEAL</span><button class="btn" onclick="claimDeal('${esc(d.id)}')">Claim</button></div></div>
+ </article>`;
+}
 
 async function loadMarketplace(q=""){
- let query=db.from("services").select("*").order("created_at",{ascending:false});
- if(q) query=query.ilike("title","%"+q+"%");
- const {data:items=[]}=await query;
- services.innerHTML=providers.innerHTML=allServices.innerHTML="";
- items.forEach(s=>{
- const card=`<div class="card"><img src="${s.image_url||'https://picsum.photos/400/240'}"><div class="c"><h3>${s.title}</h3><p>R${s.price||0}</p><button onclick="bookService('${s.id}')">Book Service</button></div></div>`;
- services.insertAdjacentHTML("beforeend",card);
- allServices.insertAdjacentHTML("beforeend",card);
- providers.insertAdjacentHTML("beforeend",`<div class="card"><img src="${s.image_url||'https://picsum.photos/401/240'}"><div class="c"><h3>${s.provider_name||'Student Provider'}</h3><p>⭐ ${s.rating||'New'}</p></div></div>`);
- });
- const {data:deals=[]}=await db.from("deals").select("*").order("created_at",{ascending:false});
- allDeals.innerHTML="";
- deals.forEach(d=>{
- allDeals.insertAdjacentHTML("beforeend",`<div class="card"><img src="${d.image_url||'https://picsum.photos/402/240'}"><div class="c"><h3>${d.title}</h3><p>${d.discount||''}</p><button onclick="claimDeal('${d.id}')">Claim Deal</button></div></div>`);
+ let query=db.from("services").select("*").order("created_at",{ascending:false}).limit(60);
+ if(q)query=query.ilike("title","%"+q+"%");
+ const {data:items,error}=await query;
+ if(error){console.warn(error.message);}
+ allServiceData=items||[];
+
+ const servicesBox=document.getElementById("services");
+ servicesBox.innerHTML=allServiceData.length?allServiceData.map(serviceCard).join(""):'<div class="empty">No matching services yet.</div>';
+ document.getElementById("resultCount").textContent=allServiceData.length+" LIVE";
+
+ const providersBox=document.getElementById("providers");
+ const unique={};
+ allServiceData.forEach(x=>{if(x.provider_id&&!unique[x.provider_id])unique[x.provider_id]=x;});
+ const providerItems=Object.values(unique).slice(0,10);
+ providersBox.innerHTML=providerItems.length?providerItems.map(providerCard).join(""):'<div class="empty">Provider profiles will appear here.</div>';
+
+ document.getElementById("liveServices").textContent=allServiceData.length;
+ document.getElementById("availableProviders").textContent=providerItems.filter(x=>x.is_available!==false).length;
+
+ renderSwipe();
+ lucide.createIcons();
+}
+
+async function loadDeals(){
+ const {data:deals,error}=await db.from("deals").select("*").order("created_at",{ascending:false}).limit(12);
+ if(error){console.warn(error.message);}
+ const box=document.getElementById("deals");
+ box.innerHTML=(deals||[]).length?(deals||[]).map(dealCard).join(""):'<div class="empty">No deals are available right now.</div>';
+ lucide.createIcons();
+}
+
+function renderSwipe(){
+ const box=document.getElementById("swipeCard");
+ if(!allServiceData.length){box.innerHTML='<div class="empty">More services are coming soon.</div>';return;}
+ const s=allServiceData[swipeIndex%allServiceData.length];
+ const image=s.image_url||"https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1000&q=80";
+ box.innerHTML=`<div class="swipe-image"><img src="${image}" alt="${esc(s.title||"Service")}"><span class="available" style="left:12px;top:12px">⚡ ${esc(s.category||"SERVICE")}</span></div>
+ <div class="swipe-body">
+  <div class="row"><div><h2 style="margin:0 0 4px;font-size:21px">${esc(s.title||"Student Service")}</h2><div class="rating">⭐ ${esc(s.rating||"New")} · ✓ Verified Student</div></div><div class="price">R${money(s.price)}</div></div>
+  <p class="muted" style="margin-top:10px">⚡ ${esc(s.delivery_time||"Flexible delivery")} · 🪙 +50 MARI after verified completion</p>
+  <div class="swipe-actions"><button class="btn secondary" onclick="nextSwipe()">← Next</button><a class="btn" href="customer.html?service=${encodeURIComponent(s.id||"")}">View Service</a></div>
+ </div>`;
+ lucide.createIcons();
+}
+
+function nextSwipe(){swipeIndex++;renderSwipe();}
+
+function filterCategory(category,button){
+ document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+ button.classList.add("active");
+ document.querySelectorAll(".service").forEach(card=>{
+  card.style.display=(category==="All"||card.dataset.category===category)?"block":"none";
  });
 }
-async function bookService(id){
- const {data}=await db.auth.getSession();
- if(!data.session){localStorage.setItem("zep_booking_service",id);location.href="auth.html";return;}
- location.href="customer.html?service="+encodeURIComponent(id);
+
+function searchNow(){
+ const q=document.getElementById("search").value.trim();
+ loadMarketplace(q);
+ document.getElementById("services").scrollIntoView({behavior:"smooth"});
 }
+
+async function saveService(id){
+ const {data:{session}}=await db.auth.getSession();
+ if(!session){localStorage.setItem("zep_save_service",id);location.href="auth.html";return;}
+ const {error}=await db.from("saved_services").insert({user_id:session.user.id,service_id:id});
+ if(error)alert("Could not save service: "+error.message);
+ else alert("Service saved.");
+}
+
 async function claimDeal(id){
- const {data}=await db.auth.getSession();
- if(!data.session){localStorage.setItem("zep_claim_deal",id);location.href="auth.html";return;}
+ const {data:{session}}=await db.auth.getSession();
+ if(!session){localStorage.setItem("zep_claim_deal",id);location.href="auth.html";return;}
  location.href="deal.html?id="+encodeURIComponent(id);
 }
-search.addEventListener("input",e=>loadMarketplace(e.target.value));
+
 loadMarketplace();
+loadDeals();
 lucide.createIcons();
 </script>
-</body></html>
+</body>
+</html>
