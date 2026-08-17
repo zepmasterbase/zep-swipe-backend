@@ -2,211 +2,571 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<title>Zep Swipe | Gateway</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070707">
+<title>Zep Swipe | Sign In</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{--bg:#030403;--card:rgba(15,17,14,.82);--line:rgba(255,255,255,.10);--accent:#b8ff3b;--accent2:#d7ff73;--muted:#8e9589;--danger:#ff7777}
+:root{
+  --bg:#070707;
+  --card:#141414;
+  --line:#262626;
+  --accent:#b8ff3b;
+  --muted:#aaa;
+  --danger:#ff6b6b;
+}
 *{box-sizing:border-box;font-family:Inter,sans-serif}
-html,body{margin:0;min-height:100%;background:#030403;color:#fff}
-body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:-25%;background:radial-gradient(circle at 50% 20%,rgba(184,255,59,.13),transparent 28%),radial-gradient(circle at 10% 90%,rgba(184,255,59,.05),transparent 25%);filter:blur(10px);pointer-events:none}
-.shell{width:100%;max-width:470px;position:relative;z-index:2}
-.brand{text-align:center;margin-bottom:18px}
-.brand img{width:92px;height:92px;object-fit:contain;filter:drop-shadow(0 0 24px rgba(184,255,59,.32));animation:float 4s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-5px)}}
-.wordmark{font-size:25px;font-weight:900;letter-spacing:-1.2px;margin-top:5px}.wordmark span{color:var(--accent)}
-.tag{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#777;margin-top:5px}
-.panel{background:linear-gradient(145deg,rgba(20,23,19,.92),rgba(9,10,9,.88));border:1px solid var(--line);border-radius:30px;padding:23px;box-shadow:0 30px 100px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.04);backdrop-filter:blur(24px)}
-.status{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid rgba(184,255,59,.15);background:rgba(184,255,59,.045);border-radius:13px;color:#cbd8bc;font-size:10px;margin-bottom:20px}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
-h1{font-size:28px;letter-spacing:-1.5px;margin:0 0 6px}.intro{font-size:12px;line-height:1.55;color:var(--muted);margin:0 0 18px}
-.roles{display:grid;gap:8px;margin-bottom:17px}.role{position:relative;padding:13px;border:1px solid var(--line);background:rgba(0,0,0,.24);border-radius:15px;cursor:pointer;transition:.2s}.role:hover{border-color:#3a3f35}.role.active{border-color:rgba(184,255,59,.65);background:rgba(184,255,59,.07);box-shadow:0 0 25px rgba(184,255,59,.05)}.role strong{font-size:12px}.role small{display:block;color:#858a82;margin-top:3px;font-size:10px}.tick{position:absolute;right:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;border:1px solid #444;display:grid;place-items:center;font-size:10px;color:transparent}.role.active .tick{background:var(--accent);border-color:var(--accent);color:#000}
-.field{margin-top:10px}.field label{display:block;color:#9b9f98;font-size:10px;margin:0 0 6px 2px}.input-wrap{position:relative}.input-wrap input{padding-right:46px}input{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:13px;background:#080908;color:#fff;outline:0;font-size:12px}input:focus{border-color:rgba(184,255,59,.55);box-shadow:0 0 0 3px rgba(184,255,59,.05)}.eye{position:absolute;right:8px;top:7px;width:34px;height:34px;border:0;background:transparent;color:#777;cursor:pointer}
-.primary,.secondary{width:100%;padding:14px;border-radius:14px;font-weight:900;cursor:pointer;margin-top:11px}.primary{border:0;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#050505;box-shadow:0 10px 30px rgba(184,255,59,.12)}.secondary{border:1px solid rgba(184,255,59,.45);background:transparent;color:var(--accent)}
-.divider{display:flex;align-items:center;gap:9px;color:#555;font-size:9px;margin:17px 0}.divider:before,.divider:after{content:"";height:1px;background:#222;flex:1}
-.footer-note{text-align:center;color:#656a63;font-size:9px;line-height:1.5;margin-top:13px}.footer-note b{color:#aab2a3}
-#msg{min-height:20px;text-align:center;margin-top:12px;color:var(--accent);font-size:11px;line-height:1.45}#msg.error{color:var(--danger)}
-.loading{opacity:.55;pointer-events:none}
-#gate{display:none;text-align:center}.gate-icon{font-size:42px;margin-bottom:7px}.gate h2{font-size:25px;letter-spacing:-1px;margin:5px 0 8px}.gate p{color:var(--muted);font-size:12px;line-height:1.55}
-.gate button{margin-top:12px}.link{color:var(--accent);text-decoration:none;font-weight:800}
-@media(max-width:420px){body{padding:14px}.panel{padding:19px;border-radius:25px}.brand img{width:78px;height:78px}h1{font-size:25px}}
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle at top,#111,#070707);
+  color:#fff;
+  padding:20px;
+}
+.card{
+  width:100%;
+  max-width:460px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+.logo{
+  text-align:center;
+  color:var(--accent);
+  font-size:30px;
+  font-weight:800;
+}
+.sub{
+  text-align:center;
+  color:var(--muted);
+  margin:8px 0 22px;
+  line-height:1.5;
+}
+.roles{
+  display:grid;
+  gap:10px;
+}
+.role{
+  padding:14px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#101010;
+  cursor:pointer;
+  transition:.15s ease;
+}
+.role:hover{border-color:#555}
+.role.active{
+  border-color:var(--accent);
+  background:#1a2508;
+}
+.role strong{font-size:16px}
+.role small{
+  display:block;
+  color:var(--muted);
+  margin-top:4px;
+}
+label{
+  display:block;
+  margin-top:16px;
+  font-size:13px;
+  color:#ccc;
+}
+input{
+  width:100%;
+  padding:14px;
+  margin-top:8px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:#101010;
+  color:#fff;
+  outline:none;
+}
+input:focus{border-color:var(--accent)}
+button{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border-radius:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+.primary{
+  border:none;
+  background:var(--accent);
+  color:#000;
+}
+.secondary{
+  background:transparent;
+  border:1px solid var(--accent);
+  color:var(--accent);
+}
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+#msg{
+  margin-top:16px;
+  min-height:22px;
+  text-align:center;
+  color:var(--accent);
+  line-height:1.45;
+}
+#msg.error{color:var(--danger)}
+.footer-note{
+  margin-top:18px;
+  text-align:center;
+  color:#777;
+  font-size:12px;
+  line-height:1.5;
+}
 </style>
 </head>
+
 <body>
+<div class="card">
 
-<div class="shell" id="authShell">
-  <div class="brand">
-    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
-    <div class="wordmark">ZEP <span>SWIPE</span></div>
-    <div class="tag">The Student Economy</div>
+  <div class="logo">⚡ Zep Swipe</div>
+
+  <div class="sub">
+    Choose your account type when creating your Zep Swipe account.
   </div>
 
-  <div class="panel">
-    <div class="status"><span class="status-dot"></span><span>South Africa early access · Secure Supabase authentication</span></div>
-
-    <h1 id="heading">Welcome back.</h1>
-    <p class="intro" id="intro">Your next opportunity starts here. Choose your account type when creating an account.</p>
-
-    <div class="roles" id="roles">
-      <div class="role active" data-role="customer">
-        <strong>👤 Customer</strong>
-        <small>Book trusted student services & redeem deals</small>
-        <span class="tick">✓</span>
-      </div>
-      <div class="role" data-role="provider">
-        <strong>💼 Student Provider</strong>
-        <small>Sell your skills, complete services & earn</small>
-        <span class="tick">✓</span>
-      </div>
-      <div class="role" data-role="business">
-        <strong>🏪 Business</strong>
-        <small>Reach students through deals & opportunities</small>
-        <span class="tick">✓</span>
-      </div>
+  <div class="roles">
+    <div class="role active" data-role="customer">
+      <strong>👤 Customer</strong>
+      <small>Book services & redeem deals</small>
     </div>
 
-    <div class="field">
-      <label>EMAIL</label>
-      <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+    <div class="role" data-role="provider">
+      <strong>💼 Student Provider</strong>
+      <small>List services & earn</small>
     </div>
 
-    <div class="field">
-      <label>PASSWORD</label>
-      <div class="input-wrap">
-        <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password">
-        <button class="eye" type="button" onclick="togglePassword()" aria-label="Show password">◉</button>
-      </div>
+    <div class="role" data-role="business">
+      <strong>🏪 Business</strong>
+      <small>Create student deals & reach customers</small>
     </div>
-
-    <button id="loginBtn" class="primary" onclick="login()">ENTER ZEP SWIPE →</button>
-    <button id="signupBtn" class="secondary" onclick="signup()">Create New Account</button>
-
-    <div class="divider">SECURE ACCESS</div>
-    <div class="footer-note">🛡 <b>Your session stays active</b> across your Zep Swipe dashboard until you sign out.</div>
-    <div id="msg"></div>
   </div>
-</div>
 
-<div class="shell" id="gate">
-  <div class="panel gate">
-    <div class="gate-icon">🌍</div>
-    <div class="wordmark">ZEP <span>SWIPE</span></div>
-    <h2>We're launching in South Africa first.</h2>
-    <p>Zep Swipe authentication is currently available only from South Africa. You can join the wider waitlist while we prepare for expansion.</p>
-    <button class="primary" onclick="location.replace('waitlist.html')">JOIN THE WAITLIST</button>
-    <p style="margin-top:13px">Already on the waitlist? <a class="link" href="waitlist.html">Continue there →</a></p>
+  <label for="email">Email</label>
+  <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+
+  <label for="password">Password</label>
+  <input id="password" type="password" autocomplete="new-password" placeholder="At least 6 characters">
+
+  <button id="signupBtn" class="primary" type="button">Create Account</button>
+  <button id="loginBtn" class="secondary" type="button">Login</button>
+
+  <div id="msg"></div>
+
+  <div class="footer-note">
+    By creating an account, you agree to use Zep Swipe responsibly and provide accurate information.
   </div>
 </div>
 
 <script>
-const SUPABASE_URL="20https://mccsctmgkokkcrkmjuvw.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jY3NjdG1na29ra2Nya21qdXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5Nzg0NjcsImV4cCI6MjEwMjU1NDQ2N30.uQrPeROFDjxxiVDPh0vnAyS3TSN6igVTEbbOXkCBx_U";
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+/* =========================================================
+   ZEP SWIPE SUPABASE CONFIGURATION
+   GitHub Pages development environment
+   ========================================================= */
 
-let role="customer";
-let regionChecked=false;
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
 
-document.querySelectorAll(".role").forEach(el=>{
-  el.addEventListener("click",()=>{
-    document.querySelectorAll(".role").forEach(x=>x.classList.remove("active"));
-    el.classList.add("active");
-    role=el.dataset.role;
+const SUPABASE_ANON_KEY =
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpZWVrY2VsY2F0aHR1bHV3Y2ZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyOTk3MzAsImV4cCI6MjA5ODg3NTczMH0.qAwf6TtqwLLMD2pnLDIwIYqwoHM2rF31ehqa5TDqnJI";
+
+const db = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY,
+  {
+    auth:{
+      persistSession:true,
+      autoRefreshToken:true,
+      detectSessionInUrl:true
+    }
+  }
+);
+
+/* =========================================================
+   APP SETTINGS
+   ========================================================= */
+
+const AUTH_REDIRECT_URL =
+  "https://masterbase.github.io/auth.html";
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const signupBtn = document.getElementById("signupBtn");
+const loginBtn = document.getElementById("loginBtn");
+const msgEl = document.getElementById("msg");
+
+let selectedRole = "customer";
+
+/* =========================================================
+   ROLE SELECTION
+   ========================================================= */
+
+document.querySelectorAll(".role").forEach(roleEl => {
+
+  roleEl.addEventListener("click", () => {
+
+    document.querySelectorAll(".role")
+      .forEach(el => el.classList.remove("active"));
+
+    roleEl.classList.add("active");
+
+    selectedRole = roleEl.dataset.role;
   });
+
 });
 
-function setMsg(text,error=false){
-  const el=document.getElementById("msg");
-  el.textContent=text;
-  el.classList.toggle("error",error);
-}
-function setLoading(on){document.querySelector(".panel").classList.toggle("loading",on)}
-function togglePassword(){
-  const input=document.getElementById("password");
-  input.type=input.type==="password"?"text":"password";
-}
-function showGate(){
-  document.getElementById("authShell").style.display="none";
-  document.getElementById("gate").style.display="block";
-}
-async function checkSouthAfrica(){
-  if(regionChecked)return true;
-  try{
-    const controller=new AbortController();
-    const timer=setTimeout(()=>controller.abort(),5000);
-    const res=await fetch("https://ipwho.is/",{signal:controller.signal,cache:"no-store"});
-    clearTimeout(timer);
-    if(!res.ok)throw new Error("Geo lookup failed");
-    const geo=await res.json();
-    if(!geo || !geo.success || String(geo.country_code).toUpperCase()!=="ZA"){
-      showGate(); return false;
-    }
-    regionChecked=true; return true;
-  }catch(e){
-    // Fail closed for the public launch gate.
-    showGate(); return false;
-  }
-}
-async function getRole(userId){
-  const {data}=await db.from("profiles").select("role").eq("id",userId).maybeSingle();
-  return data?.role||"customer";
-}
-function redirect(r){
-  if(r==="customer")location.replace("customer.html");
-  else if(r==="provider")location.replace("provider.html");
-  else if(r==="business")location.replace("business-deals.html");
-  else location.replace("customer.html");
-}
-async function init(){
-  const allowed=await checkSouthAfrica();
-  if(!allowed)return;
+/* =========================================================
+   MESSAGE HELPERS
+   ========================================================= */
 
-  const {data:{session}}=await db.auth.getSession();
-  if(session){
-    redirect(await getRole(session.user.id));
+function showMessage(message, error=false){
+  msgEl.textContent = message;
+  msgEl.className = error ? "error" : "";
+}
+
+function setLoading(button, loading, text){
+  button.disabled = loading;
+  button.textContent = loading ? text : button.dataset.default;
+}
+
+signupBtn.dataset.default = "Create Account";
+loginBtn.dataset.default = "Login";
+
+/* =========================================================
+   VALIDATION
+   ========================================================= */
+
+function validateForm(){
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  if(!email){
+    showMessage("Please enter your email.", true);
+    emailInput.focus();
+    return false;
+  }
+
+  if(!password){
+    showMessage("Please enter your password.", true);
+    passwordInput.focus();
+    return false;
+  }
+
+  if(password.length < 6){
+    showMessage("Password must be at least 6 characters.", true);
+    passwordInput.focus();
+    return false;
+  }
+
+  return true;
+}
+
+/* =========================================================
+   CREATE / UPDATE PROFILE
+   =========================================================
+   The selected role is stored in Supabase Auth metadata.
+   This is important when email confirmation is enabled because
+   a new signup may not have an authenticated database session
+   until the email is verified.
+   ========================================================= */
+
+async function ensureProfile(user){
+
+  if(!user) return false;
+
+  const role =
+    user.user_metadata?.role ||
+    localStorage.getItem("zep_selected_role") ||
+    "customer";
+
+  const cleanRole =
+    ["customer","provider","business"].includes(role)
+      ? role
+      : "customer";
+
+  const {error} = await db
+    .from("profiles")
+    .upsert({
+      id:user.id,
+      email:user.email || "",
+      role:cleanRole
+    });
+
+  if(error){
+    console.error("Profile error:", error);
+    showMessage(
+      "Your account is active, but your profile could not be saved. Please try logging in again.",
+      true
+    );
+    return false;
+  }
+
+  localStorage.removeItem("zep_selected_role");
+
+  return true;
+}
+
+/* =========================================================
+   CREATE ACCOUNT
+   ========================================================= */
+
+async function signup(){
+
+  if(!validateForm()) return;
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  localStorage.setItem("zep_selected_role", selectedRole);
+
+  setLoading(signupBtn, true, "Creating...");
+
+  showMessage("Creating your Zep Swipe account...");
+
+  const {data,error} = await db.auth.signUp({
+
+    email,
+    password,
+
+    options:{
+      emailRedirectTo:AUTH_REDIRECT_URL,
+
+      data:{
+        role:selectedRole
+      }
+    }
+
+  });
+
+  if(error){
+
+    console.error(error);
+
+    showMessage(error.message, true);
+
+    setLoading(signupBtn, false);
+
     return;
   }
 
-  db.auth.onAuthStateChange(async(event,session)=>{
-    if(event==="SIGNED_IN"&&session)redirect(await getRole(session.user.id));
-  });
-}
-async function login(){
-  if(!(await checkSouthAfrica()))return;
-  const email=document.getElementById("email").value.trim();
-  const password=document.getElementById("password").value;
-  if(!email||!password){setMsg("Enter your email and password.",true);return}
-  setLoading(true);setMsg("Authenticating...");
-  try{
-    const {data,error}=await db.auth.signInWithPassword({email,password});
-    if(error)throw error;
-    redirect(await getRole(data.user.id));
-  }catch(e){setMsg(e.message||"Login failed.",true)}
-  finally{setLoading(false)}
-}
-async function signup(){
-  if(!(await checkSouthAfrica()))return;
-  const email=document.getElementById("email").value.trim();
-  const password=document.getElementById("password").value;
-  if(!email||!password){setMsg("Enter your email and password.",true);return}
-  if(password.length<6){setMsg("Password must be at least 6 characters.",true);return}
-  setLoading(true);setMsg("Creating your Zep Swipe account...");
-  try{
-    const {data,error}=await db.auth.signUp({email,password});
-    if(error)throw error;
-    if(data.user){
-      const {error:profileError}=await db.from("profiles").upsert({
-        id:data.user.id,email,role
-      },{onConflict:"id"});
-      if(profileError)throw profileError;
+  /*
+    If email confirmation is disabled, Supabase may return
+    an active session immediately. In that case create the
+    profile now.
+  */
+
+  if(data.session && data.user){
+
+    const profileOK = await ensureProfile(data.user);
+
+    if(profileOK){
+      showMessage("Account created. Redirecting...");
+      redirectByRole(selectedRole);
     }
-    if(data.session)redirect(role);
-    else setMsg("Account created. Verify your email, then return here to log in.");
-  }catch(e){setMsg(e.message||"Could not create account.",true)}
-  finally{setLoading(false)}
+
+    setLoading(signupBtn, false);
+
+    return;
+  }
+
+  /*
+    If email confirmation is enabled, there may be no session.
+    The role is already stored in Auth metadata and will be
+    recovered after the user verifies and logs in.
+  */
+
+  showMessage(
+    "Account created. Check your email and verify your account before logging in."
+  );
+
+  setLoading(signupBtn, false);
 }
-init();
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+async function login(){
+
+  if(!validateForm()) return;
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  setLoading(loginBtn, true, "Signing in...");
+
+  showMessage("Signing you in...");
+
+  const {data,error} =
+    await db.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if(error){
+
+    console.error(error);
+
+    showMessage(error.message, true);
+
+    setLoading(loginBtn, false);
+
+    return;
+  }
+
+  if(!data.user){
+
+    showMessage("Login succeeded, but no user session was returned.", true);
+
+    setLoading(loginBtn, false);
+
+    return;
+  }
+
+  /*
+    Make sure the profile exists and has the correct role.
+  */
+
+  const profileOK = await ensureProfile(data.user);
+
+  if(!profileOK){
+
+    setLoading(loginBtn, false);
+
+    return;
+  }
+
+  /*
+    Get the role from the database after profile sync.
+  */
+
+  const {data:profile,error:profileError} =
+    await db
+      .from("profiles")
+      .select("role")
+      .eq("id",data.user.id)
+      .maybeSingle();
+
+  if(profileError){
+
+    console.error(profileError);
+
+    showMessage(
+      "Logged in, but your profile could not be loaded.",
+      true
+    );
+
+    setLoading(loginBtn, false);
+
+    return;
+  }
+
+  const role =
+    profile?.role ||
+    data.user.user_metadata?.role ||
+    "customer";
+
+  showMessage("Login successful. Redirecting...");
+
+  redirectByRole(role);
+}
+
+/* =========================================================
+   REDIRECT BY ROLE
+   ========================================================= */
+
+function redirectByRole(role){
+
+  if(role === "provider"){
+    location.replace("provider.html");
+    return;
+  }
+
+  if(role === "business"){
+    location.replace("business-deals.html");
+    return;
+  }
+
+  location.replace("customer.html");
+}
+
+/* =========================================================
+   AUTH STATE LISTENER
+   ========================================================= */
+
+db.auth.onAuthStateChange((event, session) => {
+
+  if(event === "SIGNED_OUT"){
+    localStorage.removeItem("zep_selected_role");
+  }
+
+});
+
+/* =========================================================
+   BUTTON EVENTS
+   ========================================================= */
+
+signupBtn.addEventListener("click", signup);
+loginBtn.addEventListener("click", login);
+
+[emailInput,passwordInput].forEach(input => {
+
+  input.addEventListener("keydown", event => {
+
+    if(event.key === "Enter"){
+      login();
+    }
+
+  });
+
+});
+
+/* =========================================================
+   HANDLE RETURN FROM EMAIL VERIFICATION
+   ========================================================= */
+
+async function checkExistingSession(){
+
+  const {data:{session},error} =
+    await db.auth.getSession();
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  /*
+    Do not automatically redirect an already logged-in user
+    from this page. The user can still see the login screen.
+    This keeps the page predictable during testing.
+  */
+
+  if(session?.user){
+    console.log("Active Zep Swipe session:", session.user.id);
+  }
+
+}
+
+checkExistingSession();
 </script>
+
 </body>
 </html>
