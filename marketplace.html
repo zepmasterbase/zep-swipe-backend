@@ -3,34 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe | Marketplace V2</title>
+<title>Zep Swipe | Marketplace</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#050505;--card:#111;--card2:#0b0b0b;--line:#252525;--accent:#b8ff3b;--muted:#999}
+:root{--bg:#050505;--card:#111;--card2:#0b0b0b;--line:#252525;--accent:#b8ff3b;--muted:#999;--danger:#ff8585}
 *{box-sizing:border-box;font-family:Inter,sans-serif}
 html,body{margin:0;background:var(--bg);color:#fff;overflow-x:hidden}
-body{padding-bottom:86px}.wrap{max-width:1200px;margin:auto}
-.top{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:rgba(5,5,5,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+body{padding-bottom:88px}.wrap{max-width:1200px;margin:auto}
+.top{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:rgba(5,5,5,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
 .logo{font-weight:800;letter-spacing:-.6px}.logo span{color:var(--accent)}
 .top-actions{display:flex;gap:8px}.icon{width:40px;height:40px;border:1px solid var(--line);border-radius:50%;background:#101010;color:#fff;display:grid;place-items:center;cursor:pointer}
-.hero{margin:14px;min-height:510px;border:1px solid var(--line);border-radius:30px;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.94)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=2000&q=90') center/cover}
-.hero:after{content:"";position:absolute;inset:auto -20% -40% -20%;height:60%;background:radial-gradient(circle,rgba(184,255,59,.14),transparent 62%);pointer-events:none}
+.hero{margin:14px;min-height:530px;border:1px solid var(--line);border-radius:30px;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.95)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=2000&q=90') center/cover}
+.hero:after{content:"";position:absolute;inset:auto -20% -45% -20%;height:65%;background:radial-gradient(circle,rgba(184,255,59,.15),transparent 63%);pointer-events:none}
 .content{position:relative;z-index:2}.eyebrow{display:inline-flex;width:max-content;padding:7px 10px;border-radius:999px;background:rgba(184,255,59,.12);color:var(--accent);font-size:10px;font-weight:800}
-.hero h1{font-size:clamp(36px,7vw,72px);line-height:.95;letter-spacing:-3px;max-width:760px;margin:16px 0 10px}.hero p{max-width:620px;color:#c3c3c3;font-size:14px;line-height:1.55}
-.search{margin-top:18px;display:flex;align-items:center;gap:9px;background:rgba(8,8,8,.88);border:1px solid #333;border-radius:16px;padding:14px}.search input{border:0;background:transparent;color:#fff;outline:0;width:100%;font-size:14px}
-.chips{display:flex;gap:8px;overflow:auto;padding:14px 14px 3px}.chip{flex:none;border:1px solid var(--line);background:#101010;color:#fff;padding:10px 13px;border-radius:999px;font-size:11px;cursor:pointer}.chip.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:800}
+.hero h1{font-size:clamp(38px,7vw,76px);line-height:.94;letter-spacing:-3px;max-width:800px;margin:16px 0 10px}
+.hero p{max-width:650px;color:#c3c3c3;font-size:14px;line-height:1.55}
+.search{margin-top:18px;display:flex;align-items:center;gap:9px;background:rgba(8,8,8,.9);border:1px solid #333;border-radius:16px;padding:14px}
+.search input{border:0;background:transparent;color:#fff;outline:0;width:100%;font-size:14px}
+.search button{border:0;cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:11px;padding:10px 13px;background:var(--accent);color:#000;font-weight:800;font-size:11px;text-decoration:none;cursor:pointer}
+.btn.secondary{background:#242424;color:#fff;border:1px solid #333}
+.chips{display:flex;gap:8px;overflow:auto;padding:14px}.chip{flex:none;border:1px solid var(--line);background:#101010;color:#fff;padding:10px 13px;border-radius:999px;font-size:11px;cursor:pointer}.chip.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:800}
 .section{margin:14px}.head{display:flex;align-items:end;justify-content:space-between;gap:10px;margin:22px 0 11px}.head h2{margin:0;font-size:21px}.muted{color:var(--muted);font-size:11px;line-height:1.5}.badge{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(184,255,59,.1);color:var(--accent);font-size:10px;font-weight:800}
-.pulse{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.pulse-card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px}.pulse-card strong{display:block;color:var(--accent);font-size:19px;margin-bottom:4px}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.service{background:var(--card);border:1px solid var(--line);border-radius:19px;overflow:hidden;transition:.2s}.service:hover{transform:translateY(-3px);border-color:#3a3a3a}.image{height:190px;position:relative;background:#161616}.image img{width:100%;height:100%;object-fit:cover}.available{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.78);padding:6px 8px;border-radius:999px;font-size:9px;color:var(--accent);font-weight:800}.save{position:absolute;right:10px;top:10px;width:35px;height:35px;border-radius:50%;border:1px solid #444;background:rgba(0,0,0,.7);color:#fff;display:grid;place-items:center;cursor:pointer}.service-body{padding:14px}.service h3{margin:0 0 5px;font-size:15px}.price{font-size:22px;font-weight:800}.rating{font-size:10px;color:#ccc}.match{display:inline-flex;padding:5px 8px;border-radius:999px;background:rgba(184,255,59,.08);color:var(--accent);font-size:9px}.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:11px}.btn{display:inline-block;border:0;border-radius:11px;padding:10px 13px;background:var(--accent);color:#000;font-weight:800;font-size:11px;text-decoration:none;cursor:pointer}.btn.secondary{background:#252525;color:#fff;border:1px solid #333}
-.provider-row{display:flex;gap:10px;overflow:auto}.provider{min-width:190px;background:var(--card);border:1px solid var(--line);border-radius:17px;padding:13px}.avatar{width:46px;height:46px;border-radius:50%;object-fit:cover;float:left;margin-right:10px}.provider h3{margin:4px 0 3px;font-size:13px}.clear{clear:both}.provider-meta{margin-top:12px;font-size:10px;color:#aaa}
-.swipe-area{display:flex;justify-content:center}.swipe-card{width:min(430px,100%);background:var(--card);border:1px solid var(--line);border-radius:25px;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,.35)}.swipe-image{height:300px;position:relative}.swipe-image img{width:100%;height:100%;object-fit:cover}.swipe-body{padding:18px}.swipe-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+.pulse{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.pulse-card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px}.pulse-card strong{display:block;color:var(--accent);font-size:20px;margin-bottom:4px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.service{background:var(--card);border:1px solid var(--line);border-radius:19px;overflow:hidden;transition:.2s}.service:hover{transform:translateY(-3px);border-color:#3a3a3a}
+.image{height:190px;position:relative;background:#161616}.image img{width:100%;height:100%;object-fit:cover}.available{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.78);padding:6px 8px;border-radius:999px;font-size:9px;color:var(--accent);font-weight:800}.save{position:absolute;right:10px;top:10px;width:35px;height:35px;border-radius:50%;border:1px solid #444;background:rgba(0,0,0,.7);color:#fff;display:grid;place-items:center;cursor:pointer}
+.service-body{padding:14px}.service h3{margin:0 0 5px;font-size:15px}.price{font-size:22px;font-weight:800}.rating{font-size:10px;color:#ccc}.match{display:inline-flex;padding:5px 8px;border-radius:999px;background:rgba(184,255,59,.08);color:var(--accent);font-size:9px}.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:11px}
+.provider-row{display:flex;gap:10px;overflow:auto}.provider{min-width:205px;background:var(--card);border:1px solid var(--line);border-radius:17px;padding:13px}.avatar{width:46px;height:46px;border-radius:50%;object-fit:cover;float:left;margin-right:10px}.provider h3{margin:4px 0 3px;font-size:13px}.clear{clear:both}.provider-meta{margin-top:12px;font-size:10px;color:#aaa}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.quick-card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;text-decoration:none;color:#fff}.quick-card b{display:block;margin:8px 0 4px;font-size:13px}.quick-card i{color:var(--accent)}
+.job{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:16px}.job-row{display:flex;justify-content:space-between;align-items:center;gap:12px}.job h3{margin:0 0 4px;font-size:15px}.job-price{font-size:22px;font-weight:800}.job-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.job-tag{padding:5px 8px;border-radius:999px;background:#1a1a1a;color:#aaa;font-size:9px}.job-tag.hot{color:var(--accent);background:rgba(184,255,59,.08)}
 .deal{background:linear-gradient(135deg,#151b0c,#101010);border:1px solid rgba(184,255,59,.2);border-radius:19px;padding:16px}
-.footer{position:fixed;z-index:60;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:9px}.footer a{color:#fff;text-decoration:none;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px}.footer a:hover{color:var(--accent)}
-.hidden{display:none!important}.empty{padding:18px;text-align:center;border:1px dashed #333;border-radius:15px;color:#999;font-size:11px}
-@media(max-width:850px){.cards{grid-template-columns:repeat(2,1fr)}.pulse{grid-template-columns:1fr 1fr}.pulse-card:last-child{display:none}}
-@media(max-width:560px){.cards{grid-template-columns:1fr 1fr}.image{height:145px}.hero{min-height:540px}.hero h1{letter-spacing:-2px}.swipe-image{height:270px}}
+.activity{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #222}.activity:last-child{border-bottom:0}.dot{width:8px;height:8px;background:var(--accent);border-radius:50%;margin-top:5px;flex:none}
+.empty{padding:18px;text-align:center;border:1px dashed #333;border-radius:15px;color:#999;font-size:11px}
+.footer{position:fixed;z-index:70;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:9px}.footer a{color:#fff;text-decoration:none;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px}.footer a:hover{color:var(--accent)}
+.hidden{display:none!important}
+@media(max-width:850px){.cards{grid-template-columns:repeat(2,1fr)}.pulse{grid-template-columns:1fr 1fr}.quick{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.cards{grid-template-columns:1fr 1fr}.image{height:145px}.hero{min-height:555px}.hero h1{letter-spacing:-2px}.pulse{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -38,8 +49,8 @@ body{padding-bottom:86px}.wrap{max-width:1200px;margin:auto}
 <header class="top">
   <div class="logo">ZEP <span>SWIPE</span></div>
   <div class="top-actions">
-    <button class="icon" onclick="alert('Notifications will appear here when connected.')"><i data-lucide="bell"></i></button>
-    <button class="icon" onclick="location.href='auth.html'"><i data-lucide="user"></i></button>
+    <button class="icon" onclick="showNotifications()" title="Notifications"><i data-lucide="bell"></i></button>
+    <button class="icon" onclick="location.href='auth.html'" title="Account"><i data-lucide="user"></i></button>
   </div>
 </header>
 
@@ -47,12 +58,12 @@ body{padding-bottom:86px}.wrap{max-width:1200px;margin:auto}
 
 <section class="hero">
   <div class="content">
-    <span class="eyebrow">⚡ THE STUDENT-POWERED MARKETPLACE</span>
-    <h1>Find your next solution.</h1>
-    <p>Discover trusted student skills, services and local deals. Pay securely, get the work done and earn MARI after verified completion.</p>
+    <span class="eyebrow">⚡ TODAY ON ZEP SWIPE</span>
+    <h1 id="heroTitle">Find your next solution.</h1>
+    <p>Discover trusted student skills, quick jobs, local deals and everyday services. Pay securely, get work done and earn MARI after verified completion.</p>
     <div class="search">
       <i data-lucide="search" size="18"></i>
-      <input id="search" placeholder="What do you need done?" onkeydown="if(event.key==='Enter')searchNow()">
+      <input id="search" placeholder="What do you need done today?" onkeydown="if(event.key==='Enter')searchNow()">
       <button class="btn" onclick="searchNow()">Search</button>
     </div>
   </div>
@@ -67,43 +78,66 @@ body{padding-bottom:86px}.wrap{max-width:1200px;margin:auto}
   <button class="chip" onclick="filterCategory('Photography',this)">📸 Photo</button>
   <button class="chip" onclick="filterCategory('Writing',this)">✍️ Writing</button>
   <button class="chip" onclick="filterCategory('AI Services',this)">🤖 AI</button>
+  <button class="chip" onclick="filterCategory('Virtual Assistant',this)">🧑‍💻 VA</button>
 </div>
 
 <section class="section">
-  <div class="head"><div><h2>🌐 Marketplace Pulse</h2><p class="muted">What's happening on Zep Swipe right now.</p></div></div>
+  <div class="head"><div><h2>🌐 Today's Pulse</h2><p class="muted">A live snapshot of activity across the marketplace.</p></div><span class="badge">LIVE</span></div>
   <div class="pulse">
     <div class="pulse-card"><strong id="liveServices">0</strong><span class="muted">Live services</span></div>
-    <div class="pulse-card"><strong id="availableProviders">0</strong><span class="muted">Available providers</span></div>
+    <div class="pulse-card"><strong id="availableProviders">0</strong><span class="muted">Providers available</span></div>
+    <div class="pulse-card"><strong id="newJobs">0</strong><span class="muted">New opportunities</span></div>
     <div class="pulse-card"><strong id="completedToday">0</strong><span class="muted">Completed today</span></div>
   </div>
 </section>
 
 <section class="section">
-  <div class="head"><div><h2>🔥 Discover</h2><p class="muted">Services matched to what customers are looking for.</p></div><span class="badge" id="resultCount">LIVE</span></div>
-  <div id="services" class="cards"></div>
+  <div class="head"><div><h2>⚡ Quick Actions</h2><p class="muted">Get something done without searching.</p></div></div>
+  <div class="quick">
+    <a class="quick-card" href="#services"><i data-lucide="search"></i><b>Find a Service</b><span class="muted">Hire a student</span></a>
+    <a class="quick-card" href="#jobs"><i data-lucide="zap"></i><b>Quick Jobs</b><span class="muted">Fast-turnaround work</span></a>
+    <a class="quick-card" href="#deals"><i data-lucide="ticket-percent"></i><b>Student Deals</b><span class="muted">Save locally</span></a>
+    <a class="quick-card" href="auth.html"><i data-lucide="plus-circle"></i><b>Post a Job</b><span class="muted">Request a service</span></a>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="head"><div><h2>🔥 Trending Today</h2><p class="muted">Services people are discovering right now.</p></div><span class="badge" id="resultCount">LIVE</span></div>
+  <div id="servicesGrid" class="cards"></div>
 </section>
 
 <section class="section">
-  <div class="head"><div><h2>👋 Meet Available Providers</h2><p class="muted">Students who are currently open to new opportunities.</p></div></div>
+  <div class="head"><div><h2>🟢 Available Now</h2><p class="muted">Students currently open to new opportunities.</p></div></div>
   <div id="providers" class="provider-row"></div>
 </section>
 
-<section class="section">
-  <div class="head"><div><h2>↔️ Zep Swipe</h2><p class="muted">Swipe-style discovery for fast browsing.</p></div><span class="badge">OPTIONAL</span></div>
-  <div class="swipe-area"><div id="swipeCard" class="swipe-card"></div></div>
+<section class="section" id="jobs">
+  <div class="head"><div><h2>⚡ Quick Jobs</h2><p class="muted">Small jobs customers can post and students can complete quickly.</p></div><span class="badge">FAST</span></div>
+  <div id="quickJobs"></div>
+</section>
+
+<section class="section" id="deals">
+  <div class="head"><div><h2>🏷 Student Deals</h2><p class="muted">Fresh local offers from participating businesses.</p></div></div>
+  <div id="dealsGrid" class="cards"></div>
 </section>
 
 <section class="section">
-  <div class="head"><div><h2>🏷 Student Deals</h2><p class="muted">Local offers available through the Zep Swipe network.</p></div></div>
-  <div id="deals" class="cards"></div>
+  <div class="head"><div><h2>📈 What's Trending</h2><p class="muted">Useful signals for customers, businesses and students.</p></div></div>
+  <div class="quick">
+    <div class="quick-card"><i data-lucide="trending-up"></i><b>Graphic Design ↑</b><span class="muted">High demand today</span></div>
+    <div class="quick-card"><i data-lucide="monitor"></i><b>Web Development</b><span class="muted">Growing requests</span></div>
+    <div class="quick-card"><i data-lucide="book-open"></i><b>Tutoring</b><span class="muted">Popular this week</span></div>
+    <div class="quick-card"><i data-lucide="video"></i><b>Content Creation</b><span class="muted">New opportunities</span></div>
+  </div>
 </section>
 
 <section class="section">
-  <div class="head"><div><h2>🛡️ Why Zep Swipe</h2><p class="muted">Built around trust between customers and student providers.</p></div></div>
+  <div class="head"><div><h2>🛡️ Built Around Trust</h2><p class="muted">The marketplace is designed around real transactions, not fake engagement.</p></div></div>
   <div class="pulse">
     <div class="pulse-card"><strong>✓</strong><span class="muted">Verified providers</span></div>
     <div class="pulse-card"><strong>🛡</strong><span class="muted">Escrow protected</span></div>
-    <div class="pulse-card"><strong>🪙</strong><span class="muted">MARI rewards</span></div>
+    <div class="pulse-card"><strong>🪙</strong><span class="muted">MARI after verified completion</span></div>
+    <div class="pulse-card"><strong>10%</strong><span class="muted">Platform fee on completed provider services</span></div>
   </div>
 </section>
 
@@ -113,7 +147,7 @@ body{padding-bottom:86px}.wrap{max-width:1200px;margin:auto}
   <a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
   <a href="marketplace.html"><i data-lucide="compass"></i><span>Discover</span></a>
   <a href="auth.html"><i data-lucide="plus-circle"></i><span>Post</span></a>
-  <a href="customer.html"><i data-lucide="coins"></i><span>MARI</span></a>
+  <a href="auth.html"><i data-lucide="coins"></i><span>MARI</span></a>
   <a href="auth.html"><i data-lucide="user"></i><span>Account</span></a>
 </footer>
 
@@ -122,8 +156,8 @@ const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";
 const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-let allServiceData=[];
-let swipeIndex=0;
+let allServices=[];
+let currentFilter="All";
 
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
 function money(v){return Number(v||0).toLocaleString("en-ZA",{minimumFractionDigits:0,maximumFractionDigits:2});}
@@ -132,35 +166,34 @@ function serviceCard(s){
  const image=s.image_url||"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80";
  const title=esc(s.title||"Student Service");
  const category=esc(s.category||"Student Service");
- const provider=esc(s.provider_name||"Verified Student Provider");
  const price=money(s.price);
  const rating=esc(s.rating||"New");
  const available=s.is_available!==false;
  return `<article class="service" data-category="${category}">
-   <div class="image">
-    <img src="${image}" alt="${title}" loading="lazy">
-    ${available?'<span class="available">🟢 AVAILABLE NOW</span>':''}
-    <button class="save" onclick="saveService('${esc(s.id)}')" aria-label="Save service"><i data-lucide="heart" size="16"></i></button>
-   </div>
-   <div class="service-body">
-    <h3>${title}</h3>
-    <div class="rating">⭐ ${rating} · ${category}</div>
-    <div class="meta"><span class="price">R${price}</span><span class="match">${s.match_percent||"90"}% MATCH</span></div>
-    <div class="meta"><span class="muted">⚡ ${esc(s.delivery_time||"Flexible delivery")}</span><a class="btn" href="customer.html?service=${encodeURIComponent(s.id||"")}">View</a></div>
-    <div class="muted" style="margin-top:8px">🪙 +50 MARI after verified completion</div>
-   </div>
+  <div class="image">
+   <img src="${image}" alt="${title}" loading="lazy">
+   ${available?'<span class="available">🟢 AVAILABLE NOW</span>':''}
+   <button class="save" onclick="saveService('${esc(s.id)}')" aria-label="Save service"><i data-lucide="heart" size="16"></i></button>
+  </div>
+  <div class="service-body">
+   <h3>${title}</h3>
+   <div class="rating">⭐ ${rating} · ${category}</div>
+   <div class="meta"><span class="price">R${price}</span><span class="match">${s.match_percent||"90"}% MATCH</span></div>
+   <div class="meta"><span class="muted">⚡ ${esc(s.delivery_time||"Flexible delivery")}</span><a class="btn" href="service.html?id=${encodeURIComponent(s.id||"")}">View</a></div>
+   <div class="muted" style="margin-top:8px">🪙 +50 MARI after verified completion</div>
+  </div>
  </article>`;
 }
 
 function providerCard(s){
  const image=s.provider_avatar||s.image_url||"https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=300&q=80";
  return `<div class="provider">
-   <img class="avatar" src="${image}" alt="">
-   <h3>${esc(s.provider_name||"Student Provider")}</h3>
-   <div class="rating">⭐ ${esc(s.rating||"New")} · ✓ Verified</div>
-   <div class="clear"></div>
-   <div class="provider-meta">🟢 ${s.is_available!==false?"Available now":"Currently away"}</div>
-   <a class="btn" href="customer.html?provider=${encodeURIComponent(s.provider_id||"")} " style="display:block;text-align:center;margin-top:10px">View Profile</a>
+  <img class="avatar" src="${image}" alt="">
+  <h3>${esc(s.provider_name||"Student Provider")}</h3>
+  <div class="rating">⭐ ${esc(s.rating||"New")} · ✓ Verified</div>
+  <div class="clear"></div>
+  <div class="provider-meta">🟢 ${s.is_available!==false?"Available now":"Currently away"}</div>
+  <a class="btn" href="service.html?provider=${encodeURIComponent(s.provider_id||"")}" style="display:block;text-align:center;margin-top:10px">View Profile</a>
  </div>`;
 }
 
@@ -168,68 +201,95 @@ function dealCard(d){
  const image=d.image_url||"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80";
  return `<article class="service">
   <div class="image"><img src="${image}" alt="${esc(d.title||"Deal")}" loading="lazy"></div>
-  <div class="service-body"><h3>${esc(d.title||"Student Deal")}</h3><p class="muted">${esc(d.discount||"Special student offer")}</p><div class="meta"><span class="match">STUDENT DEAL</span><button class="btn" onclick="claimDeal('${esc(d.id)}')">Claim</button></div></div>
+  <div class="service-body">
+   <h3>${esc(d.title||"Student Deal")}</h3>
+   <p class="muted">${esc(d.discount||"Special student offer")}</p>
+   <div class="meta"><span class="match">STUDENT DEAL</span><button class="btn" onclick="claimDeal('${esc(d.id)}')">Claim</button></div>
+  </div>
  </article>`;
+}
+
+function quickJobCard(j){
+ return `<div class="job" style="margin-top:9px">
+  <div class="job-row"><div><h3>${esc(j.title||"Quick Student Job")}</h3><span class="muted">${esc(j.category||"General")} · ${esc(j.delivery_time||"Today")}</span></div><div class="job-price">R${money(j.budget||j.price)}</div></div>
+  <div class="job-tags"><span class="job-tag hot">⚡ QUICK</span><span class="job-tag">🛡 Protected</span></div>
+  <div style="margin-top:12px"><a class="btn" href="auth.html">View Opportunity</a></div>
+ </div>`;
 }
 
 async function loadMarketplace(q=""){
  let query=db.from("services").select("*").order("created_at",{ascending:false}).limit(60);
  if(q)query=query.ilike("title","%"+q+"%");
- const {data:items,error}=await query;
- if(error){console.warn(error.message);}
- allServiceData=items||[];
+ const {data,error}=await query;
+ if(error)console.warn("Services:",error.message);
+ allServices=data||[];
 
- const servicesBox=document.getElementById("services");
- servicesBox.innerHTML=allServiceData.length?allServiceData.map(serviceCard).join(""):'<div class="empty">No matching services yet.</div>';
- document.getElementById("resultCount").textContent=allServiceData.length+" LIVE";
+ renderServices();
+ document.getElementById("liveServices").textContent=allServices.length;
+ document.getElementById("resultCount").textContent=allServices.length+" LIVE";
 
- const providersBox=document.getElementById("providers");
  const unique={};
- allServiceData.forEach(x=>{if(x.provider_id&&!unique[x.provider_id])unique[x.provider_id]=x;});
- const providerItems=Object.values(unique).slice(0,10);
- providersBox.innerHTML=providerItems.length?providerItems.map(providerCard).join(""):'<div class="empty">Provider profiles will appear here.</div>';
+ allServices.forEach(x=>{if(x.provider_id&&!unique[x.provider_id])unique[x.provider_id]=x;});
+ const providers=Object.values(unique).slice(0,10);
+ document.getElementById("availableProviders").textContent=providers.filter(x=>x.is_available!==false).length;
+ document.getElementById("providers").innerHTML=providers.length?providers.map(providerCard).join(""):'<div class="empty">Provider availability will appear here.</div>';
 
- document.getElementById("liveServices").textContent=allServiceData.length;
- document.getElementById("availableProviders").textContent=providerItems.filter(x=>x.is_available!==false).length;
+ try{
+  const {data:orders}=await db.from("orders").select("id,status,created_at").gte("created_at",new Date(Date.now()-86400000).toISOString());
+  const completed=(orders||[]).filter(x=>x.status==="completed").length;
+  document.getElementById("completedToday").textContent=completed;
+ }catch(e){document.getElementById("completedToday").textContent="—";}
 
- renderSwipe();
+ try{
+  const {data:jobs}=await db.from("jobs").select("id,status").in("status",["open","pending"]).limit(100);
+  document.getElementById("newJobs").textContent=(jobs||[]).length;
+ }catch(e){document.getElementById("newJobs").textContent="—";}
+
+ lucide.createIcons();
+}
+
+function renderServices(){
+ let items=allServices;
+ if(currentFilter!=="All")items=items.filter(s=>(s.category||"").toLowerCase()===currentFilter.toLowerCase());
+ document.getElementById("servicesGrid").innerHTML=items.length?items.map(serviceCard).join(""):'<div class="empty">No services in this category yet.</div>';
  lucide.createIcons();
 }
 
 async function loadDeals(){
- const {data:deals,error}=await db.from("deals").select("*").order("created_at",{ascending:false}).limit(12);
- if(error){console.warn(error.message);}
- const box=document.getElementById("deals");
- box.innerHTML=(deals||[]).length?(deals||[]).map(dealCard).join(""):'<div class="empty">No deals are available right now.</div>';
+ const {data,error}=await db.from("deals").select("*").order("created_at",{ascending:false}).limit(12);
+ if(error)console.warn("Deals:",error.message);
+ const deals=data||[];
+ document.getElementById("dealsGrid").innerHTML=deals.length?deals.map(dealCard).join(""):'<div class="empty">No deals are available right now.</div>';
  lucide.createIcons();
 }
 
-function renderSwipe(){
- const box=document.getElementById("swipeCard");
- if(!allServiceData.length){box.innerHTML='<div class="empty">More services are coming soon.</div>';return;}
- const s=allServiceData[swipeIndex%allServiceData.length];
- const image=s.image_url||"https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1000&q=80";
- box.innerHTML=`<div class="swipe-image"><img src="${image}" alt="${esc(s.title||"Service")}"><span class="available" style="left:12px;top:12px">⚡ ${esc(s.category||"SERVICE")}</span></div>
- <div class="swipe-body">
-  <div class="row"><div><h2 style="margin:0 0 4px;font-size:21px">${esc(s.title||"Student Service")}</h2><div class="rating">⭐ ${esc(s.rating||"New")} · ✓ Verified Student</div></div><div class="price">R${money(s.price)}</div></div>
-  <p class="muted" style="margin-top:10px">⚡ ${esc(s.delivery_time||"Flexible delivery")} · 🪙 +50 MARI after verified completion</p>
-  <div class="swipe-actions"><button class="btn secondary" onclick="nextSwipe()">← Next</button><a class="btn" href="customer.html?service=${encodeURIComponent(s.id||"")}">View Service</a></div>
- </div>`;
- lucide.createIcons();
+async function loadQuickJobs(){
+ try{
+  const {data,error}=await db.from("jobs").select("*").eq("status","open").order("created_at",{ascending:false}).limit(5);
+  if(error)throw error;
+  const jobs=data||[];
+  document.getElementById("quickJobs").innerHTML=jobs.length?jobs.map(quickJobCard).join(""):'<div class="empty">No quick jobs are open right now. Be the first to post one.</div>';
+ }catch(e){
+  document.getElementById("quickJobs").innerHTML=`
+   ${quickJobCard({title:"Instagram poster",category:"Graphic Design",budget:250,delivery_time:"Today"})}
+   ${quickJobCard({title:"PowerPoint redesign",category:"Presentation Design",budget:180,delivery_time:"24 hours"})}
+   ${quickJobCard({title:"CV formatting",category:"Writing",budget:150,delivery_time:"24 hours"})}`;
+ }
 }
-
-function nextSwipe(){swipeIndex++;renderSwipe();}
 
 function filterCategory(category,button){
+ currentFilter=category;
  document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
  button.classList.add("active");
- document.querySelectorAll(".service").forEach(card=>{
-  card.style.display=(category==="All"||card.dataset.category===category)?"block":"none";
- });
+ renderServices();
+ document.getElementById("services").scrollIntoView({behavior:"smooth"});
 }
 
 function searchNow(){
  const q=document.getElementById("search").value.trim();
+ currentFilter="All";
+ document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+ document.querySelector(".chip").classList.add("active");
  loadMarketplace(q);
  document.getElementById("services").scrollIntoView({behavior:"smooth"});
 }
@@ -237,9 +297,11 @@ function searchNow(){
 async function saveService(id){
  const {data:{session}}=await db.auth.getSession();
  if(!session){localStorage.setItem("zep_save_service",id);location.href="auth.html";return;}
- const {error}=await db.from("saved_services").insert({user_id:session.user.id,service_id:id});
- if(error)alert("Could not save service: "+error.message);
- else alert("Service saved.");
+ try{
+  const {error}=await db.from("saved_services").insert({user_id:session.user.id,service_id:id});
+  if(error)throw error;
+  alert("Service saved.");
+ }catch(e){alert("Could not save service: "+e.message);}
 }
 
 async function claimDeal(id){
@@ -248,8 +310,11 @@ async function claimDeal(id){
  location.href="deal.html?id="+encodeURIComponent(id);
 }
 
+function showNotifications(){alert("Notifications will appear here when the notification backend is connected.");}
+
 loadMarketplace();
 loadDeals();
+loadQuickJobs();
 lucide.createIcons();
 </script>
 </body>
