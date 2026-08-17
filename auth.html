@@ -2,63 +2,102 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe | Sign In</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Zep Swipe | Gateway</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#050505;--card:#111;--line:#292929;--accent:#b8ff3b;--muted:#999;--danger:#ff7777}
+:root{--bg:#030403;--card:rgba(15,17,14,.82);--line:rgba(255,255,255,.10);--accent:#b8ff3b;--accent2:#d7ff73;--muted:#8e9589;--danger:#ff7777}
 *{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;min-height:100vh;display:flex;justify-content:center;align-items:center;background:radial-gradient(circle at 50% 0,#162008 0,#070707 38%,#050505 100%);color:#fff;padding:20px}
-.card{width:100%;max-width:460px;background:rgba(17,17,17,.94);border:1px solid var(--line);border-radius:28px;padding:26px;box-shadow:0 25px 90px rgba(0,0,0,.45)}
-.logo{text-align:center;color:var(--accent);font-size:30px;font-weight:800;letter-spacing:-1px}
-.sub{text-align:center;color:#aaa;line-height:1.5;margin:8px 0 20px;font-size:13px}
-.access{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid rgba(184,255,59,.2);background:rgba(184,255,59,.06);border-radius:13px;color:#d9e8c2;font-size:11px;margin-bottom:16px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);flex:none}
-.roles{display:grid;grid-template-columns:1fr;gap:9px}
-.role{padding:14px;border:1px solid var(--line);border-radius:14px;background:#0d0d0d;cursor:pointer;transition:.2s}
-.role.active{border-color:var(--accent);background:#182208;box-shadow:0 0 20px rgba(184,255,59,.07)}
-.role small{color:#999}
-input{width:100%;padding:13px;margin-top:11px;border-radius:12px;border:1px solid var(--line);background:#0b0b0b;color:#fff;outline:0}
-input:focus{border-color:#637a35}
-button{width:100%;padding:14px;margin-top:11px;border-radius:12px;font-weight:800;cursor:pointer}
-.primary{background:var(--accent);color:#000;border:0}.secondary{background:transparent;border:1px solid var(--accent);color:var(--accent)}
-#msg{margin-top:14px;min-height:20px;text-align:center;color:var(--accent);font-size:12px;line-height:1.45}
-#msg.error{color:var(--danger)}
-.loading{opacity:.65;pointer-events:none}
-#gate{display:none;text-align:center;padding:16px 4px}
-#gate h2{margin:10px 0 7px}.gate-icon{font-size:40px}
-.link{color:var(--accent);text-decoration:none;font-weight:700}
+html,body{margin:0;min-height:100%;background:#030403;color:#fff}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:-25%;background:radial-gradient(circle at 50% 20%,rgba(184,255,59,.13),transparent 28%),radial-gradient(circle at 10% 90%,rgba(184,255,59,.05),transparent 25%);filter:blur(10px);pointer-events:none}
+.shell{width:100%;max-width:470px;position:relative;z-index:2}
+.brand{text-align:center;margin-bottom:18px}
+.brand img{width:92px;height:92px;object-fit:contain;filter:drop-shadow(0 0 24px rgba(184,255,59,.32));animation:float 4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-5px)}}
+.wordmark{font-size:25px;font-weight:900;letter-spacing:-1.2px;margin-top:5px}.wordmark span{color:var(--accent)}
+.tag{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#777;margin-top:5px}
+.panel{background:linear-gradient(145deg,rgba(20,23,19,.92),rgba(9,10,9,.88));border:1px solid var(--line);border-radius:30px;padding:23px;box-shadow:0 30px 100px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.04);backdrop-filter:blur(24px)}
+.status{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid rgba(184,255,59,.15);background:rgba(184,255,59,.045);border-radius:13px;color:#cbd8bc;font-size:10px;margin-bottom:20px}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+h1{font-size:28px;letter-spacing:-1.5px;margin:0 0 6px}.intro{font-size:12px;line-height:1.55;color:var(--muted);margin:0 0 18px}
+.roles{display:grid;gap:8px;margin-bottom:17px}.role{position:relative;padding:13px;border:1px solid var(--line);background:rgba(0,0,0,.24);border-radius:15px;cursor:pointer;transition:.2s}.role:hover{border-color:#3a3f35}.role.active{border-color:rgba(184,255,59,.65);background:rgba(184,255,59,.07);box-shadow:0 0 25px rgba(184,255,59,.05)}.role strong{font-size:12px}.role small{display:block;color:#858a82;margin-top:3px;font-size:10px}.tick{position:absolute;right:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;border:1px solid #444;display:grid;place-items:center;font-size:10px;color:transparent}.role.active .tick{background:var(--accent);border-color:var(--accent);color:#000}
+.field{margin-top:10px}.field label{display:block;color:#9b9f98;font-size:10px;margin:0 0 6px 2px}.input-wrap{position:relative}.input-wrap input{padding-right:46px}input{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:13px;background:#080908;color:#fff;outline:0;font-size:12px}input:focus{border-color:rgba(184,255,59,.55);box-shadow:0 0 0 3px rgba(184,255,59,.05)}.eye{position:absolute;right:8px;top:7px;width:34px;height:34px;border:0;background:transparent;color:#777;cursor:pointer}
+.primary,.secondary{width:100%;padding:14px;border-radius:14px;font-weight:900;cursor:pointer;margin-top:11px}.primary{border:0;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#050505;box-shadow:0 10px 30px rgba(184,255,59,.12)}.secondary{border:1px solid rgba(184,255,59,.45);background:transparent;color:var(--accent)}
+.divider{display:flex;align-items:center;gap:9px;color:#555;font-size:9px;margin:17px 0}.divider:before,.divider:after{content:"";height:1px;background:#222;flex:1}
+.footer-note{text-align:center;color:#656a63;font-size:9px;line-height:1.5;margin-top:13px}.footer-note b{color:#aab2a3}
+#msg{min-height:20px;text-align:center;margin-top:12px;color:var(--accent);font-size:11px;line-height:1.45}#msg.error{color:var(--danger)}
+.loading{opacity:.55;pointer-events:none}
+#gate{display:none;text-align:center}.gate-icon{font-size:42px;margin-bottom:7px}.gate h2{font-size:25px;letter-spacing:-1px;margin:5px 0 8px}.gate p{color:var(--muted);font-size:12px;line-height:1.55}
+.gate button{margin-top:12px}.link{color:var(--accent);text-decoration:none;font-weight:800}
+@media(max-width:420px){body{padding:14px}.panel{padding:19px;border-radius:25px}.brand img{width:78px;height:78px}h1{font-size:25px}}
 </style>
 </head>
 <body>
 
-<div class="card" id="authCard">
-  <div class="logo">⚡ Zep Swipe</div>
-  <div class="sub">The student-powered services marketplace.</div>
-
-  <div class="access"><span class="dot"></span><span>South Africa early-access region check</span></div>
-
-  <div class="roles">
-    <div class="role active" data-role="customer"><strong>👤 Customer</strong><br><small>Book services & redeem deals</small></div>
-    <div class="role" data-role="provider"><strong>💼 Student Provider</strong><br><small>Sell services & earn</small></div>
-    <div class="role" data-role="business"><strong>🏪 Business</strong><br><small>Create student deals</small></div>
+<div class="shell" id="authShell">
+  <div class="brand">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+    <div class="wordmark">ZEP <span>SWIPE</span></div>
+    <div class="tag">The Student Economy</div>
   </div>
 
-  <input id="email" type="email" autocomplete="email" placeholder="Email">
-  <input id="password" type="password" autocomplete="current-password" placeholder="Password">
+  <div class="panel">
+    <div class="status"><span class="status-dot"></span><span>South Africa early access · Secure Supabase authentication</span></div>
 
-  <button id="signupBtn" class="primary" onclick="signup()">Create Account</button>
-  <button id="loginBtn" class="secondary" onclick="login()">Login</button>
+    <h1 id="heading">Welcome back.</h1>
+    <p class="intro" id="intro">Your next opportunity starts here. Choose your account type when creating an account.</p>
 
-  <div id="msg"></div>
+    <div class="roles" id="roles">
+      <div class="role active" data-role="customer">
+        <strong>👤 Customer</strong>
+        <small>Book trusted student services & redeem deals</small>
+        <span class="tick">✓</span>
+      </div>
+      <div class="role" data-role="provider">
+        <strong>💼 Student Provider</strong>
+        <small>Sell your skills, complete services & earn</small>
+        <span class="tick">✓</span>
+      </div>
+      <div class="role" data-role="business">
+        <strong>🏪 Business</strong>
+        <small>Reach students through deals & opportunities</small>
+        <span class="tick">✓</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>EMAIL</label>
+      <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+    </div>
+
+    <div class="field">
+      <label>PASSWORD</label>
+      <div class="input-wrap">
+        <input id="password" type="password" autocomplete="current-password" placeholder="Enter your password">
+        <button class="eye" type="button" onclick="togglePassword()" aria-label="Show password">◉</button>
+      </div>
+    </div>
+
+    <button id="loginBtn" class="primary" onclick="login()">ENTER ZEP SWIPE →</button>
+    <button id="signupBtn" class="secondary" onclick="signup()">Create New Account</button>
+
+    <div class="divider">SECURE ACCESS</div>
+    <div class="footer-note">🛡 <b>Your session stays active</b> across your Zep Swipe dashboard until you sign out.</div>
+    <div id="msg"></div>
+  </div>
 </div>
 
-<div class="card" id="gate">
-  <div class="gate-icon">🌍</div>
-  <h2>Early access is currently South Africa only</h2>
-  <p class="sub">Zep Swipe is currently opening this experience to people connecting from South Africa. You can join the wider waitlist while we expand.</p>
-  <button class="primary" onclick="location.replace('waitlist.html')">Join the Waitlist</button>
+<div class="shell" id="gate">
+  <div class="panel gate">
+    <div class="gate-icon">🌍</div>
+    <div class="wordmark">ZEP <span>SWIPE</span></div>
+    <h2>We're launching in South Africa first.</h2>
+    <p>Zep Swipe authentication is currently available only from South Africa. You can join the wider waitlist while we prepare for expansion.</p>
+    <button class="primary" onclick="location.replace('waitlist.html')">JOIN THE WAITLIST</button>
+    <p style="margin-top:13px">Already on the waitlist? <a class="link" href="waitlist.html">Continue there →</a></p>
+  </div>
 </div>
 
 <script>
@@ -70,11 +109,11 @@ let role="customer";
 let regionChecked=false;
 
 document.querySelectorAll(".role").forEach(el=>{
-  el.onclick=()=>{
+  el.addEventListener("click",()=>{
     document.querySelectorAll(".role").forEach(x=>x.classList.remove("active"));
     el.classList.add("active");
     role=el.dataset.role;
-  };
+  });
 });
 
 function setMsg(text,error=false){
@@ -82,132 +121,91 @@ function setMsg(text,error=false){
   el.textContent=text;
   el.classList.toggle("error",error);
 }
-
-function setLoading(on){
-  document.getElementById("authCard").classList.toggle("loading",on);
+function setLoading(on){document.querySelector(".panel").classList.toggle("loading",on)}
+function togglePassword(){
+  const input=document.getElementById("password");
+  input.type=input.type==="password"?"text":"password";
 }
-
-function emailEl(){return document.getElementById("email")}
-function passEl(){return document.getElementById("password")}
-
-function showWaitlist(){
-  document.getElementById("authCard").style.display="none";
+function showGate(){
+  document.getElementById("authShell").style.display="none";
   document.getElementById("gate").style.display="block";
 }
-
 async function checkSouthAfrica(){
   if(regionChecked)return true;
   try{
-    /*
-      This is a client-side gate for the public UI.
-      Production enforcement should also happen server-side/at the
-      Supabase Edge Function/API layer because browser checks can be bypassed.
-    */
     const controller=new AbortController();
     const timer=setTimeout(()=>controller.abort(),5000);
-    const res=await fetch("https://ipwho.is/",{
-      signal:controller.signal,
-      cache:"no-store"
-    });
+    const res=await fetch("https://ipwho.is/",{signal:controller.signal,cache:"no-store"});
     clearTimeout(timer);
     if(!res.ok)throw new Error("Geo lookup failed");
     const geo=await res.json();
-    regionChecked=true;
-    if(geo && geo.success && String(geo.country_code).toUpperCase()==="ZA")return true;
-    showWaitlist();
-    return false;
-  }catch(e){
-    /*
-      Fail closed: if the public IP lookup cannot verify South Africa,
-      do not expose the auth form. This is stricter for the launch gate.
-    */
-    showWaitlist();
-    return false;
-  }
-}
-
-async function init(){
-  const allowed=await checkSouthAfrica();
-  if(!allowed)return;
-
-  const {data:{session}}=await db.auth.getSession();
-  if(session){
-    const {data:profile}=await db.from("profiles").select("role").eq("id",session.user.id).maybeSingle();
-    redirect(profile?.role||"customer");
-    return;
-  }
-
-  db.auth.onAuthStateChange(async(event,session)=>{
-    if(event==="SIGNED_IN" && session){
-      const {data:profile}=await db.from("profiles").select("role").eq("id",session.user.id).maybeSingle();
-      redirect(profile?.role||"customer");
+    if(!geo || !geo.success || String(geo.country_code).toUpperCase()!=="ZA"){
+      showGate(); return false;
     }
-  });
-}
-
-async function signup(){
-  if(!(await checkSouthAfrica()))return;
-
-  const email=emailEl().value.trim();
-  const password=passEl().value;
-  if(!email||!password){setMsg("Enter your email and password.",true);return;}
-  if(password.length<6){setMsg("Password must be at least 6 characters.",true);return;}
-
-  setLoading(true);setMsg("Creating your account...");
-  try{
-    const {data,error}=await db.auth.signUp({email,password});
-    if(error)throw error;
-
-    if(data.user){
-      const {error:profileError}=await db.from("profiles").upsert({
-        id:data.user.id,
-        email,
-        role
-      },{onConflict:"id"});
-      if(profileError)throw profileError;
-    }
-
-    if(data.session){
-      setMsg("Account created. Redirecting...");
-      redirect(role);
-    }else{
-      setMsg("Account created. Check your email to verify your account, then return to login.");
-    }
+    regionChecked=true; return true;
   }catch(e){
-    setMsg(e.message||"Could not create account.",true);
-  }finally{
-    setLoading(false);
+    // Fail closed for the public launch gate.
+    showGate(); return false;
   }
 }
-
-async function login(){
-  if(!(await checkSouthAfrica()))return;
-
-  const email=emailEl().value.trim();
-  const password=passEl().value;
-  if(!email||!password){setMsg("Enter your email and password.",true);return;}
-
-  setLoading(true);setMsg("Signing you in...");
-  try{
-    const {data,error}=await db.auth.signInWithPassword({email,password});
-    if(error)throw error;
-
-    const {data:profile}=await db.from("profiles").select("role").eq("id",data.user.id).maybeSingle();
-    redirect(profile?.role||"customer");
-  }catch(e){
-    setMsg(e.message||"Login failed.",true);
-  }finally{
-    setLoading(false);
-  }
+async function getRole(userId){
+  const {data}=await db.from("profiles").select("role").eq("id",userId).maybeSingle();
+  return data?.role||"customer";
 }
-
 function redirect(r){
   if(r==="customer")location.replace("customer.html");
   else if(r==="provider")location.replace("provider.html");
   else if(r==="business")location.replace("business-deals.html");
   else location.replace("customer.html");
 }
+async function init(){
+  const allowed=await checkSouthAfrica();
+  if(!allowed)return;
 
+  const {data:{session}}=await db.auth.getSession();
+  if(session){
+    redirect(await getRole(session.user.id));
+    return;
+  }
+
+  db.auth.onAuthStateChange(async(event,session)=>{
+    if(event==="SIGNED_IN"&&session)redirect(await getRole(session.user.id));
+  });
+}
+async function login(){
+  if(!(await checkSouthAfrica()))return;
+  const email=document.getElementById("email").value.trim();
+  const password=document.getElementById("password").value;
+  if(!email||!password){setMsg("Enter your email and password.",true);return}
+  setLoading(true);setMsg("Authenticating...");
+  try{
+    const {data,error}=await db.auth.signInWithPassword({email,password});
+    if(error)throw error;
+    redirect(await getRole(data.user.id));
+  }catch(e){setMsg(e.message||"Login failed.",true)}
+  finally{setLoading(false)}
+}
+async function signup(){
+  if(!(await checkSouthAfrica()))return;
+  const email=document.getElementById("email").value.trim();
+  const password=document.getElementById("password").value;
+  if(!email||!password){setMsg("Enter your email and password.",true);return}
+  if(password.length<6){setMsg("Password must be at least 6 characters.",true);return}
+  setLoading(true);setMsg("Creating your Zep Swipe account...");
+  try{
+    const {data,error}=await db.auth.signUp({email,password});
+    if(error)throw error;
+    if(data.user){
+      const {error:profileError}=await db.from("profiles").upsert({
+        id:data.user.id,email,role
+      },{onConflict:"id"});
+      if(profileError)throw profileError;
+    }
+    if(data.session)redirect(role);
+    else setMsg("Account created. Verify your email, then return here to log in.");
+  }catch(e){setMsg(e.message||"Could not create account.",true)}
+  finally{setLoading(false)}
+}
 init();
 </script>
 </body>
