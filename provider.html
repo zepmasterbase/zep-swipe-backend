@@ -3,133 +3,324 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe | Student Provider</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<title>Zep Swipe | Student Provider V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
+:root{--bg:#070707;--card:#121212;--card2:#0d0d0d;--line:#262626;--accent:#b8ff3b;--muted:#9b9b9b;--blue:#77a7ff;--red:#ff7777}
 *{box-sizing:border-box;font-family:Inter,sans-serif}
 body{margin:0;background:var(--bg);color:#fff;padding-bottom:88px}
-.wrap{max-width:760px;margin:auto}
-.hero,.card{margin:16px;border:1px solid var(--line);border-radius:22px;background:var(--card)}
-.hero{padding:24px;background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.88)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.badge{display:inline-flex;padding:8px 14px;border-radius:999px;background:#203600;color:var(--accent);font-weight:700}
-.balance{font-size:42px;font-weight:800;margin:12px 0}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.tile{background:#101010;border:1px solid var(--line);border-radius:16px;padding:14px}
-.card{padding:18px}
-label{display:block;color:#bbb;font-size:13px;margin:10px 0 6px}
-input,textarea,select{width:100%;padding:12px;border-radius:12px;background:#101010;color:#fff;border:1px solid var(--line)}
-button{width:100%;padding:13px;border:none;border-radius:12px;background:var(--accent);font-weight:800;margin-top:14px}
-.job,.panel{background:#101010;border:1px solid var(--line);border-radius:16px;padding:14px}
-.row{display:flex;justify-content:space-between;margin:8px 0}
-.nav{position:fixed;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
-.nav a{color:#fff;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center}
-small{color:#aaa}
+.wrap{max-width:900px;margin:auto}
+.hero{margin:14px;padding:24px;border:1px solid var(--line);border-radius:26px;background:radial-gradient(circle at 90% 10%,rgba(184,255,59,.15),transparent 35%),linear-gradient(135deg,#181818,#090909)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.badge,.pill{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border-radius:999px;background:rgba(184,255,59,.12);color:var(--accent);font-size:10px;font-weight:800}
+h1{font-size:clamp(28px,7vw,46px);line-height:1.05;margin:22px 0 7px;letter-spacing:-1.3px}
+h2{font-size:21px;margin:0 0 5px}h3{font-size:15px;margin:0 0 7px}
+p{color:#b5b5b5;line-height:1.5;margin:0}
+.muted{font-size:11px;color:var(--muted)}
+.card{margin:14px;padding:17px;border:1px solid var(--line);border-radius:20px;background:var(--card)}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}
+.balance{font-size:43px;font-weight:800;letter-spacing:-1.5px;margin:17px 0 3px}
+.balance small{font-size:13px;color:var(--muted);font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+@media(max-width:650px){.grid{grid-template-columns:repeat(2,1fr)}}
+.tile{background:var(--card2);border:1px solid var(--line);border-radius:15px;padding:13px}
+.tile strong{display:block;font-size:20px;color:var(--accent);margin-bottom:4px}
+.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:650px){.action-grid{grid-template-columns:1fr}}
+.action,.job,.panel{background:var(--card2);border:1px solid var(--line);border-radius:15px;padding:14px}
+.action i{color:var(--accent);margin-bottom:9px}
+button{width:100%;padding:12px;border:0;border-radius:12px;background:var(--accent);color:#000;font-weight:800;margin-top:12px;cursor:pointer}
+button.secondary{background:#242424;color:#fff;border:1px solid #333}
+button:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0}
+input,textarea,select{width:100%;padding:12px;border-radius:12px;background:#0d0d0d;color:#fff;border:1px solid var(--line);margin-top:8px;outline:none}
+textarea{resize:vertical;min-height:90px}
+label{display:block;font-size:11px;color:#bbb;margin-top:11px}
+.progress{height:8px;background:#222;border-radius:99px;overflow:hidden;margin:10px 0}.progress span{display:block;height:100%;background:var(--accent);width:0}
+.score{font-size:34px;font-weight:800;color:var(--accent)}
+.activity{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #222}.activity:last-child{border:0}.dot{width:8px;height:8px;background:var(--accent);border-radius:50%;margin-top:6px;flex:none}
+.nav{position:fixed;z-index:30;left:0;right:0;bottom:0;background:#0b0b0b;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:10px}
+.nav a{color:#fff;text-decoration:none;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px}.nav a:hover{color:var(--accent)}
+.hidden{display:none!important}.empty{padding:16px;text-align:center;color:var(--muted);border:1px dashed #333;border-radius:13px}
+.notice{font-size:10px;color:var(--muted);margin-top:9px}
 </style>
 </head>
 <body>
 <div class="wrap">
+
 <section class="hero">
-<span class="badge">🛡 Escrow Protected</span>
-<h2 style="margin-top:14px">My Business</h2>
-<p>Payments are held in Zep Swipe Escrow and released after successful job completion.</p>
-<div class="balance">R<span id="wallet">0.00</span></div>
-<div class="grid">
-<div class="tile"><strong>Available</strong><br><small>Ready to withdraw</small><h3>R0.00</h3></div>
-<div class="tile"><strong>Pending</strong><br><small>Escrow</small><h3>R0.00</h3></div>
-<div class="tile"><strong>Completed Jobs</strong><h3 id="jobs">0</h3></div>
-<div class="tile"><strong>Rating</strong><h3>⭐5.0</h3></div>
-</div>
+ <div class="top"><span class="badge">🛡 VERIFIED SERVICE PROVIDER</span><b>ZEP SWIPE</b></div>
+ <h1>Good morning<span id="nameGreeting"></span> 👋</h1>
+ <p>Your personal opportunity engine. Find work, complete services and build your earning reputation.</p>
+ <div class="balance">R<span id="wallet">0.00</span></div>
+ <small>Available cash earnings</small>
+ <div class="grid" style="margin-top:18px">
+  <div class="tile"><strong id="available">R0</strong><span class="muted">Available</span></div>
+  <div class="tile"><strong id="pending">R0</strong><span class="muted">Pending</span></div>
+  <div class="tile"><strong id="jobs">0</strong><span class="muted">Completed Jobs</span></div>
+  <div class="tile"><strong>⭐ <span id="rating">5.0</span></strong><span class="muted">Rating</span></div>
+ </div>
 </section>
 
 <section class="card">
-<h3>🪙 Mari Rewards</h3>
-<div class="panel">
-<div class="row"><span>Mari Balance</span><strong><span id="mari">0</span> MARI</strong></div>
-<div class="row"><span>Reward Rule</span><strong>+25 MARI</strong></div>
-<p style="margin-top:10px">Providers earn <strong>25 MARI</strong> after a job is completed and escrow funds are successfully released.</p>
-</div>
+ <div class="section-head"><div><h2>🪙 MARI Rewards</h2><p class="muted">Earn rewards after verified service completion.</p></div><span class="pill">WITHDRAWAL LOCKED</span></div>
+ <div class="panel">
+  <div class="row"><span>MARI Balance</span><strong><span id="mari">0</span> MARI</strong></div>
+  <div class="row"><span>Current reward</span><strong>+25 MARI</strong></div>
+  <div class="row"><span>Withdrawal</span><strong>🔒 Locked</strong></div>
+  <p style="margin-top:10px">Complete a verified service and receive the configured MARI reward. MARI withdrawals are currently locked while the rewards program is being developed.</p>
+ </div>
+ <button class="secondary" onclick="showMariHistory()">View MARI Activity</button>
+ <div id="mariHistory" class="hidden" style="margin-top:10px"></div>
 </section>
 
 <section class="card">
-<h3>💼 Current Job</h3>
-<div class="job">
-<div class="row"><span>Campus Logo Design</span><strong>R850</strong></div>
-<div class="row"><span>Status</span><strong id="status">🟡 In Progress</strong></div>
-<div class="row"><span>Escrow</span><strong>Funds Secured</strong></div>
-<button onclick="submitJob()">Mark Work Submitted</button>
-</div>
+ <div class="section-head"><div><h2>🔥 Today's Opportunities</h2><p class="muted">Opportunities matched to student skills.</p></div></div>
+ <div id="opportunities">
+  <div class="job">
+   <div class="row"><b>Campus Logo Design</b><strong>R850</strong></div>
+   <p class="muted">Graphic Design · 2 days</p>
+   <button onclick="alert('Connect this button to your orders/applications backend.')">View Opportunity</button>
+  </div>
+  <div class="job" style="margin-top:9px">
+   <div class="row"><b>Website Update</b><strong>R1,200</strong></div>
+   <p class="muted">Web Development · 3 days</p>
+   <button onclick="alert('Connect this button to your orders/applications backend.')">View Opportunity</button>
+  </div>
+ </div>
 </section>
 
 <section class="card">
-<h3>📊 Wallet Summary</h3>
-<div class="panel">
-<div class="row"><span>This Month</span><strong>R0.00</strong></div>
-<div class="row"><span>Platform Fee (10%)</span><strong>R0.00</strong></div>
-<div class="row"><span>Net Paid Out</span><strong>R0.00</strong></div>
-</div>
+ <div class="section-head"><div><h2>📈 Your Progress</h2><p class="muted">Build trust and unlock more opportunity.</p></div><div class="score" id="providerScore">0</div></div>
+ <div class="progress"><span id="scoreBar"></span></div>
+ <div class="grid">
+  <div class="tile"><strong id="completedScore">0</strong><span class="muted">Completed</span></div>
+  <div class="tile"><strong id="reviewScore">0</strong><span class="muted">Reviews</span></div>
+  <div class="tile"><strong id="responseScore">0%</strong><span class="muted">Response</span></div>
+  <div class="tile"><strong id="repeatScore">0</strong><span class="muted">Repeat Clients</span></div>
+ </div>
 </section>
 
 <section class="card">
-<h3>🚀 Publish Service</h3>
-<label>Category</label>
-<select><option>Graphic Design</option><option>Tutoring</option><option>Programming</option><option>Photography</option><option>Virtual Assistant</option></select>
-<label>Service Title</label><input placeholder="Logo Design">
-<label>Description</label><textarea rows="4"></textarea>
-<label>Price</label><input placeholder="500">
-<label>Delivery Time</label><select><option>24 Hours</option><option>2 Days</option><option>7 Days</option></select>
-<label>Portfolio</label><input type="file" multiple>
-<button>Publish Service</button>
+ <div class="section-head"><div><h2>💼 Current Job</h2><p class="muted">Example state — connect to your orders table for live jobs.</p></div></div>
+ <div class="job">
+  <div class="row"><span>Campus Logo Design</span><strong>R850</strong></div>
+  <div class="row"><span>Status</span><strong id="status">🟡 In Progress</strong></div>
+  <div class="row"><span>Escrow</span><strong>Funds Secured</strong></div>
+  <button onclick="submitJob()">Mark Work Submitted</button>
+ </div>
 </section>
 
 <section class="card">
-<h3>🏦 Withdraw</h3>
-<label>Bank</label><input>
-<label>Account Number</label><input>
-<label>Amount</label><input>
-<button>Request Withdrawal</button>
+ <div class="section-head"><div><h2>💰 Earnings Breakdown</h2><p class="muted">Every completed service is settled transparently.</p></div></div>
+ <div class="panel">
+  <div class="row"><span>Service value</span><strong id="serviceGross">R850.00</strong></div>
+  <div class="row"><span>Zep Swipe platform fee (10%)</span><strong id="serviceFee">R85.00</strong></div>
+  <div class="row"><span>Your net cash earnings</span><strong id="serviceNet">R765.00</strong></div>
+  <div class="row"><span>MARI reward</span><strong>+25 MARI</strong></div>
+ </div>
+ <p class="notice">The 10% fee and MARI reward must be calculated and recorded server-side. The browser should never be trusted to credit a wallet.</p>
+</section>
+
+<section class="card" id="create">
+ <div class="section-head"><div><h2>➕ Publish a Service</h2><p class="muted">Turn your skills into opportunities.</p></div></div>
+ <label>Category</label>
+ <select id="serviceCategory"><option>Graphic Design</option><option>Tutoring</option><option>Programming</option><option>Photography</option><option>Virtual Assistant</option><option>Digital Marketing</option><option>Other</option></select>
+ <label>Service Title</label><input id="serviceTitle" placeholder="Logo Design">
+ <label>Description</label><textarea id="serviceDescription" placeholder="What will you deliver?"></textarea>
+ <label>Price (R)</label><input id="servicePrice" type="number" min="1" placeholder="500">
+ <label>Delivery Time</label><select id="deliveryTime"><option>24 Hours</option><option>2 Days</option><option>3 Days</option><option>7 Days</option></select>
+ <label>Portfolio</label><input id="portfolio" type="file" multiple>
+ <button onclick="publishService()">Publish Service</button>
 </section>
 
 <section class="card">
-<h3>👤 Profile</h3>
-<label>Profile Photo</label><input type="file">
-<label>Full Name</label><input>
-<label>University</label><input>
-<label>Bio</label><textarea rows="3"></textarea>
-<button>Save Changes</button>
+ <div class="section-head"><div><h2>⚡ Wallet</h2><p class="muted">Cash earnings can be withdrawn according to your payout rules.</p></div></div>
+ <div class="panel">
+  <div class="row"><span>Available to withdraw</span><strong id="withdrawAvailable">R0.00</strong></div>
+  <div class="row"><span>Pending in escrow</span><strong id="withdrawPending">R0.00</strong></div>
+ </div>
+ <label>Bank</label><input id="bankName" placeholder="Bank name">
+ <label>Account Number</label><input id="accountNumber" placeholder="Account number">
+ <label>Amount</label><input id="withdrawAmount" type="number" min="1" placeholder="Amount">
+ <button onclick="requestWithdrawal()">Request Withdrawal</button>
+ <p class="notice">Connect this button to a server-side payout/withdrawal workflow before production use.</p>
 </section>
+
+<section class="card">
+ <div class="section-head"><div><h2>👤 Profile</h2><p class="muted">Build trust with a strong student provider profile.</p></div></div>
+ <label>Profile Photo</label><input id="profilePhoto" type="file" accept="image/*">
+ <label>Full Name</label><input id="fullName">
+ <label>University</label><input id="university">
+ <label>Bio</label><textarea id="bio" rows="3"></textarea>
+ <button onclick="saveProfile()">Save Changes</button>
+</section>
+
+<section class="card">
+ <div class="section-head"><div><h2>⚡ Recent Activity</h2><p class="muted">Your latest earning activity.</p></div></div>
+ <div id="activity"><div class="activity"><span class="dot"></span><div><b>Welcome to your provider dashboard</b><p class="muted">Your verified service activity will appear here.</p></div></div></div>
+</section>
+
 </div>
 
 <nav class="nav">
-<a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
-<a href="marketplace.html"><i data-lucide="briefcase"></i><span>Jobs</span></a>
-<a href="#"><i data-lucide="plus-circle"></i><span>Create</span></a>
-<a href="#"><i data-lucide="wallet"></i><span>Wallet</span></a>
-<a href="#"><i data-lucide="user"></i><span>Profile</span></a>
+ <a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+ <a href="marketplace.html"><i data-lucide="briefcase"></i><span>Find Work</span></a>
+ <a href="#create"><i data-lucide="plus-circle"></i><span>Create</span></a>
+ <a href="#wallet"><i data-lucide="wallet"></i><span>Wallet</span></a>
+ <a href="#profile"><i data-lucide="user"></i><span>Profile</span></a>
 </nav>
 
 <script>
 const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRpZWVrY2VsY2F0aHR1bHV3Y2ZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyOTk3MzAsImV4cCI6MjA5ODg3NTczMH0.qAwf6TtqwLLMD2pnLDIwIYqwoHM2rF31ehqa5TDqnJI";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
-function submitJob(){
-  document.getElementById("status").textContent="🟢 Awaiting Escrow Release";
+const MARI_REWARD=25;
+let currentUser=null;
+
+function money(n){return "R"+Number(n||0).toLocaleString("en-ZA",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+
+async function getSession(){
+ const {data,error}=await db.auth.getSession();
+ if(error)throw error;
+ currentUser=data.session?.user||null;
+ return currentUser;
 }
 
-// Production flow:
-// 1. Customer pays into escrow.
-// 2. Provider completes work.
-// 3. Customer approves (or platform completes per policy).
-// 4. Escrow releases payment.
-// 5. Credit provider wallet (90%).
-// 6. Record 10% platform fee.
-// 7. Award +25 MARI.
-// 8. Update provider dashboard and MARI balance.
+async function loadProvider(){
+ if(!currentUser){location.replace("auth.html");return;}
 
-lucide.createIcons();
+ /* Expected provider tables:
+    profiles: id/user_id/full_name/university/bio/avatar_url/rating
+    provider_wallets: user_id/available_balance/pending_balance
+    mari_wallets: user_id/balance/withdrawal_locked
+    mari_transactions: user_id/type/amount/reference/description/created_at
+    orders: provider_id/status/gross_amount/platform_fee/provider_net
+ */
+ try{
+  const {data:p}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
+  if(p){
+   fullName.value=p.full_name||"";
+   university.value=p.university||"";
+   bio.value=p.bio||"";
+   nameGreeting.textContent=p.full_name?", "+esc(p.full_name.split(" ")[0]):"";
+   rating.textContent=Number(p.rating||5).toFixed(1);
+  }
+
+  const {data:w}=await db.from("provider_wallets").select("*").eq("user_id",currentUser.id).maybeSingle();
+  const available=Number(w?.available_balance||0),pending=Number(w?.pending_balance||0);
+  wallet.textContent=available.toFixed(2);availableEl(available);pendingEl(pending);
+
+  const {data:m}=await db.from("mari_wallets").select("*").eq("user_id",currentUser.id).maybeSingle();
+  mari.textContent=Number(m?.balance||0).toLocaleString();
+  if(m?.withdrawal_locked!==false){
+   document.querySelector(".badge + *");
+  }
+
+  await loadOrders();
+  await loadMariHistoryData();
+  lucide.createIcons();
+ }catch(e){console.warn("Provider backend not fully connected:",e.message);}
+}
+
+function availableEl(v){document.getElementById("available").textContent=money(v);document.getElementById("withdrawAvailable").textContent=money(v);}
+function pendingEl(v){document.getElementById("pending").textContent=money(v);document.getElementById("withdrawPending").textContent=money(v);}
+
+async function loadOrders(){
+ try{
+  const {data}=await db.from("orders").select("*").eq("provider_id",currentUser.id);
+  const rows=data||[];
+  const completed=rows.filter(x=>x.status==="completed").length;
+  jobs.textContent=completed;completedScore.textContent=completed;
+  perf(completed,rows);
+ }catch(e){}
+}
+
+function perf(completed,rows){
+ const reviews=rows.filter(x=>x.review_id).length;
+ reviewScore.textContent=reviews;
+ const score=Math.min(100,Math.round(45+Math.min(completed,20)*2+Math.min(reviews,10)*1.5));
+ providerScore.textContent=score;
+ scoreBar.style.width=score+"%";
+}
+
+async function loadMariHistoryData(){
+ const box=document.getElementById("mariHistory");
+ try{
+  const {data,error}=await db.from("mari_transactions").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(20);
+  if(error||!data?.length){box.innerHTML='<div class="empty">No MARI transactions yet.</div>';return;}
+  box.innerHTML=data.map(t=>`
+   <div class="activity">
+    <span class="dot"></span>
+    <div><b>+${Number(t.amount||0)} MARI</b><p class="muted">${esc(t.description||"Reward transaction")} · ${new Date(t.created_at).toLocaleDateString()}</p></div>
+   </div>`).join("");
+ }catch(e){box.innerHTML='<div class="empty">MARI activity will appear here when connected.</div>';}
+}
+
+function showMariHistory(){document.getElementById("mariHistory").classList.toggle("hidden");}
+
+function submitJob(){
+ document.getElementById("status").textContent="🟢 Awaiting Customer Approval";
+ alert("Demo status updated. In production, call a protected Edge Function that verifies the order before releasing funds or MARI.");
+}
+
+async function publishService(){
+ if(!currentUser){location.replace("auth.html");return;}
+ const price=Number(servicePrice.value||0);
+ if(!serviceTitle.value.trim()||price<=0){alert("Enter a service title and valid price.");return;}
+ const payload={
+  provider_id:currentUser.id,
+  category:serviceCategory.value,
+  title:serviceTitle.value.trim(),
+  description:serviceDescription.value.trim(),
+  price,
+  delivery_time:deliveryTime.value,
+  status:"active"
+ };
+ const {error}=await db.from("services").insert(payload);
+ if(error){alert("Could not publish service: "+error.message);return;}
+ alert("Service published.");
+ serviceTitle.value="";serviceDescription.value="";servicePrice.value="";
+}
+
+async function saveProfile(){
+ if(!currentUser){location.replace("auth.html");return;}
+ const payload={id:currentUser.id,full_name:fullName.value.trim(),university:university.value.trim(),bio:bio.value.trim()};
+ const {error}=await db.from("profiles").upsert(payload);
+ if(error){alert("Could not save profile: "+error.message);return;}
+ alert("Profile saved.");
+}
+
+async function requestWithdrawal(){
+ const amount=Number(withdrawAmount.value||0);
+ if(amount<=0){alert("Enter a valid withdrawal amount.");return;}
+ alert("Withdrawal request should be processed by a protected server-side payout function before going live.");
+}
+
+async function logout(){
+ const {error}=await db.auth.signOut();
+ if(error){alert("Could not log out.");return;}
+ location.replace("auth.html");
+}
+
+db.auth.onAuthStateChange((_event,session)=>{
+ currentUser=session?.user||null;
+ if(!currentUser)location.replace("auth.html");
+});
+
+async function init(){
+ try{
+  await getSession();
+  if(!currentUser){location.replace("auth.html");return;}
+  await loadProvider();
+ }catch(e){location.replace("auth.html");}
+ lucide.createIcons();
+}
+init();
 </script>
 </body>
 </html>
