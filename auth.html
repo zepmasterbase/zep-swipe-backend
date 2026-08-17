@@ -7,91 +7,208 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--line:#262626;--accent:#b8ff3b}
+:root{--bg:#050505;--card:#111;--line:#292929;--accent:#b8ff3b;--muted:#999;--danger:#ff7777}
 *{box-sizing:border-box;font-family:Inter,sans-serif}
-body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:radial-gradient(circle at top,#111,#070707);color:#fff;padding:20px}
-.card{width:100%;max-width:430px;background:#141414;border:1px solid var(--line);border-radius:22px;padding:24px}
-.logo{text-align:center;color:var(--accent);font-size:30px;font-weight:800}
-.sub{text-align:center;color:#aaa;margin:8px 0 20px}
-.roles{display:grid;grid-template-columns:1fr;gap:10px}
-.role{padding:14px;border:1px solid var(--line);border-radius:14px;background:#101010;cursor:pointer}
-.role.active{border-color:var(--accent);background:#1a2508}
-input{width:100%;padding:13px;margin-top:12px;border-radius:12px;border:1px solid var(--line);background:#101010;color:#fff}
-button{width:100%;padding:14px;margin-top:12px;border:none;border-radius:12px;font-weight:800;cursor:pointer}
-.primary{background:var(--accent);color:#000}.secondary{background:transparent;border:1px solid var(--accent);color:var(--accent)}
-#msg{margin-top:14px;color:#b8ff3b;min-height:20px;text-align:center}
-small{color:#aaa}
+body{margin:0;min-height:100vh;display:flex;justify-content:center;align-items:center;background:radial-gradient(circle at 50% 0,#162008 0,#070707 38%,#050505 100%);color:#fff;padding:20px}
+.card{width:100%;max-width:460px;background:rgba(17,17,17,.94);border:1px solid var(--line);border-radius:28px;padding:26px;box-shadow:0 25px 90px rgba(0,0,0,.45)}
+.logo{text-align:center;color:var(--accent);font-size:30px;font-weight:800;letter-spacing:-1px}
+.sub{text-align:center;color:#aaa;line-height:1.5;margin:8px 0 20px;font-size:13px}
+.access{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid rgba(184,255,59,.2);background:rgba(184,255,59,.06);border-radius:13px;color:#d9e8c2;font-size:11px;margin-bottom:16px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);flex:none}
+.roles{display:grid;grid-template-columns:1fr;gap:9px}
+.role{padding:14px;border:1px solid var(--line);border-radius:14px;background:#0d0d0d;cursor:pointer;transition:.2s}
+.role.active{border-color:var(--accent);background:#182208;box-shadow:0 0 20px rgba(184,255,59,.07)}
+.role small{color:#999}
+input{width:100%;padding:13px;margin-top:11px;border-radius:12px;border:1px solid var(--line);background:#0b0b0b;color:#fff;outline:0}
+input:focus{border-color:#637a35}
+button{width:100%;padding:14px;margin-top:11px;border-radius:12px;font-weight:800;cursor:pointer}
+.primary{background:var(--accent);color:#000;border:0}.secondary{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+#msg{margin-top:14px;min-height:20px;text-align:center;color:var(--accent);font-size:12px;line-height:1.45}
+#msg.error{color:var(--danger)}
+.loading{opacity:.65;pointer-events:none}
+#gate{display:none;text-align:center;padding:16px 4px}
+#gate h2{margin:10px 0 7px}.gate-icon{font-size:40px}
+.link{color:var(--accent);text-decoration:none;font-weight:700}
 </style>
 </head>
 <body>
-<div class="card">
-<div class="logo">⚡ Zep Swipe</div>
-<div class="sub">Choose your account type when creating a new account.</div>
 
-<div class="roles">
-<div class="role active" data-role="customer"><strong>👤 Customer</strong><br><small>Book services & redeem deals</small></div>
-<div class="role" data-role="provider"><strong>💼 Student Provider</strong><br><small>Sell services & earn</small></div>
-<div class="role" data-role="business"><strong>🏪 Business</strong><br><small>Create student deals</small></div>
+<div class="card" id="authCard">
+  <div class="logo">⚡ Zep Swipe</div>
+  <div class="sub">The student-powered services marketplace.</div>
+
+  <div class="access"><span class="dot"></span><span>South Africa early-access region check</span></div>
+
+  <div class="roles">
+    <div class="role active" data-role="customer"><strong>👤 Customer</strong><br><small>Book services & redeem deals</small></div>
+    <div class="role" data-role="provider"><strong>💼 Student Provider</strong><br><small>Sell services & earn</small></div>
+    <div class="role" data-role="business"><strong>🏪 Business</strong><br><small>Create student deals</small></div>
+  </div>
+
+  <input id="email" type="email" autocomplete="email" placeholder="Email">
+  <input id="password" type="password" autocomplete="current-password" placeholder="Password">
+
+  <button id="signupBtn" class="primary" onclick="signup()">Create Account</button>
+  <button id="loginBtn" class="secondary" onclick="login()">Login</button>
+
+  <div id="msg"></div>
 </div>
 
-<input id="email" type="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-
-<button class="primary" onclick="signup()">Create Account</button>
-<button class="secondary" onclick="login()">Login</button>
-
-<div id="msg"></div>
+<div class="card" id="gate">
+  <div class="gate-icon">🌍</div>
+  <h2>Early access is currently South Africa only</h2>
+  <p class="sub">Zep Swipe is currently opening this experience to people connecting from South Africa. You can join the wider waitlist while we expand.</p>
+  <button class="primary" onclick="location.replace('waitlist.html')">Join the Waitlist</button>
 </div>
 
 <script>
 const SUPABASE_URL="https://tqxfkijetudtzldflrjb.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxeGZraWpldHVkdHpsZGZscmpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzMTA4MjcsImV4cCI6MjEwMTg4NjgyN30.FHCgU6h911ghgI3k9MSo0GKaasFcwpjN_82H-4pyfd8";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 let role="customer";
+let regionChecked=false;
+
 document.querySelectorAll(".role").forEach(el=>{
- el.onclick=()=>{
-   document.querySelectorAll(".role").forEach(x=>x.classList.remove("active"));
-   el.classList.add("active");
-   role=el.dataset.role;
- };
+  el.onclick=()=>{
+    document.querySelectorAll(".role").forEach(x=>x.classList.remove("active"));
+    el.classList.add("active");
+    role=el.dataset.role;
+  };
 });
 
-const msg=t=>document.getElementById("msg").textContent=t;
-
-async function signup(){
- const email=emailEl().value.trim(),password=passEl().value;
- msg("Creating account...");
- const {data,error}=await db.auth.signUp({email,password});
- if(error){msg(error.message);return;}
- if(data.user){
-   await db.from("profiles").upsert({
-     id:data.user.id,
-     email,
-     role
-   });
- }
- msg(data.session?"Success! Redirecting...":"Account created. Verify your email then login.");
- if(data.session) redirect(role);
+function setMsg(text,error=false){
+  const el=document.getElementById("msg");
+  el.textContent=text;
+  el.classList.toggle("error",error);
 }
 
-async function login(){
- const email=emailEl().value.trim(),password=passEl().value;
- msg("Signing in...");
- const {data,error}=await db.auth.signInWithPassword({email,password});
- if(error){msg(error.message);return;}
- const {data:profile}=await db.from("profiles").select("role").eq("id",data.user.id).single();
- redirect(profile?.role||"customer");
-}
-
-function redirect(r){
- if(r==="customer") location.replace("customer.html");
- else if(r==="provider") location.replace("provider.html");
- else if(r==="business") location.replace("business-deals.html");
+function setLoading(on){
+  document.getElementById("authCard").classList.toggle("loading",on);
 }
 
 function emailEl(){return document.getElementById("email")}
 function passEl(){return document.getElementById("password")}
+
+function showWaitlist(){
+  document.getElementById("authCard").style.display="none";
+  document.getElementById("gate").style.display="block";
+}
+
+async function checkSouthAfrica(){
+  if(regionChecked)return true;
+  try{
+    /*
+      This is a client-side gate for the public UI.
+      Production enforcement should also happen server-side/at the
+      Supabase Edge Function/API layer because browser checks can be bypassed.
+    */
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),5000);
+    const res=await fetch("https://ipwho.is/",{
+      signal:controller.signal,
+      cache:"no-store"
+    });
+    clearTimeout(timer);
+    if(!res.ok)throw new Error("Geo lookup failed");
+    const geo=await res.json();
+    regionChecked=true;
+    if(geo && geo.success && String(geo.country_code).toUpperCase()==="ZA")return true;
+    showWaitlist();
+    return false;
+  }catch(e){
+    /*
+      Fail closed: if the public IP lookup cannot verify South Africa,
+      do not expose the auth form. This is stricter for the launch gate.
+    */
+    showWaitlist();
+    return false;
+  }
+}
+
+async function init(){
+  const allowed=await checkSouthAfrica();
+  if(!allowed)return;
+
+  const {data:{session}}=await db.auth.getSession();
+  if(session){
+    const {data:profile}=await db.from("profiles").select("role").eq("id",session.user.id).maybeSingle();
+    redirect(profile?.role||"customer");
+    return;
+  }
+
+  db.auth.onAuthStateChange(async(event,session)=>{
+    if(event==="SIGNED_IN" && session){
+      const {data:profile}=await db.from("profiles").select("role").eq("id",session.user.id).maybeSingle();
+      redirect(profile?.role||"customer");
+    }
+  });
+}
+
+async function signup(){
+  if(!(await checkSouthAfrica()))return;
+
+  const email=emailEl().value.trim();
+  const password=passEl().value;
+  if(!email||!password){setMsg("Enter your email and password.",true);return;}
+  if(password.length<6){setMsg("Password must be at least 6 characters.",true);return;}
+
+  setLoading(true);setMsg("Creating your account...");
+  try{
+    const {data,error}=await db.auth.signUp({email,password});
+    if(error)throw error;
+
+    if(data.user){
+      const {error:profileError}=await db.from("profiles").upsert({
+        id:data.user.id,
+        email,
+        role
+      },{onConflict:"id"});
+      if(profileError)throw profileError;
+    }
+
+    if(data.session){
+      setMsg("Account created. Redirecting...");
+      redirect(role);
+    }else{
+      setMsg("Account created. Check your email to verify your account, then return to login.");
+    }
+  }catch(e){
+    setMsg(e.message||"Could not create account.",true);
+  }finally{
+    setLoading(false);
+  }
+}
+
+async function login(){
+  if(!(await checkSouthAfrica()))return;
+
+  const email=emailEl().value.trim();
+  const password=passEl().value;
+  if(!email||!password){setMsg("Enter your email and password.",true);return;}
+
+  setLoading(true);setMsg("Signing you in...");
+  try{
+    const {data,error}=await db.auth.signInWithPassword({email,password});
+    if(error)throw error;
+
+    const {data:profile}=await db.from("profiles").select("role").eq("id",data.user.id).maybeSingle();
+    redirect(profile?.role||"customer");
+  }catch(e){
+    setMsg(e.message||"Login failed.",true);
+  }finally{
+    setLoading(false);
+  }
+}
+
+function redirect(r){
+  if(r==="customer")location.replace("customer.html");
+  else if(r==="provider")location.replace("provider.html");
+  else if(r==="business")location.replace("business-deals.html");
+  else location.replace("customer.html");
+}
+
+init();
 </script>
 </body>
 </html>
