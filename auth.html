@@ -912,10 +912,17 @@ async function signup(){
 
   msg("Creating account...");
 
+  const redirectUrl =
+    window.location.origin +
+    "/zep-swipe-backend/verify.html";
+
   const {data,error}=
     await db.auth.signUp({
       email,
-      password
+      password,
+      options:{
+        emailRedirectTo:redirectUrl
+      }
     });
 
   if(error){
@@ -925,23 +932,17 @@ async function signup(){
     return;
   }
 
-
   if(data.user){
 
     await db
       .from("profiles")
       .upsert({
-
         id:data.user.id,
-
         email,
-
         role
-
       });
 
   }
-
 
   msg(
     data.session
@@ -949,13 +950,11 @@ async function signup(){
       :"Account created. Verify your email then login."
   );
 
-
   if(data.session){
 
     redirect(role);
 
   }
-
 }
 
 
