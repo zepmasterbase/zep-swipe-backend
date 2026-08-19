@@ -1,787 +1,234 @@
-How do customers pay students when booking? And why didn't you add the on the side card and link it respectively. Can payment be made on this page before service is accepted or what is the best approach 
-
-Yo can we update only the provider     
- Dashboard UI Redesign to look exactly like the image I uploaded and keep everything else intact   
-    
-Redesign the provider Dashboard into a premium, modern, mobile-first experience inspired by the attached reference image.    
-    
-Brand Identity    
-    
-- Platform: Zep Swipe    
-- Mission: Help  University & College students earn money, find jobs, and access local opportunities.    
-- Design Style: Modern fintech + Web3 + marketplace.    
-- Feel: Premium, trustworthy, aspirational, youthful.    
-- Primary Color: #b8ff3b    
-- Background: #070707    
-- Card Color: #141414    
-- Border Color: #262626    
-- Text: White with subtle gray secondary text.    
-    
-Header Hero Section    
-    
-Create a full-width dashboard banner with rounded corners.    
-    
-Left Side    
-    
-Display:    
-    
-Welcome back, {FirstName} 👋    
-    
-Subtext:    
-Turn your skills into income today.    
-    
-Show:    
-    
-- Current Balance    
-- Quick stats    
-- CTA buttons:    
-  - Find Jobs near me  
-  - My Jobs    
-  - Withdraw paystack  
-  - Send if possible to another user ( provider)
-    
-Right Side    
-    
-Use a high-quality hero image featuring:    
-    
-- Young African university students    
-- Working on laptops    
-- Learning digital skills    
-- Collaborating in a modern environment    
-- Smiling and productive    
-    
-Overlay floating glassmorphism cards showing:    
-    
-Graphic Design    
-Jobs Available   connect to backend supabase 
-    
-Tutoring    
- Jobs Available   connect backend 
-    
-Coding    
-Jobs Available    connect backend 
-    
-Include a glowing Zep Swipe logo in the center.    
-    
-Add subtle green neon glow effects.    
-    
-Dashboard Layout    
-    
-Below the hero section create:    
-    
-Quick Actions    
-    
-Grid cards:    
-    
-- Find Jobs    
-- Post Service    
-- Refer & Earn    
-- Student Deals    
-- My Services    
-    
-Each card:    
-    
-- Rounded corners    
-- Hover animation    
-- Neon icon    
-- Premium shadow    
-    
-Recent Activity    
-    
-Modern activity feed showing:    
-    
-- Payments received    
-- Jobs completed    
-- Referrals earned    
-- Student deals redeemed    
-    
-Display timestamps and  amounts.    
-    
-Earnings Overview    
-    
-Show:    
-    
-- Total Earnings    
-- Monthly Earnings    
-- Weekly Earnings    
-- Growth Percentage    
-    
-Include:    
-    
-- Beautiful line chart    
-- Animated chart loading    
-- Glassmorphism container    
-    
-Recommended Opportunities    
-    
-Display swipeable cards for:    
-    
-- Tutoring    
-- Graphic Design    
-- Photography    
-- Coding    
-- Social Media Management    
-    
-Each card should show:    
-    
-- Earnings potential    
-- Distance    
-- Category    
-- Apply button    
-    
-Student Deals Section    
-    
-Horizontal cards featuring:    
-    
-- Restaurants    
-- Cafes    
-- Barbers    
-- Hair Salons    
-- Transport Discounts    
-    
-Each card should display:    
-    
-- Discount percentage    
-- Business logo    
-- Redeem button    
-    
-Navigation    
-    
-Bottom navigation bar:    
-    
-- Home    
-- Jobs    
-- Deals    
-- Wallet    
-- Profile    
-    
-Active tab should glow with #b8ff3b.    
-    
-UX Requirements    
-    
-- Mobile-first design    
-- Responsive on all devices    
-- Smooth animations    
-- Glassmorphism effects    
-- Soft shadows    
-- Premium fintech appearance    
-- Fast loading    
-- Accessible typography    
-- Professional spacing    
-    
-Goal    
-    
-The dashboard should instantly make students feel:    
-    
-"I can learn, earn, grow my income, and build my future here."    
-    
-The final result should look like a billion-dollar startup product, combining the professionalism of modern fintech apps with the energy of the African student economy.  
-  
-<!DOCTYPE html>  
-<html lang="en">  
-<head>  
-<meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  
-<title>Zep Swipe Provider V13</title>  
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">  
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  
-<style>  
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626;--text:#fff;--muted:#aaa;}  
-*{box-sizing:border-box;font-family:Inter,sans-serif;margin:0;padding:0}  
-body{background:var(--bg);color:var(--text);padding-bottom:100px}  
-header{position:sticky;top:0;background:#0b0b0b;padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}  
-.logo{color:var(--accent);font-weight:800}  
-.wrap{max-width:1100px;margin:auto;padding:16px}  
-.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-top:14px}  
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}  
-.box,.item{background:rgba(184,255,59,.06);border:1px solid rgba(184,255,59,.15);padding:12px;border-radius:12px}  
-input,textarea,select{width:100%;padding:12px;margin-top:10px;border-radius:12px;background:#0d0d0d;color:#fff;border:1px solid var(--border)}  
-button{padding:12px;border:none;border-radius:12px;font-weight:700;cursor:pointer;margin-top:10px}  
-.primary{background:var(--accent);color:#000}  
-.badge{padding:6px 10px;border-radius:999px;background:rgba(184,255,59,.15);color:var(--accent)}  
-.small{font-size:12px;color:var(--muted)}  
-</style>  
-</head>  
-<body>  
-<header>  
-<div class="logo">⚡ Zep Swipe Provider V13</div>  
-<div class="badge">Bookings + Wallet + Analytics</div>  
-</header>  
-  
-<div class="wrap">  
-<div class="card"><h2>🎓 Student Provider Dashboard</h2><p class="small">Marketplace + Payments Ready</p></div>  
-  
-<div class="grid">  
-<div class="box"><h2 id="bal">R0</h2><p>Available</p></div>  
-<div class="box"><h2 id="pend">R0</h2><p>Pending</p></div>  
-<div class="box"><h2 id="jobs">0</h2><p>Jobs</p></div>  
-<div class="box"><h2 id="views">0</h2><p>Views</p></div>  
-</div>  
-  
-<div class="card">  
-<h3>👤 Profile</h3>  
-<input id="name" placeholder="Full Name">  
-<input id="university" placeholder="University">  
-<input id="whatsapp" placeholder="WhatsApp">  
-<button class="primary" onclick="saveProfile()">Save Profile</button>  
-</div>  
-  
-<div class="card">  
-<h3>🛠 Create Service</h3>  
-<input id="serviceName" placeholder="Service Name">  
-<select id="serviceType">  
-<option>Hourly</option>  
-<option>Fixed Price</option>  
-<option>Package</option>  
-</select>  
-<input id="servicePrice" placeholder="Price">  
-<input id="serviceImage" placeholder="Image URL">  
-<textarea id="serviceDesc" placeholder="Description"></textarea>  
-<button class="primary" onclick="publishService()">Publish Service</button>  
-</div>  
-  
-<div class="card"><h3>📚 My Services</h3><div id="servicesList"></div></div>  
-<div class="card"><h3>📥 Booking Requests</h3><div id="requestsList"></div></div>  
-<div class="card"><h3>💰 Wallet Transactions</h3><div id="walletList"></div></div>  
-<div class="card"><h3>⭐ Reviews</h3><div id="reviewsList"></div></div>  
-<div class="card"><h3>📊 Analytics</h3><div id="analyticsList"><div class="item">Views, Requests and Conversion metrics loaded from Supabase.</div></div></div>  
-</div>  
-  
-<script>  
-const SUPABASE_URL="YOUR_SUPABASE_URL";  
-const SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY";  
-const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);  
-let currentUser=null;  
-  
-async function init(){  
- const {data:{session}}=await client.auth.getSession();  
- if(session){  
-   currentUser=session.user;  
-   loadServices();  
- }  
-}  
-init();  
-  
-async function saveProfile(){  
- if(!currentUser) return alert("Login required");  
- await client.from("providers").upsert([{  
-   user_id:currentUser.id,  
-   name:name.value,  
-   university:university.value,  
-   whatsapp:whatsapp.value  
- }]);  
- alert("Profile saved");  
-}  
-  
-async function publishService(){  
- if(!currentUser) return alert("Login required");  
- await client.from("services").insert([{  
-   provider_id:currentUser.id,  
-   service_name:serviceName.value,  
-   service_type:serviceType.value,  
-   price:servicePrice.value,  
-   image_url:serviceImage.value,  
-   description:serviceDesc.value,  
-   active:true  
- }]);  
- loadServices();  
-}  
-  
-async function loadServices(){  
- const {data=[]}=await client.from("services").select("*").eq("provider_id",currentUser.id);  
- document.getElementById("servicesList").innerHTML=data.map(s=>  
- <div class="item">  
- <b>${s.service_name}</b><br>  
- ${s.service_type} • R${s.price||0}  
- </div>).join("");  
-}  
-</script>  
-</body>  
-</html>
-
-I want the dashboard to look modern and FinTech with a background image exactly like the image 
-
-If I share the provider code can you add up the exact earning overview where student can view how much their earn this month last month or months back and transaction history at bottom and keep page clean and keep everything else intact or you. 
-
-The provider dashboard doesn't look like student will get hook to return daily even when they are not getting any jobs. No referral engine with earning overview with a round percentage earning graphics 
-
-How best can we upgrade it to make it look more sleeker with withdraw to bank from card with sleeker mini cards for my jobs, find jobs linked marketplace.html send button for in wallet transactions between students with welcome with student name if it can look similar to a FinTech dashboard I attached 
-
-Can the spin Board look similar like the image I uploaded for Mari earning 20 Mari, 3Mari and give all 6 slots win rewards or what you think of addthing this to make page more gamified 
-
-The sound should look futuristic  with Mari coins falling effect when win. and professional. no footer icons no WhatsApp share button on referral card. Where is the cinematic learn and earn Card that rewards daily task completion of services (tutoring ) etc..
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Waitlist V104 Supabase Ready</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
-:root{--bg:#070707;--card:#141414;--accent:#b8ff3b;--border:#262626}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
-body{background:var(--bg);color:#fff;padding-bottom:90px}
-.header{padding:14px;background:#0b0b0b;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
-.hero{margin:16px;padding:32px;border-radius:28px;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80') center/cover}
-.card{margin:16px;padding:18px;background:var(--card);border:1px solid var(--border);border-radius:22px}
-input,select{width:100%;padding:12px;margin-top:10px;background:#101010;color:#fff;border:1px solid var(--border);border-radius:12px}
-.btn{width:100%;padding:14px;margin-top:12px;border:none;border-radius:14px;background:var(--accent);font-weight:800}
-#wheel{width:280px;height:280px;margin:20px auto;border-radius:50%;background:conic-gradient(#00ff88 0 60deg,#ffd700 60deg 120deg,#66ff33 120deg 180deg,#00ffaa 180deg 240deg,#b8ff3b 240deg 300deg,#00ff88 300deg 360deg);transition:transform 5s ease-out;display:flex;align-items:center;justify-content:center}
-.center{width:110px;height:110px;border-radius:50%;background:#141414;display:flex;align-items:center;justify-content:center;font-weight:800}
-#dashboard{display:none}
-</style>
-</head>
-<body>
-<div class="header">
-<img src="https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" width="48">
-<div><h3 style="color:#b8ff3b">Zep Swipe</h3><small>Student Economy</small></div>
-</div>
+<meta name="viewport" content="width=device-width, initial-scale=1,viewport-fit=cover">
 
-<div id="signup">
-<div class="hero"><h1>Learn • Earn • Refer • Grow</h1></div>
-<div class="card">
-<input id="name" placeholder="Full Name">
-<input id="email" placeholder="Email">
-<input id="country" placeholder="Country">
-<input id="referral" placeholder="Referral Code">
-<select id="course"><option>Graphic Design</option><option>Tutoring</option></select>
-<button class="btn" onclick="registerStudent()">Unlock Dashboard</button>
-</div>
-</div>
+<title>Zep Swipe | Sign In</title>
 
-<div id="dashboard">
-<div class="hero"><h2 id="welcome"></h2></div>
-<div class="card"><h3>MARI Wallet: <span id="mari">0</span></h3></div>
-<div class="card">
-<h3>Daily Spin</h3>
-<div id="wheel"><div class="center" onclick="spin()">SPIN</div></div>
-<p id="result">Rewards: 3,5,7,10,15,20 MARI</p>
-</div>
-<div class="card">
-<h3>Referral Link</h3>
-<input id="refLink" readonly>
-</div>
-</div>
-
-<script>
-const SUPABASE_URL="YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-
-async function registerStudent(){
- const sid='ZS-'+Math.floor(Math.random()*90000+10000);
- localStorage.setItem('studentId',sid);
- document.getElementById('signup').style.display='none';
- document.getElementById('dashboard').style.display='block';
- document.getElementById('welcome').innerText='Welcome '+name.value+' 👋';
- document.getElementById('refLink').value='https://zepswipe.com/ref/'+sid;
-
- try{
- await db.from('students').insert({
-   student_id:sid,
-   full_name:name.value,
-   email:email.value,
-   country:country.value,
-   course:course.value,
-   referral_code_used:referral.value,
-   mari_balance:0
- });
- }catch(e){}
-}
-
-async function spin(){
- const rewards=[3,5,7,10,15,20];
- const win=rewards[Math.floor(Math.random()*rewards.length)];
- const rotate=1800+Math.floor(Math.random()*720);
- wheel.style.transform='rotate('+rotate+'deg)';
- setTimeout(()=>{
-   mari.innerText=parseInt(mari.innerText)+win;
-   result.innerText='🎉 You won '+win+' MARI';
- },5000);
-}
-
-lucide.createIcons();
-</script>
-</body>
-</html>
-
-
-That's the security advise am getting 
-
-I meant his 
-
-Should I apply this too as I applied definer 
-
-This is what I got when I clicked
-
-It has 12 rows 
-
-
-Bro I tried login this is what I got
-
-
-
-Should I replace the signup function from 62 to line 78
-
-
-
-Can't signup 
-
-
-
-
-I received the email but from Supabase not Zep swipe and when I verified this is what I got
-
-
-
-After login it redirects me to customer dashboard 
-
-I save my details and this is what happened 
-
-
-Trying to create business and this is what I got 
-
-Now the waitlist is not working. It's not responsive or I have to wait after updating code 
-
-And I can't create deals too
-
-
-After I verified from email by clicking the email link this is what I got 
-
-This is what I get when I verify email as customer
-
-
-This is what I see
-
-Yes — I can see what you're showing. You are in the Supabase Table Editor, and I can see the profiles table selected. The table appears to have an email column, but the photo is too blurry for me to reliably confirm every column.
-
-Since you deleted the old tables, let's start clean and do this one step at a time.
-Right now: don't create services or deals
-
-First, let's make sure profiles is correct.
-
-In Supabase, click SQL Editor on the left, then New query.
-
-Paste this SQL and click Run:
-
-create table if not exists public.profiles (
-  id uuid primary key references auth.users(id) on delete cascade,
-  email text,
-  role text not null default 'customer'
-    check (role in ('customer', 'provider', 'business')),
-  full_name text,
-  phone text,
-  avatar_url text,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
-alter table public.profiles enable row level security;
-
-drop policy if exists "Users can view own profile" on public.profiles;
-drop policy if exists "Users can create own profile" on public.profiles;
-drop policy if exists "Users can update own profile" on public.profiles;
-
-create policy "Users can view own profile"
-on public.profiles
-for select
-to authenticated
-using ((select auth.uid()) = id);
-
-create policy "Users can create own profile"
-on public.profiles
-for insert
-to authenticated
-with check ((select auth.uid()) = id);
-
-create policy "Users can update own profile"
-on public.profiles
-for update
-to authenticated
-using ((select auth.uid()) = id)
-with check ((select auth.uid()) = id);
-
-Then check the table
-
-Go back to:
-
-Table Editor → profiles
-
-You should have these columns:
-
-    id
-
-    email
-
-    role
-
-    full_name
-
-    phone
-
-    avatar_url
-
-    created_at
-
-    updated_at
-
-The most important three for our first test are:
-
-id + email + role
-
-Once those are there, stop there.
-
-Tell me “profiles is ready”, and I'll walk you through the next single step: testing your auth.html signup and making sure the Customer/Provider/Business role is actually being saved.
-
-Should I run 
-
-Yes. Below is the complete upgraded marketplace.html, including the logged-in account routing you asked for.
-
-It does:
-
-    Supabase marketplace connection
-
-    Active services from services
-
-    Active/unexpired deals from deals
-
-    Search
-
-    Category filtering
-
-    Services / Deals / Discover tabs
-
-    Customer → customer.html
-
-    Provider → provider.html
-
-    Business → business-deals.html
-
-    Logged-out Account → auth.html
-
-    Logged-in Account → their correct dashboard
-
-    Booking/claim requires login
-
-    Mobile responsive design
-
-    Loading/error/empty states
-
-    Safer rendering of database text
-
-    Refresh button
-
-    GitHub Pages friendly
-
-Replace your entire existing marketplace.html with this.
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Zep Swipe Marketplace</title>
-
-<meta name="description" content="Discover student services, student providers and exclusive local business deals on Zep Swipe.">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+  rel="stylesheet"
+>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-
 :root{
-  --bg:#070707;
-  --bg2:#0b0b0b;
-  --card:#141414;
-  --card2:#101010;
-  --line:#262626;
-  --muted:#999;
+  --bg:#030403;
+  --panel:#0d100c;
+  --card:#111510;
+  --line:#252a23;
   --accent:#b8ff3b;
-  --accent-dark:#203600;
-  --danger:#ff5c5c;
-  --max:1400px;
+  --accent2:#d9ff79;
+  --muted:#8e9588;
+  --danger:#ff7777;
 }
 
 *{
   box-sizing:border-box;
   font-family:Inter,sans-serif;
+}
 
-Important before you upload it
+html,body{
+  margin:0;
+  min-height:100%;
+  background:var(--bg);
+  color:#fff;
+}
 
-Change only this:
+body{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:18px;
+  overflow-x:hidden;
+}
 
-const SUPABASE_ANON_KEY =
-"YOUR_SUPABASE_ANON_KEY";
+/* Ambient background */
 
-to your existing Supabase anon/publishable key.
+body:before{
+  content:"";
+  position:fixed;
+  width:620px;
+  height:620px;
+  top:-280px;
+  left:50%;
+  transform:translateX(-50%);
+  background:radial-gradient(
+    circle,
+    rgba(184,255,59,.18),
+    rgba(184,255,59,.05) 35%,
+    transparent 70%
+  );
+  pointer-events:none;
+}
 
-You do not need to put anything from customer.html into this marketplace file.
-Your Account behavior will now be
-User state	Clicking Account
-Not logged in	auth.html
-Customer	customer.html
-Student Provider	provider.html
-Business	business-deals.html
-Logged in but missing profile	Shows profile error
+body:after{
+  content:"";
+  position:fixed;
+  width:400px;
+  height:400px;
+  bottom:-220px;
+  right:-150px;
+  background:radial-gradient(
+    circle,
+    rgba(184,255,59,.07),
+    transparent 70%
+  );
+  pointer-events:none;
+}
 
-One caveat: this marketplace can read from the tables now, but it won't show real services/deals until we connect provider.html and business-deals.html to the services and deals tables. That's the next backend step.
-
-Pasted text.txt
-Document
-how about the auth.html can we make it persistence and keep everything instant since its already connected to supabase and login and account creating is working fine. returning users shouldnt see the auth.html dashboard they should be directed to there respective dashboards customer student provider or business 
-
-Yes. Since your Supabase authentication is already working, we can make auth.html behave like a true persistent gateway:
-
-    Returning user with an active Supabase session → instantly redirected
-
-    Customer → customer.html
-
-    Student Provider → provider.html
-
-    Business → business-deals.html
-
-    New user → sees the normal signup/login screen
-
-    No need to sign in again while the Supabase session is still active
-
-    Supabase Auth already persists the session in the browser by default.
-
-    Your existing profile/role lookup is the right mechanism for deciding which dashboard to open.
-
-1. The important change
-
-Your current auth.html only redirects after someone manually logs in.
-
-We should add an automatic session check immediately when auth.html loads.
-
-Put this directly after your existing:
-
-const db=supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-So it becomes:
-
-const db=supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
+.auth{
+  width:100%;
+  max-width:460px;
+  position:relative;
+  z-index:2;
+}
 
 /* =========================
-   AUTO SESSION REDIRECT
+   BRAND
 ========================= */
 
-async function checkExistingSession(){
+.brand{
+  text-align:center;
+  margin-bottom:20px;
+}
 
-  try{
+.logo-orb{
+  width:116px;
+  height:116px;
+  margin:0 auto 14px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  position:relative;
 
-    const {
-      data:{
-        session
-      },
-      error
-    } = await db.auth.getSession();
-
-    if(error){
-      console.error("Session check:",error);
-      return;
-    }
-
-    /* No existing login */
-    if(!session){
-      return;
-    }
-
-    /* Existing logged-in user */
-    msg("Welcome back. Opening your dashboard...");
-
-    const {
-      data:profile,
-      error:profileError
-    } = await db
-      .from("profiles")
-      .select("role")
-      .eq("id",session.user.id)
-      .single();
-
-    if(profileError){
-
-      console.error(
-        "Profile lookup:",
-        profileError
-      );
-
-      return;
-    }
-
-    redirect(
-      profile?.role || "customer"
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #253a16 0%,
+      #10170c 40%,
+      #050705 75%
     );
 
-  }catch(error){
+  border:1px solid rgba(184,255,59,.65);
 
-    console.error(
-      "Existing session error:",
-      error
-    );
+  box-shadow:
+    0 0 0 5px rgba(184,255,59,.035),
+    0 0 25px rgba(184,255,59,.25),
+    0 0 60px rgba(184,255,59,.15),
+    inset 0 0 28px rgba(184,255,59,.12);
 
+  animation:logoPulse 2.8s ease-in-out infinite;
+}
+
+.logo-orb:before,
+.logo-orb:after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(184,255,59,.2);
+  animation:orbRing 3s ease-out infinite;
+}
+
+.logo-orb:before{
+  inset:-9px;
+}
+
+.logo-orb:after{
+  inset:-19px;
+  animation-delay:1.45s;
+}
+
+.logo-orb img{
+  width:76px;
+  height:76px;
+  object-fit:contain;
+  border-radius:50%;
+
+  filter:
+    drop-shadow(0 0 8px rgba(184,255,59,.5))
+    drop-shadow(0 0 18px rgba(184,255,59,.25));
+}
+
+@keyframes logoPulse{
+  0%,100%{
+    transform:scale(1);
+    box-shadow:
+      0 0 0 5px rgba(184,255,59,.035),
+      0 0 25px rgba(184,255,59,.25),
+      0 0 60px rgba(184,255,59,.15),
+      inset 0 0 28px rgba(184,255,59,.12);
   }
 
+  50%{
+    transform:scale(1.035);
+    box-shadow:
+      0 0 0 8px rgba(184,255,59,.045),
+      0 0 45px rgba(184,255,59,.42),
+      0 0 95px rgba(184,255,59,.18),
+      inset 0 0 35px rgba(184,255,59,.18);
+  }
 }
 
-2. But there's one important improvement
+@keyframes orbRing{
+  0%{
+    transform:scale(.88);
+    opacity:.8;
+  }
 
-Your current redirect() function is already correct:
-
-function redirect(r){
-
-  if(r==="customer")
-    location.replace("customer.html");
-
-  else if(r==="provider")
-    location.replace("provider.html");
-
-  else if(r==="business")
-    location.replace("business-deals.html");
-
+  100%{
+    transform:scale(1.18);
+    opacity:0;
+  }
 }
 
-That's exactly what we want.
+.wordmark{
+  font-size:29px;
+  font-weight:900;
+  letter-spacing:-1.6px;
+}
 
-So don't create another redirect() function. Keep the existing one.
-3. Fix your verification URL
+.wordmark span{
+  color:var(--accent);
+}
 
-I noticed one issue in your current signup code.
+.tagline{
+  margin-top:5px;
+  color:#687064;
+  font-size:9px;
+  letter-spacing:2.6px;
+  text-transform:uppercase;
+}
 
-You currently have:
+/* =========================
+   MAIN PANEL
+========================= */
 
-const redirectUrl =
-  window.location.origin +
-  "https://zepmasterbase.github.io/zep-swipe-backend/verify.html";
+.panel{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18,22,17,.97),
+      rgba(7,9,7,.98)
+    );
 
-That's incorrect because you're combining the current origin with another complete URL.
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:23px;
 
-Change it to:
+  box-shadow:
+    0 30px 100px rgba(0,0,0,.6),
+    inset 0 1px rgba(255,255,255,.035);
 
-const redirectUrl =
-  "https://zepmasterbase.github.io/zep-swipe-backend/verify.html";
+  backdrop-filter:blur(20px);
+}
 
-Your existing signup already passes this URL to Supabase through emailRedirectTo.
-4. Even better: make it feel instant
-
-I recommend adding a small loading state so the user doesn't see the login form for a split second before being redirected.
-
-Add this CSS:
+/* =========================
+   SESSION LOADING
+========================= */
 
 .session-loading{
   display:none;
@@ -799,9 +246,11 @@ Add this CSS:
   width:26px;
   height:26px;
   margin:0 auto 10px;
+
   border:3px solid #30352d;
   border-top-color:var(--accent);
   border-radius:50%;
+
   animation:spin .7s linear infinite;
 }
 
@@ -811,40 +260,953 @@ Add this CSS:
   }
 }
 
-Then immediately inside your .panel, before the status section, add:
+/* =========================
+   STATUS
+========================= */
 
-<div id="sessionLoading" class="session-loading">
+.status{
+  display:flex;
+  align-items:center;
+  gap:9px;
 
-  <div class="session-spinner"></div>
+  padding:10px 12px;
 
-  <strong>Welcome back</strong>
+  border-radius:13px;
 
-  <div>Opening your Zep Swipe dashboard...</div>
+  background:rgba(184,255,59,.045);
+  border:1px solid rgba(184,255,59,.14);
+
+  color:#aeb8a5;
+  font-size:9px;
+
+  margin-bottom:20px;
+}
+
+.status-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+
+  background:var(--accent);
+
+  box-shadow:
+    0 0 8px var(--accent),
+    0 0 15px rgba(184,255,59,.6);
+
+  animation:dotPulse 1.8s infinite;
+}
+
+@keyframes dotPulse{
+  50%{
+    transform:scale(1.35);
+    box-shadow:0 0 15px var(--accent);
+  }
+}
+
+h1{
+  font-size:27px;
+  letter-spacing:-1.5px;
+  margin:0 0 7px;
+}
+
+.intro{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.6;
+  margin:0 0 20px;
+}
+
+/* =========================
+   ROLE SELECTOR
+========================= */
+
+.role-heading{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  margin-bottom:9px;
+
+  color:#aeb5a8;
+  font-size:9px;
+  font-weight:800;
+
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.selected{
+  color:var(--accent);
+  font-size:8px;
+  text-transform:none;
+  letter-spacing:0;
+}
+
+.roles{
+  display:grid;
+  gap:9px;
+  margin-bottom:18px;
+}
+
+.role{
+  width:100%;
+  min-height:68px;
+
+  position:relative;
+
+  padding:13px 45px 13px 15px;
+
+  border-radius:16px;
+
+  border:1px solid var(--line);
+
+  background:
+    linear-gradient(
+      145deg,
+      #111510,
+      #090b09
+    );
+
+  color:#fff;
+
+  cursor:pointer;
+  text-align:left;
+
+  transition:
+    transform .18s,
+    border-color .18s,
+    background .18s,
+    box-shadow .18s;
+
+  appearance:none;
+}
+
+.role:hover{
+  transform:translateY(-1px);
+  border-color:#3b4435;
+}
+
+.role:active{
+  transform:scale(.985);
+}
+
+.role.active{
+  border-color:var(--accent);
+
+  background:
+    linear-gradient(
+      145deg,
+      #1b270e,
+      #0c1109
+    );
+
+  box-shadow:
+    0 0 0 1px rgba(184,255,59,.08),
+    0 0 28px rgba(184,255,59,.08);
+}
+
+.role strong{
+  display:block;
+  font-size:12px;
+}
+
+.role small{
+  display:block;
+  color:#858c80;
+  margin-top:5px;
+  font-size:9.5px;
+  line-height:1.35;
+}
+
+.tick{
+  position:absolute;
+
+  right:13px;
+  top:50%;
+
+  transform:translateY(-50%);
+
+  width:21px;
+  height:21px;
+
+  border-radius:50%;
+
+  border:1px solid #3b4138;
+
+  display:grid;
+  place-items:center;
+
+  color:transparent;
+  font-size:11px;
+  font-weight:900;
+}
+
+.role.active .tick{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#050505;
+
+  box-shadow:
+    0 0 15px rgba(184,255,59,.45);
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.field{
+  margin-top:11px;
+}
+
+label{
+  display:block;
+
+  color:#969d91;
+
+  font-size:9px;
+  font-weight:600;
+
+  letter-spacing:.8px;
+
+  margin:0 0 6px 2px;
+}
+
+.input-wrap{
+  position:relative;
+}
+
+input{
+  width:100%;
+
+  padding:14px;
+
+  border-radius:13px;
+
+  border:1px solid var(--line);
+
+  background:#080a08;
+
+  color:#fff;
+
+  outline:none;
+
+  font-size:12px;
+
+  transition:
+    border-color .2s,
+    box-shadow .2s;
+}
+
+input::placeholder{
+  color:#4e554b;
+}
+
+input:focus{
+  border-color:rgba(184,255,59,.6);
+
+  box-shadow:
+    0 0 0 3px rgba(184,255,59,.05),
+    0 0 20px rgba(184,255,59,.04);
+}
+
+/* Password eye */
+
+.eye{
+  position:absolute;
+
+  right:6px;
+  top:6px;
+
+  width:38px;
+  height:38px;
+
+  border:0;
+
+  background:transparent;
+
+  color:#777;
+
+  cursor:pointer;
+
+  border-radius:10px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button{
+  font-family:inherit;
+}
+
+.primary,
+.secondary{
+  width:100%;
+
+  padding:14px;
+
+  border-radius:14px;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  margin-top:12px;
+
+  transition:
+    transform .18s,
+    box-shadow .2s,
+    background .2s;
+}
+
+.primary{
+  border:0;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent2),
+      var(--accent) 55%,
+      #8dff27
+    );
+
+  color:#050505;
+
+  box-shadow:
+    0 10px 30px rgba(184,255,59,.13);
+}
+
+.primary:hover{
+  transform:translateY(-1px);
+
+  box-shadow:
+    0 15px 40px rgba(184,255,59,.25);
+}
+
+.primary:active{
+  transform:scale(.985);
+}
+
+.secondary{
+  border:1px solid rgba(184,255,59,.5);
+
+  background:
+    rgba(184,255,59,.025);
+
+  color:var(--accent);
+}
+
+.secondary:hover{
+  background:rgba(184,255,59,.07);
+  border-color:var(--accent);
+}
+
+.secondary:active{
+  transform:scale(.985);
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+#msg{
+  min-height:20px;
+
+  text-align:center;
+
+  margin-top:12px;
+
+  color:var(--accent);
+
+  font-size:10.5px;
+
+  line-height:1.45;
+}
+
+#msg.error{
+  color:var(--danger);
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+  text-align:center;
+
+  margin-top:18px;
+
+  color:#5f665d;
+
+  font-size:9px;
+
+  line-height:1.5;
+}
+
+.secure{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+
+  color:#697167;
+}
+
+/* Mobile */
+
+@media(max-width:420px){
+
+  body{
+    padding:13px;
+  }
+
+  .panel{
+    padding:18px;
+    border-radius:24px;
+  }
+
+  .logo-orb{
+    width:96px;
+    height:96px;
+  }
+
+  .logo-orb img{
+    width:65px;
+    height:65px;
+  }
+
+  h1{
+    font-size:24px;
+  }
+
+  .wordmark{
+    font-size:26px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="auth">
+
+  <!-- BRAND -->
+
+  <div class="brand">
+
+    <div class="logo-orb">
+      <img
+        src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+        alt="Zep Swipe Logo"
+      >
+    </div>
+
+    <div class="wordmark">
+      ZEP <span>SWIPE</span>
+    </div>
+
+    <div class="tagline">
+      The Student Economy
+    </div>
+
+  </div>
+
+  <!-- PANEL -->
+
+  <div class="panel">
+
+    <!-- Persistent session loading -->
+
+    <div id="sessionLoading" class="session-loading">
+
+      <div class="session-spinner"></div>
+
+      <strong>Welcome back</strong>
+
+      <div>Opening your Zep Swipe dashboard...</div>
+
+    </div>
+
+    <div class="status">
+
+      <span class="status-dot"></span>
+
+      <span>Secure Zep Swipe account gateway</span>
+
+    </div>
+
+    <h1>
+      Welcome to Zep Swipe.
+    </h1>
+
+    <p class="intro">
+      Choose how you'll use Zep Swipe. Create an account or sign in below.
+    </p>
+
+    <!-- ROLE -->
+
+    <div class="role-heading">
+
+      <span>Choose account type</span>
+
+      <span class="selected" id="selectedLabel">
+        Customer selected
+      </span>
+
+    </div>
+
+    <div class="roles">
+
+      <button
+        type="button"
+        class="role active"
+        data-role="customer"
+      >
+        <strong>👤 Customer</strong>
+
+        <small>
+          Book trusted student services & redeem deals
+        </small>
+
+        <span class="tick">✓</span>
+      </button>
+
+      <button
+        type="button"
+        class="role"
+        data-role="provider"
+      >
+        <strong>💼 Student Provider</strong>
+
+        <small>
+          Offer your skills, complete services & earn
+        </small>
+
+        <span class="tick">✓</span>
+      </button>
+
+      <button
+        type="button"
+        class="role"
+        data-role="business"
+      >
+        <strong>🏪 Business</strong>
+
+        <small>
+          Reach students through deals & opportunities
+        </small>
+
+        <span class="tick">✓</span>
+      </button>
+
+    </div>
+
+    <!-- EMAIL -->
+
+    <div class="field">
+
+      <label for="email">
+        EMAIL
+      </label>
+
+      <input
+        id="email"
+        type="email"
+        autocomplete="email"
+        placeholder="you@example.com"
+      >
+
+    </div>
+
+    <!-- PASSWORD -->
+
+    <div class="field">
+
+      <label for="password">
+        PASSWORD
+      </label>
+
+      <div class="input-wrap">
+
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Enter your password"
+        >
+
+        <button
+          type="button"
+          class="eye"
+          onclick="togglePassword()"
+          aria-label="Show password"
+        >
+          ◉
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+
+    <button
+      class="primary"
+      type="button"
+      onclick="signup()"
+    >
+      CREATE ACCOUNT →
+    </button>
+
+    <button
+      class="secondary"
+      type="button"
+      onclick="login()"
+    >
+      SIGN IN
+    </button>
+
+    <div id="msg"></div>
+
+    <div class="footer">
+
+      <span class="secure">
+        🛡 Secure authentication
+      </span>
+
+      <br>
+
+      Your Zep Swipe account keeps your session active
+      until you sign out.
+
+    </div>
+
+  </div>
 
 </div>
 
-5. Then use this improved session function
+<script>
 
-Replace the earlier checkExistingSession() with:
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";
+
+const SUPABASE_ANON_KEY="YOUR_WORKING_ANON_KEY";
+
+const db=supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+
+/* =========================
+   ROLE
+========================= */
+
+let role="customer";
+
+const roleNames={
+  customer:"Customer selected",
+  provider:"Student Provider selected",
+  business:"Business selected"
+};
+
+document.querySelectorAll(".role").forEach(el=>{
+
+  el.onclick=()=>{
+
+    document
+      .querySelectorAll(".role")
+      .forEach(x=>x.classList.remove("active"));
+
+    el.classList.add("active");
+
+    role=el.dataset.role;
+
+    document.getElementById("selectedLabel").textContent=
+      roleNames[role];
+
+  };
+
+});
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+function msg(text,isError=false){
+
+  const element=document.getElementById("msg");
+
+  element.textContent=text;
+
+  element.classList.toggle("error",isError);
+
+}
+
+
+/* =========================
+   PASSWORD
+========================= */
+
+function togglePassword(){
+
+  const input=
+    document.getElementById("password");
+
+  input.type=
+    input.type==="password"
+      ?"text"
+      :"password";
+
+}
+
+
+/* =========================
+   SIGNUP
+========================= */
+
+async function signup(){
+
+  const email=
+    emailEl().value.trim();
+
+  const password=
+    passEl().value;
+
+  if(!email || !password){
+
+    msg(
+      "Enter your email and password.",
+      true
+    );
+
+    return;
+  }
+
+  if(password.length < 6){
+
+    msg(
+      "Password must be at least 6 characters.",
+      true
+    );
+
+    return;
+  }
+
+  msg("Creating account...");
+
+  try{
+
+    const redirectUrl =
+      "https://zepmasterbase.github.io/zep-swipe-backend/verify.html";
+
+    const {data,error} =
+      await db.auth.signUp({
+
+        email,
+        password,
+
+        options:{
+          emailRedirectTo:redirectUrl
+        }
+
+      });
+
+    if(error){
+
+      msg(error.message,true);
+
+      return;
+    }
+
+    /*
+      Save the selected role in profiles.
+      If email confirmation is enabled, the user
+      may not have an active session yet.
+    */
+
+    if(data.user && data.session){
+
+      const {error:profileError} =
+        await db
+          .from("profiles")
+          .upsert({
+            id:data.user.id,
+            email,
+            role
+          });
+
+      if(profileError){
+
+        console.error(
+          "Profile save error:",
+          profileError
+        );
+
+        msg(
+          "Account created, but your profile could not be saved. Please contact support.",
+          true
+        );
+
+        return;
+      }
+
+    }
+
+    /*
+      If Supabase requires email verification,
+      the session may be null.
+    */
+
+    if(!data.session){
+
+      msg(
+        "Account created. Verify your email, then login."
+      );
+
+      return;
+    }
+
+    msg(
+      "Success! Redirecting..."
+    );
+
+    redirect(role);
+
+  }catch(error){
+
+    console.error(error);
+
+    msg(
+      "Something went wrong. Please try again.",
+      true
+    );
+
+  }
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+async function login(){
+
+  const email=
+    emailEl().value.trim();
+
+  const password=
+    passEl().value;
+
+  if(!email || !password){
+
+    msg(
+      "Enter your email and password.",
+      true
+    );
+
+    return;
+  }
+
+  msg("Signing in...");
+
+  try{
+
+    const {data,error} =
+      await db.auth.signInWithPassword({
+
+        email,
+        password
+
+      });
+
+    if(error){
+
+      msg(error.message,true);
+
+      return;
+    }
+
+    const {
+      data:profile,
+      error:profileError
+    } =
+      await db
+        .from("profiles")
+        .select("role")
+        .eq("id",data.user.id)
+        .maybeSingle();
+
+    if(profileError){
+
+      console.error(
+        "Profile lookup error:",
+        profileError
+      );
+
+      msg(
+        "Your account is active, but your profile could not be loaded.",
+        true
+      );
+
+      return;
+    }
+
+    if(!profile?.role){
+
+      msg(
+        "Your account is active, but no account role was found.",
+        true
+      );
+
+      return;
+    }
+
+    msg(
+      "Welcome back. Opening your dashboard..."
+    );
+
+    redirect(profile.role);
+
+  }catch(error){
+
+    console.error(error);
+
+    msg(
+      "Something went wrong while signing in.",
+      true
+    );
+
+  }
+
+}
+
+
+/* =========================
+   PERSISTENT SESSION
+========================= */
 
 async function checkExistingSession(){
 
-  const loading =
+  const loading=
     document.getElementById("sessionLoading");
 
   try{
 
     const {
-      data:{
-        session
-      },
+      data,
       error
-    } = await db.auth.getSession();
+    } =
+      await db.auth.getSession();
 
     if(error){
 
       console.error(
-        "Session check:",
+        "Session check error:",
         error
       );
 
@@ -853,33 +1215,38 @@ async function checkExistingSession(){
 
     /*
       No active session.
-      Keep showing the login/signup page.
+      Keep showing the normal auth page.
     */
 
-    if(!session){
+    if(!data.session){
 
       return;
     }
 
     /*
       Existing session found.
+      Show the loading state before redirect.
     */
 
     loading.classList.add("show");
 
+    const user=
+      data.session.user;
+
     const {
       data:profile,
       error:profileError
-    } = await db
-      .from("profiles")
-      .select("role")
-      .eq("id",session.user.id)
-      .single();
+    } =
+      await db
+        .from("profiles")
+        .select("role")
+        .eq("id",user.id)
+        .maybeSingle();
 
     if(profileError){
 
       console.error(
-        "Profile lookup:",
+        "Persistent profile lookup error:",
         profileError
       );
 
@@ -888,477 +1255,88 @@ async function checkExistingSession(){
       return;
     }
 
-    /*
-      Redirect according to saved role.
-    */
+    if(!profile?.role){
 
-    redirect(
-      profile?.role || "customer"
-    );
+      loading.classList.remove("show");
+
+      msg(
+        "Your account is active, but no account role was found.",
+        true
+      );
+
+      return;
+    }
+
+    redirect(profile.role);
 
   }catch(error){
 
     console.error(
+      "Persistent session error:",
+      error
+    );
 
-And run:
+    loading.classList.remove("show");
+
+  }
+
+}
+
+
+/* =========================
+   REDIRECT
+========================= */
+
+function redirect(r){
+
+  if(r==="customer"){
+
+    location.replace("customer.html");
+
+  }else if(r==="provider"){
+
+    location.replace("provider.html");
+
+  }else if(r==="business"){
+
+    location.replace("business-deals.html");
+
+  }else{
+
+    msg(
+      "Your account role is not recognized.",
+      true
+    );
+
+  }
+
+}
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function emailEl(){
+
+  return document.getElementById("email");
+
+}
+
+function passEl(){
+
+  return document.getElementById("password");
+
+}
+
+
+/* =========================
+   START PERSISTENCE CHECK
+========================= */
 
 checkExistingSession();
 
-after your Supabase client is created.
-Your final flow
+</script>
 
-Your Zep Swipe authentication system will then work like this:
-
-                     auth.html
-                         │
-                         ▼
-                Check Supabase session
-                         │
-              ┌──────────┴──────────┐
-              │                     │
-          No session            Session exists
-              │                     │
-              ▼                     ▼
-        Show auth page        Read profiles.role
-                                    │
-                    ┌───────────────┼───────────────┐
-                    │               │               │
-                 customer        provider        business
-                    │               │               │
-                    ▼               ▼               ▼
-             customer.html    provider.html   business-deals.html
-
-What happens in practice
-
-New visitor:
-
-auth.html → no session → sees signup/login.
-
-Customer signs up:
-
-signup() → Supabase account → profiles.role = customer → customer.html.
-
-Your existing signup already saves the user's role into profiles.
-
-Customer returns tomorrow:
-
-auth.html → Supabase sees existing session → profiles says customer → immediately customer.html.
-
-Provider returns:
-
-auth.html → session → provider → provider.html.
-
-Business returns:
-
-auth.html → session → business → business-deals.html.
-
-So yes — this is the right architecture for the pilot. You shouldn't make already-authenticated users repeatedly enter their email and password just because they landed on auth.html.
-
-One more thing: your uploaded auth.html currently contains a Supabase project URL/key different from the one you've shown in some of your earlier marketplace code. Make sure auth, marketplace, customer, provider, and business pages all use the same Supabase project. Otherwise sessions and tables can appear to mysteriously disappear between pages.
-
-Yes — “Invalid API key” means the problem is almost certainly the Supabase project URL/key in the new auth.html I gave you.
-
-I can see the issue: in that version, I used a different Supabase project configuration than the one you originally showed me. Do not use that version.
-
-Your original working auth.html used:
-
-const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";
-
-const SUPABASE_ANON_KEY="YOUR_WORKING_ANON_KEY";
-
-So the safest fix is:
-1. Go to Supabase
-
-Open your Supabase project:
-
-Project Settings → API
-
-Copy:
-
-    Project URL
-
-    Publishable/anon key (the public browser key)
-
-2. In auth.html, replace ONLY these two lines
-
-const SUPABASE_URL =
-  "YOUR_SUPABASE_PROJECT_URL";
-
-const SUPABASE_ANON_KEY =
-  "YOUR_SUPABASE_ANON_KEY";
-
-with the exact URL and public key from the same Supabase project where you created profiles, services, and deals.
-3. Make sure every page uses the SAME project
-
-Your:
-
-    auth.html
-
-    marketplace.html
-
-    customer.html
-
-    provider.html
-
-    business-deals.html
-
-must all point to the same Supabase project.
-
-For example:
-
-const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";
-const SUPABASE_ANON_KEY="YOUR_PUBLIC_ANON_KEY";
-
-Don't mix keys from different projects.
-4. Important
-
-You do not need to change the persistence logic.
-
-Once the correct Supabase URL/key is restored, this part:
-
-const {data:{session}} =
-  await db.auth.getSession();
-
-will detect the returning user's existing session.
-
-Then:
-
-Returning user
-      ↓
-Supabase session exists
-      ↓
-profiles.role
-      ↓
-customer → customer.html
-provider → provider.html
-business → business-deals.html
-
-One thing I recommend
-
-Don't change anything else yet. First restore the exact Supabase URL + public key from the project that is already working.
-
-If you paste the Supabase Project URL and the public anon/publishable key you're currently using in your working marketplace.html, I can give you the corrected complete auth.html with the persistent-login system without changing your existing backend setup.
-
-Account created, but your profile could not be saved. Please contact support. create account error. and Your account is active, but no account role was found. is sign in error all was working fine when i shared
-Account created, but your profile could not be saved. Please contact support. create account error. and Your account is active, but no account role was found. is sign in error all was working fine when i shared
-
-You're right — the original auth.html was working, so we shouldn't have changed the Supabase project configuration or added logic that changes the signup flow.
-
-The two errors point to one specific problem:
-
-    “Account created, but your profile could not be saved”
-    → auth.signUp() succeeded, but the insert/upsert into profiles failed.
-
-    “Your account is active, but no account role was found”
-    → Login succeeded, but the lookup in profiles didn't return the user's role.
-
-So the authentication itself is working. The problem is the profile/role step.
-Let's restore the working logic first
-
-Your original working code was:
-
-async function signup(){
- const email=emailEl().value.trim(),password=passEl().value;
- msg("Creating account...");
-
- const {data,error}=await db.auth.signUp({
-   email,
-   password
- });
-
- if(error){
-   msg(error.message);
-   return;
- }
-
- if(data.user){
-   await db.from("profiles").upsert({
-     id:data.user.id,
-     email,
-     role
-   });
- }
-
- msg(
-   data.session
-     ? "Success! Redirecting..."
-     : "Account created. Verify your email then login."
- );
-
- if(data.session) redirect(role);
-}
-
-And login:
-
-async function login(){
-
- const email=emailEl().value.trim(),
-       password=passEl().value;
-
- msg("Signing in...");
-
- const {data,error} =
-   await db.auth.signInWithPassword({
-     email,
-     password
-   });
-
- if(error){
-   msg(error.message);
-   return;
- }
-
- const {data:profile} =
-   await db
-     .from("profiles")
-     .select("role")
-     .eq("id",data.user.id)
-     .single();
-
- redirect(
-   profile?.role || "customer"
- );
-}
-
-That is the logic we should preserve.
-Before changing anything else
-
-Go into Supabase → Table Editor → profiles and check whether the newly created user actually has a row.
-
-You should see something like:
-id	email	role
-user's UUID	their email	customer
-
-If the user exists in Authentication → Users but there is no corresponding row in profiles, then we've confirmed the exact issue.
-
-Don't delete the profile table or recreate anything yet.
-
-If you send me a screenshot of your profiles table showing its columns and the row (you can hide the email if you want), I can walk you through fixing the RLS policy/insert issue step-by-step while keeping the authentication code that was already working.
-
-Write me the complete auth.html
-
-Yes. Let's keep the same Supabase project and the same signup/profile logic that was working, and only add persistent-session routing.
-
-The key point is: don't replace your working Supabase URL/key with another project. Use the exact credentials from the auth.html that successfully created accounts.
-
-Here is the complete version:
-
-⚠️ One thing you MUST do before uploading
-
-Replace:
-
-const SUPABASE_ANON_KEY =
-"PASTE_YOUR_WORKING_ANON_KEY_HERE";
-
-with the exact public anon key from the auth.html that was working before.
-
-Do not use the key from my previous version.
-
-Also make sure the URL is the same project:
-
-const SUPABASE_URL =
-"https://tieekcelcathtuluwcfc.supabase.co";
-
-One important issue with your current profiles setup
-
-Because you said the account is successfully created but the profile sometimes isn't saved, your profiles RLS policy is the next thing we should verify. Your authentication can work perfectly while the profile insert is blocked by RLS.
-
-Don't change the auth code again after this. Once you put the correct working anon key back in, if you still get:
-
-    Account created. Please verify your email, then login.
-
-instead of a profile being created, we'll fix the profiles RLS policy directly in Supabase.
-
-
-<!DOCTYPE html>
-
-<html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"> <title>Zep Swipe | Sign In</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"> <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style> :root{ --bg:#030403; --panel:#0d100c; --card:#111510; --line:#252a23; --accent:#b8ff3b; --accent2:#d9ff79; --muted:#8e9588; --danger:#ff7777; } *{ box-sizing:border-box; font-family:Inter,sans-serif; } html,body{ margin:0; min-height:100%; background:var(--bg); color:#fff; } body{ min-height:100vh; display:flex; justify-content:center; align-items:center; padding:18px; overflow-x:hidden; } /* Ambient background */ body:before{ content:""; position:fixed; width:620px; height:620px; top:-280px; left:50%; transform:translateX(-50%); background:radial-gradient( circle, rgba(184,255,59,.18), rgba(184,255,59,.05) 35%, transparent 70% ); pointer-events:none; } /* Second ambient glow */ body:after{ content:""; position:fixed; width:400px; height:400px; bottom:-220px; right:-150px; background:radial-gradient( circle, rgba(184,255,59,.07), transparent 70% ); pointer-events:none; } .auth{ width:100%; max-width:460px; position:relative; z-index:2; } /* ========================= BRAND ========================= */ .brand{ text-align:center; margin-bottom:20px; } .logo-orb{ width:116px; height:116px; margin:0 auto 14px; border-radius:50%; display:grid; place-items:center; position:relative; background: radial-gradient( circle at 35% 30%, #253a16 0%, #10170c 40%, #050705 75% ); border:1px solid rgba(184,255,59,.65); box-shadow: 0 0 0 5px rgba(184,255,59,.035), 0 0 25px rgba(184,255,59,.25), 0 0 60px rgba(184,255,59,.15), inset 0 0 28px rgba(184,255,59,.12); animation:logoPulse 2.8s ease-in-out infinite; } .logo-orb:before, .logo-orb:after{ content:""; position:absolute; border-radius:50%; border:1px solid rgba(184,255,59,.2); animation:orbRing 3s ease-out infinite; } .logo-orb:before{ inset:-9px; } .logo-orb:after{ inset:-19px; animation-delay:1.45s; } .logo-orb img{ width:76px; height:76px; object-fit:contain; border-radius:50%; filter: drop-shadow(0 0 8px rgba(184,255,59,.5)) drop-shadow(0 0 18px rgba(184,255,59,.25)); } @keyframes logoPulse{ 0%,100%{ transform:scale(1); box-shadow: 0 0 0 5px rgba(184,255,59,.035), 0 0 25px rgba(184,255,59,.25), 0 0 60px rgba(184,255,59,.15), inset 0 0 28px rgba(184,255,59,.12); } 50%{ transform:scale(1.035); box-shadow: 0 0 0 8px rgba(184,255,59,.045), 0 0 45px rgba(184,255,59,.42), 0 0 95px rgba(184,255,59,.18), inset 0 0 35px rgba(184,255,59,.18); } } @keyframes orbRing{ 0%{ transform:scale(.88); opacity:.8; } 100%{ transform:scale(1.18); opacity:0; } } .wordmark{ font-size:29px; font-weight:900; letter-spacing:-1.6px; } .wordmark span{ color:var(--accent); } .tagline{ margin-top:5px; color:#687064; font-size:9px; letter-spacing:2.6px; text-transform:uppercase; } /* ========================= MAIN PANEL ========================= */ .panel{ background: linear-gradient( 145deg, rgba(18,22,17,.97), rgba(7,9,7,.98) ); border:1px solid var(--line); border-radius:28px; padding:23px; box-shadow: 0 30px 100px rgba(0,0,0,.6), inset 0 1px rgba(255,255,255,.035); backdrop-filter:blur(20px); } /* Status */ .status{ display:flex; align-items:center; gap:9px; padding:10px 12px; border-radius:13px; background:rgba(184,255,59,.045); border:1px solid rgba(184,255,59,.14); color:#aeb8a5; font-size:9px; margin-bottom:20px; } .status-dot{ width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow: 0 0 8px var(--accent), 0 0 15px rgba(184,255,59,.6); animation:dotPulse 1.8s infinite; } @keyframes dotPulse{ 50%{ transform:scale(1.35); box-shadow:0 0 15px var(--accent); } } h1{ font-size:27px; letter-spacing:-1.5px; margin:0 0 7px; } .intro{ color:var(--muted); font-size:11px; line-height:1.6; margin:0 0 20px; } /* ========================= ROLE SELECTOR ========================= */ .role-heading{ display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; color:#aeb5a8; font-size:9px; font-weight:800; letter-spacing:1px; text-transform:uppercase; } .selected{ color:var(--accent); font-size:8px; text-transform:none; letter-spacing:0; } .roles{ display:grid; gap:9px; margin-bottom:18px; } .role{ width:100%; min-height:68px; position:relative; padding:13px 45px 13px 15px; border-radius:16px; border:1px solid var(--line); background: linear-gradient( 145deg, #111510, #090b09 ); color:#fff; cursor:pointer; text-align:left; transition: transform .18s, border-color .18s, background .18s, box-shadow .18s; appearance:none; } .role:hover{ transform:translateY(-1px); border-color:#3b4435; } .role:active{ transform:scale(.985); } .role.active{ border-color:var(--accent); background: linear-gradient( 145deg, #1b270e, #0c1109 ); box-shadow: 0 0 0 1px rgba(184,255,59,.08), 0 0 28px rgba(184,255,59,.08); } .role strong{ display:block; font-size:12px; } .role small{ display:block; color:#858c80; margin-top:5px; font-size:9.5px; line-height:1.35; } .tick{ position:absolute; right:13px; top:50%; transform:translateY(-50%); width:21px; height:21px; border-radius:50%; border:1px solid #3b4138; display:grid; place-items:center; color:transparent; font-size:11px; font-weight:900; } .role.active .tick{ background:var(--accent); border-color:var(--accent); color:#050505; box-shadow: 0 0 15px rgba(184,255,59,.45); } /* ========================= INPUTS ========================= */ .field{ margin-top:11px; } label{ display:block; color:#969d91; font-size:9px; font-weight:600; letter-spacing:.8px; margin:0 0 6px 2px; } .input-wrap{ position:relative; } input{ width:100%; padding:14px; border-radius:13px; border:1px solid var(--line); background:#080a08; color:#fff; outline:none; font-size:12px; transition: border-color .2s, box-shadow .2s; } input::placeholder{ color:#4e554b; } input:focus{ border-color:rgba(184,255,59,.6); box-shadow: 0 0 0 3px rgba(184,255,59,.05), 0 0 20px rgba(184,255,59,.04); } /* Password eye */ .eye{ position:absolute; right:6px; top:6px; width:38px; height:38px; border:0; background:transparent; color:#777; cursor:pointer; border-radius:10px; } /* ========================= BUTTONS ========================= */ button{ font-family:inherit; } .primary, .secondary{ width:100%; padding:14px; border-radius:14px; font-weight:900; cursor:pointer; margin-top:12px; transition: transform .18s, box-shadow .2s, background .2s; } .primary{ border:0; background: linear-gradient( 135deg, var(--accent2), var(--accent) 55%, #8dff27 ); color:#050505; box-shadow: 0 10px 30px rgba(184,255,59,.13); } .primary:hover{ transform:translateY(-1px); box-shadow: 0 15px 40px rgba(184,255,59,.25); } .primary:active{ transform:scale(.985); } .secondary{ border:1px solid rgba(184,255,59,.5); background: rgba(184,255,59,.025); color:var(--accent); } .secondary:hover{ background:rgba(184,255,59,.07); border-color:var(--accent); } .secondary:active{ transform:scale(.985); } /* ========================= MESSAGE ========================= */ #msg{ min-height:20px; text-align:center; margin-top:12px; color:var(--accent); font-size:10.5px; line-height:1.45; } #msg.error{ color:var(--danger); } /* ========================= FOOTER ========================= */ .footer{ text-align:center; margin-top:18px; color:#5f665d; font-size:9px; line-height:1.5; } .secure{ display:inline-flex; align-items:center; gap:5px; color:#697167; } /* Mobile */ @media(max-width:420px){ body{ padding:13px; } .panel{ padding:18px; border-radius:24px; } .logo-orb{ width:96px; height:96px; } .logo-orb img{ width:65px; height:65px; } h1{ font-size:24px; } .wordmark{ font-size:26px; } } </style>
-
-</head>
-
-<body>
-
-<div class="auth">
-
-<!-- BRAND -->
-
-<div class="brand">
-
-<div class="logo-orb">
-  <img
-    src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-    alt="Zep Swipe Logo"
-  >
-</div>
-
-<div class="wordmark">
-  ZEP <span>SWIPE</span>
-</div>
-
-<div class="tagline">
-  The Student Economy
-</div>
-
-</div>
-
-<!-- PANEL -->
-
-<div class="panel">
-
-<div class="status">
-  <span class="status-dot"></span>
-  <span>Secure Zep Swipe account gateway</span>
-</div>
-
-<h1>
-  Welcome to Zep Swipe.
-</h1>
-
-<p class="intro">
-  Choose how you'll use Zep Swipe. Create an account or sign in below.
-</p>
-
-
-<!-- ROLE -->
-<div class="role-heading">
-  <span>Choose account type</span>
-  <span class="selected" id="selectedLabel">
-    Customer selected
-  </span>
-</div>
-
-<div class="roles">
-
-  <button
-    type="button"
-    class="role active"
-    data-role="customer"
-  >
-    <strong>👤 Customer</strong>
-    <small>
-      Book trusted student services & redeem deals
-    </small>
-    <span class="tick">✓</span>
-  </button>
-
-
-  <button
-    type="button"
-    class="role"
-    data-role="provider"
-  >
-    <strong>💼 Student Provider</strong>
-    <small>
-      Offer your skills, complete services & earn
-    </small>
-    <span class="tick">✓</span>
-  </button>
-
-
-  <button
-    type="button"
-    class="role"
-    data-role="business"
-  >
-    <strong>🏪 Business</strong>
-    <small>
-      Reach students through deals & opportunities
-    </small>
-    <span class="tick">✓</span>
-  </button>
-
-</div>
-
-
-<!-- EMAIL -->
-<div class="field">
-
-  <label for="email">
-    EMAIL
-  </label>
-
-  <input
-    id="email"
-    type="email"
-    autocomplete="email"
-    placeholder="you@example.com"
-  >
-
-</div>
-
-
-<!-- PASSWORD -->
-<div class="field">
-
-  <label for="password">
-    PASSWORD
-  </label>
-
-  <div class="input-wrap">
-
-    <input
-      id="password"
-      type="password"
-      autocomplete="current-password"
-      placeholder="Enter your password"
-    >
-
-    <button
-      type="button"
-      class="eye"
-      onclick="togglePassword()"
-      aria-label="Show password"
-    >
-      ◉
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- ACTIONS -->
-<button
-  class="primary"
-  type="button"
-  onclick="signup()"
->
-  CREATE ACCOUNT →
-</button>
-
-<button
-  class="secondary"
-  type="button"
-  onclick="login()"
->
-  SIGN IN
-</button>
-
-
-<div id="msg"></div>
-
-
-<div class="footer">
-
-  <span class="secure">
-    🛡 Secure authentication
-  </span>
-
-  <br>
-
-  Your Zep Swipe account keeps your session active
-  until you sign out.
-
-</div>
-
-</div>
-
-</div>
-
-<script> /* ========================= SUPABASE ========================= */ const SUPABASE_URL="https://mccsctmgkokkcrkmjuvw.supabase.co"; const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jY3NjdG1na29ra2Nya21qdXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY5Nzg0NjcsImV4cCI6MjEwMjU1NDQ2N30.uQrPeROFDjxxiVDPh0vnAyS3TSN6igVTEbbOXkCBx_U"; const db=supabase.createClient( SUPABASE_URL, SUPABASE_ANON_KEY ); /* ========================= ROLE ========================= */ let role="customer"; const roleNames={ customer:"Customer selected", provider:"Student Provider selected", business:"Business selected" }; document.querySelectorAll(".role").forEach(el=>{ el.onclick=()=>{ document .querySelectorAll(".role") .forEach(x=>x.classList.remove("active")); el.classList.add("active"); role=el.dataset.role; document.getElementById("selectedLabel").textContent= roleNames[role]; }; }); /* ========================= MESSAGE ========================= */ const msg=t=> document.getElementById("msg").textContent=t; /* ========================= PASSWORD ========================= */ function togglePassword(){ const input= document.getElementById("password"); input.type= input.type==="password" ?"text" :"password"; } /* ========================= SIGNUP ========================= */ async function signup(){ const email= emailEl().value.trim(); const password= passEl().value; if(!email || !password){ msg("Enter your email and password."); return; } msg("Creating account..."); const redirectUrl = window.location.origin + "https://zepmasterbase.github.io/zep-swipe-backend/verify.html"; const {data,error}= await db.auth.signUp({ email, password, options:{ emailRedirectTo:redirectUrl } }); if(error){ msg(error.message); return; } if(data.user){ await db .from("profiles") .upsert({ id:data.user.id, email, role }); } msg( data.session ?"Success! Redirecting..." :"Account created. Verify your email then login." ); if(data.session){ redirect(role); } } /* ========================= LOGIN ========================= */ async function login(){ const email= emailEl().value.trim(); const password= passEl().value; if(!email || !password){ msg("Enter your email and password."); return; } msg("Signing in..."); const {data,error}= await db.auth.signInWithPassword({ email, password }); if(error){ msg(error.message); return; } const {data:profile}= await db .from("profiles") .select("role") .eq("id",data.user.id) .single(); redirect( profile?.role || "customer" ); } /* ========================= REDIRECT ========================= */ function redirect(r){ if(r==="customer") location.replace("customer.html"); else if(r==="provider") location.replace("provider.html"); else if(r==="business") location.replace("business-deals.html"); } /* ========================= HELPERS ========================= */ function emailEl(){ return document.getElementById("email"); } function passEl(){ return document.getElementById("password"); } </script>
-
-</body> </html>
+</body>
+</html>
