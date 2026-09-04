@@ -899,6 +899,8 @@ const db=supabase.createClient(
   SUPABASE_ANON_KEY
 );
 
+const redirectUrl="https://zepmasterbase.github.io/zep-swipe-backend/verify.html";
+
 
 /* =========================
    ROLE
@@ -968,20 +970,46 @@ function togglePassword(){
    SIGNUP
 ========================= */
 
-const {data,error}=await db.auth.signUp({
-  email,
-  password,
-  options:{
-    emailRedirectTo: redirectUrl,
-    data:{
-      role: role
-    }
+async function signup(){
+
+  const email=emailEl().value.trim();
+  const password=passEl().value;
+
+  if(!email || !password){
+    msg("Enter your email and password.",true);
+    return;
   }
-});
+
+  msg("Creating account...");
+
+  try{
+    const {data,error}=await db.auth.signUp({
+      email,
+      password,
+      options:{
+        emailRedirectTo:redirectUrl,
+        data:{ role:role }
+      }
+    });
+
+    if(error){
+      msg(error.message,true);
+      return;
+    }
+
+    if(data.user && data.session){
+      msg("Account created. Opening your dashboard...");
+      redirect(role);
+    }else{
+      msg("Account created. Verify your email, then sign in.");
+    }
+
+  }catch(error){
+    console.error("Signup error:",error);
+    msg("Something went wrong while creating your account.",true);
   }
 
 }
-
 
 /* =========================
    LOGIN
