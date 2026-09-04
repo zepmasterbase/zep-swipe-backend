@@ -968,123 +968,16 @@ function togglePassword(){
    SIGNUP
 ========================= */
 
-async function signup(){
-
-  const email=
-    emailEl().value.trim();
-
-  const password=
-    passEl().value;
-
-  if(!email || !password){
-
-    msg(
-      "Enter your email and password.",
-      true
-    );
-
-    return;
+const {data,error}=await db.auth.signUp({
+  email,
+  password,
+  options:{
+    emailRedirectTo: redirectUrl,
+    data:{
+      role: role
+    }
   }
-
-  if(password.length < 6){
-
-    msg(
-      "Password must be at least 6 characters.",
-      true
-    );
-
-    return;
-  }
-
-  msg("Creating account...");
-
-  try{
-
-    const redirectUrl =
-      "https://zepmasterbase.github.io/zep-swipe-backend/verify.html";
-
-    const {data,error} =
-      await db.auth.signUp({
-
-        email,
-        password,
-
-        options:{
-          emailRedirectTo:redirectUrl
-        }
-
-      });
-
-    if(error){
-
-      msg(error.message,true);
-
-      return;
-    }
-
-    /*
-      Save the selected role in profiles.
-      If email confirmation is enabled, the user
-      may not have an active session yet.
-    */
-
-    if(data.user && data.session){
-
-      const {error:profileError} =
-        await db
-          .from("profiles")
-          .upsert({
-            id:data.user.id,
-            email,
-            role
-          });
-
-      if(profileError){
-
-        console.error(
-          "Profile save error:",
-          profileError
-        );
-
-        msg(
-          "Account created, but your profile could not be saved. Please contact support.",
-          true
-        );
-
-        return;
-      }
-
-    }
-
-    /*
-      If Supabase requires email verification,
-      the session may be null.
-    */
-
-    if(!data.session){
-
-      msg(
-        "Account created. Verify your email, then login."
-      );
-
-      return;
-    }
-
-    msg(
-      "Success! Redirecting..."
-    );
-
-    redirect(role);
-
-  }catch(error){
-
-    console.error(error);
-
-    msg(
-      "Something went wrong. Please try again.",
-      true
-    );
-
+});
   }
 
 }
