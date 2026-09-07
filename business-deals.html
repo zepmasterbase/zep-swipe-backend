@@ -1,426 +1,146 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Zep Swipe Business Dashboard V43</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zep Swipe | Business Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070707;--card:#141414;--card2:#101010;--accent:#b8ff3b;--border:#282828;--muted:#9a9a9a;--danger:#ff6b6b;--blue:#76a9ff}
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
-body{background:var(--bg);color:#fff;padding-bottom:88px}
-button,input,select,textarea{font:inherit}
-.container{max-width:980px;margin:auto}
-.hero{margin:14px;padding:25px;border:1px solid var(--border);border-radius:26px;background:radial-gradient(circle at 90% 10%,rgba(184,255,59,.16),transparent 35%),linear-gradient(135deg,#171717,#090909)}
-.topline{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{font-weight:800;letter-spacing:-.4px}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;background:rgba(184,255,59,.12);color:var(--accent);font-size:11px;font-weight:800}
-h1{font-size:clamp(28px,7vw,48px);line-height:1.04;margin-top:18px;letter-spacing:-1.4px}
-h2{font-size:22px;letter-spacing:-.5px}
-h3{font-size:15px}
-p{color:#b8b8b8;line-height:1.5}
-.muted{color:var(--muted);font-size:12px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:17px;margin:14px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-@media(max-width:650px){.grid{grid-template-columns:repeat(2,1fr)}}
-.stat{background:var(--card2);border:1px solid var(--border);border-radius:15px;padding:14px}
-.stat strong{display:block;font-size:25px;color:var(--accent);margin-bottom:4px}
-.stat span{font-size:11px;color:var(--muted)}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}
-.btn{border:0;border-radius:12px;padding:11px 14px;background:var(--accent);color:#000;font-weight:800;cursor:pointer}
-.btn.secondary{background:#242424;color:#fff;border:1px solid #333}
-.btn.small{padding:8px 10px;font-size:12px}
-.btn.danger{background:#2a1414;color:#ff8b8b;border:1px solid #472020}
-input,select,textarea{width:100%;padding:12px;margin-top:9px;background:#0d0d0d;color:#fff;border:1px solid var(--border);border-radius:12px;outline:none}
-textarea{min-height:95px;resize:vertical}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media(max-width:650px){.action-grid{grid-template-columns:1fr}}
-.action{background:#101010;border:1px solid var(--border);border-radius:16px;padding:14px}
-.action i{color:var(--accent);margin-bottom:9px}
-.action h3{margin-bottom:5px}
-.activity{display:flex;gap:11px;padding:13px 0;border-bottom:1px solid #222;align-items:flex-start}
-.activity:last-child{border-bottom:0}
-.dot{width:9px;height:9px;border-radius:50%;background:var(--accent);margin-top:6px;flex:none}
-.lead{background:#101010;border:1px solid var(--border);border-radius:14px;padding:12px;margin-top:9px}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.pill{display:inline-flex;padding:5px 8px;border-radius:999px;background:#222;color:#ccc;font-size:10px;font-weight:700}
-.pill.green{background:rgba(184,255,59,.12);color:var(--accent)}
-.progress{height:8px;background:#242424;border-radius:999px;overflow:hidden;margin:10px 0}
-.progress>span{display:block;height:100%;background:var(--accent);width:78%}
-.score{font-size:38px;font-weight:800;color:var(--accent)}
-.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-@media(max-width:700px){.plan-grid{grid-template-columns:1fr}}
-.plan{background:#101010;border:1px solid var(--border);border-radius:16px;padding:15px}
-.plan.active{border-color:var(--accent);box-shadow:0 0 0 1px rgba(184,255,59,.18)}
-.price{font-size:24px;font-weight:800;margin:8px 0}
-.deal{background:#101010;border:1px solid var(--border);border-radius:15px;padding:13px;margin-top:9px}
-.empty{padding:18px;text-align:center;color:var(--muted);border:1px dashed #333;border-radius:14px}
-.notice{font-size:11px;color:var(--muted);margin-top:9px}
-.footer{position:fixed;z-index:50;bottom:0;left:0;right:0;background:#0b0b0b;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0}
-.footer a{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;text-decoration:none;font-size:11px}
-.footer a:hover{color:var(--accent)}
-.hidden{display:none!important}
+:root{--bg:#070707;--card:#111315;--line:#292d30;--muted:#969da1;--a:#b8ff3b;--danger:#ff6b6b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#1b2608,#070707 40%);color:#fff;font-family:Inter,sans-serif;padding-bottom:85px}
+button,input,textarea,select{font:inherit}button{cursor:pointer}.top{height:66px;position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:#070707dc;border-bottom:1px solid var(--line);backdrop-filter:blur(16px)}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800}.brand-logo{width:44px;height:44px;border-radius:50%;object-fit:contain;background:#111315;padding:6px;border:1px solid #40551d;box-shadow:0 0 0 1px #b8ff3b33,0 0 12px #b8ff3b55,0 0 26px #b8ff3b22;animation:logoPulse 2.2s ease-in-out infinite}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 0 1px #b8ff3b33,0 0 10px #b8ff3b44,0 0 20px #b8ff3b18}50%{box-shadow:0 0 0 2px #b8ff3b66,0 0 18px #b8ff3b77,0 0 34px #b8ff3b2e}}.brand small{display:block;color:var(--muted);font-size:9px}
+.icons{display:flex;gap:7px}.icon{width:39px;height:39px;border:1px solid var(--line);background:#101112;color:#fff;border-radius:11px;display:grid;place-items:center}.icon#logout{color:var(--a);border-color:#5a7b27;background:#101500;box-shadow:0 0 10px #b8ff3b33, inset 0 0 10px #b8ff3b0d}.icon#logout:hover{box-shadow:0 0 18px #b8ff3b77, inset 0 0 12px #b8ff3b18;transform:translateY(-1px)}
+.wrap{max-width:1150px;margin:auto;padding:16px}.hero{border:1px solid var(--line);border-radius:27px;padding:28px;margin-bottom:14px;background:linear-gradient(135deg,#182100dd,#111315dd),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1800&q=80') center/cover}
+.pill{display:inline-flex;gap:6px;align-items:center;border:1px solid #40551d;background:#182300;color:var(--a);padding:7px 10px;border-radius:99px;font-size:10px;font-weight:800}
+h1{font-size:clamp(30px,5vw,52px);line-height:1.02;letter-spacing:-2px;margin:14px 0 9px}.hero p{color:#ccd0d2;line-height:1.55;max-width:620px;margin:0}.primary{background:var(--a);color:#070707;border:0;border-radius:13px;padding:13px 16px;font-weight:800}.hero .primary{margin-top:18px;width:auto}
+.grid{display:grid;gap:13px}.stats{grid-template-columns:repeat(4,1fr);margin-bottom:13px}.card{background:#111315ee;border:1px solid var(--line);border-radius:20px;padding:16px}.num{font-size:26px;font-weight:800}.muted,small{color:var(--muted)}.stats small{font-size:10px}
+.layout{grid-template-columns:1.45fr .85fr;align-items:start}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.head h2{font-size:17px;margin:0}
+input,textarea,select{width:100%;background:#0b0d0e;color:#fff;border:1px solid #303438;border-radius:12px;padding:12px;outline:none}textarea{min-height:90px;resize:vertical}label{display:block;color:#b9bec1;font-size:10px;font-weight:800;margin:11px 0 6px}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.file{border:1px dashed #464b4e;border-radius:14px;padding:12px;background:#0b0d0e}.file input{border:0;padding:0;background:none}.preview{display:none;margin-top:9px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}.preview img{width:100%;max-height:230px;object-fit:cover;display:block}.actions{display:flex;gap:8px;margin-top:12px}.actions>*{flex:1}.secondary{background:#101213;color:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;font-weight:700}.status{min-height:18px;margin-top:9px;font-size:11px;color:var(--muted)}
+.profile{display:flex;gap:13px;align-items:center;margin-bottom:14px}.logo{width:74px;height:74px;border-radius:50%;object-fit:contain;background:#111315;border:1px solid #40551d;padding:8px;box-shadow:0 0 0 1px #b8ff3b33,0 0 14px #b8ff3b44;animation:logoPulse 2.2s ease-in-out infinite}.profile strong{font-size:17px}.profile p{margin:4px 0 0;font-size:11px;color:var(--muted)}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:8px}.quick button{text-align:left;background:#0d0f10;border:1px solid var(--line);color:#fff;border-radius:13px;padding:12px;font-weight:700}.quick svg{color:var(--a);vertical-align:middle;margin-right:6px}
+.deals{display:grid;gap:9px}.deal{display:grid;grid-template-columns:105px 1fr;gap:12px;background:#0c0e0f;border:1px solid var(--line);border-radius:16px;padding:9px}.deal img{width:105px;height:88px;object-fit:cover;border-radius:11px;background:#17191b}.deal h3{font-size:14px;margin:4px 0}.deal p{font-size:11px;color:#aeb3b6;margin:0;line-height:1.4}.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.tag{font-size:9px;background:#181b1d;color:#c8cdcf;border-radius:99px;padding:5px 7px}.live{color:var(--a);background:#182300}.empty{text-align:center;padding:25px;color:var(--muted);font-size:12px}
+.bar{height:7px;background:#24282a;border-radius:99px;overflow:hidden;margin-top:11px}.bar i{display:block;height:100%;background:var(--a);width:0}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:#0a0b0ced;border-top:1px solid var(--line);backdrop-filter:blur(15px)}.navin{max-width:600px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.nav button{background:none;border:0;color:#aeb3b6;padding:9px;font-size:9px;font-weight:700}.nav button.active{color:var(--a)}.nav svg{display:block;margin:auto auto 3px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}@media(max-width:520px){.wrap{padding:10px}.hero{padding:22px;border-radius:22px}.row{grid-template-columns:1fr}.deal{grid-template-columns:86px 1fr}.deal img{width:86px;height:82px}}
 </style>
 </head>
 <body>
+<header class="top"><div class="brand"><img class="brand-logo" src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo"><div>ZEP SWIPE<small>BUSINESS</small></div></div><div class="icons"><button class="icon" id="refresh"><i data-lucide="refresh-cw" width="16"></i></button><button class="icon" id="logout"><i data-lucide="log-out" width="16"></i></button></div></header>
 
-<div class="container">
+<main class="wrap">
+<section class="hero"><span class="pill"><i data-lucide="sparkles" width="12"></i> WELCOME TO ZEP SWIPE</span><h1 id="heroTitle">Welcome, <span id="welcomeName">Business</span>.</h1><p id="heroCopy">Your next customer is already looking for what you offer. Publish your first student deal, get discovered on Zep Swipe, and turn local student attention into real visits, claims and sales.</p><button class="primary" onclick="goCreate()"><i data-lucide="plus" width="16"></i> Create Your First Deal</button></section>
 
-<section class="hero">
-  <div class="topline">
-    <span class="badge">● BUSINESS DASHBOARD</span>
-    <span class="brand">ZEP SWIPE</span>
-  </div>
-  <h1>Good morning<span id="businessGreeting"></span> 👋</h1>
-  <p style="margin-top:9px">Your daily command centre for reaching more students and turning attention into customers.</p>
-  <div class="actions" style="margin-top:17px">
-    <button class="btn" onclick="scrollToId('createDeal')">+ Create Deal</button>
-    <button class="btn secondary" onclick="scrollToId('leadsSection')">View Leads</button>
-  </div>
+<section class="grid stats">
+<div class="card"><div class="num" id="active">0</div><small>Active deals</small></div>
+<div class="card"><div class="num" id="total">0</div><small>Total deals</small></div>
+<div class="card"><div class="num" id="mari">0</div><small>MARI balance</small></div>
+<div class="card"><div class="num" id="redeemed">0</div><small>Redemptions</small></div>
 </section>
 
-<section class="card">
-  <div class="section-head">
-    <div><h2>Today's Business</h2><p class="muted">Your latest performance</p></div>
-    <span class="pill green">LIVE</span>
-  </div>
-  <div class="grid">
-    <div class="stat"><strong id="views">0</strong><span>Profile Views</span></div>
-    <div class="stat"><strong id="claims">0</strong><span>Deal Claims</span></div>
-    <div class="stat"><strong id="leads">0</strong><span>New Leads</span></div>
-    <div class="stat"><strong id="activeDeals">0</strong><span>Active Deals</span></div>
-  </div>
+<section class="grid layout"><div>
+<section class="card" id="create">
+<div class="head"><h2>Create a student deal</h2><span class="pill">FREE LISTING</span></div>
+<label>DEAL IMAGE</label><div class="file"><input id="dealImage" type="file" accept="image/jpeg,image/png,image/webp"></div>
+<div class="preview" id="dealPreview"><img id="dealPreviewImg" alt="Deal preview"></div>
+<label>DEAL TITLE</label><input id="title" maxlength="120" placeholder="e.g. 20% Off Student Haircut">
+<div class="row"><div><label>CATEGORY</label><select id="category"><option>Food & Drinks</option><option>Beauty & Wellness</option><option>Retail</option><option>Education</option><option>Entertainment</option><option>Services</option><option>Travel</option><option>Other</option></select></div><div><label>DISCOUNT %</label><input id="discount" type="number" min="0" max="100" placeholder="20"></div></div>
+<label>DESCRIPTION</label><textarea id="description" maxlength="500" placeholder="Tell students why they should claim this deal."></textarea>
+<div class="row"><div><label>COUPON QUANTITY</label><input id="quantity" type="number" min="0" value="100"></div><div><label>EXPIRY DATE</label><input id="expiry" type="date"></div></div>
+<div class="preview" style="display:block"><div style="padding:12px"><small>MARKETPLACE PREVIEW</small><h3 id="ptitle">Your deal title</h3><p id="pdesc" class="muted">Your description will appear here.</p><div class="tags"><span class="tag live" id="pdiscount">0% OFF</span><span class="tag" id="pcategory">Food & Drinks</span></div></div></div>
+<div class="actions"><button class="secondary" id="clear">Clear</button><button class="primary" id="publish"><i data-lucide="rocket" width="15"></i> Publish Deal</button></div><div class="status" id="dealStatus"></div>
 </section>
 
-<section class="card">
-  <div class="section-head">
-    <div><h2>🔥 Today's Opportunities</h2><p class="muted">Quick actions that can improve your results</p></div>
-  </div>
-  <div class="action-grid">
-    <div class="action">
-      <i data-lucide="plus-circle"></i>
-      <h3>Post something new</h3>
-      <p class="muted">Fresh offers give students a reason to return.</p>
-      <button class="btn small" onclick="scrollToId('createDeal')">Create Deal</button>
-    </div>
-    <div class="action">
-      <i data-lucide="message-circle"></i>
-      <h3>Check your leads</h3>
-      <p class="muted"><span id="leadPrompt">0</span> lead(s) may need your response.</p>
-      <button class="btn small" onclick="scrollToId('leadsSection')">Respond</button>
-    </div>
-    <div class="action">
-      <i data-lucide="sparkles"></i>
-      <h3>Improve your profile</h3>
-      <p class="muted">Complete your profile to build more trust.</p>
-      <button class="btn small" onclick="scrollToId('profile')">Improve</button>
-    </div>
-  </div>
-</section>
-
-<section class="card" id="leadsSection">
-  <div class="section-head">
-    <div><h2>💬 New Leads</h2><p class="muted">Turn student interest into customers.</p></div>
-    <span class="pill" id="leadCountPill">0 new</span>
-  </div>
-  <div id="leadsContainer"><div class="empty">No lead data yet. Connect your leads table to show real enquiries here.</div></div>
-</section>
-
-<section class="card">
-  <div class="section-head">
-    <div><h2>📈 Growth Score</h2><p class="muted">Simple actions can improve your visibility.</p></div>
-    <div class="score" id="growthScore">78</div>
-  </div>
-  <div class="progress"><span id="scoreBar"></span></div>
-  <p class="muted">Profile completeness: <strong id="profileCompleteness">0%</strong></p>
-  <div class="actions" style="margin-top:10px">
-    <span class="pill">✓ Business profile</span>
-    <span class="pill">✓ Contact details</span>
-    <span class="pill">+ Add photos</span>
-    <span class="pill">+ Add description</span>
-  </div>
-</section>
-
-<section class="card">
-  <div class="section-head">
-    <div><h2>📊 Your Deal Performance</h2><p class="muted">Follow the journey from attention to action.</p></div>
-  </div>
-  <div class="grid">
-    <div class="stat"><strong id="perfViews">0</strong><span>Views</span></div>
-    <div class="stat"><strong id="perfClaims">0</strong><span>Claims</span></div>
-    <div class="stat"><strong id="perfLeads">0</strong><span>Enquiries</span></div>
-    <div class="stat"><strong id="conversionRate">0%</strong><span>Claim Rate</span></div>
-  </div>
-</section>
-
-<section class="card">
-  <div class="section-head">
-    <div><h2>🔥 Student Demand</h2><p class="muted">Use demand to shape your next offer.</p></div>
-  </div>
-  <div class="grid">
-    <div class="stat"><strong>HIGH</strong><span>Food & Drinks</span></div>
-    <div class="stat"><strong>HIGH</strong><span>Fashion Deals</span></div>
-    <div class="stat"><strong>HIGH</strong><span>Salon & Barber</span></div>
-    <div class="stat"><strong>MED</strong><span>Tech Services</span></div>
-  </div>
-  <p class="notice">Demand insights can later be populated dynamically from student searches, claims and marketplace activity.</p>
-</section>
-
-<section class="card" id="createDeal">
-  <div class="section-head">
-    <div><h2>🚀 Create Deal</h2><p class="muted">Give students a reason to choose your business.</p></div>
-  </div>
-  <select id="dealPlan">
-    <option value="free">Free Listing</option>
-    <option value="featured">Featured Deal</option>
-    <option value="premium">Premium Deal</option>
-  </select>
-  <select id="category">
-    <option>Food & Drinks</option><option>Salon & Barber</option><option>Fashion</option>
-    <option>Electronics</option><option>Education</option><option>Other</option>
-  </select>
-  <input id="title" placeholder="Deal Title">
-  <textarea id="description" placeholder="Describe the offer and why students should claim it"></textarea>
-  <input id="discount" type="number" min="0" max="100" placeholder="Discount %">
-  <input id="expiry" type="date">
-  <button class="btn" onclick="publishDeal()">Publish Deal</button>
-</section>
-
-<section class="card">
-  <div class="section-head"><div><h2>📦 My Deals</h2><p class="muted">Manage your live offers.</p></div></div>
-  <div id="dealsContainer"><div class="empty">Loading...</div></div>
-</section>
-
-<section class="card" id="profile">
-  <div class="section-head"><div><h2>🏪 Business Profile</h2><p class="muted">Complete profiles build trust.</p></div></div>
-  <input id="businessName" placeholder="Business Name">
-  <input id="ownerName" placeholder="Owner Name">
-  <input id="location" placeholder="Location">
-  <input id="whatsapp" placeholder="WhatsApp Number">
-  <textarea id="businessDescription" placeholder="Short business description"></textarea>
-  <button class="btn" onclick="saveProfile()">Save Profile</button>
-</section>
-
-<section class="card">
-  <div class="section-head">
-    <div><h2>⚡ Activity</h2><p class="muted">What's happening around your business.</p></div>
-  </div>
-  <div id="activityContainer">
-    <div class="activity"><span class="dot"></span><div><b>Welcome to Zep Swipe</b><p class="muted">Your business activity will appear here as students interact with your profile.</p></div></div>
-    <div class="activity"><span class="dot"></span><div><b>Keep your offers fresh</b><p class="muted">Posting relevant student deals regularly can help keep your profile active.</p></div></div>
-  </div>
-</section>
-
-<section class="card">
-  <div class="section-head">
-    <div><h2>💳 Plans & Subscription</h2><p class="muted">Start free, upgrade when Zep Swipe is delivering value.</p></div>
-  </div>
-  <div id="subscriptionStatus" class="status" style="margin-bottom:12px">Subscription: Loading...</div>
-  <div id="plans" class="plan-grid"></div>
-  <p class="notice">Payments are initiated by your secure backend. Never place the Paystack secret key in this HTML.</p>
-  <div id="paymentStatus" class="status hidden"></div>
-</section>
-
-<section class="card">
-  <div class="section-head"><div><h2>🏆 Business Leaderboard</h2><p class="muted">Compete on verified student engagement.</p></div></div>
-  <div class="deal"><div class="row"><b>🥇 Top Business</b><span class="pill">184 claims</span></div></div>
-  <div class="deal"><div class="row"><b>🥈 Rising Business</b><span class="pill">162 claims</span></div></div>
-  <div class="deal"><div class="row"><b>🥉 Local Favourite</b><span class="pill">149 claims</span></div></div>
-  <p class="notice">Replace these placeholders with your real leaderboard query when the analytics tables are ready.</p>
-</section>
-
+<section class="card"><div class="head"><h2>My deals</h2><button class="secondary" id="reload">Refresh</button></div><div class="deals" id="list"><div class="empty">Loading your deals…</div></div></section>
 </div>
 
-<nav class="footer">
-  <a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
-  <a href="marketplace.html"><i data-lucide="briefcase-business"></i><span>Services</span></a>
-  <a href="business-deals.html"><i data-lucide="ticket-percent"></i><span>Deals</span></a>
-  <a href="#" onclick="logout();return false;"><i data-lucide="log-out"></i><span>Logout</span></a>
-  <a href="#profile"><i data-lucide="user-round"></i><span>Profile</span></a>
-</nav>
+<div>
+<section class="card" id="profileSection"><div class="head"><h2>Business profile</h2><button class="secondary" id="saveProfile">Save</button></div>
+<div class="profile"><div><img class="logo" id="logo" alt="Business logo"><label for="logoFile" style="text-align:center;color:var(--a);cursor:pointer">Upload</label><input id="logoFile" type="file" accept="image/jpeg,image/png,image/webp" style="display:none"></div><div><strong id="displayName">Your Business</strong><p id="email">Loading…</p></div></div>
+<label>BUSINESS NAME</label><input id="businessName" maxlength="120" placeholder="Your business name">
+<label>PHONE / WHATSAPP</label><input id="phone" maxlength="40" placeholder="+27 …">
+<label>ABOUT</label><textarea id="bio" maxlength="500" placeholder="Short description students should know."></textarea>
+<div class="status" id="profileStatus"></div></section>
+
+<section class="card"><div class="head"><h2>Quick actions</h2></div><div class="quick">
+<button onclick="goCreate()"><i data-lucide="ticket-percent" width="15"></i>New deal</button>
+<button onclick="document.getElementById('profileSection').scrollIntoView({behavior:'smooth'})"><i data-lucide="store" width="15"></i>Profile</button>
+<button onclick="location.href='marketplace.html'"><i data-lucide="shopping-bag" width="15"></i>Marketplace</button>
+<button onclick="refreshAll()"><i data-lucide="refresh-cw" width="15"></i>Refresh</button>
+</div><p class="muted" style="font-size:10px;line-height:1.5">Logo uses <b>business-logos</b>; deal images use <b>deal-images</b>. Both URLs are saved to Supabase and can be displayed on Marketplace.</p></section>
+
+<section class="card"><div class="head"><h2>Growth path</h2><span class="pill">MARI</span></div><div style="font-size:12px;line-height:1.6;color:#c9cdcf">Publish → students discover → claim → verified redemption → grow.</div><div class="bar"><i id="progress"></i></div><div class="status" id="progressText">0 / 50 verified redemptions</div></section>
+</div></section>
+</main>
+
+<nav class="nav"><div class="navin"><button class="active" onclick="scrollTo({top:0,behavior:'smooth'})"><i data-lucide="home" width="17"></i>Home</button><button onclick="goCreate()"><i data-lucide="plus-circle" width="17"></i>Create</button><button onclick="document.querySelector('.deals').scrollIntoView({behavior:'smooth'})"><i data-lucide="ticket-percent" width="17"></i>Deals</button><button onclick="document.getElementById('profileSection').scrollIntoView({behavior:'smooth'})"><i data-lucide="user-round" width="17"></i>Profile</button></div></nav>
 
 <script>
 const SUPABASE_URL="https://qhwjtdsbkjfdgwevemiv.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let user=null,profile=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const fileName=s=>s.toLowerCase().replace(/[^a-z0-9._-]+/g,"-");
 
-const PLANS=[
- {id:"free",name:"Founding Business",price:0,currency:"ZAR",features:["First month free","Business profile","Deal publishing"]},
- {id:"featured",name:"Featured Partner",price:399,currency:"ZAR",features:["Featured placement","Enhanced profile","Deal promotion","Basic analytics"]},
- {id:"premium",name:"Premium Partner",price:799,currency:"ZAR",features:["Everything in Featured","Premium placement","Advanced promotion","Advanced analytics"]}
-];
-
-let currentUser=null,currentBusiness=null;
-
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
-function scrollToId(id){document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});}
-function planName(id){return PLANS.find(p=>p.id===id)?.name||id;}
-function setStatus(html){document.getElementById("subscriptionStatus").innerHTML=html;}
-function money(p){return p.price===0?"FREE":`${p.currency} ${p.price.toLocaleString()}/month`;}
-
-function renderPlans(active){
- const box=document.getElementById("plans");
- box.innerHTML=PLANS.map(p=>`
- <div class="plan ${active===p.id?"active":""}">
-   ${p.id==="featured"?'<span class="badge">POPULAR</span>':''}
-   <h3 style="margin-top:9px">${esc(p.name)}</h3>
-   <div class="price">${money(p)}</div>
-   <p class="muted">${p.features.map(esc).join(" • ")}</p>
-   ${p.id==="free"?'<button class="btn secondary" disabled>Included</button>':
-   `<button class="btn" onclick="startCheckout('${p.id}')">Upgrade</button>`}
- </div>`).join("");
-}
-
-async function getSession(){
- const {data,error}=await db.auth.getSession();
- if(error)throw error;
- currentUser=data.session?.user||null;
- return currentUser;
-}
-
-async function loadBusiness(){
- if(!currentUser){location.replace("auth.html");return;}
- const {data,error}=await db.from("businesses").select("*").eq("owner_id",currentUser.id).maybeSingle();
- if(error){console.error(error);return;}
- currentBusiness=data;
- if(data){
-  businessName.value=data.name||"";
-  ownerName.value=data.owner_name||"";
-  location.value=data.location||"";
-  whatsapp.value=data.whatsapp||"";
-  businessDescription.value=data.description||"";
-  businessGreeting.textContent=data.name?`, ${esc(data.name)}`:"";
-  calculateProfile(data);
- }else{
-  businessGreeting.textContent="";
-  calculateProfile({});
- }
- await loadSubscription();
- await loadDeals();
-}
-
-function calculateProfile(b){
- let n=0;
- ["name","owner_name","location","whatsapp","description"].forEach(k=>{if(b[k])n++;});
- const pct=Math.round(n/5*100);
- profileCompleteness.textContent=pct+"%";
- const score=Math.max(20,Math.min(100,40+pct));
- growthScore.textContent=score;
- scoreBar.style.width=score+"%";
-}
-
-async function loadSubscription(){
- if(!currentBusiness){renderPlans("free");setStatus("Subscription: <strong>Founding Business — FREE</strong>");return;}
- const {data,error}=await db.from("subscriptions").select("plan_id,status,expires_at").eq("business_id",currentBusiness.id).order("created_at",{ascending:false}).limit(1).maybeSingle();
- if(error){console.warn(error.message);renderPlans("free");setStatus("Subscription: <strong>Founding Business — FREE</strong>");return;}
- if(data?.status==="active"){
-  renderPlans(data.plan_id);
-  const exp=data.expires_at?new Date(data.expires_at).toLocaleDateString():"—";
-  setStatus(`Subscription: <strong>${esc(planName(data.plan_id))}</strong> · Active · ${exp}`);
- }else{
-  renderPlans("free");
-  setStatus("Subscription: <strong>Founding Business — FREE</strong> for the first month.");
- }
-}
-
-async function startCheckout(planId){
- if(!currentUser){location.replace("auth.html");return;}
- if(!currentBusiness){alert("Save your business profile first.");scrollToId("profile");return;}
- const plan=PLANS.find(p=>p.id===planId);
- if(!plan||plan.price<=0)return;
- const box=document.getElementById("paymentStatus");
- box.classList.remove("hidden");
- box.textContent="Starting secure Paystack checkout...";
- try{
-  const {data,error}=await db.functions.invoke("paystack-checkout",{body:{business_id:currentBusiness.id,plan_id:plan.id,email:currentUser.email}});
-  if(error)throw error;
-  if(!data?.authorization_url)throw new Error("No checkout URL returned.");
-  location.href=data.authorization_url;
- }catch(e){
-  console.error(e);
-  box.textContent="Payment could not be started. "+(e.message||"Please try again.");
- }
-}
-
-async function saveProfile(){
- if(!currentUser){location.replace("auth.html");return;}
- const payload={
-  owner_id:currentUser.id,
-  name:businessName.value.trim(),
-  owner_name:ownerName.value.trim(),
-  location:location.value.trim(),
-  whatsapp:whatsapp.value.trim(),
-  description:businessDescription.value.trim()
- };
- if(!payload.name){alert("Enter your business name.");return;}
- const {data,error}=await db.from("businesses").upsert(payload,{onConflict:"owner_id"}).select().single();
- if(error){alert("Could not save profile: "+error.message);return;}
- currentBusiness=data;calculateProfile(data);businessGreeting.textContent=", "+esc(data.name);
- alert("Business profile saved.");
- await loadSubscription();
-}
-
-async function publishDeal(){
- if(!currentUser||!currentBusiness){alert("Please sign in and save your business profile first.");return;}
- const payload={
-  business_id:currentBusiness.id,
-  title:title.value.trim(),
-  description:description.value.trim(),
-  discount:Number(discount.value||0),
-  expiry:expiry.value||null,
-  category:category.value,
-  plan:dealPlan.value,
-  status:"active"
- };
- if(!payload.title){alert("Enter a deal title.");return;}
- const {error}=await db.from("deals").insert(payload);
- if(error){alert("Could not publish deal: "+error.message);return;}
- alert("Deal published.");
- title.value="";description.value="";discount.value="";expiry.value="";
- await loadDeals();
-}
-
-async function loadDeals(){
- const box=document.getElementById("dealsContainer");
- if(!currentBusiness){box.innerHTML='<div class="empty">Create your business profile first.</div>';return;}
- const {data,error}=await db.from("deals").select("*").eq("business_id",currentBusiness.id).order("created_at",{ascending:false}).limit(50);
- if(error){box.innerHTML=`<div class="empty">${esc(error.message)}</div>`;return;}
- const deals=data||[];
- const active=deals.filter(d=>d.status==="active").length;
- activeDeals.textContent=active;
- box.innerHTML=deals.length?deals.map(d=>`
- <div class="deal">
-  <div class="row"><b>${esc(d.title||"Deal")}</b><span class="pill green">${Number(d.discount||0)}% OFF</span></div>
-  <p class="muted" style="margin-top:5px">${esc(d.category||"")} · ${esc(d.plan||"free")}</p>
- </div>`).join(""):'<div class="empty">No deals yet. Create your first student offer above.</div>';
-}
-
-async function logout(){
- const {error}=await db.auth.signOut();
- if(error){alert("Could not log out. Please try again.");return;}
- location.replace("auth.html");
-}
+function msg(id,text,error=false){$(id).textContent=text;$(id).style.color=error?"var(--danger)":"var(--muted)"}
+function goCreate(){$("create").scrollIntoView({behavior:"smooth"});setTimeout(()=>$("title").focus(),350)}
 
 async function init(){
- try{
-  await getSession();
-  if(!currentUser){location.replace("auth.html");return;}
-  await loadBusiness();
-  lucide.createIcons();
- }catch(e){
-  console.error(e);
-  location.replace("auth.html");
- }
+ const {data:{session}}=await db.auth.getSession();
+ if(!session){location.href="auth.html";return}
+ user=session.user;$("email").textContent=user.email||"";$("welcomeName").textContent=(user.user_metadata?.full_name||user.email?.split("@")[0]||"Business").split(" ")[0];
+ await loadProfile();await refreshAll();lucide.createIcons()
 }
-
-db.auth.onAuthStateChange((_event,session)=>{
- currentUser=session?.user||null;
- if(!currentUser){location.replace("auth.html");}
-});
+async function loadProfile(){
+ const {data,error}=await db.from("profiles").select("id,email,role,full_name,phone,avatar_url,bio").eq("id",user.id).maybeSingle();
+ if(error){msg("profileStatus","Could not load profile: "+error.message,true);return}
+ profile=data||{};$("businessName").value=data?.full_name||"";$("phone").value=data?.phone||"";$("bio").value=data?.bio||"";$("displayName").textContent=data?.full_name||"Your Business";$("welcomeName").textContent=(data?.full_name||"Business").split(" ")[0];
+ $("logo").src=data?.avatar_url||"https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png";$("welcomeName").textContent=(data?.full_name||"Business").split(" ")[0];
+}
+async function saveBusinessProfile(){
+ msg("profileStatus","Saving…");let avatar=profile?.avatar_url||null;let f=$("logoFile").files[0];
+ if(f){if(f.size>3*1024*1024){msg("profileStatus","Logo must be 3MB or smaller.",true);return}
+  let path=user.id+"/"+Date.now()+"-"+fileName(f.name),up=await db.storage.from("business-logos").upload(path,f,{upsert:true,contentType:f.type});
+  if(up.error){msg("profileStatus","Logo upload failed: "+up.error.message,true);return}
+  avatar=db.storage.from("business-logos").getPublicUrl(path).data.publicUrl
+ }
+ let payload={id:user.id,email:user.email,role:"business",full_name:$("businessName").value.trim(),phone:$("phone").value.trim(),bio:$("bio").value.trim(),avatar_url:avatar};
+ let {error}=await db.from("profiles").upsert(payload,{onConflict:"id"});
+ if(error){msg("profileStatus","Could not save profile: "+error.message,true);return}
+ profile={...profile,...payload};$("displayName").textContent=payload.full_name||"Your Business";$("welcomeName").textContent=(payload.full_name||"Business").split(" ")[0];if(avatar)$("logo").src=avatar;$("logoFile").value="";msg("profileStatus","Profile saved."); 
+}
+async function publishDeal(){
+ let title=$("title").value.trim(),description=$("description").value.trim(),discount=Number($("discount").value||0),quantity=Number($("quantity").value||0),expiry=$("expiry").value||null,file=$("dealImage").files[0];
+ if(!title){msg("dealStatus","Deal title is required.",true);return}if(discount<0||discount>100){msg("dealStatus","Discount must be 0–100.",true);return}
+ msg("dealStatus","Publishing…");$("publish").disabled=true;
+ try{
+  let image=null;if(file){if(file.size>5*1024*1024)throw Error("Deal image must be 5MB or smaller.");let path=user.id+"/"+Date.now()+"-"+fileName(file.name),up=await db.storage.from("deal-images").upload(path,file,{upsert:true,contentType:file.type});if(up.error)throw up.error;image=db.storage.from("deal-images").getPublicUrl(path).data.publicUrl}
+  let {error}=await db.from("deals").insert({business_id:user.id,title,category:$("category").value,description:description||null,discount,coupon_quantity:Math.floor(quantity),coupons_claimed:0,image_url:image,status:"active",expires_at:expiry?new Date(expiry+"T23:59:59").toISOString():null});
+  if(error)throw error;clearForm();msg("dealStatus","Deal published successfully.");await loadDeals()
+ }catch(e){msg("dealStatus","Could not publish deal: "+(e.message||e),true)}finally{$("publish").disabled=false}
+}
+async function loadDeals(){
+ let {data,error}=await db.from("deals").select("id,title,category,description,discount,coupon_quantity,coupons_claimed,image_url,status,expires_at,created_at").eq("business_id",user.id).order("created_at",{ascending:false});
+ if(error){$("list").innerHTML='<div class="empty">'+esc(error.message)+'</div>';return}
+ let a=(data||[]).filter(d=>d.status==="active"&&(!d.expires_at||new Date(d.expires_at)>new Date()));$("active").textContent=a.length;$("total").textContent=(data||[]).length;
+ $("list").innerHTML=(data||[]).map(d=>{let live=d.status==="active"&&(!d.expires_at||new Date(d.expires_at)>new Date()),left=d.coupon_quantity?Math.max(0,d.coupon_quantity-(d.coupons_claimed||0)):"∞";return '<article class="deal"><img src="'+esc(d.image_url||"https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=500&q=80")+'"><div><span class="tag '+(live?"live":"")+'">'+(live?"LIVE":esc(d.status))+'</span><h3>'+esc(d.title)+'</h3><p>'+esc(d.description||"No description")+'</p><div class="tags"><span class="tag">'+esc(d.category)+'</span><span class="tag">'+Number(d.discount||0)+'% OFF</span><span class="tag">'+left+' left</span></div><div class="tags">'+(d.expires_at?'<span class="tag">Ends '+new Date(d.expires_at).toLocaleDateString()+'</span>':"")+' <button class="secondary" style="padding:5px 8px;font-size:9px" onclick="deleteDeal(''+d.id+'')">Delete</button></div></div></article>'}).join("")||'<div class="empty">No deals yet.<br>Create your first student offer.</div>';
+}
+async function deleteDeal(id){if(!confirm("Delete this deal?"))return;let {error}=await db.from("deals").delete().eq("id",id).eq("business_id",user.id);if(error){alert(error.message);return}await loadDeals()}
+async function loadWallet(){let {data}=await db.from("mari_wallets").select("balance").eq("user_id",user.id).maybeSingle();$("mari").textContent=Number(data?.balance||0).toLocaleString()}
+async function loadRedemptions(){let {data:ds}=await db.from("deals").select("id").eq("business_id",user.id);let ids=(ds||[]).map(x=>x.id);if(!ids.length){$("redeemed").textContent="0";$("progressText").textContent="0 / 50 verified redemptions";$("progress").style.width="0%";return}let {data}=await db.from("coupon_redemptions").select("id,status").in("deal_id",ids);let n=(data||[]).filter(x=>x.status==="redeemed").length;$("redeemed").textContent=n;$("progressText").textContent=n+" / 50 verified redemptions";$("progress").style.width=Math.min(100,n*2)+"%"}
+async function refreshAll(){await loadDeals();await loadWallet();await loadRedemptions()}
+function clearForm(){$("title").value="";$("description").value="";$("discount").value="";$("quantity").value="100";$("expiry").value="";$("dealImage").value="";$("dealPreview").style.display="none"}
+$("saveProfile").onclick=saveBusinessProfile;$("publish").onclick=publishDeal;$("reload").onclick=loadDeals;$("refresh").onclick=refreshAll;$("clear").onclick=clearForm;
+$("logout").onclick=async()=>{await db.auth.signOut();location.href="auth.html"};
+$("dealImage").onchange=e=>{let f=e.target.files[0];if(f){$("dealPreviewImg").src=URL.createObjectURL(f);$("dealPreview").style.display="block"}};
+$("logoFile").onchange=e=>{let f=e.target.files[0];if(f)$("logo").src=URL.createObjectURL(f)};
+["title","description","discount","category"].forEach(id=>$(id).addEventListener("input",()=>{$("ptitle").textContent=$("title").value||"Your deal title";$("pdesc").textContent=$("description").value||"Your description will appear here.";$("pdiscount").textContent=(Number($("discount").value||0))+"% OFF";$("pcategory").textContent=$("category").value}));
 init();
 </script>
-</body>
-</html>
+</body></html>
