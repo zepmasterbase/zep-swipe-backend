@@ -13,27 +13,72 @@
 button,input,textarea,select{font:inherit}button{cursor:pointer}.top{height:66px;position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:#070707dc;border-bottom:1px solid var(--line);backdrop-filter:blur(16px)}
 .brand{display:flex;gap:10px;align-items:center;font-weight:800}.brand-logo{width:44px;height:44px;border-radius:50%;object-fit:contain;background:#111315;padding:6px;border:1px solid #40551d;box-shadow:0 0 0 1px #b8ff3b33,0 0 12px #b8ff3b55,0 0 26px #b8ff3b22;animation:logoPulse 2.2s ease-in-out infinite}
 @keyframes logoPulse{0%,100%{box-shadow:0 0 0 1px #b8ff3b33,0 0 10px #b8ff3b44,0 0 20px #b8ff3b18}50%{box-shadow:0 0 0 2px #b8ff3b66,0 0 18px #b8ff3b77,0 0 34px #b8ff3b2e}}.brand small{display:block;color:var(--muted);font-size:9px}
-.icons{display:flex;gap:7px}.icon{width:39px;height:39px;border:1px solid var(--line);background:#101112;color:#fff;border-radius:11px;display:grid;place-items:center}.icon#logout{color:var(--a);border-color:#5a7b27;background:#101500;box-shadow:0 0 10px #b8ff3b33, inset 0 0 10px #b8ff3b0d}.icon#logout:hover{box-shadow:0 0 18px #b8ff3b77, inset 0 0 12px #b8ff3b18;transform:translateY(-1px)}
-.wrap{max-width:1150px;margin:auto;padding:16px}.hero{border:1px solid var(--line);border-radius:27px;padding:28px;margin-bottom:14px;background:linear-gradient(135deg,#182100dd,#111315dd),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1800&q=80') center/cover}
+.icons{display:flex;gap:9px;align-items:center}.icon{width:42px;height:42px;min-width:42px;aspect-ratio:1/1;padding:0;border:1px solid #40551d;background:#101500;color:var(--a);border-radius:50%;display:grid;place-items:center;box-shadow:0 0 0 1px #b8ff3b22,0 0 12px #b8ff3b33,inset 0 0 10px #b8ff3b0d;transition:all .2s ease}.icon svg{width:18px;height:18px;display:block;stroke:currentColor;stroke-width:2.4;filter:drop-shadow(0 0 4px #b8ff3b88)}.icon:hover{color:#d9ff9a;border-color:#b8ff3b;box-shadow:0 0 0 2px #b8ff3b33,0 0 20px #b8ff3b77,inset 0 0 14px #b8ff3b18;transform:translateY(-1px)}.icon#refresh,.icon#logout{color:var(--a)}.icon#logout:hover{box-shadow:0 0 0 2px #b8ff3b33,0 0 22px #b8ff3b88,inset 0 0 14px #b8ff3b18}
+.wrap{max-width:1180px;margin:auto;padding:20px}.hero{position:relative;overflow:hidden;border:1px solid #39471f;border-radius:30px;padding:34px;margin-bottom:16px;background:linear-gradient(135deg,#182100dd,#111315dd),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1800&q=80') center/cover}
 .pill{display:inline-flex;gap:6px;align-items:center;border:1px solid #40551d;background:#182300;color:var(--a);padding:7px 10px;border-radius:99px;font-size:10px;font-weight:800}
 h1{font-size:clamp(30px,5vw,52px);line-height:1.02;letter-spacing:-2px;margin:14px 0 9px}.hero p{color:#ccd0d2;line-height:1.55;max-width:620px;margin:0}.primary{background:var(--a);color:#070707;border:0;border-radius:13px;padding:13px 16px;font-weight:800}.hero .primary{margin-top:18px;width:auto}
-.grid{display:grid;gap:13px}.stats{grid-template-columns:repeat(4,1fr);margin-bottom:13px}.card{background:#111315ee;border:1px solid var(--line);border-radius:20px;padding:16px}.num{font-size:26px;font-weight:800}.muted,small{color:var(--muted)}.stats small{font-size:10px}
+.grid{display:grid;gap:13px}.stats{grid-template-columns:repeat(4,1fr);margin-bottom:16px}
+.card{background:linear-gradient(145deg,#151819f2,#0e1011f2);border:1px solid #292f31;border-radius:20px;padding:18px;box-shadow:0 10px 35px #0008}
+.stats .card{position:relative;overflow:hidden;min-height:92px}
+.stats .card:before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--a),transparent);opacity:.7}
+.stats .card small{display:flex;align-items:center;gap:6px;margin-top:5px}
+.num{font-size:30px;font-weight:800;letter-spacing:-1px}.muted,small{color:var(--muted)}.stats small{font-size:10px}
 .layout{grid-template-columns:1.45fr .85fr;align-items:start}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.head h2{font-size:17px;margin:0}
 input,textarea,select{width:100%;background:#0b0d0e;color:#fff;border:1px solid #303438;border-radius:12px;padding:12px;outline:none}textarea{min-height:90px;resize:vertical}label{display:block;color:#b9bec1;font-size:10px;font-weight:800;margin:11px 0 6px}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .file{border:1px dashed #464b4e;border-radius:14px;padding:12px;background:#0b0d0e}.file input{border:0;padding:0;background:none}.preview{display:none;margin-top:9px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}.preview img{width:100%;max-height:230px;object-fit:cover;display:block}.actions{display:flex;gap:8px;margin-top:12px}.actions>*{flex:1}.secondary{background:#101213;color:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;font-weight:700}.status{min-height:18px;margin-top:9px;font-size:11px;color:var(--muted)}
-.profile{display:flex;gap:13px;align-items:center;margin-bottom:14px}.logo{width:74px;height:74px;border-radius:50%;object-fit:contain;background:#111315;border:1px solid #40551d;padding:8px;box-shadow:0 0 0 1px #b8ff3b33,0 0 14px #b8ff3b44;animation:logoPulse 2.2s ease-in-out infinite}.profile strong{font-size:17px}.profile p{margin:4px 0 0;font-size:11px;color:var(--muted)}
+.profile{display:flex;gap:13px;align-items:center;margin-bottom:14px}.logo{width:74px;height:74px;aspect-ratio:1/1;flex:0 0 74px;border-radius:50%;object-fit:contain;background:#111315;border:1px solid #40551d;padding:8px;box-shadow:0 0 0 1px #b8ff3b33,0 0 14px #b8ff3b44;animation:logoPulse 2.2s ease-in-out infinite}.profile strong{font-size:17px}.profile p{margin:4px 0 0;font-size:11px;color:var(--muted)}
 .quick{display:grid;grid-template-columns:1fr 1fr;gap:8px}.quick button{text-align:left;background:#0d0f10;border:1px solid var(--line);color:#fff;border-radius:13px;padding:12px;font-weight:700}.quick svg{color:var(--a);vertical-align:middle;margin-right:6px}
 .deals{display:grid;gap:9px}.deal{display:grid;grid-template-columns:105px 1fr;gap:12px;background:#0c0e0f;border:1px solid var(--line);border-radius:16px;padding:9px}.deal img{width:105px;height:88px;object-fit:cover;border-radius:11px;background:#17191b}.deal h3{font-size:14px;margin:4px 0}.deal p{font-size:11px;color:#aeb3b6;margin:0;line-height:1.4}.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.tag{font-size:9px;background:#181b1d;color:#c8cdcf;border-radius:99px;padding:5px 7px}.live{color:var(--a);background:#182300}.empty{text-align:center;padding:25px;color:var(--muted);font-size:12px}
 .bar{height:7px;background:#24282a;border-radius:99px;overflow:hidden;margin-top:11px}.bar i{display:block;height:100%;background:var(--a);width:0}
 .nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:#0a0b0ced;border-top:1px solid var(--line);backdrop-filter:blur(15px)}.navin{max-width:600px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.nav button{background:none;border:0;color:#aeb3b6;padding:9px;font-size:9px;font-weight:700}.nav button.active{color:var(--a)}.nav svg{display:block;margin:auto auto 3px}
-@media(max-width:850px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}@media(max-width:520px){.wrap{padding:10px}.hero{padding:22px;border-radius:22px}.row{grid-template-columns:1fr}.deal{grid-template-columns:86px 1fr}.deal img{width:86px;height:82px}}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}@media(max-width:520px){.notify-panel{position:fixed;right:12px;top:66px}.wrap{padding:10px}.hero{padding:22px;border-radius:22px}.row{grid-template-columns:1fr}.deal{grid-template-columns:86px 1fr}.deal img{width:86px;height:82px}}
+
+.notify-wrap{position:relative}
+.notify-dot{position:absolute;right:5px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 10px var(--a);display:none}
+.notify-panel{position:absolute;right:0;top:52px;width:min(360px,calc(100vw - 24px));background:#0d1011f7;border:1px solid #3c4d20;border-radius:18px;box-shadow:0 20px 55px #000b,0 0 25px #b8ff3b18;backdrop-filter:blur(20px);padding:0;overflow:hidden;display:none;z-index:100}
+.notify-panel.open{display:block;animation:dropIn .16s ease-out}
+@keyframes dropIn{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
+.notify-head{display:flex;justify-content:space-between;align-items:center;padding:15px 16px;border-bottom:1px solid var(--line)}
+.notify-head strong{font-size:13px}.notify-head span{font-size:9px;color:var(--a);font-weight:800}
+.notify-list{max-height:320px;overflow:auto}
+.notify-item{display:flex;gap:11px;padding:13px 15px;border-bottom:1px solid #222729}
+.notify-item:last-child{border-bottom:0}
+.notify-item .ni{width:30px;height:30px;min-width:30px;border-radius:50%;display:grid;place-items:center;background:#192300;color:var(--a)}
+.notify-item b{display:block;font-size:11px;margin-bottom:3px}.notify-item p{margin:0;color:#aeb4b7;font-size:10px;line-height:1.45}
+.notify-empty{padding:24px 16px;text-align:center;color:var(--muted);font-size:11px}
 </style>
 </head>
 <body>
-<header class="top"><div class="brand"><img class="brand-logo" src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo"><div>ZEP SWIPE<small>BUSINESS</small></div></div><div class="icons"><button class="icon" id="refresh"><i data-lucide="refresh-cw" width="16"></i></button><button class="icon" id="logout"><i data-lucide="log-out" width="16"></i></button></div></header>
+<header class="top">
+<div class="brand"><img class="brand-logo" src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo"><div>ZEP SWIPE<small>BUSINESS COMMAND</small></div></div>
+<div class="icons">
+  <div class="notify-wrap">
+    <button class="icon" id="notifications" aria-label="Notifications" title="Notifications"><i data-lucide="bell-ring" width="18"></i><span class="notify-dot" id="notifyDot"></span></button>
+    <div class="notify-panel" id="notifyPanel">
+      <div class="notify-head"><strong>Notifications</strong><span id="notifyCount">LIVE</span></div>
+      <div class="notify-list" id="notifyList">
+        <div class="notify-empty">No new updates yet.</div>
+      </div>
+    </div>
+  </div>
+  <button class="icon" id="refresh" aria-label="Refresh" title="Refresh"><i data-lucide="refresh-cw" width="18"></i></button>
+  <button class="icon" id="logout" aria-label="Log out" title="Log out"><i data-lucide="log-out" width="18"></i></button>
+</div>
+</header>
 
 <main class="wrap">
 <section class="hero"><span class="pill"><i data-lucide="sparkles" width="12"></i> WELCOME TO ZEP SWIPE</span><h1 id="heroTitle">Welcome, <span id="welcomeName">Business</span>.</h1><p id="heroCopy">Your next customer is already looking for what you offer. Publish your first student deal, get discovered on Zep Swipe, and turn local student attention into real visits, claims and sales.</p><button class="primary" onclick="goCreate()"><i data-lucide="plus" width="16"></i> Create Your First Deal</button></section>
+
+<section class="card" style="margin-bottom:16px;padding:12px 15px;border-color:#2f3d1b;background:linear-gradient(90deg,#121a08,#111315)">
+  <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+    <div style="display:flex;gap:9px;align-items:center">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 10px var(--a);display:inline-block"></span>
+      <strong style="font-size:11px">BUSINESS COMMAND CENTER</strong>
+      <span class="muted" style="font-size:10px">Live dashboard • offers • growth</span>
+    </div>
+    <span id="lastUpdated" class="muted" style="font-size:9px">Ready</span>
+  </div>
+</section>
 
 <section class="grid stats">
 <div class="card"><div class="num" id="active">0</div><small>Active deals</small></div>
@@ -84,6 +129,8 @@ const SUPABASE_URL="https://qhwjtdsbkjfdgwevemiv.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 let user=null,profile=null;
+let notifications=[];
+const NOTIFY_KEY="zep_business_notifications";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 const fileName=s=>s.toLowerCase().replace(/[^a-z0-9._-]+/g,"-");
@@ -91,11 +138,44 @@ const fileName=s=>s.toLowerCase().replace(/[^a-z0-9._-]+/g,"-");
 function msg(id,text,error=false){$(id).textContent=text;$(id).style.color=error?"var(--danger)":"var(--muted)"}
 function goCreate(){$("create").scrollIntoView({behavior:"smooth"});setTimeout(()=>$("title").focus(),350)}
 
+
+function addNotification(title, text, icon="bell-ring"){
+  const item={title,text,icon,time:new Date().toISOString()};
+  notifications=[item,...notifications].slice(0,8);
+  try{localStorage.setItem(NOTIFY_KEY,JSON.stringify(notifications));}catch(e){}
+  renderNotifications();
+}
+function renderNotifications(){
+  const list=$("notifyList"), dot=$("notifyDot"), count=$("notifyCount");
+  if(!notifications.length){
+    list.innerHTML='<div class="notify-empty">No new updates yet.</div>';
+    dot.style.display="none"; count.textContent="LIVE"; return;
+  }
+  dot.style.display="block";
+  count.textContent=notifications.length+" NEW";
+  list.innerHTML=notifications.map(n=>`<div class="notify-item"><div class="ni"><i data-lucide="${esc(n.icon||"bell")} " width="15"></i></div><div><b>${esc(n.title)}</b><p>${esc(n.text)}</p></div></div>`).join("");
+  lucide.createIcons();
+}
+function loadLocalNotifications(){
+  try{notifications=JSON.parse(localStorage.getItem(NOTIFY_KEY)||"[]")||[];}catch(e){notifications=[];}
+  renderNotifications();
+}
+function toggleNotifications(){
+  $("notifyPanel").classList.toggle("open");
+  if($("notifyPanel").classList.contains("open")){
+    $("notifyDot").style.display="none";
+  }
+}
+document.addEventListener("click",e=>{
+  const wrap=document.querySelector(".notify-wrap");
+  if(wrap && !wrap.contains(e.target)) $("notifyPanel").classList.remove("open");
+});
+
 async function init(){
  const {data:{session}}=await db.auth.getSession();
  if(!session){location.href="auth.html";return}
  user=session.user;$("email").textContent=user.email||"";$("welcomeName").textContent=(user.user_metadata?.full_name||user.email?.split("@")[0]||"Business").split(" ")[0];
- await loadProfile();await refreshAll();lucide.createIcons()
+ loadLocalNotifications();await loadProfile();await refreshAll();$("lastUpdated").textContent="Updated "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});lucide.createIcons();addNotification("Dashboard ready","Your business command center is synced with your account.","layout-dashboard")
 }
 async function loadProfile(){
  const {data,error}=await db.from("profiles").select("id,email,role,full_name,phone,avatar_url,bio").eq("id",user.id).maybeSingle();
@@ -113,7 +193,7 @@ async function saveBusinessProfile(){
  let payload={id:user.id,email:user.email,role:"business",full_name:$("businessName").value.trim(),phone:$("phone").value.trim(),bio:$("bio").value.trim(),avatar_url:avatar};
  let {error}=await db.from("profiles").upsert(payload,{onConflict:"id"});
  if(error){msg("profileStatus","Could not save profile: "+error.message,true);return}
- profile={...profile,...payload};$("displayName").textContent=payload.full_name||"Your Business";$("welcomeName").textContent=(payload.full_name||"Business").split(" ")[0];if(avatar)$("logo").src=avatar;$("logoFile").value="";msg("profileStatus","Profile saved."); 
+ profile={...profile,...payload};$("displayName").textContent=payload.full_name||"Your Business";$("welcomeName").textContent=(payload.full_name||"Business").split(" ")[0];if(avatar)$("logo").src=avatar;$("logoFile").value="";msg("profileStatus","Profile saved.");addNotification("Profile updated","Your business profile was saved successfully.","user-round"); 
 }
 async function publishDeal(){
  let title=$("title").value.trim(),description=$("description").value.trim(),discount=Number($("discount").value||0),quantity=Number($("quantity").value||0),expiry=$("expiry").value||null,file=$("dealImage").files[0];
@@ -122,7 +202,7 @@ async function publishDeal(){
  try{
   let image=null;if(file){if(file.size>5*1024*1024)throw Error("Deal image must be 5MB or smaller.");let path=user.id+"/"+Date.now()+"-"+fileName(file.name),up=await db.storage.from("deal-images").upload(path,file,{upsert:true,contentType:file.type});if(up.error)throw up.error;image=db.storage.from("deal-images").getPublicUrl(path).data.publicUrl}
   let {error}=await db.from("deals").insert({business_id:user.id,title,category:$("category").value,description:description||null,discount,coupon_quantity:Math.floor(quantity),coupons_claimed:0,image_url:image,status:"active",expires_at:expiry?new Date(expiry+"T23:59:59").toISOString():null});
-  if(error)throw error;clearForm();msg("dealStatus","Deal published successfully.");await loadDeals()
+  if(error)throw error;clearForm();msg("dealStatus","Deal published successfully.");addNotification("Deal published","Your student offer is now listed as active.","rocket");await loadDeals()
  }catch(e){msg("dealStatus","Could not publish deal: "+(e.message||e),true)}finally{$("publish").disabled=false}
 }
 async function loadDeals(){
@@ -134,10 +214,15 @@ async function loadDeals(){
 async function deleteDeal(id){if(!confirm("Delete this deal?"))return;let {error}=await db.from("deals").delete().eq("id",id).eq("business_id",user.id);if(error){alert(error.message);return}await loadDeals()}
 async function loadWallet(){let {data}=await db.from("mari_wallets").select("balance").eq("user_id",user.id).maybeSingle();$("mari").textContent=Number(data?.balance||0).toLocaleString()}
 async function loadRedemptions(){let {data:ds}=await db.from("deals").select("id").eq("business_id",user.id);let ids=(ds||[]).map(x=>x.id);if(!ids.length){$("redeemed").textContent="0";$("progressText").textContent="0 / 50 verified redemptions";$("progress").style.width="0%";return}let {data}=await db.from("coupon_redemptions").select("id,status").in("deal_id",ids);let n=(data||[]).filter(x=>x.status==="redeemed").length;$("redeemed").textContent=n;$("progressText").textContent=n+" / 50 verified redemptions";$("progress").style.width=Math.min(100,n*2)+"%"}
-async function refreshAll(){await loadDeals();await loadWallet();await loadRedemptions()}
+async function refreshAll(){await loadDeals();await loadWallet();await loadRedemptions();$("lastUpdated").textContent="Updated "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});}
 function clearForm(){$("title").value="";$("description").value="";$("discount").value="";$("quantity").value="100";$("expiry").value="";$("dealImage").value="";$("dealPreview").style.display="none"}
-$("saveProfile").onclick=saveBusinessProfile;$("publish").onclick=publishDeal;$("reload").onclick=loadDeals;$("refresh").onclick=refreshAll;$("clear").onclick=clearForm;
-$("logout").onclick=async()=>{await db.auth.signOut();location.href="auth.html"};
+$("saveProfile").onclick=saveBusinessProfile;
+$("publish").onclick=publishDeal;
+$("reload").onclick=loadDeals;
+$("refresh").onclick=async()=>{await refreshAll();addNotification("Dashboard refreshed","Your latest deals, wallet and redemption data were refreshed.","refresh-cw");};
+$("clear").onclick=clearForm;
+$("notifications").onclick=toggleNotifications;
+$("logout").onclick=async()=>{ $("logout").disabled=true; $("logout").style.opacity=".6"; try{await db.auth.signOut();}finally{location.href="index.html";} };
 $("dealImage").onchange=e=>{let f=e.target.files[0];if(f){$("dealPreviewImg").src=URL.createObjectURL(f);$("dealPreview").style.display="block"}};
 $("logoFile").onchange=e=>{let f=e.target.files[0];if(f)$("logo").src=URL.createObjectURL(f)};
 ["title","description","discount","category"].forEach(id=>$(id).addEventListener("input",()=>{$("ptitle").textContent=$("title").value||"Your deal title";$("pdesc").textContent=$("description").value||"Your description will appear here.";$("pdiscount").textContent=(Number($("discount").value||0))+"% OFF";$("pcategory").textContent=$("category").value}));
