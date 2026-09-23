@@ -1,231 +1,1269 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zep Swipe | Business Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
-:root{--bg:#070707;--card:#111315;--line:#292d30;--muted:#969da1;--a:#b8ff3b;--danger:#ff6b6b}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#1b2608,#070707 40%);color:#fff;font-family:Inter,sans-serif;padding-bottom:85px}
-button,input,textarea,select{font:inherit}button{cursor:pointer}.top{height:66px;position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:#070707dc;border-bottom:1px solid var(--line);backdrop-filter:blur(16px)}
-.brand{display:flex;gap:10px;align-items:center;font-weight:800}.brand-logo{width:44px;height:44px;border-radius:50%;object-fit:contain;background:#111315;padding:6px;border:1px solid #40551d;box-shadow:0 0 0 1px #b8ff3b33,0 0 12px #b8ff3b55,0 0 26px #b8ff3b22;animation:logoPulse 2.2s ease-in-out infinite}
-@keyframes logoPulse{0%,100%{box-shadow:0 0 0 1px #b8ff3b33,0 0 10px #b8ff3b44,0 0 20px #b8ff3b18}50%{box-shadow:0 0 0 2px #b8ff3b66,0 0 18px #b8ff3b77,0 0 34px #b8ff3b2e}}.brand small{display:block;color:var(--muted);font-size:9px}
-.icons{display:flex;gap:9px;align-items:center}.icon{width:42px;height:42px;min-width:42px;aspect-ratio:1/1;padding:0;border:1px solid #40551d;background:#101500;color:var(--a);border-radius:50%;display:grid;place-items:center;box-shadow:0 0 0 1px #b8ff3b22,0 0 12px #b8ff3b33,inset 0 0 10px #b8ff3b0d;transition:all .2s ease}.icon svg{width:18px;height:18px;display:block;stroke:currentColor;stroke-width:2.4;filter:drop-shadow(0 0 4px #b8ff3b88)}.icon:hover{color:#d9ff9a;border-color:#b8ff3b;box-shadow:0 0 0 2px #b8ff3b33,0 0 20px #b8ff3b77,inset 0 0 14px #b8ff3b18;transform:translateY(-1px)}.icon#refresh,.icon#logout{color:var(--a)}.icon#logout:hover{box-shadow:0 0 0 2px #b8ff3b33,0 0 22px #b8ff3b88,inset 0 0 14px #b8ff3b18}
-.wrap{max-width:1180px;margin:auto;padding:20px}.hero{position:relative;overflow:hidden;border:1px solid #39471f;border-radius:30px;padding:34px;margin-bottom:16px;background:linear-gradient(135deg,#182100dd,#111315dd),url('https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1800&q=80') center/cover}
-.pill{display:inline-flex;gap:6px;align-items:center;border:1px solid #40551d;background:#182300;color:var(--a);padding:7px 10px;border-radius:99px;font-size:10px;font-weight:800}
-h1{font-size:clamp(30px,5vw,52px);line-height:1.02;letter-spacing:-2px;margin:14px 0 9px}.hero p{color:#ccd0d2;line-height:1.55;max-width:620px;margin:0}.primary{background:var(--a);color:#070707;border:0;border-radius:13px;padding:13px 16px;font-weight:800}.hero .primary{margin-top:18px;width:auto}
-.grid{display:grid;gap:13px}.stats{grid-template-columns:repeat(4,1fr);margin-bottom:16px}
-.card{background:linear-gradient(145deg,#151819f2,#0e1011f2);border:1px solid #292f31;border-radius:20px;padding:18px;box-shadow:0 10px 35px #0008}
-.stats .card{position:relative;overflow:hidden;min-height:92px}
-.stats .card:before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--a),transparent);opacity:.7}
-.stats .card small{display:flex;align-items:center;gap:6px;margin-top:5px}
-.num{font-size:30px;font-weight:800;letter-spacing:-1px}.muted,small{color:var(--muted)}.stats small{font-size:10px}
-.layout{grid-template-columns:1.45fr .85fr;align-items:start}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.head h2{font-size:17px;margin:0}
-input,textarea,select{width:100%;background:#0b0d0e;color:#fff;border:1px solid #303438;border-radius:12px;padding:12px;outline:none}textarea{min-height:90px;resize:vertical}label{display:block;color:#b9bec1;font-size:10px;font-weight:800;margin:11px 0 6px}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.file{border:1px dashed #464b4e;border-radius:14px;padding:12px;background:#0b0d0e}.file input{border:0;padding:0;background:none}.preview{display:none;margin-top:9px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}.preview img{width:100%;max-height:230px;object-fit:cover;display:block}.actions{display:flex;gap:8px;margin-top:12px}.actions>*{flex:1}.secondary{background:#101213;color:#fff;border:1px solid var(--line);border-radius:12px;padding:11px;font-weight:700}.status{min-height:18px;margin-top:9px;font-size:11px;color:var(--muted)}
-.profile{display:flex;gap:13px;align-items:center;margin-bottom:14px}.logo{width:74px;height:74px;aspect-ratio:1/1;flex:0 0 74px;border-radius:50%;object-fit:contain;background:#111315;border:1px solid #40551d;padding:8px;box-shadow:0 0 0 1px #b8ff3b33,0 0 14px #b8ff3b44;animation:logoPulse 2.2s ease-in-out infinite}.profile strong{font-size:17px}.profile p{margin:4px 0 0;font-size:11px;color:var(--muted)}
-.quick{display:grid;grid-template-columns:1fr 1fr;gap:8px}.quick button{text-align:left;background:#0d0f10;border:1px solid var(--line);color:#fff;border-radius:13px;padding:12px;font-weight:700}.quick svg{color:var(--a);vertical-align:middle;margin-right:6px}
-.deals{display:grid;gap:9px}.deal{display:grid;grid-template-columns:105px 1fr;gap:12px;background:#0c0e0f;border:1px solid var(--line);border-radius:16px;padding:9px}.deal img{width:105px;height:88px;object-fit:cover;border-radius:11px;background:#17191b}.deal h3{font-size:14px;margin:4px 0}.deal p{font-size:11px;color:#aeb3b6;margin:0;line-height:1.4}.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.tag{font-size:9px;background:#181b1d;color:#c8cdcf;border-radius:99px;padding:5px 7px}.live{color:var(--a);background:#182300}.empty{text-align:center;padding:25px;color:var(--muted);font-size:12px}
-.bar{height:7px;background:#24282a;border-radius:99px;overflow:hidden;margin-top:11px}.bar i{display:block;height:100%;background:var(--a);width:0}
-.nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:#0a0b0ced;border-top:1px solid var(--line);backdrop-filter:blur(15px)}.navin{max-width:600px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.nav button{background:none;border:0;color:#aeb3b6;padding:9px;font-size:9px;font-weight:700}.nav button.active{color:var(--a)}.nav svg{display:block;margin:auto auto 3px}
-@media(max-width:850px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}@media(max-width:520px){.notify-panel{position:fixed;right:12px;top:66px}.wrap{padding:10px}.hero{padding:22px;border-radius:22px}.row{grid-template-columns:1fr}.deal{grid-template-columns:86px 1fr}.deal img{width:86px;height:82px}}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Zep Swipe Business Hub</title>
+  <meta name="description" content="Grow your business with Zep Swipe. Promote student deals, reach customers, hire students and explore business vehicle solutions.">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-.notify-wrap{position:relative}
-.notify-dot{position:absolute;right:5px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 10px var(--a);display:none}
-.notify-panel{position:absolute;right:0;top:52px;width:min(360px,calc(100vw - 24px));background:#0d1011f7;border:1px solid #3c4d20;border-radius:18px;box-shadow:0 20px 55px #000b,0 0 25px #b8ff3b18;backdrop-filter:blur(20px);padding:0;overflow:hidden;display:none;z-index:100}
-.notify-panel.open{display:block;animation:dropIn .16s ease-out}
-@keyframes dropIn{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
-.notify-head{display:flex;justify-content:space-between;align-items:center;padding:15px 16px;border-bottom:1px solid var(--line)}
-.notify-head strong{font-size:13px}.notify-head span{font-size:9px;color:var(--a);font-weight:800}
-.notify-list{max-height:320px;overflow:auto}
-.notify-item{display:flex;gap:11px;padding:13px 15px;border-bottom:1px solid #222729}
-.notify-item:last-child{border-bottom:0}
-.notify-item .ni{width:30px;height:30px;min-width:30px;border-radius:50%;display:grid;place-items:center;background:#192300;color:var(--a)}
-.notify-item b{display:block;font-size:11px;margin-bottom:3px}.notify-item p{margin:0;color:#aeb4b7;font-size:10px;line-height:1.45}
-.notify-empty{padding:24px 16px;text-align:center;color:var(--muted);font-size:11px}
+  <style>
+    :root{
+      --bg:#070707;
+      --panel:#111;
+      --panel2:#151515;
+      --line:#272727;
+      --text:#f5f5f5;
+      --muted:#9b9b9b;
+      --green:#b8ff3b;
+      --green2:#8dcc20;
+      --danger:#ff6b6b;
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;width:100%;max-width:100%;overflow-x:hidden;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body{min-height:100vh}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+
+    .app{width:100%;min-height:100vh;padding-bottom:92px}
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      display:flex;align-items:center;justify-content:space-between;
+      width:100%;padding:14px 18px;
+      background:rgba(7,7,7,.86);backdrop-filter:blur(18px);
+      border-bottom:1px solid rgba(255,255,255,.07)
+    }
+    .brand{display:flex;align-items:center;gap:9px;font-weight:900;letter-spacing:.08em}
+    .brand-mark{
+      width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+      background:#000;border:1px solid #333;overflow:hidden
+    }
+    .brand-mark img{width:100%;height:100%;object-fit:contain}
+    .brand-fallback{color:var(--green);font-size:20px;font-weight:1000}
+    .brand-text{font-size:14px}
+    .top-actions{display:flex;gap:8px}
+    .icon-btn{
+      width:40px;height:40px;border-radius:13px;border:1px solid var(--line);
+      background:#111;color:#fff;display:grid;place-items:center
+    }
+
+    main{width:100%;max-width:1180px;margin:0 auto;padding:20px 16px 30px}
+    .hero{
+      position:relative;min-height:330px;border-radius:28px;overflow:hidden;
+      border:1px solid #292929;display:flex;align-items:flex-end;
+      isolation:isolate;
+      background:#101010
+    }
+    .hero-bg{
+      position:absolute;inset:0;z-index:-2;width:100%;height:100%;
+      object-fit:cover;object-position:center;
+      filter:saturate(.92) contrast(1.04)
+    }
+    .hero::after{
+      content:"";position:absolute;inset:0;z-index:-1;
+      background:
+        linear-gradient(90deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.63) 48%,rgba(0,0,0,.25) 100%),
+        linear-gradient(0deg,rgba(0,0,0,.90) 0%,transparent 65%);
+    }
+    .hero-content{padding:28px;max-width:720px}
+    .eyebrow{color:var(--green);font-weight:900;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+    h1{font-size:clamp(32px,7vw,62px);line-height:.98;margin:10px 0 14px;letter-spacing:-.045em}
+    .hero p{color:#ddd;max-width:620px;font-size:16px;line-height:1.55;margin:0 0 20px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      min-height:46px;padding:0 17px;border-radius:14px;border:1px solid var(--line);
+      background:#151515;color:#fff;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px
+    }
+    .btn.primary{background:var(--green);color:#080808;border-color:var(--green)}
+    .btn.ghost{background:rgba(0,0,0,.38);backdrop-filter:blur(10px)}
+    .btn.small{min-height:40px;padding:0 13px;font-size:13px}
+
+    .section{margin-top:26px}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .section-head h2{margin:0;font-size:21px;letter-spacing:-.02em}
+    .section-head p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .link-btn{color:var(--green);font-weight:800;background:none;border:0;padding:0}
+
+    .stats{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px
+    }
+    .stat{
+      background:linear-gradient(145deg,#141414,#0d0d0d);border:1px solid var(--line);
+      border-radius:18px;padding:16px;min-width:0
+    }
+    .stat-icon{color:var(--green);margin-bottom:12px}
+    .stat strong{display:block;font-size:24px;line-height:1}
+    .stat span{display:block;color:var(--muted);font-size:12px;margin-top:7px}
+
+    .growth-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .growth-card{
+      border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:20px;
+      transition:.2s transform,.2s border-color
+    }
+    .growth-card:hover{transform:translateY(-2px);border-color:#414141}
+    .growth-icon{width:42px;height:42px;border-radius:13px;background:#1c1c1c;display:grid;place-items:center;color:var(--green);margin-bottom:14px}
+    .growth-card h3{margin:0 0 7px;font-size:17px}
+    .growth-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+    .growth-card .btn{margin-top:17px;width:100%}
+
+    .deal-banner{
+      position:relative;overflow:hidden;border-radius:22px;border:1px solid #2d2d2d;
+      min-height:220px;background:#111
+    }
+    .deal-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+    .deal-banner::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,0,0,.45),rgba(0,0,0,.25))}
+    .deal-content{position:relative;z-index:1;padding:25px;max-width:590px}
+    .deal-content h2{font-size:30px;letter-spacing:-.04em;margin:8px 0}
+    .deal-content p{color:#ddd;line-height:1.5;margin:0 0 16px}
+
+    .lead-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:12px}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px}
+    .panel h3{margin:0 0 7px;font-size:18px}
+    .panel p{color:var(--muted);font-size:13px;line-height:1.5;margin:0}
+    .lead-list{margin-top:18px;display:grid;gap:10px}
+    .lead-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px;border:1px solid #242424;border-radius:15px;background:#0d0d0d}
+    .lead-left{display:flex;align-items:center;gap:10px;min-width:0}
+    .lead-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(184,255,59,.45)}
+    .lead-name{font-size:13px;font-weight:800}
+    .lead-meta{font-size:11px;color:var(--muted);margin-top:2px}
+    .pill{font-size:11px;padding:6px 8px;border-radius:99px;background:#1a1a1a;color:#ddd;border:1px solid #292929;white-space:nowrap}
+
+    .cartrack{
+      position:relative;overflow:hidden;border-radius:24px;border:1px solid #343434;
+      background:#0e0e0e;min-height:280px
+    }
+    .cartrack img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.48}
+    .cartrack::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.96),rgba(0,0,0,.66),rgba(0,0,0,.25))}
+    .cartrack-content{position:relative;z-index:1;padding:26px;max-width:690px}
+    .partner-tag{display:inline-flex;align-items:center;gap:7px;border:1px solid #3c3c3c;background:rgba(0,0,0,.48);padding:7px 10px;border-radius:99px;font-size:11px;font-weight:900;letter-spacing:.08em}
+    .cartrack h2{font-size:30px;margin:14px 0 9px;letter-spacing:-.04em}
+    .cartrack p{color:#ddd;line-height:1.55;margin:0 0 18px}
+    .vehicle-paths{display:flex;gap:9px;flex-wrap:wrap}
+    .vehicle-paths .btn{background:rgba(0,0,0,.52);backdrop-filter:blur(8px)}
+
+    .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:18px}
+    table{width:100%;border-collapse:collapse;min-width:620px}
+    th,td{text-align:left;padding:13px;border-bottom:1px solid #232323;font-size:12px}
+    th{color:#aaa;font-weight:700;background:#0d0d0d}
+    tr:last-child td{border-bottom:0}
+    .empty{padding:35px 15px;text-align:center;color:var(--muted)}
+
+    .modal-backdrop{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center}
+    .modal-backdrop.show{display:flex}
+    .modal{width:min(680px,100%);max-height:92vh;overflow:auto;background:#101010;border:1px solid #303030;border-radius:26px 26px 0 0;padding:22px}
+    .modal-head{display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .modal-head h3{margin:0;font-size:21px}
+    .close{background:#191919;color:#fff;border:1px solid #2b2b2b;border-radius:12px;width:40px;height:40px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:17px}
+    .field{display:grid;gap:7px}
+    .field.full{grid-column:1/-1}
+    .field label{font-size:12px;color:#aaa;font-weight:700}
+    .field input,.field select,.field textarea{
+      width:100%;background:#0b0b0b;border:1px solid #2b2b2b;border-radius:13px;color:#fff;padding:12px 13px;outline:none
+    }
+    .field textarea{min-height:100px;resize:vertical}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green)}
+    .form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+
+    .toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);z-index:150;background:#171717;border:1px solid #303030;color:#fff;padding:12px 15px;border-radius:13px;opacity:0;pointer-events:none;transition:.22s;max-width:calc(100% - 30px);text-align:center;font-size:13px}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+
+    .bottom-nav{
+      position:fixed;left:0;right:0;bottom:0;z-index:60;
+      display:grid;grid-template-columns:repeat(5,1fr);
+      background:rgba(8,8,8,.94);backdrop-filter:blur(18px);border-top:1px solid #222;
+      padding:8px 8px max(8px,env(safe-area-inset-bottom))
+    }
+    .nav-item{display:grid;place-items:center;gap:4px;color:#858585;font-size:10px;font-weight:700;padding:7px 2px;border:0;background:none}
+    .nav-item.active,.nav-item:hover{color:var(--green)}
+    .nav-item svg{width:19px;height:19px}
+
+    .loading{padding:35px;text-align:center;color:var(--muted)}
+    .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);margin-right:6px}
+    .hidden{display:none!important}
+    .welcome-strip{margin:0 0 16px;padding:17px 19px;border:1px solid #273326;border-radius:20px;background:linear-gradient(135deg,rgba(184,255,59,.08),rgba(17,17,17,.92));display:flex;align-items:center;justify-content:space-between;gap:15px}
+    .welcome-eyebrow{color:var(--green);font-size:10px;font-weight:1000;letter-spacing:.15em}
+    .welcome-strip h2{margin:5px 0 4px;font-size:22px;letter-spacing:-.025em}
+    .welcome-strip p{margin:0;color:var(--muted);font-size:12px}
+    .sync-badge{border:1px solid #2b3b25;background:#10170b;border-radius:999px;padding:8px 11px;font-size:10px;font-weight:900;white-space:nowrap}
+    .approval-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .approval-card{display:flex;align-items:center;gap:11px;padding:14px;border:1px solid var(--line);border-radius:18px;background:#0f0f0f}
+    .approval-icon{width:38px;height:38px;border-radius:12px;background:#181818;color:var(--green);display:grid;place-items:center}
+    .approval-card strong{display:block;font-size:21px}.approval-card span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+    .approval-card.pending{border-color:#4b3d20}.approval-card.pending .approval-icon{color:#ffc857;background:#241d0f}
+    .approval-card.rejected{border-color:#4b2828}.approval-card.rejected .approval-icon{color:#ff7777;background:#241212}
+    .upload-box{position:relative;border:1px dashed #3a3a3a;border-radius:16px;min-height:150px;background:#0b0b0b;display:grid;place-items:center;overflow:hidden;cursor:pointer;transition:.2s}
+    .upload-box:hover{border-color:var(--green);background:#0d1208}
+    .upload-box input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:3}
+    .upload-content{display:grid;place-items:center;text-align:center;gap:6px;padding:20px}
+    .upload-icon{width:46px;height:46px;border-radius:14px;background:#171717;color:var(--green);display:grid;place-items:center}
+    .upload-content strong{font-size:13px}.upload-content span{color:var(--muted);font-size:10px}
+    .deal-image-preview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+    .upload-box:has(.deal-image-preview:not(.hidden)) .upload-content{position:absolute;bottom:0;left:0;right:0;z-index:2;background:linear-gradient(transparent,rgba(0,0,0,.88));color:white;place-items:start;padding:16px;text-align:left}
+    .upload-box:has(.deal-image-preview:not(.hidden)) .upload-content .upload-icon{display:none}
+    .status-pending{color:#ffc857!important;background:#241d0f!important;border-color:#5b4722!important}
+    .status-active{color:#b8ff3b!important;background:#14200b!important;border-color:#314d1d!important}
+    .status-rejected{color:#ff7777!important;background:#241212!important;border-color:#4b2828!important}
+    .status-expired{color:#aaa!important;background:#191919!important}
+    .review-note{display:flex;align-items:flex-start;gap:9px;margin-top:11px;padding:11px 12px;border:1px solid #28351e;border-radius:13px;background:rgba(184,255,59,.035);color:#999;font-size:10px;line-height:1.45}
+    .review-note svg{flex:0 0 auto;width:15px;color:var(--green);margin-top:1px}
+
+
+
+
+    /* ZEP SWIPE NOTIFICATION CENTER */
+    .notification-trigger{position:relative}
+    .notification-count{
+      position:absolute;top:4px;right:4px;min-width:16px;height:16px;padding:0 4px;
+      display:grid;place-items:center;border-radius:99px;background:var(--green);color:#080808;
+      font-size:9px;font-weight:1000;border:2px solid #111;line-height:1
+    }
+    .notification-overlay{
+      position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.72);
+      backdrop-filter:blur(12px);display:none;align-items:flex-start;justify-content:flex-end;
+      padding:76px 18px 18px;
+    }
+    .notification-overlay.show{display:flex}
+    .notification-sheet{
+      width:min(440px,100%);max-height:min(720px,calc(100vh - 94px));overflow:hidden;
+      background:linear-gradient(160deg,#151515,#0c0c0c);border:1px solid #303030;
+      border-radius:25px;box-shadow:0 25px 90px rgba(0,0,0,.65),0 0 45px rgba(184,255,59,.06);
+      display:flex;flex-direction:column;animation:notificationIn .2s ease-out
+    }
+    @keyframes notificationIn{from{opacity:0;transform:translateY(-10px) scale(.98)}to{opacity:1;transform:none}}
+    .notification-header{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+      padding:20px 20px 15px;border-bottom:1px solid #242424
+    }
+    .notification-kicker{color:var(--green);font-size:9px;font-weight:1000;letter-spacing:.16em}
+    .notification-header h3{font-size:24px;letter-spacing:-.04em;margin:5px 0 4px}
+    .notification-header p{margin:0;color:var(--muted);font-size:11px}
+    .notification-close{
+      width:36px;height:36px;border-radius:12px;border:1px solid #303030;
+      background:#191919;color:#fff;font-size:23px;line-height:1
+    }
+    .notification-toolbar{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 15px;
+      border-bottom:1px solid #222;background:#0e0e0e
+    }
+    .notification-tabs{display:flex;gap:4px}
+    .notification-tab{
+      border:0;background:transparent;color:#777;border-radius:10px;padding:8px 10px;
+      font-size:11px;font-weight:900
+    }
+    .notification-tab.active{background:#1b1b1b;color:#fff}
+    .notification-tab span{color:var(--green);margin-left:3px}
+    .mark-all-btn{border:0;background:none;color:var(--green);font-size:10px;font-weight:900}
+    .notification-list{overflow:auto;padding:7px 10px;min-height:210px}
+    .notification-item{
+      display:flex;gap:12px;padding:14px 10px;border-radius:16px;cursor:pointer;
+      border:1px solid transparent;transition:.18s;background:transparent
+    }
+    .notification-item:hover{background:#151515;border-color:#252525}
+    .notification-item.unread{background:rgba(184,255,59,.045);border-color:#27351d}
+    .notification-icon{
+      flex:0 0 38px;width:38px;height:38px;border-radius:13px;background:#191919;
+      color:var(--green);display:grid;place-items:center
+    }
+    .notification-item.unread .notification-icon{box-shadow:0 0 0 1px rgba(184,255,59,.13),0 0 18px rgba(184,255,59,.07)}
+    .notification-body{min-width:0;flex:1}
+    .notification-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+    .notification-title{font-size:12px;font-weight:900;color:#f5f5f5}
+    .notification-time{font-size:9px;color:#777;white-space:nowrap}
+    .notification-message{font-size:11px;color:#999;line-height:1.45;margin-top:4px}
+    .notification-unread-dot{width:7px;height:7px;border-radius:50%;background:var(--green);margin-top:5px;box-shadow:0 0 9px rgba(184,255,59,.55)}
+    .notification-empty{padding:48px 22px;text-align:center;color:#777}
+    .notification-empty .empty-icon{
+      width:52px;height:52px;margin:0 auto 12px;border-radius:17px;background:#171717;
+      display:grid;place-items:center;color:#666
+    }
+    .notification-empty strong{display:block;color:#ddd;font-size:13px;margin-bottom:5px}
+    .notification-empty span{font-size:11px;line-height:1.5}
+    .notification-loading{display:flex;align-items:center;justify-content:center;gap:9px;padding:50px;color:#777;font-size:11px}
+    .notification-spinner{
+      width:16px;height:16px;border:2px solid #303030;border-top-color:var(--green);
+      border-radius:50%;animation:spin .7s linear infinite
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .notification-footer{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:11px 16px;border-top:1px solid #242424;background:#0b0b0b;color:#666;font-size:9px
+    }
+    .notification-footer button{border:0;background:none;color:#aaa;font-size:10px;font-weight:800}
+    .notification-footer button:hover{color:var(--green)}
+
+    @media(max-width:850px){
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .approval-grid{grid-template-columns:repeat(2,1fr)}
+      .growth-grid{grid-template-columns:1fr 1fr}
+      .lead-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:620px){
+      .notification-overlay{align-items:flex-end;padding:0}
+      .notification-sheet{width:100%;max-height:88vh;border-radius:25px 25px 0 0}
+      main{padding:12px 12px 25px}
+      .topbar{padding:12px}
+      .hero{min-height:440px;border-radius:23px}
+      .hero-content{padding:21px}
+      .hero p{font-size:14px}
+      .growth-grid{grid-template-columns:1fr}
+      .approval-grid{grid-template-columns:1fr 1fr}
+      .stats{gap:8px}
+      .stat{padding:13px}
+      .stat strong{font-size:21px}
+      .form-grid{grid-template-columns:1fr}
+      .field.full{grid-column:auto}
+      .cartrack{min-height:330px}
+    }
+  </style>
+<style id="header-icon-upgrade">
+.top-actions{display:flex;align-items:center;gap:7px}
+.top-actions .icon-btn{flex:0 0 40px}
+.top-actions .icon-btn svg{width:18px;height:18px;stroke-width:2.2}
 </style>
 </head>
+
 <body>
-<header class="top">
-<div class="brand"><img class="brand-logo" src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo"><div>ZEP SWIPE<small>BUSINESS COMMAND</small></div></div>
-<div class="icons">
-  <div class="notify-wrap">
-    <button class="icon" id="notifications" aria-label="Notifications" title="Notifications"><i data-lucide="bell-ring" width="18"></i><span class="notify-dot" id="notifyDot"></span></button>
-    <div class="notify-panel" id="notifyPanel">
-      <div class="notify-head"><strong>Notifications</strong><span id="notifyCount">LIVE</span></div>
-      <div class="notify-list" id="notifyList">
-        <div class="notify-empty">No new updates yet.</div>
+<div class="app">
+
+  <header class="topbar">
+    <a class="brand" href="marketplace.html" aria-label="Zep Swipe Marketplace">
+      <span class="brand-mark">
+        <img src="logo.png" alt="Zep Swipe" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="brand-fallback" style="display:none">Z</span>
+      </span>
+      <span class="brand-text">ZEP SWIPE</span>
+    </a>
+
+    <div class="top-actions">
+      <button class="icon-btn notification-trigger" onclick="openNotifications()" aria-label="Notifications" title="Notifications">
+        <i data-lucide="bell"></i>
+        <span class="notification-count hidden" id="notificationCount">0</span>
+      </button>
+      <button class="icon-btn" onclick="openAccount()" aria-label="Account" title="Account">
+        <i data-lucide="user-round"></i>
+      </button>
+      <button class="icon-btn" onclick="logout()" aria-label="Logout" title="Logout">
+        <i data-lucide="log-out"></i>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="welcome-strip" id="welcomeStrip">
+      <div>
+        <div class="welcome-eyebrow">BUSINESS COMMAND CENTER</div>
+        <h2 id="welcomeBusiness">Welcome to your Zep Swipe business hub.</h2>
+        <p id="welcomeSub">Create student deals, submit them for approval and track customer activity.</p>
+      </div>
+      <div class="sync-badge"><span class="live-dot"></span><span id="syncText">LIVE DASHBOARD</span></div>
+    </section>
+
+    <section class="hero">
+      <img class="hero-bg"
+        src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=2200&q=88"
+        alt="Business team working together"
+        loading="eager">
+      <div class="hero-content">
+        <div class="eyebrow"><span class="live-dot"></span>Business Hub</div>
+        <h1>Put your business in front of students.</h1>
+        <p>Promote your business to students, create powerful student deals, hire student talent and unlock business opportunities through Zep Swipe.</p>
+        <div class="actions">
+          <button class="btn primary" onclick="openDealModal()"><i data-lucide="tag"></i>Create Student Deal</button>
+          <button class="btn ghost" onclick="scrollToId('cartrack')"><i data-lucide="car"></i>Vehicle Solutions</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats" id="stats">
+      <div class="stat"><div class="stat-icon"><i data-lucide="eye"></i></div><strong id="statViews">0</strong><span>Deal views</span></div>
+      <div class="stat"><div class="stat-icon"><i data-lucide="ticket-check"></i></div><strong id="statClaims">0</strong><span>Claims / redemptions</span></div>
+      <div class="stat"><div class="stat-icon"><i data-lucide="users-round"></i></div><strong id="statLeads">0</strong><span>Customer opportunities</span></div>
+      <div class="stat"><div class="stat-icon"><i data-lucide="car-front"></i></div><strong id="statVehicle">0</strong><span>Vehicle enquiries</span></div>
+    </section>
+
+    <section class="section approval-grid">
+      <div class="approval-card pending">
+        <div class="approval-icon"><i data-lucide="clock-3"></i></div>
+        <div><strong id="statPending">0</strong><span>Pending approval</span></div>
+      </div>
+      <div class="approval-card approved">
+        <div class="approval-icon"><i data-lucide="badge-check"></i></div>
+        <div><strong id="statActive">0</strong><span>Live deals</span></div>
+      </div>
+      <div class="approval-card rejected">
+        <div class="approval-icon"><i data-lucide="circle-x"></i></div>
+        <div><strong id="statRejected">0</strong><span>Needs attention</span></div>
+      </div>
+      <div class="approval-card">
+        <div class="approval-icon"><i data-lucide="image"></i></div>
+        <div><strong id="statImages">0</strong><span>Deals with images</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>What can Zep Swipe do for your business?</h2>
+          <p>Choose the growth path that fits your business today.</p>
+        </div>
+      </div>
+
+      <div class="growth-grid">
+        <article class="growth-card">
+          <div class="growth-icon"><i data-lucide="ticket-percent"></i></div>
+          <h3>Promote a Student Deal</h3>
+          <p>Give verified students a reason to discover your business and visit you.</p>
+          <button class="btn small" onclick="openDealModal()">Create Deal</button>
+        </article>
+
+        <article class="growth-card">
+          <div class="growth-icon"><i data-lucide="megaphone"></i></div>
+          <h3>Generate Customers</h3>
+          <p>Turn views, enquiries and deal activity into measurable business opportunities.</p>
+          <button class="btn small" onclick="scrollToId('leads')">View Opportunities</button>
+        </article>
+
+        <article class="growth-card">
+          <div class="growth-icon"><i data-lucide="graduation-cap"></i></div>
+          <h3>Hire Students</h3>
+          <p>Find student talent for digital work, support, design, marketing and other services.</p>
+          <button class="btn small" onclick="postOpportunity()">Post Opportunity</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="deal-banner">
+        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1800&q=86" alt="Students on campus" loading="lazy">
+        <div class="deal-content">
+          <div class="eyebrow">Student Deal Days</div>
+          <h2>Get students through your door.</h2>
+          <p>Create a simple offer students can discover, claim and redeem. Keep your promotion fresh and turn campus attention into measurable activity.</p>
+          <button class="btn primary" onclick="openDealModal()"><i data-lucide="plus"></i>Launch a Student Deal</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="leads">
+      <div class="section-head">
+        <div>
+          <h2>Your business opportunities</h2>
+          <p>Keep an eye on activity coming through your Zep Swipe presence.</p>
+        </div>
+        <button class="link-btn" onclick="loadBusinessData()">Refresh</button>
+      </div>
+
+      <div class="lead-grid">
+        <div class="panel">
+          <h3>Recent activity</h3>
+          <p>New deal activity and business opportunities appear here as your account grows.</p>
+          <div class="lead-list" id="activityList">
+            <div class="empty">Loading your business activity…</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Growth checklist</h3>
+          <p>Complete the basics to make your business easier to discover.</p>
+          <div class="lead-list">
+            <div class="lead-row"><div class="lead-left"><span class="lead-dot"></span><div><div class="lead-name">Business profile</div><div class="lead-meta">Tell students who you are.</div></div></div><span class="pill">Start</span></div>
+            <div class="lead-row"><div class="lead-left"><span class="lead-dot"></span><div><div class="lead-name">Student deal</div><div class="lead-meta">Give students a reason to visit.</div></div></div><span class="pill">Create</span></div>
+            <div class="lead-row"><div class="lead-left"><span class="lead-dot"></span><div><div class="lead-name">Opportunity</div><div class="lead-meta">Reach student talent.</div></div></div><span class="pill">Post</span></div>
+            <div class="lead-row"><div class="lead-left"><span class="lead-dot"></span><div><div class="lead-name">Vehicle solutions</div><div class="lead-meta">Explore mobility solutions.</div></div></div><span class="pill">Explore</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cartrack">
+      <div class="cartrack">
+        <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=2200&q=88" alt="Business vehicle on the road" loading="lazy">
+        <div class="cartrack-content">
+          <span class="partner-tag"><i data-lucide="shield-check"></i>PARTNER OPPORTUNITY</span>
+          <h2>Protect what moves your business.</h2>
+          <p>If your business uses cars, delivery vehicles, service vehicles or a fleet, request information about mobility and fleet solutions through Zep Swipe.</p>
+          <div class="vehicle-paths">
+            <button class="btn primary" onclick="startCartrack('business')"><i data-lucide="truck"></i>I Run a Business / Fleet</button>
+            <button class="btn" onclick="startCartrack('vehicle')"><i data-lucide="car"></i>I Have a Vehicle</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section approval-grid">
+      <div class="approval-card pending">
+        <div class="approval-icon"><i data-lucide="clock-3"></i></div>
+        <div><strong id="statPending">0</strong><span>Pending approval</span></div>
+      </div>
+      <div class="approval-card approved">
+        <div class="approval-icon"><i data-lucide="badge-check"></i></div>
+        <div><strong id="statActive">0</strong><span>Live deals</span></div>
+      </div>
+      <div class="approval-card rejected">
+        <div class="approval-icon"><i data-lucide="circle-x"></i></div>
+        <div><strong id="statRejected">0</strong><span>Needs attention</span></div>
+      </div>
+      <div class="approval-card">
+        <div class="approval-icon"><i data-lucide="image"></i></div>
+        <div><strong id="statImages">0</strong><span>Deals with images</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Your active deals</h2>
+          <p>Manage the offers your business is currently promoting.</p>
+        </div>
+        <button class="btn small" onclick="openDealModal()"><i data-lucide="plus"></i>New Deal</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Deal</th><th>Status</th><th>Created</th><th>Action</th></tr></thead>
+          <tbody id="dealsTable">
+            <tr><td colspan="4" class="empty">Loading deals…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-item" onclick="location.href='marketplace.html'"><i data-lucide="store"></i><span>Marketplace</span></button>
+    <button class="nav-item" onclick="openDealModal()"><i data-lucide="plus-circle"></i><span>Post</span></button>
+    <button class="nav-item active" onclick="location.href='business-deals.html'"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></button>
+    <button class="nav-item" onclick="location.href='mobility.html'"><i data-lucide="car-front"></i><span>Mobility</span></button>
+    <button class="nav-item" onclick="openAccount()"><i data-lucide="user-round"></i><span>Account</span></button>
+  </nav>
+</div>
+
+
+<!-- NOTIFICATIONS MODAL -->
+<div class="notification-overlay" id="notificationModal" aria-hidden="true">
+  <div class="notification-sheet" role="dialog" aria-modal="true" aria-labelledby="notificationTitle">
+    <div class="notification-header">
+      <div>
+        <div class="notification-kicker"><span class="live-dot"></span>ZEP SWIPE</div>
+        <h3 id="notificationTitle">Notifications</h3>
+        <p id="notificationSubtitle">Stay on top of your business activity.</p>
+      </div>
+      <button class="notification-close" onclick="closeNotifications()" aria-label="Close notifications">×</button>
+    </div>
+
+    <div class="notification-toolbar">
+      <div class="notification-tabs">
+        <button class="notification-tab active" id="allNotificationsTab" onclick="setNotificationFilter('all')">All</button>
+        <button class="notification-tab" id="unreadNotificationsTab" onclick="setNotificationFilter('unread')">Unread <span id="unreadTabCount">0</span></button>
+      </div>
+      <button class="mark-all-btn" onclick="markAllNotificationsRead()">Mark all read</button>
+    </div>
+
+    <div class="notification-list" id="notificationList">
+      <div class="notification-loading">
+        <span class="notification-spinner"></span>
+        Loading notifications…
       </div>
     </div>
-  </div>
-  <button class="icon" id="refresh" aria-label="Refresh" title="Refresh"><i data-lucide="refresh-cw" width="18"></i></button>
-  <button class="icon" id="logout" aria-label="Log out" title="Log out"><i data-lucide="log-out" width="18"></i></button>
-</div>
-</header>
 
-<main class="wrap">
-<section class="hero"><span class="pill"><i data-lucide="sparkles" width="12"></i> WELCOME TO ZEP SWIPE</span><h1 id="heroTitle">Welcome, <span id="welcomeName">Business</span>.</h1><p id="heroCopy">Your next customer is already looking for what you offer. Publish your first student deal, get discovered on Zep Swipe, and turn local student attention into real visits, claims and sales.</p><button class="primary" onclick="goCreate()"><i data-lucide="plus" width="16"></i> Create Your First Deal</button></section>
-
-<section class="card" style="margin-bottom:16px;padding:12px 15px;border-color:#2f3d1b;background:linear-gradient(90deg,#121a08,#111315)">
-  <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-    <div style="display:flex;gap:9px;align-items:center">
-      <span style="width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 10px var(--a);display:inline-block"></span>
-      <strong style="font-size:11px">BUSINESS COMMAND CENTER</strong>
-      <span class="muted" style="font-size:10px">Live dashboard • offers • growth</span>
+    <div class="notification-footer">
+      <span><span class="live-dot"></span>Live business updates</span>
+      <button onclick="closeNotifications()">Done</button>
     </div>
-    <span id="lastUpdated" class="muted" style="font-size:9px">Ready</span>
   </div>
-</section>
-
-<section class="grid stats">
-<div class="card"><div class="num" id="active">0</div><small>Active deals</small></div>
-<div class="card"><div class="num" id="total">0</div><small>Total deals</small></div>
-<div class="card"><div class="num" id="mari">0</div><small>MARI balance</small></div>
-<div class="card"><div class="num" id="redeemed">0</div><small>Redemptions</small></div>
-</section>
-
-<section class="grid layout"><div>
-<section class="card" id="create">
-<div class="head"><h2>Create a student deal</h2><span class="pill">FREE LISTING</span></div>
-<label>DEAL IMAGE</label><div class="file"><input id="dealImage" type="file" accept="image/jpeg,image/png,image/webp"></div>
-<div class="preview" id="dealPreview"><img id="dealPreviewImg" alt="Deal preview"></div>
-<label>DEAL TITLE</label><input id="title" maxlength="120" placeholder="e.g. 20% Off Student Haircut">
-<div class="row"><div><label>CATEGORY</label><select id="category"><option>Food & Drinks</option><option>Beauty & Wellness</option><option>Retail</option><option>Education</option><option>Entertainment</option><option>Services</option><option>Travel</option><option>Other</option></select></div><div><label>DISCOUNT %</label><input id="discount" type="number" min="0" max="100" placeholder="20"></div></div>
-<label>DESCRIPTION</label><textarea id="description" maxlength="500" placeholder="Tell students why they should claim this deal."></textarea>
-<div class="row"><div><label>COUPON QUANTITY</label><input id="quantity" type="number" min="0" value="100"></div><div><label>EXPIRY DATE</label><input id="expiry" type="date"></div></div>
-<div class="preview" style="display:block"><div style="padding:12px"><small>MARKETPLACE PREVIEW</small><h3 id="ptitle">Your deal title</h3><p id="pdesc" class="muted">Your description will appear here.</p><div class="tags"><span class="tag live" id="pdiscount">0% OFF</span><span class="tag" id="pcategory">Food & Drinks</span></div></div></div>
-<div class="actions"><button class="secondary" id="clear">Clear</button><button class="primary" id="publish"><i data-lucide="rocket" width="15"></i> Publish Deal</button></div><div class="status" id="dealStatus"></div>
-</section>
-
-<section class="card"><div class="head"><h2>My deals</h2><button class="secondary" id="reload">Refresh</button></div><div class="deals" id="list"><div class="empty">Loading your deals…</div></div></section>
 </div>
 
-<div>
-<section class="card" id="profileSection"><div class="head"><h2>Business profile</h2><button class="secondary" id="saveProfile">Save</button></div>
-<div class="profile"><div><img class="logo" id="logo" alt="Business logo"><label for="logoFile" style="text-align:center;color:var(--a);cursor:pointer">Upload</label><input id="logoFile" type="file" accept="image/jpeg,image/png,image/webp" style="display:none"></div><div><strong id="displayName">Your Business</strong><p id="email">Loading…</p></div></div>
-<label>BUSINESS NAME</label><input id="businessName" maxlength="120" placeholder="Your business name">
-<label>PHONE / WHATSAPP</label><input id="phone" maxlength="40" placeholder="+27 …">
-<label>ABOUT</label><textarea id="bio" maxlength="500" placeholder="Short description students should know."></textarea>
-<div class="status" id="profileStatus"></div></section>
+<!-- CREATE DEAL MODAL -->
+<div class="modal-backdrop" id="dealModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Create a Student Deal</h3>
+      <button class="close" onclick="closeDealModal()" aria-label="Close">×</button>
+    </div>
+    <p style="color:#999;font-size:13px;line-height:1.5;margin:8px 0 0">Create an offer for students. New deals go through a quick Zep Swipe review before they appear on the marketplace.</p>
 
-<section class="card"><div class="head"><h2>Quick actions</h2></div><div class="quick">
-<button onclick="goCreate()"><i data-lucide="ticket-percent" width="15"></i>New deal</button>
-<button onclick="document.getElementById('profileSection').scrollIntoView({behavior:'smooth'})"><i data-lucide="store" width="15"></i>Profile</button>
-<button onclick="location.href='marketplace.html'"><i data-lucide="shopping-bag" width="15"></i>Marketplace</button>
-<button onclick="refreshAll()"><i data-lucide="refresh-cw" width="15"></i>Refresh</button>
-</div><p class="muted" style="font-size:10px;line-height:1.5">Logo uses <b>business-logos</b>; deal images use <b>deal-images</b>. Both URLs are saved to Supabase and can be displayed on Marketplace.</p></section>
+    <form id="dealForm" onsubmit="createDeal(event)">
+      <div class="form-grid">
+        <div class="field full">
+          <label>Deal image</label>
+          <div class="upload-box" id="dealImageBox">
+            <input id="dealImage" type="file" accept="image/png,image/jpeg,image/webp">
+            <div class="upload-content">
+              <div class="upload-icon"><i data-lucide="image-plus"></i></div>
+              <strong id="dealImageLabel">Upload a deal image</strong>
+              <span>JPG, PNG or WEBP · recommended 1200 × 900</span>
+            </div>
+            <img id="dealImagePreview" class="deal-image-preview hidden" alt="Deal preview">
+          </div>
+        </div>
+        <div class="field full">
+          <label>Deal title</label>
+          <input id="dealTitle" required placeholder="e.g. 20% Off Student Lunch">
+        </div>
+        <div class="field">
+          <label>Offer</label>
+          <input id="dealOffer" required placeholder="e.g. 20% OFF">
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <select id="dealCategory">
+            <option>Food & Drink</option>
+            <option>Beauty</option>
+            <option>Retail</option>
+            <option>Transport</option>
+            <option>Education</option>
+            <option>Fitness</option>
+            <option>Entertainment</option>
+            <option>Services</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Regular price</label>
+          <input id="dealPrice" type="number" min="0" step="0.01" placeholder="e.g. 100">
+        </div>
+        <div class="field">
+          <label>Student price</label>
+          <input id="dealStudentPrice" type="number" min="0" step="0.01" placeholder="e.g. 80">
+        </div>
+        <div class="field">
+          <label>Valid until</label>
+          <input id="dealExpiry" type="date" required>
+        </div>
+        <div class="field">
+          <label>Redemption limit</label>
+          <input id="dealLimit" type="number" min="1" placeholder="Optional">
+        </div>
+        <div class="field full">
+          <label>Description</label>
+          <textarea id="dealDescription" placeholder="Explain the offer and any redemption conditions."></textarea>
+        </div>
+        <div class="field full">
+          <label>Terms & conditions</label>
+          <textarea id="dealTerms" placeholder="e.g. Valid for students with a valid student ID. One redemption per customer."></textarea>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn" onclick="closeDealModal()">Cancel</button>
+        <button type="submit" class="btn primary" id="publishDealBtn"><i data-lucide="send"></i>Submit for Review</button>
+      </div>
+      <div class="review-note">
+        <i data-lucide="shield-check"></i>
+        <span>New deals are reviewed before going live. Once approved, your deal appears on Zep Swipe.</span>
+      </div>
+    </form>
+  </div>
+</div>
 
-<section class="card"><div class="head"><h2>Growth path</h2><span class="pill">MARI</span></div><div style="font-size:12px;line-height:1.6;color:#c9cdcf">Publish → students discover → claim → verified redemption → grow.</div><div class="bar"><i id="progress"></i></div><div class="status" id="progressText">0 / 50 verified redemptions</div></section>
-</div></section>
-</main>
-
-<nav class="nav"><div class="navin"><button class="active" onclick="scrollTo({top:0,behavior:'smooth'})"><i data-lucide="home" width="17"></i>Home</button><button onclick="goCreate()"><i data-lucide="plus-circle" width="17"></i>Create</button><button onclick="document.querySelector('.deals').scrollIntoView({behavior:'smooth'})"><i data-lucide="ticket-percent" width="17"></i>Deals</button><button onclick="document.getElementById('profileSection').scrollIntoView({behavior:'smooth'})"><i data-lucide="user-round" width="17"></i>Profile</button></div></nav>
+<div class="toast" id="toast"></div>
 
 <script>
-const SUPABASE_URL="https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-let user=null,profile=null;
-let notifications=[];
-const NOTIFY_KEY="zep_business_notifications";
-const $=id=>document.getElementById(id);
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-const fileName=s=>s.toLowerCase().replace(/[^a-z0-9._-]+/g,"-");
+/*
+  ZEP SWIPE BUSINESS HUB
+  ---------------------------------------------------------
+  IMPORTANT:
+  1. Replace the anon key below with the same PUBLIC Supabase
+     anon key already used by your working Zep Swipe frontend.
+  2. Never place a Paystack SECRET key in this file.
+  3. Server-side/RLS rules must authorize business deal creation,
+     redemption and payment state changes.
+*/
 
-function msg(id,text,error=false){$(id).textContent=text;$(id).style.color=error?"var(--danger)":"var(--muted)"}
-function goCreate(){$("create").scrollIntoView({behavior:"smooth"});setTimeout(()=>$("title").focus(),350)}
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+let currentUser = null;
+let currentProfile = null;
 
-function addNotification(title, text, icon="bell-ring"){
-  const item={title,text,icon,time:new Date().toISOString()};
-  notifications=[item,...notifications].slice(0,8);
-  try{localStorage.setItem(NOTIFY_KEY,JSON.stringify(notifications));}catch(e){}
+function toast(message){
+  const el = document.getElementById("toast");
+  el.textContent = message;
+  el.classList.add("show");
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>el.classList.remove("show"),2800);
+}
+
+function scrollToId(id){
+  document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function safeRole(profile){
+  const role = String(profile?.role || profile?.user_type || profile?.account_type || "").toLowerCase();
+  if(["business","merchant","business_owner"].includes(role)) return "business";
+  if(["provider","student_provider"].includes(role)) return "provider";
+  return "customer";
+}
+
+function redirectDashboard(profile){
+  const role = safeRole(profile);
+  if(role === "provider") location.href = "provider.html";
+  else if(role === "business") location.href = "business-deals.html";
+  else location.href = "customer.html";
+}
+
+async function getSession(){
+  try{
+    const {data:{session}} = await db.auth.getSession();
+    currentUser = session?.user || null;
+
+    if(!currentUser){
+      // Business dashboard is protected. Visitors are sent through auth.
+      location.href = "auth.html?redirect=business-deals.html";
+      return false;
+    }
+
+    const {data,error} = await db
+      .from("profiles")
+      .select("*")
+      .eq("id",currentUser.id)
+      .maybeSingle();
+
+    if(error) console.warn("Profile load:",error.message);
+    currentProfile = data || {id:currentUser.id,role:"business"};
+
+    // If this page is reached by a logged-in non-business account,
+    // send the user to the appropriate dashboard.
+    if(safeRole(currentProfile) !== "business"){
+      redirectDashboard(currentProfile);
+      return false;
+    }
+
+    return true;
+  }catch(err){
+    console.error(err);
+    location.href = "auth.html?redirect=business-deals.html";
+    return false;
+  }
+}
+
+function openAccount(){
+  if(currentUser) redirectDashboard(currentProfile);
+  else location.href = "auth.html?redirect=business-deals.html";
+}
+
+let notificationItems = [];
+let notificationFilter = "all";
+
+const notificationMeta = {
+  deal_submitted: {icon:"send", title:"Deal submitted"},
+  deal_approved: {icon:"badge-check", title:"Deal approved"},
+  deal_rejected: {icon:"circle-x", title:"Deal needs attention"},
+  deal_redeemed: {icon:"ticket-check", title:"Deal redeemed"},
+  new_lead: {icon:"user-plus", title:"New customer opportunity"},
+  mobility_lead: {icon:"car-front", title:"New mobility enquiry"},
+  payment: {icon:"credit-card", title:"Payment update"},
+  default: {icon:"bell", title:"Zep Swipe update"}
+};
+
+function openNotifications(){
+  if(!currentUser){
+    location.href = "auth.html?redirect=business-deals.html";
+    return;
+  }
+  const modal=document.getElementById("notificationModal");
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+  loadNotifications();
+}
+
+function closeNotifications(){
+  const modal=document.getElementById("notificationModal");
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+}
+
+function setNotificationFilter(filter){
+  notificationFilter=filter;
+  document.getElementById("allNotificationsTab")?.classList.toggle("active",filter==="all");
+  document.getElementById("unreadNotificationsTab")?.classList.toggle("active",filter==="unread");
   renderNotifications();
 }
+
+function relativeNotificationTime(value){
+  if(!value) return "";
+  const date=new Date(value);
+  const seconds=Math.max(0,Math.floor((Date.now()-date.getTime())/1000));
+  if(seconds<60) return "Just now";
+  const minutes=Math.floor(seconds/60);
+  if(minutes<60) return `${minutes}m ago`;
+  const hours=Math.floor(minutes/60);
+  if(hours<24) return `${hours}h ago`;
+  const days=Math.floor(hours/24);
+  if(days<7) return `${days}d ago`;
+  return date.toLocaleDateString();
+}
+
+function notificationIcon(type){
+  return notificationMeta[String(type||"default").toLowerCase()]?.icon || "bell";
+}
+
+function notificationTitle(item){
+  const meta=notificationMeta[String(item.type||"default").toLowerCase()];
+  return item.title || meta?.title || "Zep Swipe update";
+}
+
 function renderNotifications(){
-  const list=$("notifyList"), dot=$("notifyDot"), count=$("notifyCount");
-  if(!notifications.length){
-    list.innerHTML='<div class="notify-empty">No new updates yet.</div>';
-    dot.style.display="none"; count.textContent="LIVE"; return;
+  const list=document.getElementById("notificationList");
+  if(!list) return;
+
+  const unread=notificationItems.filter(n=>!n.read_at);
+  document.getElementById("unreadTabCount").textContent=unread.length;
+  const count=document.getElementById("notificationCount");
+  if(unread.length){
+    count.textContent=unread.length>99?"99+":String(unread.length);
+    count.classList.remove("hidden");
+  }else{
+    count.classList.add("hidden");
   }
-  dot.style.display="block";
-  count.textContent=notifications.length+" NEW";
-  list.innerHTML=notifications.map(n=>`<div class="notify-item"><div class="ni"><i data-lucide="${esc(n.icon||"bell")} " width="15"></i></div><div><b>${esc(n.title)}</b><p>${esc(n.text)}</p></div></div>`).join("");
+
+  const visible=notificationFilter==="unread" ? unread : notificationItems;
+
+  if(!visible.length){
+    list.innerHTML=`
+      <div class="notification-empty">
+        <div class="empty-icon"><i data-lucide="${notificationFilter==="unread"?"check-check":"bell-off"}"></i></div>
+        <strong>${notificationFilter==="unread"?"You're all caught up":"No notifications yet"}</strong>
+        <span>${notificationFilter==="unread"?"There are no unread business updates right now.":"When something important happens on Zep Swipe, you'll see it here."}</span>
+      </div>`;
+    lucide.createIcons();
+    return;
+  }
+
+  list.innerHTML=visible.map(n=>{
+    const unreadClass=n.read_at ? "" : "unread";
+    const dot=n.read_at ? "" : `<span class="notification-unread-dot"></span>`;
+    return `
+      <article class="notification-item ${unreadClass}" onclick="handleNotificationClick('${encodeURIComponent(n.id)}')">
+        <div class="notification-icon"><i data-lucide="${notificationIcon(n.type)}"></i></div>
+        <div class="notification-body">
+          <div class="notification-title-row">
+            <span class="notification-title">${escapeHtml(notificationTitle(n))}</span>
+            <span class="notification-time">${escapeHtml(relativeNotificationTime(n.created_at))}</span>
+          </div>
+          <div class="notification-message">${escapeHtml(n.message || "")}</div>
+        </div>
+        ${dot}
+      </article>`;
+  }).join("");
+
   lucide.createIcons();
 }
-function loadLocalNotifications(){
-  try{notifications=JSON.parse(localStorage.getItem(NOTIFY_KEY)||"[]")||[];}catch(e){notifications=[];}
-  renderNotifications();
-}
-function toggleNotifications(){
-  $("notifyPanel").classList.toggle("open");
-  if($("notifyPanel").classList.contains("open")){
-    $("notifyDot").style.display="none";
+
+async function loadNotifications(){
+  const list=document.getElementById("notificationList");
+  if(!list || !currentUser) return;
+
+  list.innerHTML=`<div class="notification-loading"><span class="notification-spinner"></span>Loading notifications…</div>`;
+
+  try{
+    const {data,error}=await db
+      .from("notifications")
+      .select("id,user_id,type,title,message,data,read_at,created_at")
+      .eq("user_id",currentUser.id)
+      .order("created_at",{ascending:false})
+      .limit(50);
+
+    if(error) throw error;
+    notificationItems=data || [];
+    renderNotifications();
+  }catch(err){
+    console.warn("Notifications unavailable:",err);
+    notificationItems=[];
+    list.innerHTML=`
+      <div class="notification-empty">
+        <div class="empty-icon"><i data-lucide="bell-off"></i></div>
+        <strong>Notifications aren't connected yet</strong>
+        <span>The dashboard is ready for the notifications table. Once Supabase notifications are enabled, this panel will show real business updates.</span>
+      </div>`;
+    document.getElementById("notificationCount")?.classList.add("hidden");
+    lucide.createIcons();
   }
 }
-document.addEventListener("click",e=>{
-  const wrap=document.querySelector(".notify-wrap");
-  if(wrap && !wrap.contains(e.target)) $("notifyPanel").classList.remove("open");
+
+async function markNotificationRead(id){
+  const item=notificationItems.find(n=>String(n.id)===String(id));
+  if(!item || item.read_at || !currentUser) return;
+
+  const {error}=await db
+    .from("notifications")
+    .update({read_at:new Date().toISOString()})
+    .eq("id",id)
+    .eq("user_id",currentUser.id);
+
+  if(!error){
+    item.read_at=new Date().toISOString();
+    renderNotifications();
+  }
+}
+
+async function markAllNotificationsRead(){
+  if(!currentUser) return;
+  const unread=notificationItems.filter(n=>!n.read_at);
+  if(!unread.length) return;
+
+  const {error}=await db
+    .from("notifications")
+    .update({read_at:new Date().toISOString()})
+    .eq("user_id",currentUser.id)
+    .is("read_at",null);
+
+  if(error){
+    toast("Could not mark notifications as read.");
+    return;
+  }
+
+  const now=new Date().toISOString();
+  notificationItems.forEach(n=>{if(!n.read_at)n.read_at=now});
+  renderNotifications();
+}
+
+async function handleNotificationClick(encodedId){
+  const id=decodeURIComponent(encodedId);
+  const item=notificationItems.find(n=>String(n.id)===String(id));
+  await markNotificationRead(id);
+
+  const data=item?.data || {};
+  const dealId=data.deal_id || data.dealId;
+  const url=data.url || data.link;
+
+  if(url){
+    closeNotifications();
+    location.href=url;
+    return;
+  }
+
+  if(dealId){
+    closeNotifications();
+    location.href="deal.html?id="+encodeURIComponent(dealId);
+    return;
+  }
+
+  // Keep the user in the dashboard when there is no destination.
+}
+
+async function logout(){
+  if(!currentUser){
+    location.href = "auth.html";
+    return;
+  }
+
+  try{
+    const {error} = await db.auth.signOut();
+    if(error) throw error;
+    currentUser = null;
+    currentProfile = null;
+    location.replace("auth.html");
+  }catch(err){
+    console.error("Logout failed:", err);
+    toast("Could not log out. Please try again.");
+  }
+}
+
+function openDealModal(){
+  if(!currentUser){
+    location.href = "auth.html?redirect=business-deals.html%3Faction%3Dcreate-deal";
+    return;
+  }
+  document.getElementById("dealModal").classList.add("show");
+}
+function closeDealModal(){
+  document.getElementById("dealModal").classList.remove("show");
+}
+
+async function createDeal(e){
+  e.preventDefault();
+  if(!currentUser){
+    location.href="auth.html?redirect=business-deals.html";
+    return;
+  }
+
+  const btn = document.getElementById("publishDealBtn");
+  const file = document.getElementById("dealImage").files[0];
+
+  if(file){
+    const allowed=["image/jpeg","image/png","image/webp"];
+    if(!allowed.includes(file.type)){
+      toast("Please upload a JPG, PNG or WEBP image.");
+      return;
+    }
+    if(file.size > 5 * 1024 * 1024){
+      toast("Deal image must be 5MB or smaller.");
+      return;
+    }
+  }
+
+  btn.disabled=true;
+  btn.textContent="Submitting…";
+
+  let imageUrl = null;
+
+  try{
+    /* Upload only if a deal image was selected.
+       This uses the existing Supabase Storage pattern.
+       The bucket must be named: deal-images */
+    if(file){
+      const ext = file.name.split(".").pop().toLowerCase();
+      const path = `${currentUser.id}/${crypto.randomUUID()}.${ext}`;
+
+      const {error:uploadError} = await db.storage
+        .from("deal-images")
+        .upload(path,file,{upsert:false,contentType:file.type});
+
+      if(uploadError) throw new Error("Image upload failed: " + uploadError.message);
+
+      const {data:urlData} = db.storage.from("deal-images").getPublicUrl(path);
+      imageUrl = urlData?.publicUrl || null;
+    }
+
+    const payload = {
+      business_id: currentUser.id,
+      title: document.getElementById("dealTitle").value.trim(),
+      offer: document.getElementById("dealOffer").value.trim(),
+      category: document.getElementById("dealCategory").value,
+      description: document.getElementById("dealDescription").value.trim(),
+      expires_at: document.getElementById("dealExpiry").value,
+      redemption_limit: Number(document.getElementById("dealLimit").value) || null,
+
+      /* Businesses submit deals for review.
+         Admin approval should change this to active. */
+      status: "pending"
+    };
+
+    /* Only add optional columns when an image/price was supplied.
+       If your live deals table does not yet have these columns,
+       the core deal still follows the existing schema contract. */
+    if(imageUrl) payload.image_url = imageUrl;
+    const price = Number(document.getElementById("dealPrice").value);
+    const studentPrice = Number(document.getElementById("dealStudentPrice").value);
+    if(Number.isFinite(price) && price >= 0 && document.getElementById("dealPrice").value !== "") payload.price = price;
+    if(Number.isFinite(studentPrice) && studentPrice >= 0 && document.getElementById("dealStudentPrice").value !== "") payload.student_price = studentPrice;
+
+    const terms = document.getElementById("dealTerms").value.trim();
+    if(terms) payload.terms = terms;
+
+    const {error} = await db.from("deals").insert(payload);
+    if(error) throw error;
+
+    toast("Deal submitted for review. We will notify you when it is approved.");
+    document.getElementById("dealForm").reset();
+    document.getElementById("dealImagePreview").classList.add("hidden");
+    document.getElementById("dealImageLabel").textContent="Upload a deal image";
+    closeDealModal();
+    await loadBusinessData();
+  }catch(err){
+    console.error("Create deal:",err);
+    toast(err?.message || "Could not submit the deal. Check your business permissions.");
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<i data-lucide="send"></i>Submit for Review';
+    lucide.createIcons();
+  }
+}
+
+async function loadBusinessData(){
+  if(!currentUser) return;
+  const syncText=document.getElementById("syncText");
+  if(syncText) syncText.textContent="SYNCING…";
+
+  const tbody = document.getElementById("dealsTable");
+  const activity = document.getElementById("activityList");
+  tbody.innerHTML='<tr><td colspan="4" class="empty">Loading deals…</td></tr>';
+  activity.innerHTML='<div class="empty">Loading your business activity…</div>';
+
+  try{
+    const {data:deals,error} = await db
+      .from("deals")
+      .select("*")
+      .eq("business_id",currentUser.id)
+      .order("created_at",{ascending:false})
+      .limit(20);
+
+    if(error) throw error;
+
+    if(!deals?.length){
+      tbody.innerHTML='<tr><td colspan="4" class="empty">No deals yet. Create your first student deal.</td></tr>';
+      activity.innerHTML='<div class="empty">No recent deal activity yet.</div>';
+    }else{
+      tbody.innerHTML=deals.map(d=>{
+        const title = escapeHtml(d.title || d.name || "Untitled deal");
+        const rawStatus = String(d.status || "active").toLowerCase();
+        const status = escapeHtml(rawStatus);
+        const statusClass = rawStatus==="pending" ? "status-pending" : rawStatus==="active" || rawStatus==="approved" ? "status-active" : rawStatus==="rejected" ? "status-rejected" : rawStatus==="expired" ? "status-expired" : "";
+        const created = d.created_at ? new Date(d.created_at).toLocaleDateString() : "—";
+        return `<tr>
+          <td><div style="display:flex;align-items:center;gap:9px"><span style="width:32px;height:32px;border-radius:9px;overflow:hidden;background:#191919;display:grid;place-items:center;color:var(--green)">${d.image_url ? `<img src="${escapeHtml(d.image_url)}" alt="" style="width:100%;height:100%;object-fit:cover">` : '<i data-lucide="tag" style="width:15px"></i>'}</span><strong>${title}</strong></div></td>
+          <td><span class="pill ${statusClass}">${status}</span></td>
+          <td>${created}</td>
+          <td><button class="btn small" onclick="viewDeal('${encodeURIComponent(d.id)}')">View</button></td>
+        </tr>`;
+      }).join("");
+
+      activity.innerHTML=deals.slice(0,5).map(d=>{
+        const title=escapeHtml(d.title || d.name || "Student deal");
+        const status=escapeHtml(d.status || "active");
+        return `<div class="lead-row">
+          <div class="lead-left"><span class="lead-dot"></span>
+            <div><div class="lead-name">${title}</div><div class="lead-meta">Deal status: ${status}</div></div>
+          </div>
+          <span class="pill">Deal</span>
+        </div>`;
+      }).join("");
+    }
+
+    // These counters deliberately stay conservative unless the live
+    // schema exposes the relevant fields/tables.
+    document.getElementById("statViews").textContent =
+      formatNumber(deals?.reduce((n,d)=>n + Number(d.views_count || d.views || 0),0) || 0);
+    document.getElementById("statClaims").textContent =
+      formatNumber(deals?.reduce((n,d)=>n + Number(d.redemptions_count || d.redemptions || d.claims_count || 0),0) || 0);
+
+    const pending=(deals||[]).filter(d=>String(d.status||"").toLowerCase()==="pending").length;
+    const active=(deals||[]).filter(d=>["active","approved"].includes(String(d.status||"").toLowerCase())).length;
+    const rejected=(deals||[]).filter(d=>String(d.status||"").toLowerCase()==="rejected").length;
+    const images=(deals||[]).filter(d=>!!d.image_url).length;
+    document.getElementById("statPending").textContent=formatNumber(pending);
+    document.getElementById("statActive").textContent=formatNumber(active);
+    document.getElementById("statRejected").textContent=formatNumber(rejected);
+    document.getElementById("statImages").textContent=formatNumber(images);
+
+    const businessName=currentProfile?.business_name || currentProfile?.company_name || currentProfile?.full_name || currentProfile?.name || currentUser.email?.split("@")[0] || "Business";
+    const welcome=document.getElementById("welcomeBusiness");
+    const welcomeSub=document.getElementById("welcomeSub");
+    if(welcome) welcome.textContent=`Welcome, ${businessName}.`;
+    if(welcomeSub) welcomeSub.textContent=pending ? `You have ${pending} deal${pending===1?"":"s"} waiting for admin approval.` : "Create your next student deal and grow your Zep Swipe presence.";
+
+    if(syncText) syncText.textContent="LIVE · SYNCED JUST NOW";
+    lucide.createIcons();
+
+    // Lead counts are only populated when the optional tables exist.
+    await loadOptionalLeadStats();
+
+  }catch(err){
+    console.error("Business data:",err);
+    tbody.innerHTML='<tr><td colspan="4" class="empty">Your deals could not be loaded right now.</td></tr>';
+    activity.innerHTML='<div class="empty">Connect the page to your live Supabase schema to show activity.</div>';
+  }
+}
+
+async function loadOptionalLeadStats(){
+  let leads=0,vehicle=0;
+
+  // Optional lead table: failures are ignored so the core dashboard still works.
+  try{
+    const r=await db.from("business_leads").select("id",{count:"exact",head:true}).eq("business_id",currentUser.id);
+    if(!r.error) leads=r.count||0;
+  }catch(_){}
+
+  try{
+    const r=await db.from("cartrack_leads").select("id",{count:"exact",head:true}).eq("business_id",currentUser.id);
+    if(!r.error) vehicle=r.count||0;
+  }catch(_){}
+
+  document.getElementById("statLeads").textContent=formatNumber(leads);
+  document.getElementById("statVehicle").textContent=formatNumber(vehicle);
+}
+
+function viewDeal(id){
+  location.href="deal.html?id="+decodeURIComponent(id);
+}
+
+function postOpportunity(){
+  if(!currentUser){
+    location.href="auth.html?redirect=business-deals.html%3Faction%3Dpost-opportunity";
+    return;
+  }
+  // Keep this compatible with an existing opportunity/job page if present.
+  location.href="job.html?action=post";
+}
+
+function startCartrack(type){
+  const target = "mobility.html?type="+encodeURIComponent(type)+"&source=zep-business-dashboard";
+  if(!currentUser){
+    location.href="auth.html?redirect="+encodeURIComponent(target);
+    return;
+  }
+  location.href=target;
+}
+
+function escapeHtml(value){
+  return String(value ?? "").replace(/[&<>"']/g,m=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+}
+function formatNumber(n){return new Intl.NumberFormat().format(Number(n)||0)}
+
+document.getElementById("dealImage")?.addEventListener("change",function(){
+  const file=this.files?.[0];
+  const preview=document.getElementById("dealImagePreview");
+  const label=document.getElementById("dealImageLabel");
+  if(!file){
+    preview?.classList.add("hidden");
+    if(label) label.textContent="Upload a deal image";
+    return;
+  }
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
+    this.value="";
+    toast("Please upload a JPG, PNG or WEBP image.");
+    return;
+  }
+  if(file.size>5*1024*1024){
+    this.value="";
+    toast("Deal image must be 5MB or smaller.");
+    return;
+  }
+  const reader=new FileReader();
+  reader.onload=()=>{preview.src=reader.result;preview.classList.remove("hidden");};
+  reader.readAsDataURL(file);
+  if(label) label.textContent=file.name;
 });
 
-async function init(){
- const {data:{session}}=await db.auth.getSession();
- if(!session){location.href="auth.html";return}
- user=session.user;$("email").textContent=user.email||"";$("welcomeName").textContent=(user.user_metadata?.full_name||user.email?.split("@")[0]||"Business").split(" ")[0];
- loadLocalNotifications();await loadProfile();await refreshAll();$("lastUpdated").textContent="Updated "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});lucide.createIcons();addNotification("Dashboard ready","Your business command center is synced with your account.","layout-dashboard")
+async function initRealtime(){
+  try{
+    db.channel("business-dashboard-live")
+      .on("postgres_changes",{event:"*",schema:"public",table:"deals"},payload=>{
+        if(payload?.new?.business_id===currentUser?.id || payload?.old?.business_id===currentUser?.id){
+          loadBusinessData();
+        }
+      })
+      .on("postgres_changes",{event:"INSERT",schema:"public",table:"notifications",filter:`user_id=eq.${currentUser?.id}`},payload=>{
+        if(payload?.new){
+          notificationItems=[payload.new,...notificationItems].slice(0,50);
+          renderNotifications();
+          if(document.getElementById("notificationModal")?.classList.contains("show")){
+            toast("New Zep Swipe notification");
+          }
+        }
+      })
+      .subscribe();
+  }catch(err){console.warn("Realtime unavailable",err)}
 }
-async function loadProfile(){
- const {data,error}=await db.from("profiles").select("id,email,role,full_name,phone,avatar_url,bio").eq("id",user.id).maybeSingle();
- if(error){msg("profileStatus","Could not load profile: "+error.message,true);return}
- profile=data||{};$("businessName").value=data?.full_name||"";$("phone").value=data?.phone||"";$("bio").value=data?.bio||"";$("displayName").textContent=data?.full_name||"Your Business";$("welcomeName").textContent=(data?.full_name||"Business").split(" ")[0];
- $("logo").src=data?.avatar_url||"https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png";$("welcomeName").textContent=(data?.full_name||"Business").split(" ")[0];
-}
-async function saveBusinessProfile(){
- msg("profileStatus","Saving…");let avatar=profile?.avatar_url||null;let f=$("logoFile").files[0];
- if(f){if(f.size>3*1024*1024){msg("profileStatus","Logo must be 3MB or smaller.",true);return}
-  let path=user.id+"/"+Date.now()+"-"+fileName(f.name),up=await db.storage.from("business-logos").upload(path,f,{upsert:true,contentType:f.type});
-  if(up.error){msg("profileStatus","Logo upload failed: "+up.error.message,true);return}
-  avatar=db.storage.from("business-logos").getPublicUrl(path).data.publicUrl
- }
- let payload={id:user.id,email:user.email,role:"business",full_name:$("businessName").value.trim(),phone:$("phone").value.trim(),bio:$("bio").value.trim(),avatar_url:avatar};
- let {error}=await db.from("profiles").upsert(payload,{onConflict:"id"});
- if(error){msg("profileStatus","Could not save profile: "+error.message,true);return}
- profile={...profile,...payload};$("displayName").textContent=payload.full_name||"Your Business";$("welcomeName").textContent=(payload.full_name||"Business").split(" ")[0];if(avatar)$("logo").src=avatar;$("logoFile").value="";msg("profileStatus","Profile saved.");addNotification("Profile updated","Your business profile was saved successfully.","user-round"); 
-}
-async function publishDeal(){
- let title=$("title").value.trim(),description=$("description").value.trim(),discount=Number($("discount").value||0),quantity=Number($("quantity").value||0),expiry=$("expiry").value||null,file=$("dealImage").files[0];
- if(!title){msg("dealStatus","Deal title is required.",true);return}if(discount<0||discount>100){msg("dealStatus","Discount must be 0–100.",true);return}
- msg("dealStatus","Publishing…");$("publish").disabled=true;
- try{
-  let image=null;if(file){if(file.size>5*1024*1024)throw Error("Deal image must be 5MB or smaller.");let path=user.id+"/"+Date.now()+"-"+fileName(file.name),up=await db.storage.from("deal-images").upload(path,file,{upsert:true,contentType:file.type});if(up.error)throw up.error;image=db.storage.from("deal-images").getPublicUrl(path).data.publicUrl}
-  let {error}=await db.from("deals").insert({business_id:user.id,title,category:$("category").value,description:description||null,discount,coupon_quantity:Math.floor(quantity),coupons_claimed:0,image_url:image,status:"active",expires_at:expiry?new Date(expiry+"T23:59:59").toISOString():null});
-  if(error)throw error;clearForm();msg("dealStatus","Deal published successfully.");addNotification("Deal published","Your student offer is now listed as active.","rocket");await loadDeals()
- }catch(e){msg("dealStatus","Could not publish deal: "+(e.message||e),true)}finally{$("publish").disabled=false}
-}
-async function loadDeals(){
- let {data,error}=await db.from("deals").select("id,title,category,description,discount,coupon_quantity,coupons_claimed,image_url,status,expires_at,created_at").eq("business_id",user.id).order("created_at",{ascending:false});
- if(error){$("list").innerHTML='<div class="empty">'+esc(error.message)+'</div>';return}
- let a=(data||[]).filter(d=>d.status==="active"&&(!d.expires_at||new Date(d.expires_at)>new Date()));$("active").textContent=a.length;$("total").textContent=(data||[]).length;
- $("list").innerHTML=(data||[]).map(d=>{let live=d.status==="active"&&(!d.expires_at||new Date(d.expires_at)>new Date()),left=d.coupon_quantity?Math.max(0,d.coupon_quantity-(d.coupons_claimed||0)):"∞";return '<article class="deal"><img src="'+esc(d.image_url||"https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=500&q=80")+'"><div><span class="tag '+(live?"live":"")+'">'+(live?"LIVE":esc(d.status))+'</span><h3>'+esc(d.title)+'</h3><p>'+esc(d.description||"No description")+'</p><div class="tags"><span class="tag">'+esc(d.category)+'</span><span class="tag">'+Number(d.discount||0)+'% OFF</span><span class="tag">'+left+' left</span></div><div class="tags">'+(d.expires_at?'<span class="tag">Ends '+new Date(d.expires_at).toLocaleDateString()+'</span>':"")+' <button class="secondary" style="padding:5px 8px;font-size:9px" onclick="deleteDeal(''+d.id+'')">Delete</button></div></div></article>'}).join("")||'<div class="empty">No deals yet.<br>Create your first student offer.</div>';
-}
-async function deleteDeal(id){if(!confirm("Delete this deal?"))return;let {error}=await db.from("deals").delete().eq("id",id).eq("business_id",user.id);if(error){alert(error.message);return}await loadDeals()}
-async function loadWallet(){let {data}=await db.from("mari_wallets").select("balance").eq("user_id",user.id).maybeSingle();$("mari").textContent=Number(data?.balance||0).toLocaleString()}
-async function loadRedemptions(){let {data:ds}=await db.from("deals").select("id").eq("business_id",user.id);let ids=(ds||[]).map(x=>x.id);if(!ids.length){$("redeemed").textContent="0";$("progressText").textContent="0 / 50 verified redemptions";$("progress").style.width="0%";return}let {data}=await db.from("coupon_redemptions").select("id,status").in("deal_id",ids);let n=(data||[]).filter(x=>x.status==="redeemed").length;$("redeemed").textContent=n;$("progressText").textContent=n+" / 50 verified redemptions";$("progress").style.width=Math.min(100,n*2)+"%"}
-async function refreshAll(){await loadDeals();await loadWallet();await loadRedemptions();$("lastUpdated").textContent="Updated "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});}
-function clearForm(){$("title").value="";$("description").value="";$("discount").value="";$("quantity").value="100";$("expiry").value="";$("dealImage").value="";$("dealPreview").style.display="none"}
-$("saveProfile").onclick=saveBusinessProfile;
-$("publish").onclick=publishDeal;
-$("reload").onclick=loadDeals;
-$("refresh").onclick=async()=>{await refreshAll();addNotification("Dashboard refreshed","Your latest deals, wallet and redemption data were refreshed.","refresh-cw");};
-$("clear").onclick=clearForm;
-$("notifications").onclick=toggleNotifications;
-$("logout").onclick=async()=>{ $("logout").disabled=true; $("logout").style.opacity=".6"; try{await db.auth.signOut();}finally{location.href="index.html";} };
-$("dealImage").onchange=e=>{let f=e.target.files[0];if(f){$("dealPreviewImg").src=URL.createObjectURL(f);$("dealPreview").style.display="block"}};
-$("logoFile").onchange=e=>{let f=e.target.files[0];if(f)$("logo").src=URL.createObjectURL(f)};
-["title","description","discount","category"].forEach(id=>$(id).addEventListener("input",()=>{$("ptitle").textContent=$("title").value||"Your deal title";$("pdesc").textContent=$("description").value||"Your description will appear here.";$("pdiscount").textContent=(Number($("discount").value||0))+"% OFF";$("pcategory").textContent=$("category").value}));
-init();
+
+document.getElementById("notificationModal")?.addEventListener("click",function(e){
+  if(e.target===this) closeNotifications();
+});
+
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape") closeNotifications();
+});
+
+document.addEventListener("DOMContentLoaded",async()=>{
+  lucide.createIcons();
+  const ok=await getSession();
+  if(!ok) return;
+
+  document.getElementById("dealExpiry").min=new Date().toISOString().slice(0,10);
+  await loadBusinessData();
+  await initRealtime();
+  lucide.createIcons();
+});
 </script>
-</body></html>
+</body>
+</html>
