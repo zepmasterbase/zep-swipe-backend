@@ -1,1200 +1,180 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<meta name="theme-color" content="#070707">
-<meta name="description" content="Zep Swipe — a neon, mobile-first student marketplace for services, deals, jobs and earning opportunities.">
-<title>Zep Swipe | Marketplace</title>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="theme-color" content="#05070b"><meta name="description" content="Zep Swipe Marketplace — discover student services, deals, jobs and opportunities."><title>Marketplace • Zep Swipe</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://unpkg.com/lucide@latest"></script><style>
+:root{--bg:#05070b;--panel:#0b1018;--line:#ffffff1f;--muted:#8d98aa;--text:#f7f9fb;--green:#b8ff2c;--blue:#31a8ff;--purple:#b56cff;--pink:#ff67c8;--gold:#ffc52f;--cyan:#31e7ff}*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,sans-serif;overflow-x:hidden}button,input,select{font:inherit}button{cursor:pointer}body{min-height:100vh}.page{min-height:100vh;background:radial-gradient(circle at 85% 5%,#31a8ff1a,transparent 28%),radial-gradient(circle at 15% 35%,#b56cff14,transparent 28%),linear-gradient(#05070b,#070b12)}.container{width:min(1180px,100%);margin:auto;padding:20px 18px 120px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 22px}.profile{display:flex;align-items:center;gap:12px;min-width:0}.auth-only{display:none}.auth-only.visible{display:flex}.avatar{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid #ffffff33;background:#17212c}.greeting h1{font-size:21px;line-height:1.1;margin:0 0 6px;font-weight:800;letter-spacing:-.6px}.greeting p{font-size:12px;color:var(--muted);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.header-actions{display:flex;gap:9px}.icon-btn,.zmark{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:#0c111acc;color:#fff;display:grid;place-items:center;position:relative}.zmark{background:conic-gradient(from 210deg,#0b1018,#b8ff2c,#1fe9ff,#0b1018);border:0}.zmark span{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#071018;font-weight:900;color:var(--green)}.notif-dot{position:absolute;right:7px;top:6px;width:9px;height:9px;border-radius:50%;background:#ff2f59;border:2px solid #0b1018}.search{height:58px;border:1px solid #ffffff40;border-radius:30px;background:#080c12cc;display:flex;align-items:center;gap:12px;padding:0 17px}.search input{border:0;outline:0;background:transparent;color:#fff;flex:1;min-width:0;font-size:14px}.search input::placeholder{color:#8791a4}.search-filter{border:0;background:none;color:#fff;width:38px;height:38px;border-radius:50%}.section{margin-top:27px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.section-head h2{font-size:18px;margin:0;font-weight:800;letter-spacing:-.4px}.section-head button{border:0;background:none;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px}.category-scroller{display:flex;gap:12px;overflow-x:auto;padding:2px 1px 10px;scrollbar-width:none}.category-scroller::-webkit-scrollbar{display:none}.cat{min-width:91px;height:112px;border-radius:48px;border:1px solid #ffffff38;background:linear-gradient(#141b26bf,#090d13e8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;position:relative;flex:none}.cat:after{content:"";position:absolute;left:13px;right:13px;bottom:9px;height:2px;border-radius:5px;background:var(--cat);opacity:.75}.cat svg{width:25px;height:25px;color:var(--cat)}.cat span{text-align:center;font-size:11px;font-weight:700;line-height:1.15}.cat.active{border-color:var(--cat);box-shadow:0 0 22px color-mix(in srgb,var(--cat) 28%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--cat) 12%,#101722),#071019)}.cat[data-color=blue]{--cat:#36a9ff}.cat[data-color=green]{--cat:#3cff9c}.cat[data-color=purple]{--cat:#bd6cff}.cat[data-color=gold]{--cat:#ffc62e}.cat[data-color=pink]{--cat:#ff67c8}.cat[data-color=white]{--cat:#dce7f7}.featured-card{min-height:315px;border:1px solid #b8ff2c66;border-radius:24px;overflow:hidden;position:relative;background:#0a1118;box-shadow:0 15px 50px #00000059}.featured-card:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#03070afa 0%,#03070ad6 38%,#03070a2e 100%),url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=85') center/cover}.featured-card:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 78% 55%,#ffac1e2e,transparent 23%);pointer-events:none}.featured-content{position:relative;padding:23px 20px;max-width:62%;z-index:1}.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid #b8ff2c8c;background:#0d2e1abd;color:#c7ff69;padding:7px 11px;border-radius:20px;font-size:10px;font-weight:800;margin-bottom:17px}.featured-logo{font-size:25px;font-weight:900;letter-spacing:-1.2px}.featured-logo small{display:block;font-size:10px;letter-spacing:0;color:#b9c2ce;font-weight:600;margin-top:3px}.featured-title{font-size:18px;font-weight:800;margin:18px 0 7px}.featured-copy{font-size:12px;line-height:1.5;color:#c5ced9;margin:0 0 17px}.primary{border:0;background:#f8fafc;color:#0a0d11;border-radius:22px;padding:12px 17px;font-weight:800;font-size:12px;display:inline-flex;align-items:center;gap:9px}.dots{display:flex;justify-content:center;gap:8px;margin:12px 0 0}.dot{width:19px;height:5px;border-radius:9px;background:#29344a}.dot.active{background:#2bf29b}.explore-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.explore-card{min-height:148px;border:1px solid var(--line);border-radius:18px;overflow:hidden;position:relative;background:#0c121b;cursor:pointer}.explore-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.65}.explore-card:after{content:"";position:absolute;inset:0;background:linear-gradient(#0000000d,#000000e0)}.explore-text{position:absolute;z-index:2;left:13px;right:10px;bottom:12px}.explore-text strong{font-size:12px;display:block;line-height:1.15;margin-bottom:9px}.round-arrow{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#07110b}.explore-card[data-color=purple]{--accent:#b56cff}.explore-card[data-color=green]{--accent:#35f59b}.explore-card[data-color=gold]{--accent:#ffc52f}.explore-card[data-color=blue]{--accent:#31a8ff}.opportunity-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}.list-card{min-height:84px;border:1px solid #ffffff22;border-radius:18px;background:#0d121bd1;display:flex;align-items:center;gap:12px;padding:9px 12px;cursor:pointer}.list-img{width:62px;height:62px;border-radius:13px;object-fit:cover;flex:none}.list-info{min-width:0;flex:1}.list-info strong{font-size:12px;display:block;margin-bottom:5px}.list-info p{font-size:10px;color:#8f9aac;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.list-arrow{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#35f59b;color:#07110b;flex:none}.loading{height:84px;border-radius:18px;background:linear-gradient(90deg,#0d131c 25%,#151e2a 37%,#0d131c 63%);background-size:400% 100%;animation:shimmer 1.3s infinite}@keyframes shimmer{to{background-position:-100% 0}}.bottom-nav{position:fixed;left:50%;bottom:13px;transform:translateX(-50%);width:min(690px,calc(100% - 24px));z-index:50;border:1px solid #ffffff1f;background:#05090eea;backdrop-filter:blur(22px);border-radius:31px;display:grid;grid-template-columns:repeat(5,1fr);padding:7px 7px 8px;box-shadow:0 18px 55px #0000008c}.nav-item{border:0;background:none;color:#a8b0bd;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;font-size:9px;font-weight:600;padding:6px 4px;border-radius:23px}.nav-item svg{width:21px;height:21px}.nav-item.active{color:#b8ff2c;background:#20ff8d14}.nav-center .plus{width:52px;height:52px;border-radius:50%;margin-top:-25px;display:grid;place-items:center;background:var(--green);color:#081008;border:5px solid #071018;box-shadow:0 0 25px #b8ff2c59}.modal-backdrop{position:fixed;inset:0;background:#000000b8;backdrop-filter:blur(8px);z-index:100;display:none;padding:18px;align-items:flex-end;justify-content:center}.modal-backdrop.show{display:flex}.modal{width:min(520px,100%);background:#0b1119;border:1px solid #ffffff24;border-radius:27px 27px 18px 18px;padding:20px;box-shadow:0 30px 80px #000000a6;max-height:88vh;overflow:auto}.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}.modal-head h3{margin:0;font-size:18px}.close{width:38px;height:38px;border:1px solid var(--line);background:#101823;color:#fff;border-radius:50%;display:grid;place-items:center}.field{margin-bottom:13px}.field label{font-size:11px;color:#aab4c1;display:block;margin-bottom:6px}.field input,.field select{width:100%;border:1px solid #ffffff22;background:#070c12;color:#fff;border-radius:13px;padding:12px 13px;outline:0}.consent{font-size:10px;line-height:1.5;color:#8f99a8;margin:8px 0 14px}.full{width:100%;justify-content:center}.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-120px);z-index:200;background:#111a23;border:1px solid #b8ff2c59;padding:12px 16px;border-radius:14px;font-size:12px;transition:.25s}.toast.show{transform:translateX(-50%) translateY(0)}@media(min-width:850px){.container{padding-top:32px}.featured-card{min-height:360px}.featured-content{padding:34px;max-width:54%}.featured-title{font-size:24px}.featured-copy{font-size:13px;max-width:410px}}@media(max-width:680px){.container{padding:14px 14px 110px}.avatar{width:47px;height:47px}.greeting h1{font-size:19px}.icon-btn,.zmark{width:44px;height:44px}.zmark span{width:36px;height:36px}.search{height:54px}.section{margin-top:23px}.featured-card{min-height:285px}.featured-content{max-width:76%;padding:18px 16px}.featured-logo{font-size:21px}.featured-title{font-size:16px;margin-top:13px}.featured-copy{font-size:10.5px}.explore-row{display:flex;overflow-x:auto;scrollbar-width:none}.explore-row::-webkit-scrollbar{display:none}.explore-card{min-width:145px}.opportunity-list{display:flex;overflow-x:auto;scrollbar-width:none}.opportunity-list::-webkit-scrollbar{display:none}.list-card{min-width:255px}}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-
-<style>
-:root{
-  --bg:#050605;
-  --panel:#0b0e0b;
-  --panel2:#101410;
-  --panel3:#151b15;
-  --line:rgba(255,255,255,.09);
-  --line2:rgba(184,255,59,.22);
-  --text:#f7f9f5;
-  --muted:#8d948b;
-  --accent:#b8ff3b;
-  --accent2:#7dffb2;
-  --cyan:#59e7ff;
-  --purple:#a68cff;
-  --danger:#ff7272;
-  --max:1180px;
-  --radius:24px;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-html,body{
-  margin:0;width:100%;max-width:100%;overflow-x:hidden;
-  background:
-    radial-gradient(circle at 15% -5%,rgba(184,255,59,.08),transparent 28%),
-    radial-gradient(circle at 100% 18%,rgba(89,231,255,.05),transparent 25%),
-    var(--bg);
-  color:var(--text);
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
-body{padding-bottom:92px}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-a{color:inherit;text-decoration:none}
-img{max-width:100%;display:block}
-svg{max-width:100%;flex:none}
-
-body:before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
-  background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
-                   linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
-  background-size:40px 40px;
-  mask-image:linear-gradient(to bottom,rgba(0,0,0,.55),transparent 70%);
-}
-
-.top{
-  position:sticky;top:0;z-index:1000;
-  width:100%;background:rgba(5,6,5,.78);
-  backdrop-filter:blur(22px);border-bottom:1px solid rgba(255,255,255,.07);
-}
-.top-inner{
-  width:100%;max-width:var(--max);margin:auto;padding:11px 16px;
-  display:flex;align-items:center;justify-content:space-between;gap:14px;
-}
-.brand{display:flex;align-items:center;gap:9px;min-width:0}
-.brand-mark{
-  width:38px;height:38px;border-radius:13px;display:grid;place-items:center;
-  background:linear-gradient(145deg,#111811,#080a08);
-  border:1px solid rgba(184,255,59,.48);
-  box-shadow:0 0 24px rgba(184,255,59,.13),inset 0 0 16px rgba(184,255,59,.05);
-}
-.brand-mark b{font-size:23px;color:var(--accent);font-style:italic;letter-spacing:-3px}
-.brand-name{font-size:15px;font-weight:900;letter-spacing:-.7px;white-space:nowrap}
-.brand-name span{color:var(--accent)}
-.top-actions{display:flex;gap:7px}
-.icon-btn{
-  width:40px;height:40px;border:1px solid var(--line);border-radius:13px;
-  background:rgba(16,20,16,.82);color:#fff;display:grid;place-items:center;position:relative;
-}
-.icon-btn:hover{border-color:rgba(184,255,59,.4);box-shadow:0 0 18px rgba(184,255,59,.08)}
-.notification-dot{
-  position:absolute;right:6px;top:6px;width:7px;height:7px;border-radius:50%;
-  background:var(--accent);box-shadow:0 0 10px rgba(184,255,59,.7);display:none;
-}
-
-.wrap{width:100%;max-width:var(--max);margin:auto;padding:14px 16px 34px}
-
-/* APP HERO */
-.hero{
-  position:relative;min-height:575px;border:1px solid var(--line);
-  border-radius:30px;overflow:hidden;display:flex;align-items:flex-end;isolation:isolate;
-  background:#0b0d0b;
-  box-shadow:0 30px 100px rgba(0,0,0,.28),inset 0 0 60px rgba(184,255,59,.025);
-}
-.hero-bg{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  object-position:center 34%;z-index:-3;transform:scale(1.03);
-  animation:heroDrift 20s ease-in-out infinite alternate;
-}
-.hero-overlay{
-  position:absolute;inset:0;z-index:-2;
-  background:
-    radial-gradient(circle at 74% 22%,rgba(184,255,59,.20),transparent 25%),
-    radial-gradient(circle at 92% 78%,rgba(89,231,255,.10),transparent 24%),
-    linear-gradient(90deg,rgba(0,0,0,.94) 0%,rgba(0,0,0,.66) 45%,rgba(0,0,0,.24) 100%),
-    linear-gradient(180deg,rgba(0,0,0,.12) 0%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.98) 100%);
-}
-.hero-grid{
-  position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.34;
-  background-image:linear-gradient(rgba(184,255,59,.06) 1px,transparent 1px),
-                   linear-gradient(90deg,rgba(184,255,59,.06) 1px,transparent 1px);
-  background-size:55px 55px;
-  mask-image:linear-gradient(90deg,#000,transparent 75%);
-}
-.hero-glow{
-  position:absolute;inset:auto -10% -38%;height:60%;z-index:-1;
-  background:radial-gradient(circle,rgba(184,255,59,.18),transparent 62%);
-}
-@keyframes heroDrift{
-  from{transform:scale(1.03) translate3d(0,0,0)}
-  to{transform:scale(1.065) translate3d(-.5%,-.4%,0)}
-}
-.hero-content{width:100%;max-width:850px;padding:30px}
-.eyebrows{display:flex;flex-wrap:wrap;gap:8px}
-.pill{
-  display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;
-  background:rgba(184,255,59,.11);color:var(--accent);
-  border:1px solid rgba(184,255,59,.24);font-size:9px;font-weight:900;letter-spacing:.4px;
-}
-.pill.dark{background:rgba(0,0,0,.48);border-color:#333;color:#fff}
-.hero h1{
-  margin:18px 0 12px;max-width:800px;font-size:clamp(43px,7vw,78px);
-  line-height:.94;letter-spacing:-4px;
-}
-.hero h1 span{color:var(--accent);text-shadow:0 0 28px rgba(184,255,59,.16)}
-.hero p{max-width:670px;margin:0;color:#cbd1c8;font-size:13px;line-height:1.65}
-.hero-search{
-  display:flex;align-items:center;gap:9px;margin-top:20px;
-  background:rgba(5,7,5,.91);border:1px solid rgba(184,255,59,.25);
-  border-radius:17px;padding:8px 8px 8px 14px;
-  box-shadow:0 0 30px rgba(184,255,59,.06);
-}
-.hero-search:focus-within{border-color:rgba(184,255,59,.62);box-shadow:0 0 28px rgba(184,255,59,.11)}
-.hero-search svg{color:#aaa}
-.hero-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#fff;font-size:13px}
-.hero-search input::placeholder{color:#737971}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  border:0;border-radius:13px;padding:11px 14px;background:var(--accent);
-  color:#050605;font-size:10px;font-weight:900;text-decoration:none;white-space:nowrap;
-  box-shadow:0 0 20px rgba(184,255,59,.09);
-}
-.btn:hover{filter:brightness(1.05);transform:translateY(-1px)}
-.btn.secondary{background:#1b211b;color:#fff;border:1px solid #303630}
-.btn.ghost{background:rgba(0,0,0,.28);color:#fff;border:1px solid #3b413b}
-.btn.small{padding:9px 11px;font-size:9px}
-.hero-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.hero-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
-.hero-tag{
-  padding:6px 9px;border:1px solid rgba(255,255,255,.13);border-radius:999px;
-  background:rgba(0,0,0,.42);font-size:9px;color:#ddd;
-}
-
-/* CATEGORY RAIL */
-.category-shell{margin-top:16px}
-.category-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
-.category-title b{font-size:13px;letter-spacing:-.2px}
-.category-title span{font-size:9px;color:#737971}
-.chips{
-  display:flex;gap:9px;overflow:auto;padding:2px 1px 5px;
-  scrollbar-width:none;
-}
-.chips::-webkit-scrollbar{display:none}
-.chip{
-  flex:none;min-width:74px;height:78px;padding:10px 9px;border-radius:22px;
-  border:1px solid var(--line);background:linear-gradient(145deg,#111611,#090b09);
-  color:#858c84;font-size:9px;font-weight:800;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
-  transition:.2s;
-}
-.chip-icon{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;border:1px solid #333;background:#0b0d0b}
-.chip-icon svg{width:17px;height:17px}
-.chip.active{
-  color:#061006;border-color:var(--accent);
-  background:linear-gradient(145deg,#d0ff83,#9cf22e);
-  box-shadow:0 0 25px rgba(184,255,59,.16);
-}
-.chip.active .chip-icon{background:rgba(0,0,0,.12);border-color:rgba(0,0,0,.16)}
-.chip:hover{transform:translateY(-2px);border-color:rgba(184,255,59,.38)}
-
-/* SECTIONS */
-.section{margin-top:28px}
-.section-head{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:12px;
-}
-.section-head h2{margin:0;font-size:21px;letter-spacing:-.8px}
-.section-head p{margin:4px 0 0;color:var(--muted);font-size:10px;line-height:1.5}
-.section-link{font-size:9px;color:var(--accent);font-weight:800}
-.badge{
-  display:inline-flex;align-items:center;gap:5px;padding:6px 9px;border-radius:999px;
-  color:var(--accent);background:rgba(184,255,59,.08);
-  border:1px solid rgba(184,255,59,.17);font-size:8px;font-weight:900;
-}
-
-/* LIVE PULSE */
-.pulse{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
-.pulse-card{
-  background:linear-gradient(145deg,#111611,#0a0d0a);
-  border:1px solid var(--line);border-radius:19px;padding:14px;min-width:0;
-  position:relative;overflow:hidden;
-}
-.pulse-card:after{content:"";position:absolute;width:70px;height:70px;right:-25px;top:-30px;background:rgba(184,255,59,.08);filter:blur(20px)}
-.pulse-card strong{display:block;color:var(--accent);font-size:21px;margin-bottom:4px}
-.pulse-card span{color:#7d857b;font-size:9px}
-
-/* QUICK ACTIONS */
-.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
-.quick-card{
-  width:100%;border:1px solid var(--line);border-radius:19px;
-  background:linear-gradient(145deg,#101510,#0a0d0a);padding:15px;text-align:left;color:#fff;
-  transition:.18s;position:relative;overflow:hidden;
-}
-.quick-card:after{content:"";position:absolute;width:55px;height:55px;right:-20px;bottom:-25px;background:rgba(184,255,59,.09);filter:blur(18px)}
-a.quick-card{display:block}
-.quick-card:hover{transform:translateY(-2px);border-color:rgba(184,255,59,.3)}
-.quick-card svg{color:var(--accent)}
-.quick-card b{display:block;margin:9px 0 4px;font-size:11px}
-.quick-card span{display:block;color:#80877f;font-size:9px;line-height:1.4}
-
-/* CARDS */
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.card{
-  min-width:0;overflow:hidden;background:linear-gradient(145deg,#111511,#090c09);
-  border:1px solid var(--line);border-radius:22px;transition:.2s;
-}
-.card:hover{transform:translateY(-3px);border-color:rgba(184,255,59,.28);box-shadow:0 18px 40px rgba(0,0,0,.22)}
-.card-image{height:205px;background:#121512;position:relative;overflow:hidden}
-.card-image:after{content:"";position:absolute;inset:auto 0 0;height:45%;background:linear-gradient(transparent,rgba(0,0,0,.55));pointer-events:none}
-.card-image img{width:100%;height:100%;object-fit:cover;transition:.35s}
-.card:hover .card-image img{transform:scale(1.035)}
-.card-badge{
-  position:absolute;left:10px;top:10px;padding:6px 8px;border-radius:999px;
-  background:rgba(3,5,3,.78);border:1px solid rgba(184,255,59,.24);
-  color:var(--accent);font-size:8px;font-weight:900;z-index:2;
-}
-.save{
-  position:absolute;right:10px;top:10px;width:35px;height:35px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.64);color:#fff;
-  display:grid;place-items:center;z-index:2;backdrop-filter:blur(8px);
-}
-.card-body{padding:14px}
-.card-title{margin:0;font-size:14px;line-height:1.3}
-.card-description{margin:7px 0;color:#969e94;font-size:9px;line-height:1.5;min-height:29px}
-.meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px}
-.price{font-size:20px;font-weight:900}
-.rating{font-size:9px;color:#b8c0b5}
-.match{font-size:8px;color:var(--accent);background:rgba(184,255,59,.08);padding:5px 7px;border-radius:999px}
-.card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:11px}
-
-/* PROVIDERS */
-.provider-row{display:flex;gap:10px;overflow:auto;scrollbar-width:none;padding-bottom:3px}
-.provider-row::-webkit-scrollbar{display:none}
-.provider{
-  flex:0 0 205px;padding:14px;background:linear-gradient(145deg,#111511,#090c09);
-  border:1px solid var(--line);border-radius:19px;
-}
-.avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;float:left;margin-right:10px;background:#222;border:1px solid rgba(184,255,59,.16)}
-.provider h3{margin:4px 0;font-size:12px}
-.provider .rating{margin-top:4px}
-.clear{clear:both}
-.provider-meta{margin-top:12px;color:#80877f;font-size:9px}
-
-/* JOBS */
-.job{
-  padding:16px;background:linear-gradient(145deg,#111511,#090c09);
-  border:1px solid var(--line);border-radius:20px;margin-bottom:9px;
-}
-.job-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.job h3{margin:0 0 4px;font-size:14px}
-.job-price{font-size:20px;font-weight:900;white-space:nowrap;color:var(--accent)}
-.job-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
-.job-tag{padding:5px 8px;border-radius:999px;background:#171b17;color:#969e94;font-size:8px}
-.job-tag.hot{color:var(--accent);background:rgba(184,255,59,.08)}
-
-/* DEALS */
-.deal-hero{
-  position:relative;min-height:210px;border-radius:23px;overflow:hidden;
-  border:1px solid rgba(184,255,59,.2);display:flex;align-items:flex-end;
-  background:#101410;box-shadow:inset 0 0 40px rgba(184,255,59,.04);
-}
-.deal-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
-.deal-hero:after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(90deg,rgba(0,0,0,.91),rgba(0,0,0,.3)),linear-gradient(0deg,rgba(0,0,0,.84),transparent);
-}
-.deal-copy{position:relative;z-index:1;padding:21px;max-width:700px}
-.deal-copy h2{font-size:28px;letter-spacing:-1px;margin:10px 0 5px}
-.deal-copy p{color:#b9c0b7;font-size:10px;line-height:1.55;margin:0}
-
-/* PARTNER */
-.partner{
-  display:grid;grid-template-columns:1.25fr .9fr;gap:14px;padding:20px;
-  border-radius:23px;border:1px solid rgba(184,255,59,.2);
-  background:linear-gradient(135deg,#131a0c,#0a0d0a);overflow:hidden;position:relative;
-}
-.partner:after{
-  content:"";position:absolute;width:280px;height:280px;right:-110px;bottom:-155px;
-  background:rgba(184,255,59,.13);filter:blur(65px);pointer-events:none;
-}
-.partner-copy,.partner-grid{position:relative;z-index:1}
-.partner h3{margin:8px 0;font-size:27px;letter-spacing:-1px}
-.partner-copy p{color:#9ca59a;font-size:10px;line-height:1.55;max-width:600px}
-.partner-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.partner-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.partner-point{padding:13px;border:1px solid #292f29;border-radius:16px;background:#080b08}
-.partner-point svg{color:var(--accent)}
-.partner-point b{display:block;font-size:9px;margin-top:8px}
-.partner-point span{display:block;color:#747c73;font-size:8px;line-height:1.4;margin-top:4px}
-
-/* TRUST */
-.trust{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
-.trust-card{padding:14px;border:1px solid var(--line);background:linear-gradient(145deg,#101410,#090c09);border-radius:18px}
-.trust-card svg{color:var(--accent)}
-.trust-card b{display:block;font-size:10px;margin-top:8px}
-.trust-card span{display:block;color:#747c73;font-size:8px;line-height:1.4;margin-top:4px}
-
-/* STATES */
-.state{
-  grid-column:1/-1;text-align:center;padding:28px 18px;border:1px dashed #303630;
-  border-radius:18px;background:#0e110e;color:#7e867b;font-size:10px;
-}
-.spinner{
-  width:27px;height:27px;border:3px solid #303630;border-top-color:var(--accent);
-  border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 11px;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.live-flash{animation:liveFlash .55s ease}
-@keyframes liveFlash{0%{transform:scale(1)}45%{transform:scale(1.012)}100%{transform:scale(1)}}
-#realtimeStatus.offline{color:#ffb0b0;border-color:rgba(255,100,100,.3);background:rgba(255,70,70,.07)}
-
-/* MODALS */
-.modal{
-  position:fixed;inset:0;z-index:2000;display:none;align-items:flex-end;justify-content:center;
-  padding:14px;background:rgba(0,0,0,.76);backdrop-filter:blur(10px);
-}
-.modal.show{display:flex}
-.modal-box{
-  width:min(560px,100%);max-height:90vh;overflow:auto;
-  background:#0d110d;border:1px solid #303630;border-radius:24px;padding:18px;
-  box-shadow:0 30px 100px rgba(0,0,0,.72);
-}
-.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.modal-head h3{margin:0;font-size:18px}
-.modal-head p{margin:5px 0 0;color:#7e867b;font-size:9px}
-.close{width:36px;height:36px;border-radius:11px;border:1px solid #303630;background:#151915;color:#fff;display:grid;place-items:center}
-.payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
-.payment{padding:14px;text-align:left;border:1px solid #2b312b;background:#090c09;color:#fff;border-radius:16px}
-.payment.active{border-color:var(--accent);background:rgba(184,255,59,.06);box-shadow:0 0 20px rgba(184,255,59,.06)}
-.payment svg{color:var(--accent)}
-.payment b{display:block;font-size:10px;margin-top:8px}
-.payment span{display:block;color:#747c73;font-size:8px;line-height:1.4;margin-top:4px}
-.modal-note{margin-top:12px;padding:11px;border:1px solid #292f29;border-radius:13px;background:#141914;color:#858d82;font-size:8px;line-height:1.5}
-
-/* NOTIFICATIONS */
-.notification-list{display:grid;gap:8px;margin-top:13px}
-.notification{padding:13px;border:1px solid #292f29;background:#090c09;border-radius:15px}
-.notification.unread{border-color:rgba(184,255,59,.24);background:rgba(184,255,59,.035)}
-.notification b{font-size:10px}
-.notification p{margin:5px 0 0;color:#7f877c;font-size:9px;line-height:1.45}
-
-/* MOBILE APP NAV */
-.footer{
-  position:fixed;z-index:1100;left:10px;right:10px;bottom:10px;
-  background:rgba(11,14,11,.94);backdrop-filter:blur(22px);
-  border:1px solid rgba(255,255,255,.11);border-radius:23px;
-  box-shadow:0 15px 55px rgba(0,0,0,.5);
-}
-.footer-inner{
-  width:100%;max-width:720px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);
-}
-.footer a{
-  min-width:0;padding:10px 4px 9px;color:#747c73;font-size:8px;
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-}
-.footer a.active,.footer a:hover{color:var(--accent)}
-.footer a.active svg{filter:drop-shadow(0 0 7px rgba(184,255,59,.5))}
-.footer svg{width:18px;height:18px}
-
-/* RESPONSIVE */
-@media(max-width:950px){
-  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .partner{grid-template-columns:1fr}
-  .pulse,.trust{grid-template-columns:1fr 1fr}
-  .quick{grid-template-columns:1fr 1fr}
-}
-@media(max-width:620px){
-  .wrap{padding:9px 10px 25px}
-  .hero{min-height:620px;border-radius:25px}
-  .hero-content{padding:20px}
-  .hero h1{font-size:42px;letter-spacing:-2.6px}
-  .hero p{font-size:11px}
-  .hero-actions{display:grid;grid-template-columns:1fr}
-  .hero-actions .btn{width:100%}
-  .cards{grid-template-columns:1fr 1fr}
-  .card-image{height:155px}
-  .pulse,.trust{grid-template-columns:1fr 1fr}
-  .partner h3{font-size:23px}
-  .category-title{padding:0 2px}
-}
-@media(max-width:430px){
-  .brand-name{font-size:14px}
-  .top-inner{padding:9px 12px}
-  .icon-btn{width:38px;height:38px}
-  .hero{min-height:640px}
-  .hero h1{font-size:36px}
-  .hero-search{padding:7px}
-  .hero-search input{font-size:12px}
-  .hero-search .btn{padding:10px}
-  .cards{grid-template-columns:1fr}
-  .card-image{height:190px}
-  .quick{grid-template-columns:1fr 1fr}
-  .payment-grid{grid-template-columns:1fr}
-  .job-row{align-items:flex-start}
-  .job-price{font-size:18px}
-}
-@media(max-width:360px){
-  .quick{grid-template-columns:1fr}
-  .footer a{padding-left:2px;padding-right:2px}
-  .footer a span{font-size:8px}
-}
-@media(prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .hero-bg{animation:none}
-}
-</style>
-</head>
-
-<body>
-
-<header class="top">
-  <div class="top-inner">
-    <a class="brand" href="index.html" aria-label="Zep Swipe home">
-      <span class="brand-mark"><b>Z</b></span>
-      <span class="brand-name">ZEP <span>SWIPE</span></span>
-    </a>
-    <div class="top-actions">
-      <button class="icon-btn" onclick="focusMarketplaceSearch()" aria-label="Search">
-        <i data-lucide="search"></i>
-      </button>
-      <button class="icon-btn" onclick="showNotifications()" aria-label="Notifications">
-        <i data-lucide="bell"></i>
-        <span class="notification-dot" id="notificationDot"></span>
-      </button>
-      <button class="icon-btn" onclick="goAccount()" aria-label="Account">
-        <i data-lucide="user-round"></i>
-      </button>
-    </div>
-  </div>
-</header>
-
-<main class="wrap">
-
-<section class="hero">
-  <img class="hero-bg"
-       src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=2400&q=90"
-       alt="Students collaborating on campus"
-       fetchpriority="high">
-  <div class="hero-overlay"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
-
-  <div class="hero-content">
-    <div class="eyebrows">
-      <span class="pill">⚡ ZEP SWIPE MARKETPLACE</span>
-      <span class="pill dark">● LIVE CAMPUS ECONOMY</span>
-    </div>
-
-    <h1>Discover.<br><span>Swipe. Earn.</span></h1>
-
-    <p>
-      Find trusted student services, local deals and quick opportunities around you —
-      then come back whenever campus has something new.
-    </p>
-
-    <div class="hero-search">
-      <i data-lucide="search"></i>
-      <input id="search" type="search"
-             placeholder="What do you need today?"
-             autocomplete="off"
-             onkeydown="if(event.key==='Enter')searchNow()">
-      <button class="btn" onclick="searchNow()">Search</button>
-    </div>
-
-    <div class="hero-actions">
-      <a class="btn" href="#services"><i data-lucide="search"></i> Find a Service</a>
-      <a class="btn secondary" href="#deals"><i data-lucide="ticket-percent"></i> Student Deals</a>
-      <a class="btn ghost" href="#jobs"><i data-lucide="zap"></i> Find Opportunities</a>
-    </div>
-
-    <div class="hero-tags">
-      <span class="hero-tag">💻 Services</span>
-      <span class="hero-tag">🎁 Deals</span>
-      <span class="hero-tag">⚡ Quick Jobs</span>
-      <span class="hero-tag">💰 Earn</span>
-    </div>
-  </div>
-</section>
-
-<section class="category-shell" aria-label="Marketplace categories">
-  <div class="category-title">
-    <b>Explore categories</b>
-    <span>Swipe to explore →</span>
-  </div>
-  <div class="chips">
-    <button class="chip active" onclick="filterCategory('All',this)">
-      <span class="chip-icon"><i data-lucide="sparkles"></i></span>All
-    </button>
-    <button class="chip" onclick="filterCategory('Graphic Design',this)">
-      <span class="chip-icon"><i data-lucide="palette"></i></span>Design
-    </button>
-    <button class="chip" onclick="filterCategory('Web Development',this)">
-      <span class="chip-icon"><i data-lucide="code-2"></i></span>Web
-    </button>
-    <button class="chip" onclick="filterCategory('Tutoring',this)">
-      <span class="chip-icon"><i data-lucide="book-open"></i></span>Tutors
-    </button>
-    <button class="chip" onclick="filterCategory('Social Media',this)">
-      <span class="chip-icon"><i data-lucide="smartphone"></i></span>Social
-    </button>
-    <button class="chip" onclick="filterCategory('Photography',this)">
-      <span class="chip-icon"><i data-lucide="camera"></i></span>Photo
-    </button>
-    <button class="chip" onclick="filterCategory('Writing',this)">
-      <span class="chip-icon"><i data-lucide="pen-line"></i></span>Writing
-    </button>
-    <button class="chip" onclick="filterCategory('AI Services',this)">
-      <span class="chip-icon"><i data-lucide="bot"></i></span>AI
-    </button>
-    <button class="chip" onclick="filterCategory('Virtual Assistant',this)">
-      <span class="chip-icon"><i data-lucide="headphones"></i></span>VA
-    </button>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-head">
-    <div>
-      <h2>🔥 Trending on campus</h2>
-      <p>What's getting attention across Zep Swipe right now.</p>
-    </div>
-    <span class="badge" id="realtimeStatus">● LIVE</span>
-  </div>
-
-  <div class="pulse">
-    <div class="pulse-card"><strong id="liveServices">0</strong><span>Live services</span></div>
-    <div class="pulse-card"><strong id="availableProviders">0</strong><span>Providers available</span></div>
-    <div class="pulse-card"><strong id="newJobs">0</strong><span>Open opportunities</span></div>
-    <div class="pulse-card"><strong id="completedToday">0</strong><span>Completed today</span></div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-head">
-    <div><h2>⚡ Quick access</h2><p>Start with what you need right now.</p></div>
-  </div>
-  <div class="quick">
-    <a class="quick-card" href="#services">
-      <i data-lucide="search"></i><b>Find a Service</b><span>Hire a student with the skill you need.</span>
-    </a>
-    <a class="quick-card" href="#deals">
-      <i data-lucide="ticket-percent"></i><b>Student Deals</b><span>Discover offers made for campus life.</span>
-    </a>
-    <a class="quick-card" href="#jobs">
-      <i data-lucide="zap"></i><b>Quick Jobs</b><span>Find small opportunities you can act on.</span>
-    </a>
-    <button class="quick-card" onclick="postJob()">
-      <i data-lucide="plus-circle"></i><b>Post a Request</b><span>Tell the student economy what you need.</span>
-    </button>
-  </div>
-</section>
-
-<section class="section" id="services">
-  <div class="section-head">
-    <div><h2>🟢 Services you can hire</h2><p>Student talent available through Zep Swipe.</p></div>
-    <span class="badge" id="resultCount">LIVE</span>
-  </div>
-  <div id="servicesGrid" class="cards">
-    <div class="state"><div class="spinner"></div>Loading live services…</div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-head">
-    <div><h2>👨‍🎓 Students available now</h2><p>Providers currently open to new opportunities.</p></div>
-    <a class="section-link" href="#services">View services</a>
-  </div>
-  <div id="providers" class="provider-row">
-    <div class="state">Loading providers…</div>
-  </div>
-</section>
-
-<section class="section" id="jobs">
-  <div class="section-head">
-    <div><h2>⚡ Quick opportunities</h2><p>Small jobs that can move fast.</p></div>
-    <span class="badge">FAST</span>
-  </div>
-  <div id="quickJobs"><div class="state">Loading opportunities…</div></div>
-</section>
-
-<section class="section">
-  <div class="deal-hero">
-    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=2200&q=88" alt="Students">
-    <div class="deal-copy">
-      <span class="badge">🏷 STUDENT DEALS</span>
-      <h2>More value for student life.</h2>
-      <p>Food, beauty, fashion, services, experiences and local offers from participating businesses.</p>
-      <a class="btn small" href="#deals" style="margin-top:12px">Explore Deals</a>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="deals">
-  <div class="section-head">
-    <div><h2>🎁 Deals near you</h2><p>Fresh offers from participating businesses.</p></div>
-    <span class="section-link">Swipe →</span>
-  </div>
-  <div id="dealsGrid" class="cards">
-    <div class="state">Loading deals…</div>
-  </div>
-</section>
-
-<section class="section" id="vehicleSolutions">
-  <div class="partner">
-    <div class="partner-copy">
-      <span class="badge">🚗 ZEP SWIPE MOBILITY</span>
-      <h3>Your city. Your mobility.</h3>
-      <p>
-        Explore vehicle, safety, fleet and mobility solutions through Zep Swipe partner pathways.
-        Mobility is one part of the wider student opportunity ecosystem.
-      </p>
-      <div class="partner-actions">
-        <a class="btn" href="cartrack.html">Explore Mobility</a>
-        <button class="btn secondary" onclick="shareMobility()">Share</button>
+.marketplace-hero:before{background:linear-gradient(90deg,rgba(3,7,10,.98) 0%,rgba(3,7,10,.78) 42%,rgba(3,7,10,.14) 100%),url("https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1400&q=85") center/cover}
+.marketplace-hero:after{background:radial-gradient(circle at 78% 55%,rgba(184,255,44,.18),transparent 25%)}
+.opportunity-mini:before{background:linear-gradient(90deg,rgba(3,7,10,.97),rgba(3,7,10,.42)),url("https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=80") center/cover}
+.payment-option{border:1px solid rgba(255,255,255,.13);width:100%;text-align:left;color:#fff}
+.payment-option:hover{border-color:rgba(184,255,44,.4)}
+@media(max-width:680px){.marketplace-hero{min-height:285px}.marketplace-hero .featured-content{max-width:79%}.opportunity-mini .featured-content{max-width:84%!important}}
+</style></head><body><div class="page">
+  <main class="container">
+    <header class="topbar">
+      <div class="profile auth-only" id="profileArea">
+        <img id="avatar" class="avatar" src="" alt="Profile">
+        <div class="greeting">
+          <h1 id="greeting">Hello!</h1>
+          <p id="location">Find services, deals &amp; opportunities</p>
+        </div>
       </div>
-    </div>
-    <div class="partner-grid">
-      <div class="partner-point"><i data-lucide="car"></i><b>Personal Vehicles</b><span>Explore vehicle tracking and safety options.</span></div>
-      <div class="partner-point"><i data-lucide="truck"></i><b>Business Fleets</b><span>Information for businesses managing vehicles.</span></div>
-      <div class="partner-point"><i data-lucide="shield-check"></i><b>Safety</b><span>Learn about available safety solutions.</span></div>
-      <div class="partner-point"><i data-lucide="users"></i><b>Refer</b><span>Share the official pathway with people you know.</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-head">
-    <div><h2>🛡️ Built around trust</h2><p>Designed for real marketplace activity.</p></div>
-  </div>
-  <div class="trust">
-    <div class="trust-card"><i data-lucide="badge-check"></i><b>Verified providers</b><span>Discover student talent through marketplace profiles.</span></div>
-    <div class="trust-card"><i data-lucide="lock-keyhole"></i><b>Secure checkout</b><span>Payment verification remains on the secure backend.</span></div>
-    <div class="trust-card"><i data-lucide="coins"></i><b>MARI rewards</b><span>Rewards can be credited after verified completion.</span></div>
-    <div class="trust-card"><i data-lucide="refresh-cw"></i><b>Always changing</b><span>Services, deals and opportunities keep moving.</span></div>
-  </div>
-</section>
-
-</main>
-
-<!-- CHECKOUT MODAL -->
-<div class="modal" id="paymentModal" onclick="if(event.target===this)closePaymentModal()">
-  <div class="modal-box">
-    <div class="modal-head">
-      <div>
-        <h3 id="paymentTitle">Secure checkout</h3>
-        <p>Choose how you want to continue.</p>
+      <div class="header-actions">
+        <button class="icon-btn" id="notificationBtn" aria-label="Notifications"><i data-lucide="bell"></i><span class="notif-dot" id="notifDot" style="display:none"></span></button>
+        <button class="zmark" id="accountBtn" aria-label="Account"><span>Z</span></button>
       </div>
-      <button class="close" onclick="closePaymentModal()">✕</button>
+    </header>
+
+    <div class="search">
+      <i data-lucide="search" width="22"></i>
+      <input id="searchInput" type="search" placeholder="Search services, deals, jobs or businesses..." autocomplete="off">
+      <button class="search-filter" id="filterBtn" aria-label="Filters"><i data-lucide="sliders-horizontal" width="21"></i></button>
     </div>
 
-    <div class="payment-grid">
-      <button class="payment active" onclick="selectPayment('card',this)">
-        <i data-lucide="credit-card"></i><b>Card / Paystack</b>
-        <span>Customer login is required before any card payment.</span>
-      </button>
-      <button class="payment" onclick="selectPayment('eft',this)">
-        <i data-lucide="landmark"></i><b>Bank / EFT</b>
-        <span>Use this if enabled for the order.</span>
-      </button>
-      <button class="payment" onclick="selectPayment('other',this)">
-        <i data-lucide="wallet"></i><b>Other option</b>
-        <span>Use another method enabled for checkout.</span>
-      </button>
-      <button class="payment" onclick="selectPayment('later',this)">
-        <i data-lucide="clock-3"></i><b>Return to service</b>
-        <span>Go back before checkout.</span>
-      </button>
-    </div>
+    <section class="section">
+      <div class="section-head"><h2>Categories</h2><button id="seeAllCategories">See All <i data-lucide="chevron-right" width="15"></i></button></div>
+      <div class="category-scroller" id="categories">
+        <button class="cat active" data-color="purple" data-category="Services"><i data-lucide="sparkles"></i><span>Services</span></button>
+        <button class="cat" data-color="gold" data-category="Deals"><i data-lucide="ticket-percent"></i><span>Student<br>Deals</span></button>
+        <button class="cat" data-color="green" data-category="Jobs"><i data-lucide="briefcase-business"></i><span>Quick<br>Jobs</span></button>
+        <button class="cat" data-color="blue" data-category="Business"><i data-lucide="store"></i><span>Businesses</span></button>
+        <button class="cat" data-color="pink" data-category="Students"><i data-lucide="graduation-cap"></i><span>Student<br>Life</span></button>
+        <button class="cat" data-color="white" data-category="Opportunities"><i data-lucide="circle-dollar-sign"></i><span>Ways to<br>Earn</span></button>
+      </div>
+    </section>
 
-    <div class="modal-note">
-      <strong style="color:#fff">Card payment:</strong>
-      You can browse Zep Swipe without logging in. To pay for a student service by card,
-      you must be signed in with a customer account.
-    </div>
+    <section class="section">
+      <div class="section-head"><h2>Featured Marketplace</h2><button id="seeAllFeatured">See All <i data-lucide="chevron-right" width="15"></i></button></div>
+      <div class="featured-wrap">
+        <article class="featured-card marketplace-hero">
+          <div class="featured-content">
+            <div class="badge"><i data-lucide="zap" width="12"></i> Zep Swipe Marketplace</div>
+            <div class="featured-logo">YOUR CAMPUS.<small>YOUR OPPORTUNITIES.</small></div>
+            <div class="featured-title">Skills, deals &amp; services in one place.</div>
+            <p class="featured-copy">Discover trusted student services, local deals and quick opportunities — all from the Zep Swipe marketplace.</p>
+            <button class="primary" id="browseBtn">Start Exploring <i data-lucide="arrow-right" width="16"></i></button>
+          </div>
+        </article>
+        <div class="dots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      </div>
+    </section>
 
-    <div class="modal-note">
-      <strong style="color:#fff">Security:</strong>
-      This page never contains a Paystack secret key and never marks an order as paid from the browser.
-      Payment initialization and verification stay server-side.
-    </div>
+    <section class="section">
+      <div class="section-head"><h2>Explore Marketplace</h2><button id="seeAllExplore">See All <i data-lucide="chevron-right" width="15"></i></button></div>
+      <div class="explore-row">
+        <article class="explore-card" data-color="purple" data-category="Services"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=700&q=80" alt=""><div class="explore-text"><strong>Student<br>Services</strong><span class="round-arrow"><i data-lucide="arrow-right" width="15"></i></span></div></article>
+        <article class="explore-card" data-color="gold" data-category="Deals"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=700&q=80" alt=""><div class="explore-text"><strong>Student<br>Deals</strong><span class="round-arrow"><i data-lucide="arrow-right" width="15"></i></span></div></article>
+        <article class="explore-card" data-color="green" data-category="Jobs"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=700&q=80" alt=""><div class="explore-text"><strong>Quick<br>Jobs</strong><span class="round-arrow"><i data-lucide="arrow-right" width="15"></i></span></div></article>
+        <article class="explore-card" data-color="blue" data-category="Business"><img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=700&q=80" alt=""><div class="explore-text"><strong>Local<br>Businesses</strong><span class="round-arrow"><i data-lucide="arrow-right" width="15"></i></span></div></article>
+      </div>
+    </section>
 
-    <button class="btn" id="continueCheckout" style="width:100%;margin-top:12px" onclick="continueCheckout()">
-      Continue to Secure Checkout
-    </button>
-  </div>
+    <section class="section" id="servicesSection">
+      <div class="section-head"><h2>Student Services</h2><button data-scroll="servicesGrid">See All <i data-lucide="chevron-right" width="15"></i></button></div>
+      <div class="opportunity-list" id="servicesGrid"><div class="loading-card skeleton"></div><div class="loading-card skeleton"></div></div>
+    </section>
+
+    <section class="section" id="dealsSection">
+      <div class="section-head"><h2>Student Deals</h2><button data-scroll="dealsGrid">See All <i data-lucide="chevron-right" width="15"></i></button></div>
+      <div class="opportunity-list" id="dealsGrid"><div class="loading-card skeleton"></div><div class="loading-card skeleton"></div></div>
+    </section>
+
+    <section class="section" id="jobsSection">
+      <div class="section-head"><h2>Quick Jobs &amp; Gigs</h2><button data-scroll="jobsGrid">See All <i data-lucide="chevron-right" width="15"></i></button></div>
+      <div class="opportunity-list" id="jobsGrid"><div class="loading-card skeleton"></div><div class="loading-card skeleton"></div></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>More Opportunities</h2><button id="opportunityBtn">Explore <i data-lucide="chevron-right" width="15"></i></button></div>
+      <article class="featured-card opportunity-mini" style="min-height:190px">
+        <div class="featured-content" style="max-width:75%;padding:22px">
+          <div class="badge"><i data-lucide="star" width="12"></i> Partner Network</div>
+          <div class="featured-title" style="margin-top:2px">Discover opportunities beyond the marketplace.</div>
+          <p class="featured-copy">Explore mobility, business and partner solutions through the Zep Swipe Opportunity Hub.</p>
+          <button class="primary" id="openOpportunity">Explore Opportunities <i data-lucide="arrow-right" width="16"></i></button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button class="nav-item active" data-nav="marketplace.html"><i data-lucide="house"></i><span>Home</span></button>
+    <button class="nav-item" data-nav="deals.html"><i data-lucide="ticket-percent"></i><span>Deals</span></button>
+    <button class="nav-item nav-center" id="opportunityNav"><span class="plus"><i data-lucide="plus" width="25"></i></span><span>Opportunities</span></button>
+    <button class="nav-item" data-nav="messages.html"><i data-lucide="message-square"></i><span>Messages</span></button>
+    <button class="nav-item" id="profileNav"><i data-lucide="user-round"></i><span>Profile</span></button>
+  </nav>
 </div>
 
-<!-- NOTIFICATION MODAL -->
-<div class="modal" id="notificationModal" onclick="if(event.target===this)closeNotifications()">
-  <div class="modal-box">
-    <div class="modal-head">
-      <div>
-        <h3>Notifications</h3>
-        <p>Your latest Zep Swipe activity.</p>
-      </div>
-      <button class="close" onclick="closeNotifications()">✕</button>
+<div class="toast" id="toast"></div>
+
+<div class="modal-backdrop" id="paymentModal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="paymentTitle">Continue to checkout</h3><button class="close" id="closePayment"><i data-lucide="x" width="18"></i></button></div>
+    <p id="paymentDescription" style="font-size:12px;color:#9ba5b3;line-height:1.5;margin-top:0"></p>
+    <div style="display:grid;gap:10px;margin:16px 0">
+      <button class="list-card payment-option" data-method="paystack"><div class="list-img" style="display:grid;place-items:center;background:#0e241a"><i data-lucide="credit-card" style="color:#35f59b"></i></div><div class="list-info"><strong>Card / Paystack</strong><p>Secure online payment</p></div><span class="list-arrow"><i data-lucide="chevron-right" width="14"></i></span></button>
+      <button class="list-card payment-option" data-method="eft"><div class="list-img" style="display:grid;place-items:center;background:#131c2a"><i data-lucide="building-2" style="color:#31a8ff"></i></div><div class="list-info"><strong>EFT / Bank Transfer</strong><p>Continue with payment instructions</p></div><span class="list-arrow" style="background:#31a8ff"><i data-lucide="chevron-right" width="14"></i></span></button>
+      <button class="list-card payment-option" data-method="other"><div class="list-img" style="display:grid;place-items:center;background:#241c0c"><i data-lucide="wallet" style="color:#ffc52f"></i></div><div class="list-info"><strong>Other payment method</strong><p>Choose on the next step</p></div><span class="list-arrow" style="background:#ffc52f"><i data-lucide="chevron-right" width="14"></i></span></button>
     </div>
-    <div id="notificationList" class="notification-list">
-      <div class="state">Sign in to see your notifications.</div>
-    </div>
-    <a class="btn secondary" href="notification.html" style="width:100%;margin-top:10px">Open Notification Center</a>
+    <button class="primary full" id="continueNoPayment">Continue without paying <i data-lucide="arrow-right" width="16"></i></button>
   </div>
 </div>
-
-<footer class="footer">
-  <div class="footer-inner">
-    <a href="index.html"><i data-lucide="home"></i><span>Home</span></a>
-    <a href="marketplace.html" class="active"><i data-lucide="compass"></i><span>Discover</span></a>
-    <a href="auth.html?next=marketplace.html%23jobs"><i data-lucide="plus-circle"></i><span>Post</span></a>
-    <a href="#" onclick="goDashboard();return false"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
-    <a href="auth.html"><i data-lucide="user"></i><span>Account</span></a>
-  </div>
-</footer>
-
 <script>
-/* =========================================================
-   SUPABASE
-   Keep the same project/backend contract from the supplied
-   marketplace file. Replace only the anon-key placeholder.
-   ========================================================= */
-const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";
-const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-
-let allServices=[];
-let currentFilter="All";
-let selectedServiceId=null;
-let selectedPayment="card";
-let liveRefreshTimer=null;
-let liveChannels=[];
-let liveStarted=false;
-
-function esc(v){
-  return String(v??"").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[c]));
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let currentUser=null,currentProfile=null;
+let datasets={services:[],deals:[],jobs:[]};
+let selectedItem=null;
+const $=id=>document.getElementById(id);
+function toast(msg){const e=$("toast");e.textContent=msg;e.classList.add("show");clearTimeout(window.__t);window.__t=setTimeout(()=>e.classList.remove("show"),3000)}
+function escapeHtml(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function roleDashboard(role){if(role==="provider")return"provider.html";if(role==="business")return"business-deals.html";return"customer.html"}
+function navigate(url){if(url)location.href=url}
+function requireAuth(route){if(currentUser)navigate(route);else navigate(`auth.html?redirect=${encodeURIComponent(route)}`)}
+async function session(){try{const {data:{session}}=await db.auth.getSession();currentUser=session?.user||null;$("profileArea").classList.toggle("visible",!!currentUser);if(currentUser){await profile();await notifications()}}catch(e){console.warn(e)}}
+async function profile(){try{const {data}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();currentProfile=data||{};const name=currentProfile.first_name||currentProfile.full_name?.split(" ")[0]||currentUser.user_metadata?.first_name||"there";$("greeting").textContent=`Hello ${name}!`;$("location").textContent=currentProfile.university||currentProfile.institution||"Find services, deals & opportunities";const avatar=currentProfile.avatar_url||currentProfile.profile_image||currentUser.user_metadata?.avatar_url;if(avatar){$("avatar").src=avatar}else{$("avatar").removeAttribute("src");$("avatar").alt=name.slice(0,1).toUpperCase();$("avatar").style.objectFit="contain";$("avatar").style.padding="8px";$("avatar").style.background="#0f171f";$("avatar").style.borderColor="#b8ff2c"}}}catch(e){console.warn("profile",e)}}
+async function notifications(){try{const {data}=await db.from("notifications").select("id").eq("user_id",currentUser.id).eq("read",false).limit(1);if(data?.length)$("notifDot").style.display="block"}catch(e){}}
+function img(item,fallback){return item.image_url||item.image||item.cover_url||fallback}
+function card(item,type){let title,sub,route,image;
+ if(type==="service"){title=item.title||item.name||"Student Service";sub=item.category||item.price?`${item.category||"Service"} • ${item.price||"View details"}`:"Student service";route=`service.html?id=${encodeURIComponent(item.id)}`;image=img(item,"https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=500&q=80")}
+ if(type==="deal"){title=item.title||item.offer||"Student Deal";sub=item.category||item.offer||"Student deal";route=`deal.html?id=${encodeURIComponent(item.id)}`;image=img(item,"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=500&q=80")}
+ if(type==="job"){title=item.title||item.name||"Quick Job";sub=item.category||item.location||"Work opportunity";route=`job.html?id=${encodeURIComponent(item.id)}`;image=img(item,"https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=500&q=80")}
+ return `<article class="list-card" data-route="${escapeHtml(route)}"><img class="list-img" src="${escapeHtml(image)}" alt="" loading="lazy"><div class="list-info"><strong>${escapeHtml(title)}</strong><p>${escapeHtml(sub)}</p></div><span class="list-arrow"><i data-lucide="arrow-right" width="14"></i></span></article>`}
+function render(box,items,type){const el=$(box);if(!items.length){el.innerHTML=`<div class="empty" style="grid-column:1/-1">Nothing new here yet. Check back soon.</div>`;return}el.innerHTML=items.slice(0,8).map(x=>card(x,type)).join("");bindRoutes(el);lucide.createIcons()}
+function bindRoutes(root=document){root.querySelectorAll("[data-route]").forEach(x=>x.addEventListener("click",()=>navigate(x.dataset.route)))}
+async function load(){
+ let q;
+ try{q=await db.from("services").select("*").eq("status","active").order("created_at",{ascending:false}).limit(20);datasets.services=q.error?[]:q.data||[]}catch(e){datasets.services=[]}
+ try{q=await db.from("deals").select("*").eq("status","active").order("created_at",{ascending:false}).limit(20);datasets.deals=q.error?[]:q.data||[]}catch(e){datasets.deals=[]}
+ try{q=await db.from("jobs").select("*").order("created_at",{ascending:false}).limit(20);datasets.jobs=q.error?[]:q.data||[] }catch(e){datasets.jobs=[]}
+ render("servicesGrid",datasets.services,"service");render("dealsGrid",datasets.deals,"deal");render("jobsGrid",datasets.jobs,"job");
 }
-function money(v){
-  return Number(v||0).toLocaleString("en-ZA",{minimumFractionDigits:0,maximumFractionDigits:2});
+function search(term){const q=term.trim().toLowerCase();if(!q){render("servicesGrid",datasets.services,"service");render("dealsGrid",datasets.deals,"deal");render("jobsGrid",datasets.jobs,"job");return}const filter=a=>a.filter(x=>JSON.stringify(x).toLowerCase().includes(q));render("servicesGrid",filter(datasets.services),"service");render("dealsGrid",filter(datasets.deals),"deal");render("jobsGrid",filter(datasets.jobs),"job")}
+function chooseCategory(cat){document.querySelectorAll(".cat").forEach(x=>x.classList.toggle("active",x.dataset.category===cat));const map={Services:"servicesSection",Deals:"dealsSection",Jobs:"jobsSection",Business:"servicesSection",Students:"dealsSection",Opportunities:"jobsSection"};const target=$(map[cat]);if(target)target.scrollIntoView({behavior:"smooth",block:"start"});if(cat==="Business"){$("searchInput").value="business";search("business")}}
+function openPayment(item,type){selectedItem={item,type};const title=item.title||item.name||item.offer||"Marketplace item";$("paymentTitle").textContent=type==="deal"?"Claim this deal":"Choose payment method";$("paymentDescription").textContent=type==="deal"?`${title} — continue to the secure deal page to view eligibility and redemption details.`:`${title} — choose how you would like to continue.`;$("paymentModal").classList.add("show")}
+function continueCheckout(method){if(!selectedItem)return;const {item,type}=selectedItem;const route=type==="deal"?`deal.html?id=${encodeURIComponent(item.id)}&checkout=1`: `service.html?id=${encodeURIComponent(item.id)}&checkout=1&payment=${encodeURIComponent(method)}`;$("paymentModal").classList.remove("show");requireAuth(route)}
+async function init(){lucide.createIcons();await session();await load();bindRoutes();
+ $("searchInput").addEventListener("input",e=>search(e.target.value));
+ $("filterBtn").addEventListener("click",()=>{$("searchInput").focus();toast("Search the marketplace by service, deal, job or business.")});
+ document.querySelectorAll(".cat").forEach(x=>x.addEventListener("click",()=>chooseCategory(x.dataset.category)));
+ document.querySelectorAll(".explore-card").forEach(x=>x.addEventListener("click",()=>chooseCategory(x.dataset.category)));
+ document.querySelectorAll("[data-scroll]").forEach(x=>x.addEventListener("click",()=>$(x.dataset.scroll)?.scrollIntoView({behavior:"smooth",block:"center"})));
+ $("browseBtn").addEventListener("click",()=>$("servicesSection").scrollIntoView({behavior:"smooth"}));
+ $("seeAllFeatured").addEventListener("click",()=>$("servicesSection").scrollIntoView({behavior:"smooth"}));
+ $("seeAllExplore").addEventListener("click",()=>$("servicesSection").scrollIntoView({behavior:"smooth"}));
+ $("opportunityBtn").addEventListener("click",()=>navigate("opportunity.html"));$("openOpportunity").addEventListener("click",()=>navigate("opportunity.html"));
+ $("opportunityNav").addEventListener("click",()=>navigate("opportunity.html"));
+ $("notificationBtn").addEventListener("click",()=>currentUser?navigate("notifications.html"):requireAuth("notifications.html"));
+ $("accountBtn").addEventListener("click",()=>currentUser?navigate(roleDashboard(currentProfile?.role||currentUser.user_metadata?.role)):requireAuth("customer.html"));
+ $("profileNav").addEventListener("click",()=>currentUser?navigate(roleDashboard(currentProfile?.role||currentUser.user_metadata?.role)):requireAuth("customer.html"));
+ document.querySelectorAll("[data-nav]").forEach(x=>x.addEventListener("click",()=>navigate(x.dataset.nav)));
+ $("closePayment").addEventListener("click",()=>$("paymentModal").classList.remove("show"));$("paymentModal").addEventListener("click",e=>{if(e.target===$("paymentModal"))$("paymentModal").classList.remove("show")});
+ document.querySelectorAll(".payment-option").forEach(x=>x.addEventListener("click",()=>continueCheckout(x.dataset.method)));
+ $("continueNoPayment").addEventListener("click",()=>continueCheckout("none"));
+ // Long-press/card action: clicking services/deals opens their secure detail/checkout flow.
+ // Existing card routes remain backend-safe; payment initialization belongs server-side on service.html.
+ setInterval(load,60000);
+ try{db.channel("marketplace-realtime").on("postgres_changes",{event:"*",schema:"public",table:"services"},load).on("postgres_changes",{event:"*",schema:"public",table:"deals"},load).on("postgres_changes",{event:"*",schema:"public",table:"jobs"},load).subscribe()}catch(e){console.warn(e)}
 }
-function createIcons(){
-  if(window.lucide) lucide.createIcons();
-}
-
-/* SERVICES */
-function serviceCard(s){
-  const id=esc(s.id||"");
-  const image=esc(s.image_url||"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80");
-  const title=esc(s.title||"Student Service");
-  const description=esc(s.description||"Student service available on Zep Swipe.");
-  const category=esc(s.category||"Service");
-  const provider=esc(s.provider_name||"Student Provider");
-  const rating=esc(s.rating||"New");
-  const price=money(s.price);
-  const available=s.is_available!==false;
-
-  return `<article class="card">
-    <div class="card-image">
-      <img src="${image}" alt="${title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80'">
-      <span class="card-badge">${category}</span>
-      <button class="save" onclick="saveService('${id}')" aria-label="Save service"><i data-lucide="heart"></i></button>
-    </div>
-    <div class="card-body">
-      <h3 class="card-title">${title}</h3>
-      <p class="card-description">${description}</p>
-      <div class="meta">
-        <span class="rating">⭐ ${rating}</span>
-        <span class="match">${available?"AVAILABLE":"AWAY"}</span>
-      </div>
-      <div class="meta">
-        <span class="muted" style="color:#777;font-size:9px">${provider}</span>
-        <span class="price">R${price}</span>
-      </div>
-      <div class="card-footer">
-        <span class="muted" style="font-size:9px;color:#777">🪙 +50 MARI</span>
-        <button class="btn small" onclick="startCustomerCheckout('${id}','${title.replace(/'/g,"&#039;")}')">Hire Student</button>
-      </div>
-    </div>
-  </article>`;
-}
-
-function providerCard(s){
-  const image=esc(s.provider_avatar||s.image_url||"https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=300&q=80");
-  return `<div class="provider">
-    <img class="avatar" src="${image}" alt="" loading="lazy">
-    <h3>${esc(s.provider_name||"Student Provider")}</h3>
-    <div class="rating">⭐ ${esc(s.rating||"New")} · ✓ Verified</div>
-    <div class="clear"></div>
-    <div class="provider-meta">${s.is_available!==false?"🟢 Available now":"⚪ Currently away"}</div>
-    <button class="btn small" onclick="openProvider('${esc(s.provider_id||"")}')" style="width:100%;margin-top:10px">View Profile</button>
-  </div>`;
-}
-
-/* DEALS */
-function dealCard(d){
-  const id=esc(d.id||"");
-  const image=esc(d.image_url||"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80");
-  return `<article class="card">
-    <div class="card-image">
-      <img src="${image}" alt="${esc(d.title||"Student Deal")}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80'">
-      <span class="card-badge">STUDENT DEAL</span>
-    </div>
-    <div class="card-body">
-      <h3 class="card-title">${esc(d.title||"Student Deal")}</h3>
-      <p class="card-description">${esc(d.description||d.discount||"Special student offer available.")}</p>
-      <div class="meta">
-        <span class="match">${esc(d.discount||"SPECIAL OFFER")}</span>
-        <span class="rating">${esc(d.category||"Local offer")}</span>
-      </div>
-      <div class="card-footer">
-        <span class="muted" style="font-size:9px;color:#777">Exclusive student offer</span>
-        <button class="btn small" onclick="claimAndRedeemDeal('${id}')">Claim Deal</button>
-      </div>
-    </div>
-  </article>`;
-}
-
-/* JOBS */
-function quickJobCard(j){
-  return `<div class="job">
-    <div class="job-row">
-      <div style="min-width:0">
-        <h3>${esc(j.title||"Quick Student Job")}</h3>
-        <span class="muted">${esc(j.category||"General")} · ${esc(j.delivery_time||"Today")}</span>
-      </div>
-      <div class="job-price">R${money(j.budget||j.price)}</div>
-    </div>
-    <div class="job-tags">
-      <span class="job-tag hot">⚡ QUICK</span>
-      <span class="job-tag">🛡 Protected</span>
-    </div>
-    <div style="margin-top:12px"><button class="btn small" onclick="openJob('${esc(j.id||"")}')">View Opportunity</button></div>
-  </div>`;
-}
-
-/* LOAD MARKETPLACE */
-async function loadMarketplace(q=""){
-  const servicesEl=document.getElementById("servicesGrid");
-  if(!allServices.length) servicesEl.innerHTML='<div class="state"><div class="spinner"></div>Loading live services…</div>';
-
-  let query=db.from("services").select("*").order("created_at",{ascending:false}).limit(60);
-  if(q) query=query.ilike("title","%"+q+"%");
-
-  const {data,error}=await query;
-  if(error) console.warn("Services:",error.message);
-
-  allServices=data||[];
-  renderServices();
-
-  document.getElementById("liveServices").textContent=allServices.length;
-  document.getElementById("resultCount").textContent=allServices.length+" LIVE";
-
-  const unique={};
-  allServices.forEach(x=>{if(x.provider_id&&!unique[x.provider_id])unique[x.provider_id]=x});
-  const providers=Object.values(unique).slice(0,10);
-
-  document.getElementById("availableProviders").textContent=
-    providers.filter(x=>x.is_available!==false).length;
-
-  document.getElementById("providers").innerHTML=
-    providers.length?providers.map(providerCard).join(""):'<div class="state">Provider availability will appear here.</div>';
-
-  try{
-    const {data:orders}=await db.from("orders").select("id,status,created_at")
-      .gte("created_at",new Date(Date.now()-86400000).toISOString());
-    document.getElementById("completedToday").textContent=
-      (orders||[]).filter(x=>x.status==="completed").length;
-  }catch(e){document.getElementById("completedToday").textContent="—"}
-
-  try{
-    const {data:jobs}=await db.from("jobs").select("id,status")
-      .in("status",["open","pending"]).limit(100);
-    document.getElementById("newJobs").textContent=(jobs||[]).length;
-  }catch(e){document.getElementById("newJobs").textContent="—"}
-
-  createIcons();
-}
-
-function renderServices(){
-  let items=allServices;
-  if(currentFilter!=="All"){
-    items=items.filter(s=>(s.category||"").toLowerCase()===currentFilter.toLowerCase());
-  }
-  document.getElementById("servicesGrid").innerHTML=
-    items.length?items.map(serviceCard).join(""):'<div class="state">No services in this category yet.</div>';
-  createIcons();
-}
-
-async function loadDeals(){
-  const {data,error}=await db.from("deals").select("*").eq("status","active").order("created_at",{ascending:false}).limit(12);
-  if(error) console.warn("Deals:",error.message);
-  const deals=data||[];
-  document.getElementById("dealsGrid").innerHTML=
-    deals.length?deals.map(dealCard).join(""):'<div class="state">No deals are available right now.</div>';
-  createIcons();
-}
-
-async function loadQuickJobs(){
-  try{
-    const {data,error}=await db.from("jobs").select("*").eq("status","open").order("created_at",{ascending:false}).limit(5);
-    if(error) throw error;
-    const jobs=data||[];
-    document.getElementById("quickJobs").innerHTML=
-      jobs.length?jobs.map(quickJobCard).join(""):'<div class="state">No quick jobs are open right now. Be the first to post one.</div>';
-  }catch(e){
-    document.getElementById("quickJobs").innerHTML=
-      '<div class="state">Quick jobs are temporarily unavailable.</div>';
-  }
-  createIcons();
-}
-
-/* SEARCH / FILTER */
-function filterCategory(category,button){
-  currentFilter=category;
-  document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
-  button.classList.add("active");
-  renderServices();
-  document.getElementById("services").scrollIntoView({behavior:"smooth",block:"start"});
-}
-function searchNow(){
-  const q=document.getElementById("search").value.trim();
-  currentFilter="All";
-  document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
-  document.querySelector(".chip").classList.add("active");
-  loadMarketplace(q);
-  document.getElementById("services").scrollIntoView({behavior:"smooth",block:"start"});
-}
-function focusMarketplaceSearch(){
-  const input=document.getElementById("search");
-  if(input){input.focus();input.scrollIntoView({behavior:"smooth",block:"center"})}
-}
-
-/* ROUTING */
-function openJob(id){ location.href=id?"job.html?id="+encodeURIComponent(id):"auth.html?next="+encodeURIComponent("marketplace.html#jobs") }
-function openProvider(id){ location.href=id?"service.html?provider="+encodeURIComponent(id):"marketplace.html#services" }
-function postJob(){location.href="auth.html?next="+encodeURIComponent("marketplace.html#jobs")}
-function goAccount(){location.href="auth.html"}
-
-async function goDashboard(){
-  try{
-    const {data:{session}}=await db.auth.getSession();
-    if(!session){location.href="auth.html?next="+encodeURIComponent("marketplace.html");return}
-    let role=session.user?.user_metadata?.role||session.user?.user_metadata?.account_type||localStorage.getItem("zep_role")||"";
-    try{
-      const {data:profile}=await db.from("profiles").select("*").eq("id",session.user.id).maybeSingle();
-      if(profile) role=profile.role||profile.account_type||profile.user_type||role;
-    }catch(e){}
-    role=String(role||"").toLowerCase().trim();
-    if(["provider","student_provider","freelancer"].includes(role)) return location.href="provider.html";
-    if(["business","business_owner","merchant"].includes(role)) return location.href="business-deals.html";
-    if(["student","customer","user"].includes(role)) return location.href="customer.html";
-    location.href="auth.html?next="+encodeURIComponent("marketplace.html");
-  }catch(e){location.href="auth.html?next="+encodeURIComponent("marketplace.html")}
-}
-
-/* CHECKOUT */
-async function startCustomerCheckout(id,title){
-  if(!id)return;
-
-  // Zep Swipe marketplace browsing is public.
-  // Login is required only when the visitor actually proceeds with a card payment.
-  openPaymentModal(id,title);
-}
-function openPaymentModal(id,title){
-  selectedServiceId=id;selectedPayment="card";
-  document.getElementById("paymentTitle").textContent=title?"Checkout · "+title:"Secure checkout";
-  document.querySelectorAll(".payment").forEach((x,i)=>x.classList.toggle("active",i===0));
-  document.getElementById("paymentModal").classList.add("show");
-  createIcons();
-}
-function selectPayment(method,button){
-  selectedPayment=method;
-  document.querySelectorAll(".payment").forEach(x=>x.classList.remove("active"));
-  button.classList.add("active");
-  document.getElementById("continueCheckout").textContent=
-    method==="later"?"Return to Service":"Continue to Secure Checkout";
-}
-async function continueCheckout(){
-  if(!selectedServiceId){closePaymentModal();return}
-
-  if(selectedPayment==="later"){
-    location.href="service.html?id="+encodeURIComponent(selectedServiceId);
-    return;
-  }
-
-  // Card payments require an authenticated customer account.
-  // Providers/businesses cannot use their dashboard account to make customer payments.
-  if(selectedPayment==="card"){
-    const {data:{session}}=await db.auth.getSession();
-
-    if(!session){
-      localStorage.setItem("zep_checkout_service",selectedServiceId);
-      location.href="auth.html?next="+encodeURIComponent(
-        "service.html?id="+selectedServiceId+"&checkout=1&payment=card"
-      );
-      return;
-    }
-
-    let role =
-      session.user?.user_metadata?.role ||
-      session.user?.user_metadata?.account_type ||
-      session.user?.user_metadata?.user_type ||
-      localStorage.getItem("zep_role") ||
-      "";
-
-    try{
-      const {data:profile}=await db
-        .from("profiles")
-        .select("role,account_type,user_type")
-        .eq("id",session.user.id)
-        .maybeSingle();
-
-      if(profile){
-        role =
-          profile.role ||
-          profile.account_type ||
-          profile.user_type ||
-          role;
-      }
-    }catch(e){
-      console.warn("Customer role lookup:",e.message);
-    }
-
-    role=String(role||"").toLowerCase().trim();
-
-    if(!["customer","student","user"].includes(role)){
-      alert("Please log in with a customer account before making a card payment.");
-      return;
-    }
-  }
-
-  // Actual payment initialization and verification remain on service.html/backend.
-  location.href =
-    "service.html?id="+encodeURIComponent(selectedServiceId)+
-    "&checkout=1&payment="+encodeURIComponent(selectedPayment);
-}
-function closePaymentModal(){document.getElementById("paymentModal").classList.remove("show")}
-
-/* SAVED SERVICES */
-async function saveService(id){
-  const {data:{session}}=await db.auth.getSession();
-  if(!session){
-    localStorage.setItem("zep_save_service",id);
-    location.href="auth.html";
-    return;
-  }
-  try{
-    const {error}=await db.from("saved_services").insert({user_id:session.user.id,service_id:id});
-    if(error)throw error;
-    alert("Service saved.");
-  }catch(e){alert("Could not save service: "+e.message)}
-}
-
-/* DEAL CLAIM */
-async function claimAndRedeemDeal(id){
-  if(!id)return;
-  const {data:{session}}=await db.auth.getSession();
-  if(!session){
-    localStorage.setItem("zep_claim_deal",id);
-    location.href="auth.html?next="+encodeURIComponent("deal.html?id="+id+"&action=claim");
-    return;
-  }
-  let role=session.user?.user_metadata?.role||session.user?.user_metadata?.account_type||localStorage.getItem("zep_role")||"";
-  try{
-    const {data:profile}=await db.from("profiles").select("role,account_type,user_type").eq("id",session.user.id).maybeSingle();
-    if(profile)role=profile.role||profile.account_type||profile.user_type||role;
-  }catch(e){}
-  role=String(role||"").toLowerCase().trim();
-  if(!["student","customer","user"].includes(role)){
-    alert("Please use a student/customer account to claim and redeem this deal.");
-    return;
-  }
-  location.href="deal.html?id="+encodeURIComponent(id)+"&action=claim";
-}
-
-/* NOTIFICATIONS */
-async function showNotifications(){
-  document.getElementById("notificationModal").classList.add("show");
-  await loadNotifications();
-}
-function closeNotifications(){document.getElementById("notificationModal").classList.remove("show")}
-
-async function loadNotifications(){
-  const list=document.getElementById("notificationList");
-  const {data:{session}}=await db.auth.getSession();
-  if(!session){
-    list.innerHTML='<div class="state">Sign in to see your notifications.</div>';
-    return;
-  }
-  try{
-    const {data,error}=await db.from("notifications").select("*")
-      .eq("user_id",session.user.id).order("created_at",{ascending:false}).limit(5);
-    if(error)throw error;
-    if(!data?.length){
-      list.innerHTML='<div class="state">You have no notifications yet.</div>';
-      return;
-    }
-    list.innerHTML=data.map(n=>`<div class="notification ${n.read_at?"":"unread"}">
-      <b>${esc(n.title||"Zep Swipe notification")}</b>
-      <p>${esc(n.message||"You have a new marketplace update.")}</p>
-    </div>`).join("");
-  }catch(e){
-    list.innerHTML='<div class="state">Notifications are not available yet.</div>';
-  }
-}
-
-/* MOBILITY */
-function shareMobility(){
-  const url=window.location.origin+window.location.pathname.replace(/[^/]*$/,"")+"cartrack.html";
-  if(navigator.share){
-    navigator.share({title:"Zep Swipe Mobility",text:"Explore mobility solutions through Zep Swipe.",url}).catch(()=>{});
-  }else{
-    navigator.clipboard?.writeText(url);
-    alert("Mobility link copied.");
-  }
-}
-
-/* REALTIME */
-function setRealtimeStatus(online=true){
-  const el=document.getElementById("realtimeStatus");
-  if(!el)return;
-  el.textContent=online?"● LIVE":"● SYNC OFF";
-  el.classList.toggle("offline",!online);
-}
-function flashLive(){
-  document.querySelectorAll(".pulse-card,#servicesGrid,#dealsGrid,#quickJobs")
-    .forEach(el=>{el.classList.remove("live-flash");void el.offsetWidth;el.classList.add("live-flash")});
-}
-function scheduleLiveRefresh(){
-  clearTimeout(liveRefreshTimer);
-  liveRefreshTimer=setTimeout(async()=>{
-    try{
-      await Promise.all([loadMarketplace(),loadDeals(),loadQuickJobs()]);
-      flashLive();setRealtimeStatus(true);
-    }catch(e){console.warn("Live refresh:",e.message)}
-  },500);
-}
-function startLiveMarketplace(){
-  if(liveStarted||!db?.channel)return;
-  liveStarted=true;
-  ["services","deals","jobs","orders"].forEach(table=>{
-    const channel=db.channel("zep-marketplace-"+table)
-      .on("postgres_changes",{event:"*",schema:"public",table},()=>scheduleLiveRefresh())
-      .subscribe(status=>{
-        if(status==="SUBSCRIBED")setRealtimeStatus(true);
-        if(status==="CHANNEL_ERROR"||status==="TIMED_OUT")setRealtimeStatus(false);
-      });
-    liveChannels.push(channel);
-  });
-}
-setInterval(()=>{
-  if(document.visibilityState==="visible")scheduleLiveRefresh();
-},30000);
-
-/* START */
-loadMarketplace();
-loadDeals();
-loadQuickJobs();
-createIcons();
-startLiveMarketplace();
-
-document.addEventListener("visibilitychange",()=>{
-  if(document.visibilityState==="visible")scheduleLiveRefresh();
-});
-</script>
-</body>
-</html>
+init();
+</script></body></html>
