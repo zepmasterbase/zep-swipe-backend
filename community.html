@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070707">
+<title>Zep Swipe — Community</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root{
+  --bg:#070707;--panel:#101010;--panel2:#141414;--line:#252525;
+  --green:#b8ff3b;--green2:#96df19;--white:#fff;--muted:#999;
+  --danger:#ff5d5d;--max:1180px
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+ margin:0;color:var(--white);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ background:
+ radial-gradient(circle at 12% 5%,rgba(184,255,59,.13),transparent 28%),
+ radial-gradient(circle at 88% 18%,rgba(184,255,59,.08),transparent 25%),
+ linear-gradient(rgba(7,7,7,.80),rgba(7,7,7,.96)),
+ url("https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=2200&q=85") center/cover fixed;
+ min-height:100vh;overflow-x:hidden
+}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.7));z-index:-1}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.app{max-width:var(--max);margin:auto;padding-bottom:110px}
+.top{
+ position:sticky;top:0;z-index:100;background:rgba(7,7,7,.88);
+ backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)
+}
+.top-inner{padding:13px 18px}
+.brand-row{display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{
+ width:40px;height:40px;border-radius:12px;background:var(--green);color:#070707;
+ display:grid;place-items:center;font-weight:1000;font-size:15px;box-shadow:0 0 28px rgba(184,255,59,.22)
+}
+.brand-title{font-size:21px;font-weight:950;letter-spacing:-1.4px}
+.brand-title small{display:block;font-size:8px;letter-spacing:2px;color:#777;margin-top:3px}
+.actions{display:flex;gap:8px}
+.icon-btn{width:41px;height:41px;border-radius:50%;border:1px solid #292929;background:#111;color:#fff;display:grid;place-items:center}
+.icon-btn:hover{border-color:var(--green);color:var(--green)}
+.hero{padding:42px 18px 18px}
+.eyebrow{font-size:10px;font-weight:950;letter-spacing:2px;color:var(--green);text-transform:uppercase}
+h1{font-size:clamp(38px,7vw,68px);line-height:.94;letter-spacing:-3.5px;margin:9px 0 13px;max-width:800px}
+h1 span{color:var(--green)}
+.hero p{max-width:690px;color:#aaa;line-height:1.6;font-size:14px;margin:0 0 20px}
+.search{
+ display:flex;align-items:center;gap:10px;height:56px;background:rgba(255,255,255,.07);
+ border:1px solid #2b2b2b;border-radius:15px;padding:0 16px;max-width:760px
+}
+.search i{color:#777}.search input{width:100%;border:0;outline:0;background:transparent;color:#fff}
+.search input::placeholder{color:#777}
+.quick{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-top:12px}
+.quick::-webkit-scrollbar{display:none}
+.quick button{
+ flex:0 0 auto;border:1px solid #303030;background:#111;color:#aaa;border-radius:999px;
+ padding:9px 13px;font-size:10px;font-weight:850
+}
+.quick button.active,.quick button:hover{background:var(--green);border-color:var(--green);color:#070707}
+.section{padding:20px 18px 0}
+.head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:12px}
+.head h2{font-size:20px;letter-spacing:-.7px;margin:0}
+.head p{font-size:10px;color:#777;margin:5px 0 0}
+.head button{border:0;background:transparent;color:var(--green);font-size:10px;font-weight:900}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{
+ background:rgba(16,16,16,.92);border:1px solid #252525;border-radius:18px;overflow:hidden;
+ box-shadow:0 12px 35px rgba(0,0,0,.18);transition:.2s
+}
+.card:hover{transform:translateY(-2px);border-color:#3b3b3b}
+.cover{height:130px;position:relative;overflow:hidden;background:#151515}
+.cover img{width:100%;height:100%;object-fit:cover;display:block;opacity:.78}
+.cover:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.75))}
+.avatar{
+ width:55px;height:55px;border-radius:16px;background:var(--green);color:#070707;
+ display:grid;place-items:center;font-size:17px;font-weight:1000;border:3px solid #101010;
+ position:absolute;left:14px;bottom:-22px;z-index:2
+}
+.card-body{padding:32px 14px 14px}
+.badge{display:inline-flex;align-items:center;gap:5px;background:rgba(184,255,59,.12);color:var(--green);border:1px solid rgba(184,255,59,.25);border-radius:999px;padding:5px 8px;font-size:8px;font-weight:900}
+.card h3{font-size:15px;margin:9px 0 5px}.card p{font-size:10px;color:#888;line-height:1.5;margin:0}
+.meta{display:flex;gap:10px;flex-wrap:wrap;color:#777;font-size:9px;margin-top:10px}
+.card-actions{display:flex;gap:7px;margin-top:13px}
+.btn{border:0;border-radius:10px;padding:10px 12px;font-size:10px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.green{background:var(--green);color:#070707}.btn.dark{background:#1a1a1a;color:#fff;border:1px solid #303030}.btn.ghost{background:transparent;color:#aaa;border:1px solid #303030}
+.btn:hover{transform:translateY(-1px)}
+.feature{
+ border:1px solid rgba(184,255,59,.25);border-radius:20px;padding:21px;
+ background:linear-gradient(135deg,rgba(184,255,59,.10),rgba(16,16,16,.94) 55%);
+ box-shadow:0 15px 45px rgba(0,0,0,.2)
+}
+.feature .tag{display:inline-flex;background:var(--green);color:#070707;padding:6px 9px;border-radius:999px;font-size:8px;font-weight:950}
+.feature h3{font-size:26px;letter-spacing:-1px;margin:11px 0 7px}.feature p{max-width:690px;color:#999;font-size:11px;line-height:1.55;margin:0 0 15px}
+.stat-row{display:flex;gap:20px;flex-wrap:wrap;margin:12px 0 17px}.stat strong{display:block;font-size:17px}.stat span{font-size:8px;color:#777;text-transform:uppercase;letter-spacing:1px}
+.person-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.person{
+ background:#101010;border:1px solid #252525;border-radius:16px;padding:13px;text-align:center
+}
+.person-photo{width:62px;height:62px;border-radius:50%;margin:auto;background:var(--green);color:#070707;display:grid;place-items:center;font-weight:1000;font-size:17px}
+.person strong{display:block;font-size:12px;margin-top:9px}.person span{display:block;color:#777;font-size:9px;margin-top:3px}
+.person button{width:100%;margin-top:10px}
+.project-card{padding:16px}.project-top{display:flex;justify-content:space-between;gap:10px}.project-icon{width:46px;height:46px;border-radius:13px;background:#1d1d1d;color:var(--green);display:grid;place-items:center}.project-card h3{margin:10px 0 4px}.project-card p{margin:0;color:#888;font-size:10px;line-height:1.5}.skills{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}.skill{font-size:8px;padding:5px 7px;background:#191919;border:1px solid #292929;border-radius:999px;color:#aaa}
+.event{display:grid;grid-template-columns:58px 1fr auto;gap:12px;align-items:center;background:#101010;border:1px solid #252525;border-radius:16px;padding:13px}.date{background:var(--green);color:#070707;border-radius:12px;text-align:center;padding:8px;font-weight:1000}.date b{display:block;font-size:17px;line-height:1}.date span{font-size:7px;text-transform:uppercase}.event h3{margin:0;font-size:12px}.event p{margin:4px 0 0;color:#777;font-size:9px}
+.invite{display:grid;grid-template-columns:1.3fr .7fr;gap:18px;align-items:center;border:1px solid #292929;border-radius:20px;padding:22px;background:rgba(16,16,16,.9)}.invite h2{margin:0 0 6px;font-size:24px}.invite p{margin:0;color:#888;font-size:11px;line-height:1.5}.share-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}.share{border:1px solid #303030;background:#141414;color:#fff;border-radius:10px;padding:10px 11px;font-size:9px;font-weight:900}.share:hover{border-color:var(--green);color:var(--green)}
+.empty{grid-column:1/-1;border:1px dashed #343434;border-radius:17px;padding:30px;text-align:center;color:#777;background:#101010}
+.loading{grid-column:1/-1;text-align:center;color:#777;padding:25px}
+.bottom{
+ position:fixed;left:0;right:0;bottom:0;height:78px;z-index:120;background:rgba(7,7,7,.94);
+ backdrop-filter:blur(18px);border-top:1px solid #222;display:flex;justify-content:center
+}.nav-inner{width:min(700px,100%);display:grid;grid-template-columns:repeat(5,1fr)}
+.nav{border:0;background:transparent;color:#666;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:8px;font-weight:850}.nav.active{color:var(--green)}.nav i{width:18px;height:18px}
+.modal{position:fixed;inset:0;z-index:500;display:none;align-items:flex-end;justify-content:center;padding:12px;background:rgba(0,0,0,.72);backdrop-filter:blur(12px)}.modal.show{display:flex}
+.sheet{width:min(620px,100%);max-height:92vh;overflow:auto;background:#111;border:1px solid #303030;border-radius:25px 25px 16px 16px;padding:20px;box-shadow:0 -25px 80px rgba(0,0,0,.55)}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.sheet h3{font-size:21px;margin:0}.sub{font-size:10px;color:#777;margin:4px 0 0}.close{width:38px;height:38px;border-radius:50%;border:1px solid #303030;background:#171717;color:#fff;display:grid;place-items:center}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.field{margin-top:10px}.field label{display:block;font-size:9px;color:#777;font-weight:850;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid #303030;background:#171717;color:#fff;border-radius:11px;padding:11px;outline:0}.field textarea{min-height:90px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(184,255,59,.12)}.check{display:flex;gap:8px;align-items:flex-start;color:#777;font-size:9px;line-height:1.5;margin-top:13px}.check input{accent-color:var(--green);margin-top:2px}.form-actions{display:flex;gap:8px;margin-top:16px}.form-actions .btn{flex:1}
+.profile-head{display:flex;gap:14px;align-items:center;margin-top:17px}.big-avatar{width:72px;height:72px;border-radius:20px;background:var(--green);color:#070707;display:grid;place-items:center;font-size:22px;font-weight:1000}.profile-head h3{margin:0;font-size:19px}.profile-head p{margin:4px 0 0;color:#777;font-size:10px}.profile-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:15px}
+.toast{position:fixed;z-index:700;left:50%;bottom:92px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#111;color:#fff;border:1px solid #333;border-radius:12px;padding:11px 15px;font-size:11px;transition:.25s;max-width:90%;box-shadow:0 15px 40px #000}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.person-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.hero{padding-top:30px}.grid{grid-template-columns:1fr}.person-grid{grid-template-columns:repeat(2,1fr)}.invite{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.event{grid-template-columns:55px 1fr}.event .btn{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="top-inner">
+  <div class="brand-row">
+   <a class="brand" href="index.html">
+    <div class="logo">ZS</div>
+    <div class="brand-title">ZEP SWIPE<small>OPPORTUNITY PLATFORM</small></div>
+   </a>
+   <div class="actions">
+    <button class="icon-btn" id="notifBtn" aria-label="Notifications"><i data-lucide="bell"></i></button>
+    <button class="icon-btn" id="profileBtn" aria-label="Profile"><i data-lucide="user"></i></button>
+   </div>
+  </div>
+ </div>
+</header>
+
+<main>
+<section class="hero">
+ <div class="eyebrow">ZEP SWIPE COMMUNITY</div>
+ <h1>Find your people.<br><span>Build together.</span></h1>
+ <p>Connect with students, builders, creators and entrepreneurs around the world. Join communities, find teammates, build projects and discover opportunities.</p>
+ <div class="search">
+  <i data-lucide="search"></i>
+  <input id="globalSearch" placeholder="Search students, communities, projects or skills..." autocomplete="off">
+ </div>
+ <div class="quick">
+  <button class="active" data-filter="all">Everything</button>
+  <button data-filter="people">Find People</button>
+  <button data-filter="communities">Communities</button>
+  <button data-filter="projects">Projects</button>
+  <button data-filter="competitions">Competitions</button>
+ </div>
+</section>
+
+<section class="section" id="peopleSection">
+ <div class="head">
+  <div><h2>🌍 Find Students Worldwide</h2><p>Discover people who are open to connecting.</p></div>
+  <button id="viewPeople">View all</button>
+ </div>
+ <div class="grid" id="peopleGrid"><div class="loading">Loading discoverable students…</div></div>
+</section>
+
+<section class="section">
+ <div class="feature">
+  <span class="tag">FLAGSHIP COMMUNITY</span>
+  <h3>🌍 Global Student Builders</h3>
+  <p>Build beyond your campus. Meet students from different countries, find collaborators, share projects and discover opportunities together.</p>
+  <div class="stat-row">
+   <div class="stat"><strong id="globalMembers">—</strong><span>Members</span></div>
+   <div class="stat"><strong>Global</strong><span>Community</span></div>
+   <div class="stat"><strong>Open</strong><span>To Students</span></div>
+  </div>
+  <button class="btn green" id="joinGlobal"><i data-lucide="users"></i> Join Community</button>
+ </div>
+</section>
+
+<section class="section" id="communitiesSection">
+ <div class="head"><div><h2>👥 Trending Communities</h2><p>Find people around the things you care about.</p></div><button id="createCommunity">+ Create</button></div>
+ <div class="grid" id="communitiesGrid"><div class="loading">Loading communities…</div></div>
+</section>
+
+<section class="section" id="competitionSection">
+ <div class="head"><div><h2>🏆 Competitions & Challenges</h2><p>Turn ideas into teams, projects and opportunities.</p></div><button id="viewCompetitions">Explore</button></div>
+ <div class="feature">
+  <span class="tag">ZEP SWIPE PROGRAM</span>
+  <h3>Campus Startup Challenge</h3>
+  <p>Build. Pitch. Connect. A student competition designed to help builders form teams, develop ideas and create real opportunities.</p>
+  <div class="stat-row"><div class="stat"><strong>Build</strong><span>Stage 1</span></div><div class="stat"><strong>Team</strong><span>Stage 2</span></div><div class="stat"><strong>Pitch</strong><span>Stage 3</span></div></div>
+  <button class="btn green" id="joinCompetition"><i data-lucide="trophy"></i> View Challenge</button>
+ </div>
+</section>
+
+<section class="section" id="projectsSection">
+ <div class="head"><div><h2>🚀 Student Projects</h2><p>Find something worth building together.</p></div><button id="createProject">+ Create Project</button></div>
+ <div class="grid" id="projectsGrid"><div class="loading">Loading projects…</div></div>
+</section>
+
+<section class="section">
+ <div class="head"><div><h2>📅 Upcoming Community Events</h2><p>Meet online or on campus.</p></div><button id="createEvent">+ Event</button></div>
+ <div class="grid" id="eventsGrid"><div class="loading">Loading events…</div></div>
+</section>
+
+<section class="section">
+ <div class="invite">
+  <div>
+   <h2>🤝 Grow your network</h2>
+   <p>Know students who should be here? Invite them to Zep Swipe or share a community link. We use share links rather than harvesting your private contact list.</p>
+   <div class="share-row">
+    <button class="share" id="waShare"><i data-lucide="message-circle"></i> WhatsApp</button>
+    <button class="share" id="copyInvite"><i data-lucide="copy"></i> Copy Link</button>
+    <button class="share" id="nativeShare"><i data-lucide="share-2"></i> Share</button>
+   </div>
+  </div>
+  <div style="text-align:center">
+   <div class="logo" style="margin:auto;width:66px;height:66px;font-size:20px">ZS</div>
+   <div style="color:#777;font-size:9px;margin-top:9px">STUDENTS • SKILLS • PEOPLE • OPPORTUNITIES</div>
+  </div>
+ </div>
+</section>
+
+<section class="section">
+ <div class="feature" style="background:linear-gradient(135deg,rgba(184,255,59,.08),rgba(16,16,16,.96))">
+  <span class="tag">CREATE</span>
+  <h3>Have an idea for a community?</h3>
+  <p>Create a public, private or invite-only community around a campus, skill, industry, project or interest.</p>
+  <button class="btn green" id="createCommunity2"><i data-lucide="plus"></i> Create Community</button>
+ </div>
+</section>
+</main>
+</div>
+
+<nav class="bottom">
+ <div class="nav-inner">
+  <a class="nav" href="index.html"><i data-lucide="home"></i>Home</a>
+  <a class="nav" href="marketplace.html"><i data-lucide="store"></i>Marketplace</a>
+  <a class="nav" href="opportunity.html"><i data-lucide="sparkles"></i>Opportunities</a>
+  <a class="nav active" href="community.html"><i data-lucide="users"></i>Community</a>
+  <a class="nav" href="profile.html"><i data-lucide="user-circle"></i>Profile</a>
+ </div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<!-- Profile modal -->
+<div class="modal" id="profileModal">
+ <div class="sheet">
+  <div class="sheet-head"><div><h3>Your Zep Swipe profile</h3><div class="sub">Public details depend on your privacy settings.</div></div><button class="close" data-close="profileModal"><i data-lucide="x"></i></button></div>
+  <div class="profile-head"><div class="big-avatar" id="myAvatar">ZS</div><div><h3 id="myName">Guest</h3><p id="myMeta">Sign in to manage your profile and connections.</p></div></div>
+  <div class="profile-tags"><span class="badge">Discoverable profiles only</span><span class="badge">Privacy first</span></div>
+  <div class="form-actions"><a class="btn green" href="profile.html">Open Profile</a><button class="btn dark" data-close="profileModal">Close</button></div>
+ </div>
+</div>
+
+<!-- Student profile modal -->
+<div class="modal" id="studentModal">
+ <div class="sheet">
+  <div class="sheet-head"><div><h3 id="studentName">Student</h3><div class="sub" id="studentMeta">Zep Swipe member</div></div><button class="close" data-close="studentModal"><i data-lucide="x"></i></button></div>
+  <div class="profile-head"><div class="big-avatar" id="studentAvatar">S</div><div><h3 id="studentHeadline">Student</h3><p id="studentLocation">Global</p></div></div>
+  <div class="profile-tags" id="studentTags"></div>
+  <div style="margin-top:17px"><div class="sub">Looking for</div><p id="studentLooking" style="color:#bbb;font-size:12px;line-height:1.5"></p></div>
+  <div class="form-actions"><button class="btn green" id="connectBtn"><i data-lucide="user-plus"></i> Connect</button><button class="btn dark" id="messageBtn"><i data-lucide="message-circle"></i> Message</button></div>
+ </div>
+</div>
+
+<!-- Community modal -->
+<div class="modal" id="communityModal">
+ <div class="sheet">
+  <div class="sheet-head"><div><h3 id="communityTitle">Create Community</h3><div class="sub">Build a space around an interest, campus, project or opportunity.</div></div><button class="close" data-close="communityModal"><i data-lucide="x"></i></button></div>
+  <form id="communityForm">
+   <div class="form-grid">
+    <div class="field"><label>COMMUNITY NAME *</label><input id="cName" required maxlength="80" placeholder="AI Builders Africa"></div>
+    <div class="field"><label>CATEGORY *</label><select id="cCategory" required><option>Technology</option><option>Startups</option><option>Creators</option><option>Career</option><option>Business</option><option>Campus</option><option>Other</option></select></div>
+   </div>
+   <div class="field"><label>DESCRIPTION *</label><textarea id="cDescription" required maxlength="500" placeholder="What is this community about?"></textarea></div>
+   <div class="form-grid">
+    <div class="field"><label>VISIBILITY</label><select id="cVisibility"><option value="public">Public</option><option value="private">Private</option><option value="invite_only">Invite only</option></select></div>
+    <div class="field"><label>LOCATION</label><input id="cLocation" placeholder="Global / UCT / Cape Town"></div>
+   </div>
+   <div class="check"><input type="checkbox" id="cStudentOnly" checked><span>Keep this community focused on students and student builders.</span></div>
+   <div class="form-actions"><button type="button" class="btn dark" data-close="communityModal">Cancel</button><button class="btn green" type="submit">Create Community</button></div>
+  </form>
+ </div>
+</div>
+
+<!-- Generic action modal -->
+<div class="modal" id="actionModal">
+ <div class="sheet">
+  <div class="sheet-head"><div><h3 id="actionTitle">Action</h3><div class="sub" id="actionSub">Create something on Zep Swipe.</div></div><button class="close" data-close="actionModal"><i data-lucide="x"></i></button></div>
+  <form id="actionForm">
+   <div class="field"><label>NAME *</label><input id="aName" required></div>
+   <div class="field"><label>DESCRIPTION *</label><textarea id="aDescription" required></textarea></div>
+   <div class="field"><label>WHAT ARE YOU LOOKING FOR?</label><input id="aLooking" placeholder="Designer, developer, co-founder..."></div>
+   <div class="form-actions"><button type="button" class="btn dark" data-close="actionModal">Cancel</button><button class="btn green" type="submit">Submit</button></div>
+  </form>
+ </div>
+</div>
+
+<script>
+/* =========================
+   ZEP SWIPE COMMUNITY
+   LIVE SUPABASE CONFIG
+   ========================= */
+const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY";
+const db=(window.supabase && SUPABASE_ANON_KEY!=="YOUR_SUPABASE_ANON_KEY")
+ ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY)
+ : null;
+
+
+const TABLES={
+  profiles:"profiles",
+  communities:"communities",
+  members:"community_members",
+  connections:"connections",
+  projects:"student_projects",
+  events:"community_events",
+  competitions:"competitions"
+};
+
+let currentStudent=null,currentAction="";
+let liveUser=null;
+
+function esc(v=""){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function initials(p){return ((p.first_name||p.name||"Z")+" "+(p.last_name||"")).split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
+function openModal(id){document.getElementById(id).classList.add("show");document.body.style.overflow="hidden"}
+function closeModal(id){document.getElementById(id).classList.remove("show");document.body.style.overflow=""}
+function moneySafe(n){return Number(n||0).toLocaleString()}
+function safeUrl(u){try{const x=new URL(u);return ["http:","https:"].includes(x.protocol)?x.href:"#"}catch{return "#"}}
+function emptyState(title,sub,action=""){
+  return `<div class="empty"><strong style="display:block;color:#fff;font-size:14px;margin-bottom:6px">${esc(title)}</strong><span>${esc(sub)}</span>${action?`<br><button class="btn green" style="margin-top:13px" onclick="${action}">Create</button>`:""}</div>`;
+}
+function requireDb(){
+  if(!db){toast("Add the Supabase anon key to activate the live backend.");return false}
+  return true;
+}
+async function getUser(){
+  if(!db)return null;
+  const {data,error}=await db.auth.getUser();
+  if(error){console.warn(error);return null}
+  return data?.user||null;
+}
+
+function renderPeople(list){
+ const el=document.getElementById("peopleGrid");
+ if(!list.length){el.innerHTML=emptyState("No discoverable students yet.","Be one of the first students to make your profile discoverable.","location.href='profile.html'");return}
+ el.innerHTML=list.slice(0,12).map(p=>`
+ <article class="card">
+  <div class="cover">${p.cover_url?`<img src="${safeUrl(p.cover_url)}" onerror="this.style.display='none'">`:""}<div class="avatar">${esc(initials(p))}</div></div>
+  <div class="card-body">
+   <span class="badge"><i data-lucide="globe-2"></i> Discoverable</span>
+   <h3>${esc(((p.first_name||p.name||"Student")+" "+(p.last_name||"")).trim())}</h3>
+   <p>${esc(p.headline||p.bio||"Student builder")} ${p.university?"• "+esc(p.university):""}</p>
+   <div class="meta"><span>🌍 ${esc(p.country||"Global")}</span></div>
+   <div class="skills">${(p.skills||p.interests||[]).slice(0,4).map(s=>`<span class="skill">${esc(s)}</span>`).join("")}</div>
+   <div class="card-actions"><button class="btn green" onclick='showStudent(${JSON.stringify(p).replace(/'/g,"&#39;")})'>View Profile</button><button class="btn dark" onclick='sendConnection(${JSON.stringify(p).replace(/'/g,"&#39;")})'>Connect</button></div>
+  </div>
+ </article>`).join("");
+ lucide.createIcons();
+}
+function renderCommunities(list){
+ const el=document.getElementById("communitiesGrid");
+ if(!list.length){el.innerHTML=emptyState("No communities yet.","Create the first Zep Swipe community.","openModal('communityModal')");return}
+ el.innerHTML=list.map(c=>`
+ <article class="card">
+  <div class="cover">${c.cover_url?`<img src="${safeUrl(c.cover_url)}" onerror="this.style.display='none'">`:""}<div class="avatar">${esc((c.name||"C").slice(0,2).toUpperCase())}</div></div>
+  <div class="card-body">
+   <span class="badge">${esc(c.category||"Community")}</span>
+   <h3>${esc(c.name)}</h3><p>${esc(c.description||"Student community on Zep Swipe.")}</p>
+   <div class="meta"><span>👥 ${moneySafe(c.members_count||c.member_count)} members</span><span>📍 ${esc(c.location||"Global")}</span></div>
+   <div class="card-actions"><button class="btn green" onclick='joinCommunity(${JSON.stringify(c).replace(/'/g,"&#39;")})'>Join</button><button class="btn dark" onclick='viewCommunity(${JSON.stringify(c).replace(/'/g,"&#39;")})'>Explore</button></div>
+  </div>
+ </article>`).join("");
+ lucide.createIcons();
+}
+function renderProjects(list){
+ const el=document.getElementById("projectsGrid");
+ if(!list.length){el.innerHTML=emptyState("No student projects yet.","Start a project and find collaborators.","openAction('project')");return}
+ el.innerHTML=list.map(p=>`
+ <article class="card project-card">
+  <div class="project-top"><div class="project-icon"><i data-lucide="rocket"></i></div><span class="badge">Student Project</span></div>
+  <h3>${esc(p.name||p.title)}</h3><p>${esc(p.description||"Student project")}</p>
+  <div class="skills">${(p.skills||[]).map(s=>`<span class="skill">${esc(s)}</span>`).join("")}</div>
+  <div class="meta"><span>🤝 ${esc(p.looking_for||"Collaborators welcome")}</span></div>
+  <div class="card-actions"><button class="btn green" onclick='joinProject(${JSON.stringify(p).replace(/'/g,"&#39;")})'>Join Team</button><button class="btn dark" onclick='viewProject(${JSON.stringify(p).replace(/'/g,"&#39;")})'>View</button></div>
+ </article>`).join("");
+ lucide.createIcons();
+}
+function renderEvents(list){
+ const el=document.getElementById("eventsGrid");
+ if(!list.length){el.innerHTML=emptyState("No upcoming events yet.","Create the first community event.","openAction('event')");return}
+ el.innerHTML=list.map(e=>`
+ <article class="event"><div class="date"><b>${esc(e.date||"—")}</b><span>${esc(e.month||"")}</span></div><div><h3>${esc(e.title||e.name)}</h3><p>${esc(e.location||"Online")} • ${esc(e.description||"Community event")}</p></div><button class="btn green" onclick='joinEvent(${JSON.stringify(e).replace(/'/g,"&#39;")})'>Join</button></article>`).join("");
+ lucide.createIcons();
+}
+
+async function fetchTable(table,select="*"){
+ if(!db) throw new Error("Supabase is not configured.");
+ const {data,error}=await db.from(table).select(select);
+ if(error) throw error;
+ return data||[];
+}
+function showLoadError(id,label,error){
+ console.error(label,error);
+ document.getElementById(id).innerHTML=emptyState(
+   `${label} couldn't load`,
+   "Check your Supabase table, RLS policy and column names. No demo data is shown."
+ );
+}
+
+async function loadData(){
+ if(!requireDb()){
+   ["peopleGrid","communitiesGrid","projectsGrid","eventsGrid"].forEach(id=>{
+     document.getElementById(id).innerHTML=emptyState("Backend not configured.","Add your Supabase anon/public key. Demo records are intentionally disabled.");
+   });
+   document.getElementById("globalMembers").textContent="—";
+   return;
+ }
+
+ const results=await Promise.allSettled([
+   fetchTable(TABLES.profiles,"*"),
+   fetchTable(TABLES.communities,"*"),
+   fetchTable(TABLES.projects,"*"),
+   fetchTable(TABLES.events,"*")
+ ]);
+
+ const [peopleR,communitiesR,projectsR,eventsR]=results;
+
+ if(peopleR.status==="fulfilled"){
+   const discoverable=(peopleR.value||[]).filter(p=>p.profile_visibility==="public"||p.is_discoverable===true||p.discoverable===true);
+   renderPeople(discoverable);
+ }else showLoadError("peopleGrid","Students",peopleR.reason);
+
+ if(communitiesR.status==="fulfilled"){
+   renderCommunities(communitiesR.value||[]);
+   const global=(communitiesR.value||[]).find(x=>String(x.name||"").toLowerCase()==="global student builders");
+   document.getElementById("globalMembers").textContent=global?moneySafe(global.members_count||global.member_count):"—";
+ }else showLoadError("communitiesGrid","Communities",communitiesR.reason);
+
+ if(projectsR.status==="fulfilled") renderProjects(projectsR.value||[]);
+ else showLoadError("projectsGrid","Projects",projectsR.reason);
+
+ if(eventsR.status==="fulfilled") renderEvents(eventsR.value||[]);
+ else showLoadError("eventsGrid","Events",eventsR.reason);
+}
+
+function showStudent(p){
+ currentStudent=p;
+ document.getElementById("studentName").textContent=((p.first_name||p.name||"Student")+" "+(p.last_name||"")).trim();
+ document.getElementById("studentHeadline").textContent=p.headline||"Student builder";
+ document.getElementById("studentMeta").textContent=p.university||"Zep Swipe member";
+ document.getElementById("studentLocation").textContent=(p.country||"Global")+" • "+(p.university||"Student");
+ document.getElementById("studentAvatar").textContent=initials(p);
+ document.getElementById("studentLooking").textContent=p.looking_for||"Open to meaningful connections and opportunities.";
+ document.getElementById("studentTags").innerHTML=[...(p.skills||[]),...(p.interests||[])].slice(0,10).map(x=>`<span class="badge">${esc(x)}</span>`).join("");
+ openModal("studentModal");lucide.createIcons();
+}
+
+async function sendConnection(p){
+ if(!requireDb())return;
+ const user=await getUser();
+ if(!user){toast("Sign in to send a connection request.");location.href="signin.html?next=community.html";return}
+ if(String(p.id).startsWith("demo-"))return;
+ if(String(p.id)===String(user.id)){toast("That's your own profile.");return}
+ const {error}=await db.from(TABLES.connections).upsert(
+   {sender_id:user.id,receiver_id:p.id,status:"pending",created_at:new Date().toISOString()},
+   {onConflict:"sender_id,receiver_id"}
+ );
+ if(error){console.error(error);toast("Could not send connection. Check connections RLS.");return}
+ toast("Connection request sent.");
+}
+
+async function messageStudent(){
+ if(!currentStudent)return;
+ if(!requireDb())return;
+ const user=await getUser();
+ if(!user){toast("Sign in to message students.");location.href="signin.html?next=community.html";return}
+ if(String(currentStudent.id)===String(user.id)){toast("You can't message yourself.");return}
+ location.href=`messages.html?user=${encodeURIComponent(currentStudent.id)}`;
+}
+
+async function joinCommunity(c){
+ if(!requireDb())return;
+ const user=await getUser();
+ if(!user){toast("Sign in to join this community.");location.href="signin.html?next=community.html";return}
+ const {error}=await db.from(TABLES.members).upsert(
+   {community_id:c.id,user_id:user.id,role:"member",joined_at:new Date().toISOString()},
+   {onConflict:"community_id,user_id"}
+ );
+ if(error){console.error(error);toast("Could not join community. Check community_members RLS.");return}
+ toast("You're in. Welcome to the community!");
+ loadData();
+}
+function viewCommunity(c){location.href=`community.html?id=${encodeURIComponent(c.id)}`}
+async function joinProject(p){toast("Team membership flow is ready for the project backend.");}
+function viewProject(p){location.href=`project.html?id=${encodeURIComponent(p.id)}`}
+async function joinEvent(e){toast("Event RSVP flow is ready for the community event backend.");}
+
+function openAction(type){
+ currentAction=type;
+ const map={
+  project:["Create a Student Project","Tell the community what you're building."],
+  event:["Create a Community Event","Bring students together around an event."],
+  competition:["Create a Competition","Create a student challenge or competition."]
+ };
+ document.getElementById("actionTitle").textContent=map[type]?.[0]||"Create";
+ document.getElementById("actionSub").textContent=map[type]?.[1]||"";
+ openModal("actionModal");
+}
+
+async function submitAction(e){
+ e.preventDefault();
+ if(!requireDb())return;
+ const user=await getUser();
+ if(!user){toast("Sign in to create this.");location.href="signin.html?next=community.html";return}
+ const payload={
+   name:document.getElementById("aName").value.trim(),
+   description:document.getElementById("aDescription").value.trim(),
+   looking_for:document.getElementById("aLooking").value.trim(),
+   created_by:user.id,
+   created_at:new Date().toISOString()
+ };
+ const table=currentAction==="project"?TABLES.projects:currentAction==="event"?TABLES.events:TABLES.competitions;
+ const {error}=await db.from(table).insert(payload);
+ if(error){console.error(error);toast(`Could not create ${currentAction}. Check ${table} RLS/table schema.`);return}
+ toast("Created successfully.");closeModal("actionModal");e.target.reset();loadData();
+}
+
+async function createCommunity(e){
+ e.preventDefault();
+ if(!requireDb())return;
+ const user=await getUser();
+ if(!user){toast("Sign in to create a community.");location.href="signin.html?next=community.html";return}
+ const payload={
+  name:document.getElementById("cName").value.trim(),
+  category:document.getElementById("cCategory").value,
+  description:document.getElementById("cDescription").value.trim(),
+  visibility:document.getElementById("cVisibility").value,
+  location:document.getElementById("cLocation").value.trim()||"Global",
+  student_only:document.getElementById("cStudentOnly").checked,
+  created_by:user.id,
+  members_count:1,
+  created_at:new Date().toISOString()
+ };
+ const {data,error}=await db.from(TABLES.communities).insert(payload).select().single();
+ if(error){console.error(error);toast("Could not create community. Check communities RLS/schema.");return}
+ const memberResult=await db.from(TABLES.members).insert({community_id:data.id,user_id:user.id,role:"admin",joined_at:new Date().toISOString()});
+ if(memberResult.error)console.warn("Community created but admin membership insert failed:",memberResult.error);
+ toast("Community created.");closeModal("communityModal");e.target.reset();loadData();
+}
+
+async function searchLive(q){
+ q=q.toLowerCase().trim();
+ if(!q){loadData();return}
+ if(!requireDb())return;
+ const [people,communities,projects]=await Promise.allSettled([
+  db.from(TABLES.profiles).select("*").or(`first_name.ilike.%${q}%,last_name.ilike.%${q}%,headline.ilike.%${q}%,university.ilike.%${q}%,country.ilike.%${q}%`),
+  db.from(TABLES.communities).select("*").or(`name.ilike.%${q}%,category.ilike.%${q}%,description.ilike.%${q}%`),
+  db.from(TABLES.projects).select("*").or(`name.ilike.%${q}%,title.ilike.%${q}%,description.ilike.%${q}%`)
+ ]);
+ if(people.status==="fulfilled"){
+   const rows=(people.value.data||[]).filter(p=>p.profile_visibility==="public"||p.is_discoverable===true||p.discoverable===true);renderPeople(rows);
+ }else showLoadError("peopleGrid","Students",people.reason);
+ if(communities.status==="fulfilled")renderCommunities(communities.value.data||[]);
+ else showLoadError("communitiesGrid","Communities",communities.reason);
+ if(projects.status==="fulfilled")renderProjects(projects.value.data||[]);
+ else showLoadError("projectsGrid","Projects",projects.reason);
+}
+let currentStudent=null,currentAction="";
+
+function esc(v=""){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function initials(p){return ((p.first_name||p.name||"Z")+" "+(p.last_name||"")).split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
+function openModal(id){document.getElementById(id).classList.add("show");document.body.style.overflow="hidden"}
+function closeModal(id){document.getElementById(id).classList.remove("show");document.body.style.overflow=""}
+function moneySafe(n){return Number(n||0).toLocaleString()}
+function safeUrl(u){try{const x=new URL(u);return ["http:","https:"].includes(x.protocol)?x.href:"#"}catch{return "#"}}
+
+function renderPeople(list){
+ const el=document.getElementById("peopleGrid");
+ if(!list.length){el.innerHTML='<div class="empty">No discoverable students matched your search.</div>';return}
+ el.innerHTML=list.slice(0,12).map(p=>`
+ <article class="card">
+  <div class="cover"><div class="avatar">${esc(initials(p))}</div></div>
+  <div class="card-body">
+   <span class="badge"><i data-lucide="globe-2"></i> Discoverable</span>
+   <h3>${esc((p.first_name||p.name||"Student")+" "+(p.last_name||""))}</h3>
+   <p>${esc(p.headline||p.bio||"Student builder")} ${p.university?"• "+esc(p.university):""}</p>
+   <div class="meta"><span>🌍 ${esc(p.country||"Global")}</span></div>
+   <div class="skills">${(p.skills||p.interests||[]).slice(0,4).map(s=>`<span class="skill">${esc(s)}</span>`).join("")}</div>
+   <div class="card-actions"><button class="btn green" onclick='showStudent(${JSON.stringify(p).replace(/'/g,"&#39;")})'>View Profile</button><button class="btn dark" onclick='sendConnection(${JSON.stringify(p).replace(/'/g,"&#39;")})'>Connect</button></div>
+  </div>
+ </article>`).join("");
+ lucide.createIcons();
+}
+function renderCommunities(list){
+ const el=document.getElementById("communitiesGrid");
+ if(!list.length){el.innerHTML='<div class="empty">No communities found.</div>';return}
+ el.innerHTML=list.map(c=>`
+ <article class="card">
+  <div class="cover"><img src="${safeUrl(c.cover_url)||"https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=75"}" onerror="this.style.display='none'"><div class="avatar">${esc((c.name||"C").slice(0,2).toUpperCase())}</div></div>
+  <div class="card-body">
+   <span class="badge">${esc(c.category||"Community")}</span>
+   <h3>${esc(c.name)}</h3><p>${esc(c.description||"A student community on Zep Swipe.")}</p>
+   <div class="meta"><span>👥 ${moneySafe(c.members_count)} members</span><span>📍 ${esc(c.location||"Global")}</span></div>
+   <div class="card-actions"><button class="btn green" onclick='joinCommunity(${JSON.stringify(c).replace(/'/g,"&#39;")})'>Join</button><button class="btn dark" onclick='viewCommunity(${JSON.stringify(c).replace(/'/g,"&#39;")})'>Explore</button></div>
+  </div>
+ </article>`).join("");
+ lucide.createIcons();
+}
+function renderProjects(list){
+ const el=document.getElementById("projectsGrid");
+ if(!list.length){el.innerHTML='<div class="empty">No projects found.</div>';return}
+ el.innerHTML=list.map(p=>`
+ <article class="card project-card">
+  <div class="project-top"><div class="project-icon"><i data-lucide="rocket"></i></div><span class="badge">Student Project</span></div>
+  <h3>${esc(p.name||p.title)}</h3><p>${esc(p.description||"Student project")}</p>
+  <div class="skills">${(p.skills||[]).map(s=>`<span class="skill">${esc(s)}</span>`).join("")}</div>
+  <div class="meta"><span>🤝 ${esc(p.looking_for||"Collaborators welcome")}</span></div>
+  <div class="card-actions"><button class="btn green" onclick='joinProject(${JSON.stringify(p).replace(/'/g,"&#39;")})'>Join Team</button><button class="btn dark" onclick='viewProject(${JSON.stringify(p).replace(/'/g,"&#39;")})'>View</button></div>
+ </article>`).join("");
+ lucide.createIcons();
+}
+function renderEvents(list){
+ const el=document.getElementById("eventsGrid");
+ if(!list.length){el.innerHTML='<div class="empty">No upcoming events yet.</div>';return}
+ el.innerHTML=list.map(e=>`
+ <article class="event"><div class="date"><b>${esc(e.date||"—")}</b><span>${esc(e.month||"")}</span></div><div><h3>${esc(e.title||e.name)}</h3><p>${esc(e.location||"Online")} • ${esc(e.description||"Community event")}</p></div><button class="btn green" onclick='joinEvent(${JSON.stringify(e).replace(/'/g,"&#39;")})'>Join</button></article>`).join("");
+ lucide.createIcons();
+}
+async function fetchTable(table,select="*"){
+ if(!db)return null;
+ const {data,error}=await db.from(table).select(select);
+ if(error){console.warn(table,error);return null}
+ return data||[];
+}
+async function loadData(){
+ const [people,communities,projects,events]=await Promise.all([
+  fetchTable("profiles","*"),fetchTable("communities","*"),fetchTable("student_projects","*"),fetchTable("community_events","*")
+ ]);
+ const discoverable=(people||[]).filter(p=>p.profile_visibility==="public"||p.is_discoverable===true||p.discoverable===true);
+ renderPeople(discoverable.length?discoverable:DEMO.people);
+ renderCommunities(communities&&communities.length?communities:DEMO.communities);
+ renderProjects(projects&&projects.length?projects:DEMO.projects);
+ renderEvents(events&&events.length?events:DEMO.events);
+ const global=(communities||[]).find(x=>String(x.name||"").toLowerCase()==="global student builders");
+ document.getElementById("globalMembers").textContent=global?moneySafe(global.members_count||global.member_count):"12.8K";
+}
+
+function showStudent(p){
+ currentStudent=p;
+ document.getElementById("studentName").textContent=((p.first_name||p.name||"Student")+" "+(p.last_name||"")).trim();
+ document.getElementById("studentHeadline").textContent=p.headline||"Student builder";
+ document.getElementById("studentMeta").textContent=p.university||"Zep Swipe member";
+ document.getElementById("studentLocation").textContent=(p.country||"Global")+" • "+(p.university||"Student");
+ document.getElementById("studentAvatar").textContent=initials(p);
+ document.getElementById("studentLooking").textContent=p.looking_for||"Open to meaningful connections and opportunities.";
+ document.getElementById("studentTags").innerHTML=[...(p.skills||[]),...(p.interests||[])].slice(0,10).map(x=>`<span class="badge">${esc(x)}</span>`).join("");
+ openModal("studentModal");lucide.createIcons();
+}
+async function sendConnection(p){
+ if(!db){toast("Demo mode: connect requests are ready once Supabase is configured.");return}
+ const {data:{user}}=await db.auth.getUser();
+ if(!user){toast("Sign in to send a connection request.");return}
+ if(String(p.id).startsWith("demo-")){toast("This demo profile is not yet connected to the live database.");return}
+ const payload={sender_id:user.id,receiver_id:p.id,status:"pending",created_at:new Date().toISOString()};
+ const {error}=await db.from("connections").upsert(payload,{onConflict:"sender_id,receiver_id"});
+ if(error){console.error(error);toast("Could not send connection. Check your connection policy.");return}
+ toast("Connection request sent.");
+}
+async function messageStudent(){
+ if(!currentStudent)return;
+ if(!db){toast("Chat is ready for the live messaging backend.");return}
+ const {data:{user}}=await db.auth.getUser();
+ if(!user){toast("Sign in to message students.");return}
+ if(String(currentStudent.id).startsWith("demo-")){toast("Live messaging activates when this profile exists in Supabase.");return}
+ location.href=`messages.html?user=${encodeURIComponent(currentStudent.id)}`;
+}
+async function joinCommunity(c){
+ if(!db){toast("Live backend is ready for community membership.");return}
+ const {data:{user}}=await db.auth.getUser();if(!user){toast("Sign in to join this community.");return}
+ if(String(c.id).startsWith("demo-")){toast("Demo community. Connect the communities table to enable joining.");return}
+ const {error}=await db.from("community_members").upsert({community_id:c.id,user_id:user.id,role:"member"});
+ if(error){console.error(error);toast("Could not join community.");return}
+ toast("You're in. Welcome to the community!");
+}
+function viewCommunity(c){toast(`${c.name} community view is ready for the community detail route.`)}
+function joinProject(p){toast(`Team request ready for ${p.name||p.title}.`)}
+function viewProject(p){toast(`Opening ${p.name||p.title} project.`)}
+function joinEvent(e){toast(`You're interested in ${e.title||e.name}.`)}
+function openAction(type){
+ currentAction=type;
+ const map={
+  project:["Create a Student Project","Tell the community what you're building."],
+  event:["Create a Community Event","Bring students together around an event."],
+  competition:["Create a Competition","Create a student challenge or competition."]
+ };
+ document.getElementById("actionTitle").textContent=map[type]?.[0]||"Create";
+ document.getElementById("actionSub").textContent=map[type]?.[1]||"";
+ openModal("actionModal");
+}
+async function submitAction(e){
+ e.preventDefault();
+ const payload={name:document.getElementById("aName").value.trim(),description:document.getElementById("aDescription").value.trim(),looking_for:document.getElementById("aLooking").value.trim()};
+ if(!db){toast("Live backend is ready for this submission.");closeModal("actionModal");e.target.reset();return}
+ const {data:{user}}=await db.auth.getUser();
+ if(!user){toast("Sign in to create this.");return}
+ const table=currentAction==="project"?"student_projects":currentAction==="event"?"community_events":"competitions";
+ const {error}=await db.from(table).insert({...payload,created_by:user.id,created_at:new Date().toISOString()});
+ if(error){console.error(error);toast("Could not create item. Check your Supabase table/RLS.");return}
+ toast("Created successfully.");closeModal("actionModal");e.target.reset();loadData();
+}
+async function createCommunity(e){
+ e.preventDefault();
+ const payload={name:cName.value.trim(),category:cCategory.value,description:cDescription.value.trim(),visibility:cVisibility.value,location:cLocation.value.trim()||"Global",student_only:cStudentOnly.checked};
+ if(!db){toast("Demo mode: community creation is ready for Supabase.");closeModal("communityModal");return}
+ const {data:{user}}=await db.auth.getUser();if(!user){toast("Sign in to create a community.");return}
+ const {data,error}=await db.from("communities").insert({...payload,created_by:user.id,members_count:1,created_at:new Date().toISOString()}).select().single();
+ if(error){console.error(error);toast("Could not create community. Check your table/RLS.");return}
+ await db.from("community_members").insert({community_id:data.id,user_id:user.id,role:"admin"});
+ toast("Community created.");closeModal("communityModal");e.target.reset();loadData();
+}
+
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
+document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)closeModal(m.id)}));
+document.getElementById("profileBtn").onclick=async()=>{
+ if(db){const {data:{user}}=await db.auth.getUser();if(user){document.getElementById("myName").textContent=user.email?.split("@")[0]||"Zep Swipe member";document.getElementById("myMeta").textContent=user.email||"Signed in";}}
+ openModal("profileModal");
+};
+document.getElementById("notifBtn").onclick=()=>toast("No new community notifications.");
+document.getElementById("joinGlobal").onclick=()=>joinCommunity(DEMO.communities[0]);
+document.getElementById("joinCompetition").onclick=()=>openAction("competition");
+document.getElementById("viewCompetitions").onclick=()=>openAction("competition");
+document.getElementById("createProject").onclick=()=>openAction("project");
+document.getElementById("createEvent").onclick=()=>openAction("event");
+document.getElementById("createCommunity").onclick=()=>openModal("communityModal");
+document.getElementById("createCommunity2").onclick=()=>openModal("communityModal");
+document.getElementById("communityForm").addEventListener("submit",createCommunity);
+document.getElementById("actionForm").addEventListener("submit",submitAction);
+document.getElementById("messageBtn").onclick=messageStudent;
+
+let searchTimer;
+document.getElementById("globalSearch").addEventListener("input",e=>{
+ clearTimeout(searchTimer);
+ searchTimer=setTimeout(()=>searchLive(e.target.value),300);
+});
+document.querySelectorAll(".quick button").forEach(btn=>btn.onclick=()=>{
+ document.querySelectorAll(".quick button").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+ const f=btn.dataset.filter;
+ document.getElementById("peopleSection").style.display=(f==="all"||f==="people")?"block":"none";
+ document.getElementById("communitiesSection").style.display=(f==="all"||f==="communities")?"block":"none";
+ document.getElementById("projectsSection").style.display=(f==="all"||f==="projects")?"block":"none";
+ document.getElementById("competitionSection").style.display=(f==="all"||f==="competitions")?"block":"none";
+});
+document.getElementById("copyInvite").onclick=async()=>{try{await navigator.clipboard.writeText(location.href);toast("Community link copied.");}catch{toast(location.href)}};
+document.getElementById("waShare").onclick=()=>{const text=encodeURIComponent("Join me on Zep Swipe — a student opportunity platform for people, communities, projects and opportunities: "+location.href);window.open("https://wa.me/?text="+text,"_blank")};
+document.getElementById("nativeShare").onclick=async()=>{if(navigator.share){await navigator.share({title:"Zep Swipe Community",text:"Find students, communities and opportunities on Zep Swipe.",url:location.href})}else{await navigator.clipboard.writeText(location.href);toast("Link copied.")}};
+document.getElementById("connectBtn").onclick=()=>sendConnection(currentStudent);
+
+lucide.createIcons();
+
+(async()=>{
+  if(db){
+    liveUser=await getUser();
+    if(liveUser){
+      document.getElementById("myName").textContent=liveUser.user_metadata?.full_name||liveUser.email?.split("@")[0]||"Zep Swipe member";
+      document.getElementById("myMeta").textContent=liveUser.email||"Signed in";
+    }
+    db.channel("community-live")
+      .on("postgres_changes",{event:"*",schema:"public",table:"communities"},()=>loadData())
+      .on("postgres_changes",{event:"*",schema:"public",table:"profiles"},()=>loadData())
+      .on("postgres_changes",{event:"*",schema:"public",table:"student_projects"},()=>loadData())
+      .on("postgres_changes",{event:"*",schema:"public",table:"community_events"},()=>loadData())
+      .subscribe();
+  }
+  await loadData();
+})();
+</script>
+</body>
+</html>
