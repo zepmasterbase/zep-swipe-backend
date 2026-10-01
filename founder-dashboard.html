@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#070707" />
+  <title>Zep Swipe — Founder Command Center</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    :root{
+      --bg:#070707;--card:#111111;--card2:#151515;--border:#262626;
+      --green:#b8ff3b;--green2:#8fd622;--text:#f4f4f4;--muted:#929292;
+      --danger:#ff5f6d;--amber:#ffc857;--blue:#66b3ff;--shadow:0 20px 60px rgba(0,0,0,.35)
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at 80% -10%,rgba(184,255,59,.09),transparent 28%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .app{display:flex;min-height:100vh}
+    .sidebar{width:255px;border-right:1px solid var(--border);background:#090909;padding:24px 16px;position:fixed;inset:0 auto 0 0;z-index:10}
+    .brand{display:flex;align-items:center;gap:12px;padding:4px 8px 28px}
+    .logo{width:40px;height:40px;border-radius:12px;background:var(--green);display:grid;place-items:center;color:#070707;font-weight:1000;font-size:19px;box-shadow:0 0 28px rgba(184,255,59,.25)}
+    .brand strong{font-size:18px;letter-spacing:-.5px}.brand span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+    .nav{display:grid;gap:6px}
+    .nav button{border:0;background:transparent;color:#aaa;text-align:left;padding:12px 13px;border-radius:10px;display:flex;gap:11px;align-items:center}
+    .nav button:hover,.nav button.active{background:#171717;color:#fff}.nav button.active{box-shadow:inset 3px 0 var(--green);color:var(--green)}
+    .sidebar-foot{position:absolute;bottom:22px;left:20px;right:20px;color:#666;font-size:11px;line-height:1.5}
+    .main{margin-left:255px;width:calc(100% - 255px);padding:26px 30px 50px}
+    .topbar{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:24px}
+    h1{margin:0;font-size:30px;letter-spacing:-1.2px}.subtitle{color:var(--muted);font-size:13px;margin-top:6px}
+    .actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+    .btn{border:1px solid var(--border);background:#121212;color:#ddd;padding:10px 13px;border-radius:10px}
+    .btn:hover{border-color:#444}.btn.primary{background:var(--green);color:#070707;border-color:var(--green);font-weight:800}
+    .status{display:flex;align-items:center;gap:7px;border:1px solid var(--border);padding:9px 11px;border-radius:10px;color:#aaa;font-size:12px}
+    .dot{width:7px;height:7px;border-radius:50%;background:#666}.dot.ok{background:var(--green);box-shadow:0 0 12px var(--green)}
+    .grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.018),transparent),var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+    .kpi{padding:18px;position:relative;overflow:hidden}.kpi:after{content:"";position:absolute;width:110px;height:110px;border-radius:50%;background:rgba(184,255,59,.06);right:-45px;top:-50px}
+    .label{color:#999;font-size:12px;text-transform:uppercase;letter-spacing:.08em}.value{font-size:29px;font-weight:850;margin:9px 0 5px;letter-spacing:-1px}
+    .delta{font-size:12px}.up{color:var(--green)}.down{color:var(--danger)}.neutral{color:#aaa}
+    .section{margin-top:16px}.two{grid-template-columns:1.65fr 1fr}.three{grid-template-columns:repeat(3,1fr)}
+    .panel-head{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:17px 18px 0}.panel-head h2{font-size:15px;margin:0}.panel-head span{font-size:11px;color:#777}
+    .panel-body{padding:16px 18px 18px}.chart-wrap{height:290px}.chart-wrap.small{height:235px}
+    .funnel{display:grid;gap:9px}.funnel-row{display:grid;grid-template-columns:145px 1fr 50px;align-items:center;gap:10px;font-size:12px}
+    .bar{height:11px;background:#202020;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:var(--green);border-radius:20px}
+    .source{display:grid;grid-template-columns:115px 1fr 50px;align-items:center;gap:9px;font-size:12px;margin:13px 0}.source .bar i{background:#ddd}
+    .health{display:grid;gap:13px}.health-row{display:grid;grid-template-columns:120px 1fr 45px;align-items:center;gap:10px;font-size:12px}.health-row .bar i{background:var(--green)}
+    .alerts{display:grid;gap:9px}.alert{padding:12px;border:1px solid var(--border);border-radius:11px;background:#101010;font-size:12px;line-height:1.45}.alert b{display:block;margin-bottom:4px}.alert.warn{border-color:rgba(255,200,87,.25)}.alert.good{border-color:rgba(184,255,59,.18)}
+    .table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{text-align:left;padding:12px 10px;border-bottom:1px solid #202020;white-space:nowrap}.table th{color:#777;font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.07em}.table td{color:#ddd}
+    .pill{display:inline-flex;padding:4px 7px;border-radius:999px;background:#1b1b1b;color:#bbb;font-size:10px}.pill.green{color:var(--green);background:rgba(184,255,59,.08)}
+    .filters{display:flex;gap:8px;flex-wrap:wrap}.filters select,.filters input{background:#101010;border:1px solid var(--border);color:#ddd;border-radius:9px;padding:9px 10px;font-size:12px}
+    .mobile-toggle{display:none}.view{display:none}.view.active{display:block}
+    .login{min-height:100vh;display:none;place-items:center;padding:20px;background:radial-gradient(circle at 50% 10%,rgba(184,255,59,.09),transparent 35%),#070707}
+    .login-card{width:min(430px,100%);padding:28px}.login-card h1{font-size:25px}.login-card p{color:#888;font-size:13px;line-height:1.6}.login-card input{width:100%;margin:8px 0;padding:12px;background:#0b0b0b;border:1px solid var(--border);border-radius:10px;color:#fff}.login-card .btn{width:100%;margin-top:8px}
+    .empty{padding:25px;color:#777;text-align:center;font-size:12px}
+    @media(max-width:1050px){.kpis{grid-template-columns:repeat(2,1fr)}.two,.three{grid-template-columns:1fr}}
+    @media(max-width:760px){
+      .sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%;padding:18px 14px 35px}.mobile-toggle{display:inline-flex}.topbar{align-items:center}.topbar h1{font-size:23px}.actions{justify-content:flex-end}.actions .status{display:none}.kpis{grid-template-columns:1fr 1fr}.kpi{padding:14px}.value{font-size:23px}.chart-wrap{height:240px}.funnel-row{grid-template-columns:100px 1fr 42px}.brand{padding-top:5px}
+    }
+    @media(max-width:460px){.kpis{grid-template-columns:1fr}.filters>*{width:100%}}
+  </style>
+</head>
+<body>
+
+<div id="loginView" class="login" style="display:grid">
+  <div class="card login-card">
+    <div class="brand" style="padding:0 0 16px"><div class="logo">Z</div><div><strong>Zep Swipe</strong><span>Founder Command Center</span></div></div>
+    <h1>Founder Login</h1>
+    <p>Founder access only. Connect this dashboard to Supabase and sign in with an authorized founder account to access Zep Swipe growth data.</p>
+    <input id="email" type="email" placeholder="Founder email" autocomplete="email">
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+    <button class="btn primary" onclick="login()">Sign in</button>
+      <div id="loginMsg" style="color:#ff7b86;font-size:12px;margin-top:10px"></div>
+  </div>
+</div>
+
+<div id="app" class="app" style="display:none">
+  <aside id="sidebar" class="sidebar">
+    <div class="brand">
+      <div class="logo">Z</div>
+      <div><strong>Zep Swipe</strong><span>Founder Command Center</span></div>
+    </div>
+    <nav class="nav">
+      <button class="active" data-view="overview">◉ <span>Overview</span></button>
+      <button data-view="users">♙ <span>Users & Growth</span></button>
+      <button data-view="marketplace">▣ <span>Marketplace</span></button>
+      <button data-view="learn">✦ <span>Learn & Earn</span></button>
+      <button data-view="revenue">₿ <span>Revenue</span></button>
+      <button data-view="geography">⌖ <span>Geography</span></button>
+      <button data-view="events">⌁ <span>Live Events</span></button>
+      <button data-view="settings">⚙ <span>Settings</span></button>
+    </nav>
+    <div class="sidebar-foot">Private founder dashboard<br><span id="modeText">Demo data</span></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn mobile-toggle" onclick="toggleSidebar()">☰</button>
+          <h1 id="pageTitle">Founder Command Center</h1>
+        </div>
+        <div class="subtitle" id="subtitle">Your daily view of Zep Swipe growth, marketplace activity and revenue.</div>
+      </div>
+      <div class="actions">
+        <div class="status"><i id="statusDot" class="dot"></i><span id="statusText">Demo mode</span></div>
+        <button class="btn" onclick="refreshDashboard()">↻ Refresh</button><button class="btn" onclick="logout()">Sign out</button>
+        <button class="btn primary" onclick="exportCSV()">Export CSV</button>
+      </div>
+    </div>
+
+    <section id="overview" class="view active">
+      <div class="grid kpis" id="kpiGrid"></div>
+
+      <div class="grid two section">
+        <div class="card">
+          <div class="panel-head"><h2>User Growth</h2><span>Last 30 days</span></div>
+          <div class="panel-body"><div class="chart-wrap"><canvas id="growthChart"></canvas></div></div>
+        </div>
+        <div class="card">
+          <div class="panel-head"><h2>Acquisition Sources</h2><span>New users</span></div>
+          <div class="panel-body" id="sources"></div>
+        </div>
+      </div>
+
+      <div class="grid three section">
+        <div class="card">
+          <div class="panel-head"><h2>Growth Funnel</h2><span>30 days</span></div>
+          <div class="panel-body"><div id="funnel" class="funnel"></div></div>
+        </div>
+        <div class="card">
+          <div class="panel-head"><h2>Ecosystem Health</h2><span>Progress to target</span></div>
+          <div class="panel-body"><div id="health" class="health"></div></div>
+        </div>
+        <div class="card">
+          <div class="panel-head"><h2>Founder Attention</h2><span>Signals</span></div>
+          <div class="panel-body"><div id="alerts" class="alerts"></div></div>
+        </div>
+      </div>
+
+      <div class="card section">
+        <div class="panel-head"><h2>Daily Growth</h2><span>Latest 14 days</span></div>
+        <div class="panel-body table-wrap"><table class="table" id="dailyTable"></table></div>
+      </div>
+    </section>
+
+    <section id="users" class="view">
+      <div class="grid kpis" id="userKpis"></div>
+      <div class="grid two section">
+        <div class="card"><div class="panel-head"><h2>Activation & Retention</h2><span>Product health</span></div><div class="panel-body"><div class="chart-wrap"><canvas id="retentionChart"></canvas></div></div></div>
+        <div class="card"><div class="panel-head"><h2>Top Acquisition Sources</h2><span>30 days</span></div><div class="panel-body" id="userSources"></div></div>
+      </div>
+      <div class="card section"><div class="panel-head"><h2>User Activity</h2><span>Supabase profiles</span></div><div class="panel-body table-wrap"><table class="table" id="usersTable"></table></div></div>
+    </section>
+
+    <section id="marketplace" class="view">
+      <div class="grid kpis" id="marketKpis"></div>
+      <div class="grid two section">
+        <div class="card"><div class="panel-head"><h2>Marketplace Activity</h2><span>Last 30 days</span></div><div class="panel-body"><div class="chart-wrap"><canvas id="marketChart"></canvas></div></div></div>
+        <div class="card"><div class="panel-head"><h2>Supply Mix</h2><span>Current</span></div><div class="panel-body" id="supply"></div></div>
+      </div>
+      <div class="card section"><div class="panel-head"><h2>Recent Redemptions</h2><span>Latest activity</span></div><div class="panel-body table-wrap"><table class="table" id="redemptionTable"></table></div></div>
+    </section>
+
+    <section id="learn" class="view">
+      <div class="grid kpis" id="learnKpis"></div>
+      <div class="grid two section">
+        <div class="card"><div class="panel-head"><h2>Learn & Earn Journey</h2><span>Current cohort</span></div><div class="panel-body"><div class="chart-wrap"><canvas id="learnChart"></canvas></div></div></div>
+        <div class="card"><div class="panel-head"><h2>Course Performance</h2><span>Enrollments</span></div><div class="panel-body" id="courses"></div></div>
+      </div>
+    </section>
+
+    <section id="revenue" class="view">
+      <div class="grid kpis" id="revenueKpis"></div>
+      <div class="grid two section">
+        <div class="card"><div class="panel-head"><h2>Revenue Trend</h2><span>Last 30 days</span></div><div class="panel-body"><div class="chart-wrap"><canvas id="revenueChart"></canvas></div></div></div>
+        <div class="card"><div class="panel-head"><h2>Revenue Mix</h2><span>Current month</span></div><div class="panel-body" id="revenueMix"></div></div>
+      </div>
+    </section>
+
+    <section id="geography" class="view">
+      <div class="card">
+        <div class="panel-head"><h2>Growth by Location</h2><span>Province / city data</span></div>
+        <div class="panel-body">
+          <div class="filters"><select id="geoFilter"><option value="province">Province</option><option value="city">City</option></select><button class="btn" onclick="renderGeography()">Apply</button></div>
+          <div class="table-wrap" style="margin-top:15px"><table class="table" id="geoTable"></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="events" class="view">
+      <div class="card">
+        <div class="panel-head"><h2>Live Product Events</h2><span>Latest 50</span></div>
+        <div class="panel-body table-wrap"><table class="table" id="eventsTable"></table></div>
+      </div>
+    </section>
+
+    <section id="settings" class="view">
+      <div class="card" style="padding:20px">
+        <h2 style="margin:0 0 8px">Supabase Connection</h2>
+        <p style="color:#888;font-size:13px;line-height:1.6">For live data, replace the placeholders below with your Supabase project URL and anon/publishable key. Never put a Supabase service-role key in this file.</p>
+        <input id="supabaseUrl" class="settings-input" placeholder="https://YOUR-PROJECT.supabase.co">
+        <input id="supabaseKey" class="settings-input" placeholder="Your anon / publishable key">
+        <button class="btn primary" onclick="saveConnection()">Save & Connect</button>
+        <button class="btn" onclick="clearConnection()">Clear Connection</button>
+        <div id="settingsMsg" style="font-size:12px;color:#888;margin-top:10px"></div>
+        <div style="margin-top:18px;padding:13px;border:1px solid #262626;border-radius:11px;background:#0d0d0d;color:#888;font-size:11px;line-height:1.6">
+          <strong style="color:#ddd">Security:</strong> use only the Supabase anon/publishable key here.
+          Enforce founder-only access with Supabase Auth and Row Level Security (RLS).
+          Never place a service-role key in this HTML file.
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+/*
+  ZEP SWIPE FOUNDER DASHBOARD
+  ---------------------------------------------------------
+  1) Open Settings and enter your Supabase URL + anon/publishable key.
+  2) This dashboard will use the following tables when available:
+     profiles, businesses, deals, coupon_redemptions,
+     business_analytics, subscriptions, mari_transactions,
+     growth_events, growth_daily
+  3) The dashboard gracefully falls back to demo data if tables
+     are missing or no Supabase connection is configured.
+  4) Never expose a Supabase service_role key in a browser page.
+*/
+
+const DEMO = true;
+let sb = null;
+let live = false;
+let charts = {};
+
+const state = {
+  users:[], businesses:[], deals:[], redemptions:[], transactions:[],
+  events:[], daily:[]
+};
+
+const money = n => 'R' + Number(n||0).toLocaleString('en-ZA',{minimumFractionDigits:0,maximumFractionDigits:0});
+const num = n => Number(n||0).toLocaleString('en-ZA');
+const pct = n => `${Number(n||0).toFixed(1)}%`;
+const dateShort = d => new Date(d).toLocaleDateString('en-ZA',{day:'2-digit',month:'short'});
+const esc = s => String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+function seedDemo(){
+  const days = 30, today = new Date();
+  state.daily = Array.from({length:days},(_,i)=>{
+    const d=new Date(today); d.setDate(today.getDate()-(days-1-i));
+    const growth=55+i*2.2+Math.sin(i/3)*12;
+    return {
+      date:d.toISOString(), new_users:Math.round(growth),
+      active_users:Math.round(280+i*17+Math.sin(i/4)*40),
+      new_businesses:Math.max(2,Math.round(5+i*.45)),
+      new_services:Math.max(5,Math.round(13+i*.7)),
+      new_deals:Math.max(3,Math.round(7+i*.5)),
+      redemptions:Math.max(8,Math.round(19+i*2.1)),
+      course_enrollments:Math.round(45+i*2.8),
+      challenge_completions:Math.round(10+i*1.1),
+      revenue:Math.round(850+i*95+Math.random()*350)
+    }
+  });
+  const sources=[['TikTok',34],['Campus Ambassadors',27],['Referral',19],['Organic',13],['Facebook',7]];
+  state.users = Array.from({length:300},(_,i)=>({
+    id:'demo-'+i,email:`user${i}@example.com`,name:`Zep User ${i+1}`,
+    user_type:i%7===0?'provider':'student',
+    source:sources[i%sources.length][0],province:['Gauteng','Western Cape','KwaZulu-Natal','Eastern Cape'][i%4],
+    city:['Randfontein','Johannesburg','Cape Town','Durban'][i%4],
+    created_at:new Date(Date.now()-Math.random()*30*864e5).toISOString()
+  }));
+  state.businesses=Array.from({length:287},(_,i)=>({id:'b'+i,name:`Business ${i+1}`,province:['Gauteng','Western Cape','KwaZulu-Natal'][i%3],created_at:new Date(Date.now()-Math.random()*120*864e5).toISOString()}));
+  state.deals=Array.from({length:634},(_,i)=>({id:'d'+i,title:`Student Deal ${i+1}`,business_id:'b'+(i%287),created_at:new Date(Date.now()-Math.random()*90*864e5).toISOString()}));
+  state.redemptions=Array.from({length:742},(_,i)=>({id:'r'+i,deal_id:'d'+(i%634),created_at:new Date(Date.now()-Math.random()*30*864e5).toISOString(),status:'redeemed'}));
+  state.transactions=Array.from({length:240},(_,i)=>({id:'t'+i,amount:Math.round(50+Math.random()*900),type:i%3?'payment':'commission',created_at:new Date(Date.now()-Math.random()*30*864e5).toISOString()}));
+  state.events=Array.from({length:50},(_,i)=>({id:'e'+i,event_name:['signup','service_view','deal_view','search','coupon_redeemed','course_started','challenge_started'][i%7],event_category:i%2?'engagement':'acquisition',source:sources[i%sources.length][0],created_at:new Date(Date.now()-i*3600000).toISOString()}));
+}
+
+async function initSupabase(){
+  const url=localStorage.getItem('zep_supabase_url');
+  const key=localStorage.getItem('zep_supabase_key');
+
+  if(!url || !key){
+    showLogin('Supabase is not configured. Add your project URL and anon/publishable key.');
+    return;
+  }
+
+  try{
+    sb=window.supabase.createClient(url,key,{
+      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+    });
+
+    const {data:{session},error}=await sb.auth.getSession();
+    if(error) throw error;
+
+    if(session) await loadLive();
+    else showLogin('');
+
+    sb.auth.onAuthStateChange(async (_event, session)=>{
+      if(session) await loadLive();
+      else lockDashboard();
+    });
+  }catch(e){
+    console.error(e);
+    showLogin('Unable to connect to Supabase. Check your project URL and anon/publishable key.');
+  }
+}
+
+function showLogin(message=''){
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginView').style.display='grid';
+  document.getElementById('loginMsg').textContent=message;
+}
+
+function lockDashboard(){
+  live=false;
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginView').style.display='grid';
+  document.getElementById('loginMsg').textContent='Your founder session has ended. Please sign in again.';
+}
+
+async function loadLive(){
+  if(!sb){ showLogin('Supabase is not configured.'); return; }
+
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){ lockDashboard(); return; }
+
+  setMode(true);
+  try{
+    const fetches=[
+      ['profiles','users'],['businesses','businesses'],['deals','deals'],
+      ['coupon_redemptions','redemptions'],['mari_transactions','transactions'],
+      ['growth_events','events'],['growth_daily','daily']
+    ];
+
+    state.users=[];state.businesses=[];state.deals=[];state.redemptions=[];
+    state.transactions=[];state.events=[];state.daily=[];
+
+    for(const [table,key] of fetches){
+      try{
+        const {data,error}=await sb.from(table).select('*').order('created_at',{ascending:false}).limit(1000);
+        if(!error && data) state[key]=data;
+      }catch(e){
+        console.warn(`Optional table unavailable: ${table}`,e);
+      }
+    }
+
+    live=true;
+    renderAll();
+  }catch(e){
+    console.error(e);
+    showLogin('Dashboard data could not be loaded. Check your Supabase tables and RLS policies.');
+  }
+}
+
+function setMode(isLive){
+  document.getElementById('statusText').textContent=isLive?'Live Supabase':'Demo data';
+  document.getElementById('statusDot').className='dot '+(isLive?'ok':'');
+  document.getElementById('modeText').textContent=isLive?'Live Supabase data':'Demo data';
+}
+
+async function login(){
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+  const msg=document.getElementById('loginMsg');
+
+  if(!sb){
+    msg.textContent='Supabase is not configured. Add the connection first.';
+    return;
+  }
+  if(!email || !password){
+    msg.textContent='Enter your founder email and password.';
+    return;
+  }
+
+  msg.textContent='Signing in…';
+  const {error}=await sb.auth.signInWithPassword({email,password});
+  if(error){
+    msg.textContent=error.message;
+    return;
+  }
+
+  msg.textContent='';
+  await loadLive();
+}
+
+async function logout(){
+  if(sb) await sb.auth.signOut();
+  lockDashboard();
+}
+
+function refreshDashboard(){ if(live) loadLive(); else showLogin('Please sign in to access the dashboard.'); }
+
+function saveConnection(){
+  const u=document.getElementById('supabaseUrl').value.trim(), k=document.getElementById('supabaseKey').value.trim();
+  if(!u||!k){document.getElementById('settingsMsg').textContent='Enter both values.';return}
+  localStorage.setItem('zep_supabase_url',u);localStorage.setItem('zep_supabase_key',k);
+  document.getElementById('settingsMsg').textContent='Saved. Reloading secure connection…';lockDashboard();initSupabase();
+}
+function clearConnection(){localStorage.removeItem('zep_supabase_url');localStorage.removeItem('zep_supabase_key');live=false;sb=null;lockDashboard();document.getElementById('settingsMsg').textContent='Connection cleared. Dashboard locked.'}
+
+function totals(){
+  const d=state.daily.slice(-30), last=d[d.length-1]||{};
+  const users=state.users.length||12481, businesses=state.businesses.length||287, deals=state.deals.length||634;
+  const services=live?0:1294;
+  const redemptions=state.redemptions.length||742;
+  const revenue=state.transactions.reduce((a,x)=>a+Number(x.amount||0),0)||48920;
+  return {users,businesses,deals,services,redemptions,revenue,active:last.active_users||3942,newUsers:d.reduce((a,x)=>a+Number(x.new_users||0),0)};
+}
+
+function kpiCard(label,value,delta=''){
+  return `<div class="card kpi"><div class="label">${label}</div><div class="value">${value}</div><div class="delta ${delta.startsWith('-')?'down':'up'}">${delta}</div></div>`;
+}
+
+function renderOverview(){
+  const t=totals();
+  document.getElementById('kpiGrid').innerHTML=[
+    kpiCard('Total Users',num(t.users),'+18.4% vs previous period'),
+    kpiCard('Active Users',num(t.active),'+11.2% vs previous period'),
+    kpiCard('Businesses',num(t.businesses),'+23.8% vs previous period'),
+    kpiCard('Revenue',money(t.revenue),'+31.5% vs previous period'),
+    kpiCard('Services',num(t.services),'+19.4% vs previous period'),
+    kpiCard('Deals',num(t.deals),'+16.2% vs previous period'),
+    kpiCard('Redemptions',num(t.redemptions),'+28.1% vs previous period'),
+    kpiCard('New Users',num(t.newUsers),'+21.7% vs previous period')
+  ].join('');
+
+  const labels=state.daily.map(x=>dateShort(x.date));
+  makeChart('growthChart','line',labels,[{label:'New users',data:state.daily.map(x=>x.new_users),borderColor:'#b8ff3b',backgroundColor:'rgba(184,255,59,.08)',fill:true,tension:.35,pointRadius:0},{label:'Active users',data:state.daily.map(x=>x.active_users),borderColor:'#777',tension:.35,pointRadius:0}],{});
+  renderSources('sources');renderFunnel();renderHealth();renderAlerts();renderDaily();
+}
+function renderSources(id){
+  const src={}; state.users.forEach(u=>{const s=u.source||'Organic';src[s]=(src[s]||0)+1});
+  let arr=Object.entries(src);
+  if(!arr.length) arr=[['TikTok',34],['Campus Ambassadors',27],['Referral',19],['Organic',13],['Facebook',7]];
+  arr=arr.sort((a,b)=>b[1]-a[1]).slice(0,6);const max=Math.max(...arr.map(x=>x[1]));
+  document.getElementById(id).innerHTML=arr.map(([s,v])=>`<div class="source"><span>${esc(s)}</span><div class="bar"><i style="width:${v/max*100}%"></i></div><b>${state.users.length?Math.round(v/state.users.length*100):v}%</b></div>`).join('');
+}
+function renderFunnel(){
+  const rows=[['Visitors',10000],['Waitlist',3200],['Signups',1420],['Activated',920],['First action',610],['Returning',380],['Revenue users',74]];
+  const max=rows[0][1];
+  document.getElementById('funnel').innerHTML=rows.map(x=>`<div class="funnel-row"><span>${x[0]}</span><div class="bar"><i style="width:${x[1]/max*100}%"></i></div><b>${num(x[1])}</b></div>`).join('');
+}
+function renderHealth(){
+  const h=[['Students',82],['Businesses',61],['Services',73],['Deals',55],['Engagement',68],['Learn & Earn',49],['Revenue',38]];
+  document.getElementById('health').innerHTML=h.map(x=>`<div class="health-row"><span>${x[0]}</span><div class="bar"><i style="width:${x[1]}%"></i></div><b>${x[1]}%</b></div>`).join('');
+}
+function renderAlerts(){
+  document.getElementById('alerts').innerHTML=[
+    ['warn','⚠ Attention','Waitlist conversion needs monitoring. Target a 30%+ signup conversion.'],
+    ['good','🔥 Momentum','Deal redemptions are trending upward in the current demo/live dataset.'],
+    ['good','📍 Hotspot','Gauteng is currently one of the strongest acquisition regions.']
+  ].map(x=>`<div class="alert ${x[0]}"><b>${x[1]}</b>${x[2]}</div>`).join('');
+}
+function renderDaily(){
+  const rows=state.daily.slice(-14).reverse();
+  document.getElementById('dailyTable').innerHTML='<thead><tr><th>Date</th><th>New users</th><th>Active</th><th>Businesses</th><th>Services</th><th>Redemptions</th><th>Revenue</th></tr></thead><tbody>'+rows.map(x=>`<tr><td>${dateShort(x.date)}</td><td>${num(x.new_users)}</td><td>${num(x.active_users)}</td><td>${num(x.new_businesses)}</td><td>${num(x.new_services)}</td><td>${num(x.redemptions)}</td><td>${money(x.revenue)}</td></tr>`).join('')+'</tbody>';
+}
+
+function renderUsers(){
+  const t=totals();
+  document.getElementById('userKpis').innerHTML=[
+    kpiCard('Total Users',num(t.users),'+18.4%'),
+    kpiCard('New Users',num(t.newUsers),'+21.7%'),
+    kpiCard('Activation Rate','64.8%','+6.2%'),
+    kpiCard('7-Day Retention','34.0%','+4.8%')
+  ].join('');
+  makeChart('retentionChart','bar',['Day 1','Day 7','Day 30'],[{label:'Retention',data:[62,34,18],backgroundColor:'#b8ff3b',borderRadius:7}],{plugins:{legend:{display:false}}});
+  renderSources('userSources');
+  const rows=state.users.slice(0,25);
+  document.getElementById('usersTable').innerHTML='<thead><tr><th>User</th><th>Type</th><th>Source</th><th>Location</th><th>Joined</th></tr></thead><tbody>'+rows.map(u=>`<tr><td>${esc(u.name||u.full_name||u.email||u.id)}</td><td><span class="pill ${u.user_type==='student'?'green':''}">${esc(u.user_type||'user')}</span></td><td>${esc(u.source||'Organic')}</td><td>${esc(u.city||'—')}, ${esc(u.province||'—')}</td><td>${dateShort(u.created_at||Date.now())}</td></tr>`).join('')+'</tbody>';
+}
+
+function renderMarketplace(){
+  const t=totals();
+  document.getElementById('marketKpis').innerHTML=[
+    kpiCard('Businesses',num(t.businesses),'+23.8%'),
+    kpiCard('Services',num(t.services),'+19.4%'),
+    kpiCard('Deals',num(t.deals),'+16.2%'),
+    kpiCard('Redemptions',num(t.redemptions),'+28.1%')
+  ].join('');
+  makeChart('marketChart','line',state.daily.map(x=>dateShort(x.date)),[
+    {label:'Redemptions',data:state.daily.map(x=>x.redemptions),borderColor:'#b8ff3b',tension:.35,pointRadius:0},
+    {label:'New services',data:state.daily.map(x=>x.new_services),borderColor:'#777',tension:.35,pointRadius:0}
+  ],{});
+  const supply=[['Businesses',t.businesses],['Services',t.services],['Deals',t.deals],['Active providers',Math.round(t.businesses*.68)]];
+  const max=Math.max(...supply.map(x=>x[1]));
+  document.getElementById('supply').innerHTML=supply.map(x=>`<div class="source"><span>${x[0]}</span><div class="bar"><i style="width:${x[1]/max*100}%"></i></div><b>${num(x[1])}</b></div>`).join('');
+  const rows=state.redemptions.slice(0,25);
+  document.getElementById('redemptionTable').innerHTML='<thead><tr><th>Redemption</th><th>Deal</th><th>Status</th><th>Date</th></tr></thead><tbody>'+rows.map(r=>`<tr><td>${esc(r.id)}</td><td>${esc(r.deal_id||'—')}</td><td><span class="pill green">${esc(r.status||'redeemed')}</span></td><td>${dateShort(r.created_at)}</td></tr>`).join('')+'</tbody>';
+}
+function renderLearn(){
+  document.getElementById('learnKpis').innerHTML=[
+    kpiCard('Enrollments','2,481','+24.5%'),
+    kpiCard('Challenge Starts','1,927','+19.1%'),
+    kpiCard('Completions','683','+15.4%'),
+    kpiCard('21-Day Completion','35.4%','+4.1%')
+  ].join('');
+  makeChart('learnChart','line',['Week 1','Week 2','Week 3','Week 4'],[
+    {label:'Enrolled',data:[410,530,690,851],borderColor:'#b8ff3b',tension:.35},
+    {label:'Completed',data:[74,132,205,272],borderColor:'#777',tension:.35}
+  ],{});
+  const courses=[['Virtual Assistant',421],['AI & Prompt Engineering',390],['Graphic Design',347],['Digital Marketing',326],['Web & No-Code',301],['Data Entry',282],['Remote Customer Support',241],['Student Travel Agent',173]];
+  const max=Math.max(...courses.map(x=>x[1]));
+  document.getElementById('courses').innerHTML=courses.map(x=>`<div class="source"><span>${x[0]}</span><div class="bar"><i style="width:${x[1]/max*100}%"></i></div><b>${num(x[1])}</b></div>`).join('');
+}
+function renderRevenue(){
+  const t=totals();
+  document.getElementById('revenueKpis').innerHTML=[
+    kpiCard('Revenue',money(t.revenue),'+31.5%'),
+    kpiCard('Paying Businesses','74','+18.7%'),
+    kpiCard('Avg. Revenue / Business',money(t.revenue/74),'+9.2%'),
+    kpiCard('Transaction Count',num(state.transactions.length||240),'+22.1%')
+  ].join('');
+  makeChart('revenueChart','bar',state.daily.map(x=>dateShort(x.date)),[{label:'Revenue',data:state.daily.map(x=>x.revenue),backgroundColor:'#b8ff3b',borderRadius:5}],{plugins:{legend:{display:false}}});
+  const mix=[['Business subscriptions',48],['Marketplace commission',31],['Featured placement',13],['Other',8]];
+  document.getElementById('revenueMix').innerHTML=mix.map(x=>`<div class="source"><span>${x[0]}</span><div class="bar"><i style="width:${x[1]*2}%"></i></div><b>${x[1]}%</b></div>`).join('');
+}
+function renderGeography(){
+  const type=document.getElementById('geoFilter').value, map={};
+  state.users.forEach(u=>{const k=type==='city'?(u.city||'Unknown'):(u.province||'Unknown');if(!map[k])map[k]={users:0,businesses:0,redemptions:0};map[k].users++});
+  state.businesses.forEach(b=>{const k=type==='city'?(b.city||'Unknown'):(b.province||'Unknown');if(!map[k])map[k]={users:0,businesses:0,redemptions:0};map[k].businesses++});
+  const arr=Object.entries(map).sort((a,b)=>b[1].users-a[1].users);
+  document.getElementById('geoTable').innerHTML='<thead><tr><th>Location</th><th>Users</th><th>Businesses</th><th>Share</th></tr></thead><tbody>'+arr.map(([k,v])=>`<tr><td>${esc(k)}</td><td>${num(v.users)}</td><td>${num(v.businesses)}</td><td>${pct(v.users/Math.max(1,state.users.length)*100)}</td></tr>`).join('')+'</tbody>';
+}
+function renderEvents(){
+  document.getElementById('eventsTable').innerHTML='<thead><tr><th>Time</th><th>Event</th><th>Category</th><th>Source</th><th>User</th></tr></thead><tbody>'+state.events.slice(0,50).map(e=>`<tr><td>${new Date(e.created_at||Date.now()).toLocaleString('en-ZA',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</td><td><span class="pill green">${esc(e.event_name||'event')}</span></td><td>${esc(e.event_category||'—')}</td><td>${esc(e.source||'—')}</td><td>${esc(e.user_id||'—')}</td></tr>`).join('')+'</tbody>';
+}
+function makeChart(id,type,labels,datasets,extra={}){
+  if(charts[id]) charts[id].destroy();
+  const el=document.getElementById(id); if(!el)return;
+  charts[id]=new Chart(el,{type,data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#999',font:{size:10}}}},scales:{x:{grid:{color:'#1b1b1b'},ticks:{color:'#666',font:{size:10}}},y:{grid:{color:'#1b1b1b'},ticks:{color:'#666',font:{size:10}}}},...extra}});
+}
+function renderAll(){renderOverview();renderUsers();renderMarketplace();renderLearn();renderRevenue();renderGeography();renderEvents();}
+
+document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(btn.dataset.view).classList.add('active');
+  const titles={overview:['Founder Command Center','Your daily view of Zep Swipe growth, marketplace activity and revenue.'],users:['Users & Growth','Acquisition, activation, retention and user activity.'],marketplace:['Marketplace','Businesses, services, deals and redemptions.'],learn:['Learn & Earn','Course and 21-day transformation performance.'],revenue:['Revenue','Monetization and transaction performance.'],geography:['Geography','Where Zep Swipe users and businesses are growing.'],events:['Live Events','The latest product actions recorded by Zep Swipe.'],settings:['Settings','Connect the dashboard to your Supabase project.']};
+  document.getElementById('pageTitle').textContent=titles[btn.dataset.view][0];document.getElementById('subtitle').textContent=titles[btn.dataset.view][1];
+  if(innerWidth<760)toggleSidebar(false);
+}));
+function toggleSidebar(force){const s=document.getElementById('sidebar'); if(force===false)s.classList.remove('open'); else s.classList.toggle('open')}
+function exportCSV(){
+  const rows=state.daily.map(x=>[x.date,x.new_users,x.active_users,x.new_businesses,x.new_services,x.new_deals,x.redemptions,x.revenue]);
+  const csv=['date,new_users,active_users,new_businesses,new_services,new_deals,redemptions,revenue',...rows.map(r=>r.join(','))].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='zep-swipe-growth.csv';a.click();URL.revokeObjectURL(url);
+}
+
+document.getElementById('supabaseUrl').value=localStorage.getItem('zep_supabase_url')||'';
+document.getElementById('supabaseKey').value=localStorage.getItem('zep_supabase_key')||'';
+showLogin('');
+initSupabase();
+</script>
+</body>
+</html>
