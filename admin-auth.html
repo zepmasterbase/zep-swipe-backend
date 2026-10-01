@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#070707">
+  <title>Zep Swipe — Admin Authentication</title>
+
+  <!-- Supabase JS v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#070707;
+      --card:#111111;
+      --card2:#151515;
+      --border:#282828;
+      --green:#b8ff3b;
+      --green-dark:#8fcf21;
+      --text:#f5f5f5;
+      --muted:#8e8e8e;
+      --danger:#ff6673;
+      --warning:#ffc857;
+      --shadow:0 25px 80px rgba(0,0,0,.45);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 50% -10%,rgba(184,255,59,.12),transparent 35%),
+        radial-gradient(circle at 0% 100%,rgba(184,255,59,.04),transparent 30%),
+        var(--bg);
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      display:grid;
+      place-items:center;
+      padding:24px;
+    }
+
+    .shell{
+      width:min(460px,100%);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      margin-bottom:24px;
+    }
+
+    .logo{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      background:var(--green);
+      color:#070707;
+      display:grid;
+      place-items:center;
+      font-size:21px;
+      font-weight:1000;
+      box-shadow:0 0 35px rgba(184,255,59,.25);
+    }
+
+    .brand-copy strong{
+      display:block;
+      font-size:19px;
+      letter-spacing:-.5px;
+    }
+
+    .brand-copy span{
+      display:block;
+      margin-top:3px;
+      color:var(--muted);
+      font-size:11px;
+    }
+
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.025),transparent),var(--card);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:28px;
+      box-shadow:var(--shadow);
+    }
+
+    .eyebrow{
+      color:var(--green);
+      font-size:10px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      margin-bottom:8px;
+    }
+
+    h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:-1px;
+    }
+
+    .intro{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+      margin:8px 0 22px;
+    }
+
+    .field{
+      margin-bottom:13px;
+    }
+
+    label{
+      display:block;
+      color:#aaa;
+      font-size:11px;
+      font-weight:700;
+      margin-bottom:7px;
+    }
+
+    input{
+      width:100%;
+      border:1px solid var(--border);
+      background:#0b0b0b;
+      color:#fff;
+      border-radius:11px;
+      padding:13px 14px;
+      outline:none;
+      transition:.18s ease;
+    }
+
+    input:focus{
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(184,255,59,.08);
+    }
+
+    .password-row{
+      position:relative;
+    }
+
+    .password-row input{
+      padding-right:76px;
+    }
+
+    .show-password{
+      position:absolute;
+      right:8px;
+      top:8px;
+      border:0;
+      background:#171717;
+      color:#aaa;
+      border-radius:8px;
+      padding:7px 9px;
+      font-size:10px;
+      cursor:pointer;
+    }
+
+    .show-password:hover{
+      color:#fff;
+    }
+
+    .primary{
+      width:100%;
+      border:0;
+      border-radius:11px;
+      padding:13px;
+      background:var(--green);
+      color:#070707;
+      font-weight:900;
+      cursor:pointer;
+      margin-top:4px;
+    }
+
+    .primary:hover{
+      background:#c5ff62;
+    }
+
+    .primary:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .secondary{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:11px;
+      padding:12px;
+      background:#111;
+      color:#ddd;
+      cursor:pointer;
+      margin-top:9px;
+    }
+
+    .secondary:hover{
+      border-color:#444;
+    }
+
+    .links{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:15px;
+    }
+
+    .link{
+      border:0;
+      background:none;
+      color:#999;
+      padding:0;
+      font-size:11px;
+      cursor:pointer;
+    }
+
+    .link:hover{
+      color:var(--green);
+    }
+
+    .message{
+      display:none;
+      border-radius:10px;
+      padding:11px 12px;
+      margin:14px 0 0;
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .message.error{
+      display:block;
+      color:#ff9aa3;
+      background:rgba(255,102,115,.07);
+      border:1px solid rgba(255,102,115,.18);
+    }
+
+    .message.success{
+      display:block;
+      color:#d6ff9a;
+      background:rgba(184,255,59,.06);
+      border:1px solid rgba(184,255,59,.16);
+    }
+
+    .message.info{
+      display:block;
+      color:#bbb;
+      background:#151515;
+      border:1px solid var(--border);
+    }
+
+    .locked{
+      display:none;
+      text-align:center;
+    }
+
+    .locked-icon{
+      width:64px;
+      height:64px;
+      margin:0 auto 15px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      font-size:25px;
+      background:#0c0c0c;
+    }
+
+    .locked h2{
+      margin:0;
+      font-size:21px;
+    }
+
+    .locked p{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    .security{
+      margin-top:17px;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:11px;
+      color:#777;
+      font-size:10px;
+      line-height:1.55;
+    }
+
+    .security strong{
+      color:#aaa;
+    }
+
+    .footer{
+      text-align:center;
+      color:#555;
+      font-size:10px;
+      margin-top:18px;
+    }
+
+    .config{
+      margin-top:12px;
+      border-top:1px solid #222;
+      padding-top:15px;
+    }
+
+    .config summary{
+      color:#777;
+      font-size:10px;
+      cursor:pointer;
+    }
+
+    .config-grid{
+      display:grid;
+      gap:9px;
+      margin-top:12px;
+    }
+
+    @media(max-width:480px){
+      body{padding:15px}
+      .card{padding:22px}
+      h1{font-size:25px}
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="shell">
+
+    <div class="brand">
+      <div class="logo">Z</div>
+      <div class="brand-copy">
+        <strong>Zep Swipe</strong>
+        <span>Founder Admin Portal</span>
+      </div>
+    </div>
+
+    <section class="card">
+
+      <!-- LOGIN -->
+      <div id="loginPanel">
+
+        <div class="eyebrow">Restricted Access</div>
+        <h1>Admin Sign In</h1>
+        <p class="intro">
+          Sign in with an authorized Zep Swipe administrator account
+          to access the Founder Command Center.
+        </p>
+
+        <form id="loginForm">
+
+          <div class="field">
+            <label for="email">ADMIN EMAIL</label>
+            <input
+              id="email"
+              type="email"
+              autocomplete="email"
+              placeholder="founder@example.com"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label for="password">PASSWORD</label>
+            <div class="password-row">
+              <input
+                id="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Enter your password"
+                required
+              >
+              <button type="button" class="show-password" onclick="togglePassword()">
+                Show
+              </button>
+            </div>
+          </div>
+
+          <button id="loginButton" class="primary" type="submit">
+            Sign In
+          </button>
+
+        </form>
+
+        <div id="message" class="message"></div>
+
+        <div class="links">
+          <button class="link" onclick="forgotPassword()">
+            Forgot password?
+          </button>
+          <button class="link" onclick="checkSession()">
+            Check session
+          </button>
+        </div>
+
+        <details class="config">
+          <summary>Supabase connection setup</summary>
+
+          <div class="config-grid">
+            <input
+              id="supabaseUrl"
+              type="url"
+              placeholder="https://your-project.supabase.co"
+            >
+
+            <input
+              id="supabaseKey"
+              type="text"
+              placeholder="Supabase anon / publishable key"
+            >
+
+            <button class="secondary" type="button" onclick="saveConfig()">
+              Save Supabase Connection
+            </button>
+          </div>
+        </details>
+
+        <div class="security">
+          <strong>Security:</strong>
+          This page is designed to use the Supabase anon/publishable key.
+          Never place a Supabase service-role key in browser code.
+          Access to your actual dashboard data must also be enforced with
+          Supabase Auth and Row Level Security (RLS).
+        </div>
+
+      </div>
+
+      <!-- AUTHENTICATED -->
+      <div id="authenticatedPanel" class="locked">
+
+        <div class="locked-icon">✓</div>
+
+        <h2>Authentication Successful</h2>
+
+        <p id="adminIdentity">
+          Your administrator session is active.
+        </p>
+
+        <button class="primary" onclick="openDashboard()">
+          Open Founder Dashboard
+        </button>
+
+        <button class="secondary" onclick="signOut()">
+          Sign Out
+        </button>
+
+        <div id="authMessage" class="message"></div>
+
+      </div>
+
+    </section>
+
+    <div class="footer">
+      Zep Swipe Founder Infrastructure • Private Admin Area
+    </div>
+
+  </main>
+
+<script>
+/*
+  ZEP SWIPE ADMIN AUTHENTICATION
+  ---------------------------------------------------------
+  REQUIRED SUPABASE SETUP
+
+  1. Create an admin/founder user in Supabase Authentication.
+  2. Add the user's email to your admin allowlist table OR
+     use a profiles.role = 'admin' / 'founder' field.
+  3. Update ADMIN_ROLE_CHECK below to match your schema.
+  4. Enable RLS on all dashboard data tables.
+  5. Create policies that allow only authorized admin/founder users.
+  6. Never expose the Supabase service-role key.
+
+  EXPECTED ROLE OPTION:
+    profiles.role = 'admin'
+  OR:
+    profiles.role = 'founder'
+
+  This file checks profiles for the authenticated user's ID.
+*/
+
+const DASHBOARD_URL = 'founder-dashboard.html';
+
+/*
+  Set this to true if your profiles table has a role column.
+  The default role check expects:
+      profiles.id = auth.uid()
+      profiles.role IN ('admin','founder')
+*/
+const ADMIN_ROLE_CHECK = true;
+
+let supabaseClient = null;
+
+/* -------------------------------------------------------
+   CONFIGURATION
+------------------------------------------------------- */
+
+function getConfig(){
+  return {
+    url: localStorage.getItem('zep_supabase_url') || '',
+    key: localStorage.getItem('zep_supabase_key') || ''
+  };
+}
+
+function saveConfig(){
+  const url = document.getElementById('supabaseUrl').value.trim();
+  const key = document.getElementById('supabaseKey').value.trim();
+
+  if(!url || !key){
+    showMessage('Enter both the Supabase project URL and anon/publishable key.', 'error');
+    return;
+  }
+
+  if(!url.startsWith('https://')){
+    showMessage('Your Supabase URL should begin with https://', 'error');
+    return;
+  }
+
+  localStorage.setItem('zep_supabase_url', url);
+  localStorage.setItem('zep_supabase_key', key);
+
+  showMessage('Supabase connection saved. Checking your session…', 'success');
+
+  initialize();
+}
+
+/* -------------------------------------------------------
+   SUPABASE INITIALIZATION
+------------------------------------------------------- */
+
+function initialize(){
+
+  const config = getConfig();
+
+  document.getElementById('supabaseUrl').value = config.url;
+  document.getElementById('supabaseKey').value = config.key;
+
+  if(!config.url || !config.key){
+    return;
+  }
+
+  try{
+
+    supabaseClient = window.supabase.createClient(
+      config.url,
+      config.key,
+      {
+        auth:{
+          persistSession:true,
+          autoRefreshToken:true,
+          detectSessionInUrl:true
+        }
+      }
+    );
+
+    supabaseClient.auth.onAuthStateChange(
+      async (_event, session) => {
+
+        if(session){
+          await processAuthenticatedSession(session);
+        }else{
+          showLogin();
+        }
+
+      }
+    );
+
+    checkSession();
+
+  }catch(error){
+
+    console.error(error);
+
+    showMessage(
+      'Could not initialize Supabase. Check your project configuration.',
+      'error'
+    );
+
+  }
+
+}
+
+/* -------------------------------------------------------
+   SESSION
+------------------------------------------------------- */
+
+async function checkSession(){
+
+  if(!supabaseClient){
+    showMessage(
+      'Connect your Supabase project first.',
+      'info'
+    );
+    return;
+  }
+
+  const {
+    data:{session},
+    error
+  } = await supabaseClient.auth.getSession();
+
+  if(error){
+    showMessage(error.message,'error');
+    return;
+  }
+
+  if(session){
+    await processAuthenticatedSession(session);
+  }else{
+    showLogin();
+    showMessage(
+      'No active administrator session.',
+      'info'
+    );
+  }
+
+}
+
+/* -------------------------------------------------------
+   LOGIN
+------------------------------------------------------- */
+
+document.getElementById('loginForm').addEventListener(
+  'submit',
+  async function(event){
+
+    event.preventDefault();
+
+    if(!supabaseClient){
+      showMessage(
+        'Supabase is not configured. Open "Supabase connection setup" below.',
+        'error'
+      );
+      return;
+    }
+
+    const email =
+      document.getElementById('email').value.trim();
+
+    const password =
+      document.getElementById('password').value;
+
+    const button =
+      document.getElementById('loginButton');
+
+    if(!email || !password){
+      showMessage(
+        'Enter your administrator email and password.',
+        'error'
+      );
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = 'Signing in…';
+
+    clearMessage();
+
+    try{
+
+      const {data,error} =
+        await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if(error){
+        showMessage(error.message,'error');
+        return;
+      }
+
+      if(!data.session){
+        showMessage(
+          'Authentication did not create a valid session.',
+          'error'
+        );
+        return;
+      }
+
+      await processAuthenticatedSession(data.session);
+
+    }catch(error){
+
+      console.error(error);
+
+      showMessage(
+        'An unexpected authentication error occurred.',
+        'error'
+      );
+
+    }finally{
+
+      button.disabled = false;
+      button.textContent = 'Sign In';
+
+    }
+
+  }
+);
+
+/* -------------------------------------------------------
+   ADMIN AUTHORIZATION
+------------------------------------------------------- */
+
+async function processAuthenticatedSession(session){
+
+  if(!session || !session.user){
+    showLogin();
+    return;
+  }
+
+  /*
+    If you haven't created profiles.role yet,
+    the authorization check will fail safely.
+
+    That is intentional:
+    authentication != authorization.
+
+    A valid user account should NOT automatically
+    receive founder dashboard access.
+  */
+
+  let isAdmin = false;
+
+  try{
+
+    if(ADMIN_ROLE_CHECK){
+
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .from('profiles')
+        .select('id, email, role')
+        .eq('id', session.user.id)
+        .maybeSingle();
+
+      if(error){
+
+        console.error('Admin role check:',error);
+
+        showMessage(
+          'Your account is authenticated, but administrator authorization could not be verified. Check the profiles table and RLS policy.',
+          'error'
+        );
+
+        return;
+      }
+
+      if(
+        data &&
+        (
+          data.role === 'admin' ||
+          data.role === 'founder'
+        )
+      ){
+        isAdmin = true;
+      }
+
+    }else{
+
+      /*
+        NEVER enable this in production unless the
+        dashboard itself is protected through another
+        server-side authorization mechanism.
+      */
+      isAdmin = false;
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+    showMessage(
+      'Administrator authorization failed.',
+      'error'
+    );
+
+    return;
+
+  }
+
+  if(!isAdmin){
+
+    await supabaseClient.auth.signOut();
+
+    showLogin();
+
+    showMessage(
+      'Access denied. Your account is authenticated but is not authorized as a Zep Swipe administrator.',
+      'error'
+    );
+
+    return;
+  }
+
+  document.getElementById('loginPanel').style.display='none';
+  document.getElementById('authenticatedPanel').style.display='block';
+
+  document.getElementById('adminIdentity').textContent =
+    `Signed in as ${session.user.email}. Administrator access is active.`;
+
+}
+
+/* -------------------------------------------------------
+   DASHBOARD
+------------------------------------------------------- */
+
+function openDashboard(){
+
+  /*
+    The dashboard MUST independently check the Supabase
+    session and RLS permissions. This redirect is not
+    the security boundary.
+  */
+
+  window.location.href = DASHBOARD_URL;
+
+}
+
+/* -------------------------------------------------------
+   PASSWORD RESET
+------------------------------------------------------- */
+
+async function forgotPassword(){
+
+  if(!supabaseClient){
+
+    showMessage(
+      'Connect your Supabase project first.',
+      'error'
+    );
+
+    return;
+
+  }
+
+  const email =
+    document.getElementById('email').value.trim();
+
+  if(!email){
+
+    showMessage(
+      'Enter your administrator email first.',
+      'error'
+    );
+
+    return;
+
+  }
+
+  const redirectUrl =
+    window.location.origin +
+    window.location.pathname;
+
+  try{
+
+    const {error} =
+      await supabaseClient.auth.resetPasswordForEmail(
+        email,
+        {
+          redirectTo:redirectUrl
+        }
+      );
+
+    if(error){
+      showMessage(error.message,'error');
+      return;
+    }
+
+    showMessage(
+      'Password reset instructions have been sent to the email address if it is registered.',
+      'success'
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    showMessage(
+      'Could not start the password reset process.',
+      'error'
+    );
+
+  }
+
+}
+
+/* -------------------------------------------------------
+   SIGN OUT
+------------------------------------------------------- */
+
+async function signOut(){
+
+  if(supabaseClient){
+
+    const {error} =
+      await supabaseClient.auth.signOut();
+
+    if(error){
+
+      showMessage(
+        error.message,
+        'error'
+      );
+
+      return;
+
+    }
+
+  }
+
+  showLogin();
+
+  showMessage(
+    'You have been signed out.',
+    'success'
+  );
+
+}
+
+/* -------------------------------------------------------
+   UI
+------------------------------------------------------- */
+
+function showLogin(){
+
+  document.getElementById('authenticatedPanel').style.display='none';
+  document.getElementById('loginPanel').style.display='block';
+
+}
+
+function togglePassword(){
+
+  const input =
+    document.getElementById('password');
+
+  const button =
+    document.querySelector('.show-password');
+
+  if(input.type === 'password'){
+
+    input.type='text';
+    button.textContent='Hide';
+
+  }else{
+
+    input.type='password';
+    button.textContent='Show';
+
+  }
+
+}
+
+function showMessage(text,type){
+
+  const box =
+    document.getElementById('message');
+
+  box.className =
+    'message ' + (type || 'info');
+
+  box.textContent =
+    text;
+
+}
+
+function clearMessage(){
+
+  const box =
+    document.getElementById('message');
+
+  box.className='message';
+  box.textContent='';
+
+}
+
+/* -------------------------------------------------------
+   START
+------------------------------------------------------- */
+
+initialize();
+
+</script>
+
+</body>
+</html>
