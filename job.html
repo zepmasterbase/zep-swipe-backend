@@ -1,0 +1,973 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="theme-color" content="#070707">
+
+<title>Jobs | Zep Swipe</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+:root{--bg:#070707;--card:#141414;--line:#262626;--lime:#b8ff3b;--text:#f5f5f5;--muted:#999;--red:#ff7777;--amber:#ffd27a;--green:#9eff86}
+
+*{box-sizing:border-box}
+
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+
+header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:17px 5%;border-bottom:1px solid var(--line);background:#090909}
+
+.logo{font-size:21px;font-weight:900;color:var(--lime);text-decoration:none}
+
+nav{display:flex;gap:16px;flex-wrap:wrap}
+
+nav a{font-size:13px;color:#ddd;text-decoration:none}
+
+nav a:hover{color:var(--lime)}
+
+main{max-width:1050px;margin:auto;padding:28px 18px 55px}
+
+.hero{padding:8px 0 22px}
+
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.5px;color:var(--lime);text-transform:uppercase}
+
+h1{font-size:clamp(30px,5vw,42px);line-height:1.15;letter-spacing:-1px;margin:8px 0}
+
+h2{font-size:21px;margin:0 0 8px}
+
+h3{font-size:16px;margin:9px 0}
+
+p{margin:8px 0 13px}
+
+.muted{color:var(--muted);font-size:13px}
+
+.lime{color:var(--lime)}
+
+.panel{padding:20px;margin:18px 0;background:var(--card);border:1px solid var(--line);border-radius:14px}
+
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+
+.toolbar input{flex:1;min-width:180px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr));gap:13px}
+
+.job-card{background:#101010;border:1px solid var(--line);border-radius:11px;padding:16px;min-width:0}
+
+.job-card h3{overflow-wrap:anywhere}
+
+.tag{display:inline-block;padding:4px 8px;border:1px solid #353535;border-radius:20px;font-size:11px;color:#ddd;margin:3px 3px 3px 0}
+
+.status{font-size:11px;font-weight:800;text-transform:uppercase}
+
+.pending{color:var(--amber)}.active{color:var(--green)}.rejected{color:var(--red)}.closed,.filled,.draft{color:var(--muted)}
+
+label{display:block;font-size:13px;margin:13px 0 6px;color:#ddd}
+
+input,select,textarea{width:100%;padding:12px;background:#090909;color:white;border:1px solid #363636;border-radius:8px;font:inherit;font-size:14px}
+
+input:focus,select:focus,textarea:focus{outline:1px solid var(--lime);border-color:var(--lime)}
+
+textarea{min-height:120px;resize:vertical}
+
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}
+
+.full{grid-column:1/-1}
+
+button{min-height:40px;padding:10px 15px;border-radius:8px;border:1px solid transparent;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+
+button:disabled{opacity:.5;cursor:not-allowed}
+
+.primary{background:var(--lime);color:#080808}
+
+.secondary{background:#222;color:white;border-color:#383838}
+
+.danger{background:#321919;color:#ffb4b4;border-color:#593131}
+
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+
+.notice{padding:11px 13px;background:#1b1b1b;border-radius:8px;font-size:13px;margin:12px 0;overflow-wrap:anywhere}
+
+.notice.error{color:#ffaaaa}.notice.success{color:var(--green)}
+
+.hidden{display:none!important}
+
+.description{white-space:pre-wrap;overflow-wrap:anywhere}
+
+footer{border-top:1px solid var(--line);padding:24px;text-align:center;color:var(--muted);font-size:12px}
+
+@media(max-width:580px){header{align-items:flex-start;flex-direction:column}.panel{padding:15px}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+  <a href="index.html" class="logo">ZEP SWIPE</a>
+
+  <nav>
+
+    <a href="index.html">Home</a>
+
+    <a href="marketplace.html">Marketplace</a>
+
+    <a href="provider.html">Provider</a>
+
+    <a href="auth.html" id="authLink">Sign in</a>
+
+  </nav>
+
+</header>
+
+<main>
+
+  <section class="hero">
+
+    <p class="eyebrow">Discover · Earn · Connect · Build</p>
+
+    <h1>Jobs & <span class="lime">opportunities.</span></h1>
+
+    <p class="muted">Find opportunities. Connect with employers. Build your future.</p>
+
+    <div class="actions">
+
+      <button class="primary" id="postBtn" type="button">+ Post a job</button>
+
+      <button class="secondary" id="refreshBtn" type="button">Refresh</button>
+
+    </div>
+
+    <div id="notice" class="notice hidden" role="status" aria-live="polite"></div>
+
+  </section>
+
+  <section id="adminPanel" class="panel hidden">
+
+    <p class="eyebrow">Administration</p>
+
+    <h2>Job approvals</h2>
+
+    <p class="muted">Review submissions before they become public.</p>
+
+    <div id="adminNotice" class="notice hidden" role="status"></div>
+
+    <div id="pendingJobs" class="grid"></div>
+
+  </section>
+
+  <section id="formPanel" class="panel hidden">
+
+    <h2>Post a job</h2>
+
+    <p class="muted">All submissions require approval before publication.</p>
+
+    <form id="jobForm">
+
+      <div class="form-grid">
+
+        <div class="full">
+
+          <label for="title">Job title *</label>
+
+          <input id="title" maxlength="150" required placeholder="e.g. Student Brand Ambassador">
+
+        </div>
+
+        <div>
+
+          <label for="category">Category</label>
+
+          <input id="category" maxlength="100" placeholder="e.g. Marketing">
+
+        </div>
+
+        <div>
+
+          <label for="location">Location</label>
+
+          <input id="location" maxlength="150" placeholder="e.g. Johannesburg / Remote">
+
+        </div>
+
+        <div>
+
+          <label for="employment">Employment type</label>
+
+          <select id="employment">
+
+            <option value="">Select type</option>
+
+            <option>Part-time</option><option>Full-time</option>
+
+            <option>Contract</option><option>Internship</option>
+
+            <option>Freelance</option><option>Temporary</option><option>Remote</option>
+
+          </select>
+
+        </div>
+
+        <div>
+
+          <label for="compensation">Compensation (R)</label>
+
+          <input id="compensation" type="number" min="0" step="0.01" placeholder="Optional">
+
+        </div>
+
+        <div>
+
+          <label for="compType">Compensation basis</label>
+
+          <select id="compType">
+
+            <option value="">Select basis</option>
+
+            <option>Per hour</option><option>Per day</option>
+
+            <option>Per week</option><option>Per month</option>
+
+            <option>Per project</option><option>Once-off</option><option>Unpaid</option>
+
+          </select>
+
+        </div>
+
+        <div>
+
+          <label for="deadline">Application deadline</label>
+
+          <input id="deadline" type="date">
+
+        </div>
+
+        <div class="full">
+
+          <label for="description">Description and application instructions *</label>
+
+          <textarea id="description" maxlength="10000" required placeholder="Describe the role, requirements and how applicants should apply."></textarea>
+
+        </div>
+
+      </div>
+
+      <div class="actions">
+
+        <button class="primary" id="submitBtn" type="submit">Submit for approval</button>
+
+        <button class="secondary" id="cancelBtn" type="button">Cancel</button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+  <section id="detailPanel" class="panel hidden">
+
+    <div id="jobDetail"></div>
+
+    <div class="actions"><button class="secondary" id="backBtn" type="button">Back</button></div>
+
+  </section>
+
+  <section class="panel">
+
+    <h2>Available opportunities</h2>
+
+    <p class="muted">Verified listings approved by Zep Swipe.</p>
+
+    <div class="toolbar">
+
+      <input id="search" type="search" placeholder="Search jobs or locations" aria-label="Search jobs">
+
+      <select id="categoryFilter" aria-label="Filter category">
+
+        <option value="">All categories</option>
+
+      </select>
+
+    </div>
+
+    <div id="jobs" class="grid"><p class="muted">Loading opportunities…</p></div>
+
+  </section>
+
+  <section id="myPanel" class="panel hidden">
+
+    <h2>My submissions</h2>
+
+    <p class="muted">Check the status of your job listings.</p>
+
+    <div id="myJobs" class="grid"></div>
+
+  </section>
+
+</main>
+
+<footer>© <span id="year"></span> Zep Swipe</footer>
+
+<script>
+
+(() => {
+
+  "use strict";
+
+  const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+
+  // Paste the PUBLIC anon/publishable key for this project here.
+
+  // This is the only project configuration value still required.
+
+  const SUPABASE_PUBLIC_KEY = "PASTE_YOUR_PUBLIC_KEY_HERE";
+
+  const $ = id => document.getElementById(id);
+
+  const adminRoles = ["admin", "founder"];
+
+  let db, user = null, isAdmin = false;
+
+  let publicJobs = [], ownJobs = [], pending = [];
+
+  let searchTerm = "", selectedCategory = "", detailJobId = null;
+
+  $("year").textContent = new Date().getFullYear();
+
+  function esc(v) {
+
+    return String(v ?? "").replace(/[&<>"']/g, c => ({
+
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+
+    }[c]));
+
+  }
+
+  function notify(text, type = "") {
+
+    $("notice").textContent = text;
+
+    $("notice").className = "notice" + (type ? " " + type : "");
+
+  }
+
+  function adminNotify(text, type = "") {
+
+    $("adminNotice").textContent = text;
+
+    $("adminNotice").className = "notice" + (type ? " " + type : "");
+
+  }
+
+  function money(value, basis) {
+
+    if (value === null || value === "" || value === undefined) return "Not specified";
+
+    const n = Number(value);
+
+    if (!Number.isFinite(n)) return "Not specified";
+
+    return "R" + n.toLocaleString("en-ZA", {
+
+      minimumFractionDigits: 2, maximumFractionDigits: 2
+
+    }) + (basis ? " " + esc(basis) : "");
+
+  }
+
+  function statusHTML(status) {
+
+    const allowed = ["pending","active","rejected","draft","filled","closed"];
+
+    const safe = allowed.includes(status) ? status : "pending";
+
+    return `<span class="status ${safe}">${esc(safe)}</span>`;
+
+  }
+
+  function card(job, showStatus = false) {
+
+    return `<article class="job-card">
+
+      ${showStatus ? `<p>${statusHTML(job.status)}</p>` : ""}
+
+      <h3>${esc(job.title)}</h3>
+
+      <p class="muted">${esc(job.category || "General")} · ${esc(job.location || "Location not specified")}</p>
+
+      <p><strong>${money(job.compensation, job.compensation_type)}</strong></p>
+
+      ${job.employment_type ? `<span class="tag">${esc(job.employment_type)}</span>` : ""}
+
+      ${job.application_deadline ? `<span class="tag">Deadline: ${esc(job.application_deadline)}</span>` : ""}
+
+      <div class="actions"><button type="button" class="secondary" data-view="${esc(job.id)}">View details</button></div>
+
+    </article>`;
+
+  }
+
+  async function loadUser() {
+
+    const {data, error} = await db.auth.getSession();
+
+    if (error) throw error;
+
+    user = data.session?.user || null;
+
+    $("authLink").textContent = user ? "Account" : "Sign in";
+
+  }
+
+  async function checkAdmin() {
+
+    isAdmin = false;
+
+    $("adminPanel").classList.add("hidden");
+
+    if (!user) return;
+
+    const {data, error} = await db.from("profiles")
+
+      .select("role").eq("id", user.id).maybeSingle();
+
+    if (error) {
+
+      console.warn("Admin role lookup failed:", error.message);
+
+      return;
+
+    }
+
+    isAdmin = adminRoles.includes(String(data?.role || "").toLowerCase());
+
+    $("adminPanel").classList.toggle("hidden", !isAdmin);
+
+  }
+
+  async function loadPublicJobs() {
+
+    $("jobs").innerHTML = '<p class="muted">Loading…</p>';
+
+    const {data, error} = await db.from("jobs")
+
+      .select("id,title,description,category,location,employment_type,compensation,compensation_type,application_deadline,status,created_at,created_by")
+
+      .eq("status", "active")
+
+      .order("created_at", {ascending:false});
+
+    if (error) {
+
+      console.error("Jobs load failed:", error);
+
+      $("jobs").innerHTML = '<p class="muted">Opportunities are temporarily unavailable.</p>';
+
+      return;
+
+    }
+
+    publicJobs = data || [];
+
+    const categories = [...new Set(publicJobs.map(j => j.category).filter(Boolean))].sort();
+
+    const old = selectedCategory;
+
+    $("categoryFilter").innerHTML = '<option value="">All categories</option>' +
+
+      categories.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+
+    selectedCategory = categories.includes(old) ? old : "";
+
+    $("categoryFilter").value = selectedCategory;
+
+    renderPublicJobs();
+
+  }
+
+  function renderPublicJobs() {
+
+    const term = searchTerm.toLowerCase();
+
+    const list = publicJobs.filter(j =>
+
+      [j.title,j.description,j.category,j.location,j.employment_type]
+
+        .join(" ").toLowerCase().includes(term) &&
+
+      (!selectedCategory || j.category === selectedCategory)
+
+    );
+
+    $("jobs").innerHTML = list.length
+
+      ? list.map(j => card(j)).join("")
+
+      : '<p class="muted">No matching approved jobs yet.</p>';
+
+  }
+
+  async function loadOwnJobs() {
+
+    if (!user) {
+
+      $("myPanel").classList.add("hidden");
+
+      return;
+
+    }
+
+    $("myPanel").classList.remove("hidden");
+
+    const {data, error} = await db.from("jobs")
+
+      .select("id,title,description,category,location,employment_type,compensation,compensation_type,application_deadline,status,created_at,created_by")
+
+      .eq("created_by", user.id)
+
+      .order("created_at", {ascending:false});
+
+    if (error) {
+
+      console.error("Own jobs load failed:", error);
+
+      $("myJobs").innerHTML = '<p class="muted">Your submissions could not be loaded.</p>';
+
+      return;
+
+    }
+
+    ownJobs = data || [];
+
+    $("myJobs").innerHTML = ownJobs.length
+
+      ? ownJobs.map(j => card(j, true)).join("")
+
+      : '<p class="muted">You have not submitted any jobs.</p>';
+
+  }
+
+  async function loadPending() {
+
+    if (!isAdmin) return;
+
+    $("pendingJobs").innerHTML = '<p class="muted">Loading queue…</p>';
+
+    const {data, error} = await db.from("jobs")
+
+      .select("id,title,description,category,location,employment_type,compensation,compensation_type,application_deadline,status,created_at,created_by")
+
+      .eq("status", "pending")
+
+      .order("created_at", {ascending:true});
+
+    if (error) {
+
+      console.error("Approval queue failed:", error);
+
+      $("pendingJobs").innerHTML = '<p class="muted">Approval queue unavailable. Check administrator database policies.</p>';
+
+      return;
+
+    }
+
+    pending = data || [];
+
+    $("pendingJobs").innerHTML = pending.length ? pending.map(j => `
+
+      <article class="job-card">
+
+        <p>${statusHTML(j.status)}</p>
+
+        <h3>${esc(j.title)}</h3>
+
+        <p class="muted">${esc(j.category || "General")} · ${esc(j.location || "Not specified")}</p>
+
+        <p>${esc((j.description || "").slice(0,180))}${(j.description || "").length > 180 ? "…" : ""}</p>
+
+        <p><strong>${money(j.compensation,j.compensation_type)}</strong></p>
+
+        <div class="actions">
+
+          <button type="button" class="secondary" data-view="${esc(j.id)}">Review</button>
+
+          <button type="button" class="primary" data-approve="${esc(j.id)}">Approve</button>
+
+          <button type="button" class="danger" data-reject="${esc(j.id)}">Reject</button>
+
+        </div>
+
+      </article>`).join("")
+
+      : '<p class="muted">No pending jobs.</p>';
+
+  }
+
+  async function viewJob(id) {
+
+    const cached = [...publicJobs, ...ownJobs, ...pending].find(j => j.id === id);
+
+    let job = cached;
+
+    if (!job) {
+
+      const {data, error} = await db.from("jobs")
+
+        .select("id,title,description,category,location,employment_type,compensation,compensation_type,application_deadline,status,created_at,created_by")
+
+        .eq("id", id).maybeSingle();
+
+      if (error || !data) {
+
+        notify("This listing is unavailable or access is restricted.", "error");
+
+        return;
+
+      }
+
+      job = data;
+
+    }
+
+    detailJobId = job.id;
+
+    $("jobDetail").innerHTML = `
+
+      <p>${statusHTML(job.status)}</p>
+
+      <h2>${esc(job.title)}</h2>
+
+      <p class="muted">${esc(job.category || "General")} · ${esc(job.location || "Not specified")}</p>
+
+      <p><strong>Compensation:</strong> ${money(job.compensation,job.compensation_type)}</p>
+
+      <p><strong>Employment:</strong> ${esc(job.employment_type || "Not specified")}</p>
+
+      <p><strong>Deadline:</strong> ${esc(job.application_deadline || "Not specified")}</p>
+
+      <h3>Description & application instructions</h3>
+
+      <div class="description">${esc(job.description)}</div>
+
+      ${isAdmin && job.status === "pending" ? `
+
+        <div class="actions">
+
+          <button type="button" class="primary" data-approve="${esc(job.id)}">Approve & publish</button>
+
+          <button type="button" class="danger" data-reject="${esc(job.id)}">Reject</button>
+
+        </div>` : ""}`;
+
+    $("detailPanel").classList.remove("hidden");
+
+    $("detailPanel").scrollIntoView({behavior:"smooth",block:"start"});
+
+  }
+
+  async function moderate(id, status) {
+
+    if (!user || !isAdmin || !["active","rejected"].includes(status)) {
+
+      adminNotify("You are not authorized to moderate listings.", "error");
+
+      return;
+
+    }
+
+    if (!confirm(status === "active" ? "Approve and publish this job?" : "Reject this job?")) return;
+
+    const buttons = [...document.querySelectorAll(
+
+      `[data-approve="${CSS.escape(id)}"],[data-reject="${CSS.escape(id)}"]`
+
+    )];
+
+    buttons.forEach(b => b.disabled = true);
+
+    const {data, error} = await db.from("jobs")
+
+      .update({status, updated_at:new Date().toISOString()})
+
+      .eq("id",id).eq("status","pending")
+
+      .select("id,status").maybeSingle();
+
+    if (error) {
+
+      console.error("Moderation failed:", error);
+
+      adminNotify("Could not update this job. Check administrator RLS permissions. " + error.message, "error");
+
+      buttons.forEach(b => b.disabled = false);
+
+      return;
+
+    }
+
+    if (!data) {
+
+      adminNotify("No change made. This job may already have been reviewed.", "error");
+
+      await loadPending();
+
+      return;
+
+    }
+
+    adminNotify(status === "active" ? "Job approved and published." : "Job rejected and kept unpublished.", "success");
+
+    if (detailJobId === id) $("detailPanel").classList.add("hidden");
+
+    await Promise.all([loadPending(),loadPublicJobs(),loadOwnJobs()]);
+
+  }
+
+  function openPostForm() {
+
+    if (!user) {
+
+      window.location.href = "auth.html?redirect=" + encodeURIComponent("job.html?action=post");
+
+      return;
+
+    }
+
+    $("formPanel").classList.remove("hidden");
+
+    $("formPanel").scrollIntoView({behavior:"smooth",block:"start"});
+
+  }
+
+  async function submitJob(event) {
+
+    event.preventDefault();
+
+    if (!user) {
+
+      notify("Please sign in to submit a job.", "error");
+
+      return;
+
+    }
+
+    const title = $("title").value.trim();
+
+    const description = $("description").value.trim();
+
+    const raw = $("compensation").value.trim();
+
+    const amount = raw === "" ? null : Number(raw);
+
+    if (!title || !description) {
+
+      notify("Enter a job title and description.", "error");
+
+      return;
+
+    }
+
+    if (amount !== null && (!Number.isFinite(amount) || amount < 0)) {
+
+      notify("Enter a valid compensation amount.", "error");
+
+      return;
+
+    }
+
+    const payload = {
+
+      created_by:user.id,
+
+      title,
+
+      description,
+
+      category:$("category").value.trim() || null,
+
+      location:$("location").value.trim() || null,
+
+      employment_type:$("employment").value || null,
+
+      compensation:amount,
+
+      compensation_type:$("compType").value || null,
+
+      application_deadline:$("deadline").value || null,
+
+      status:"pending"
+
+    };
+
+    $("submitBtn").disabled = true;
+
+    $("submitBtn").textContent = "Submitting…";
+
+    const {error} = await db.from("jobs").insert(payload);
+
+    $("submitBtn").disabled = false;
+
+    $("submitBtn").textContent = "Submit for approval";
+
+    if (error) {
+
+      console.error("Job submission failed:", error);
+
+      notify("Job could not be submitted. Please try again or contact support.", "error");
+
+      return;
+
+    }
+
+    $("jobForm").reset();
+
+    $("formPanel").classList.add("hidden");
+
+    notify("Job submitted. It will appear publicly after approval.", "success");
+
+    await loadOwnJobs();
+
+  }
+
+  async function refresh() {
+
+    await Promise.all([loadPublicJobs(),loadOwnJobs()]);
+
+    if (isAdmin) await loadPending();
+
+  }
+
+  async function init() {
+
+    // Avoid showing a setup warning in the live dashboard. If the key
+
+    // is missing, display a quiet message rather than a large warning.
+
+    if (!SUPABASE_PUBLIC_KEY || SUPABASE_PUBLIC_KEY.includes("PASTE_")) {
+
+      $("jobs").innerHTML = '<p class="muted">Jobs are temporarily unavailable. Please try again shortly.</p>';
+
+      $("postBtn").disabled = true;
+
+      $("refreshBtn").disabled = true;
+
+      console.error("Configure the public Supabase key in job.html.");
+
+      return;
+
+    }
+
+    if (!window.supabase?.createClient) {
+
+      $("jobs").innerHTML = '<p class="muted">Jobs are temporarily unavailable.</p>';
+
+      return;
+
+    }
+
+    db = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLIC_KEY);
+
+    try {
+
+      await loadUser();
+
+      await checkAdmin();
+
+      await refresh();
+
+      const params = new URLSearchParams(location.search);
+
+      if (params.get("action") === "post") openPostForm();
+
+      if (params.get("id")) await viewJob(params.get("id"));
+
+      db.auth.onAuthStateChange(() => {
+
+        setTimeout(async () => {
+
+          try {
+
+            await loadUser();
+
+            await checkAdmin();
+
+            await refresh();
+
+          } catch (e) { console.error(e); }
+
+        },0);
+
+      });
+
+    } catch (e) {
+
+      console.error("Jobs initialization error:",e);
+
+      $("jobs").innerHTML = '<p class="muted">Jobs are temporarily unavailable. Please refresh.</p>';
+
+    }
+
+  }
+
+  $("postBtn").addEventListener("click",openPostForm);
+
+  $("refreshBtn").addEventListener("click",refresh);
+
+  $("cancelBtn").addEventListener("click",()=>$("formPanel").classList.add("hidden"));
+
+  $("backBtn").addEventListener("click",()=>$("detailPanel").classList.add("hidden"));
+
+  $("jobForm").addEventListener("submit",submitJob);
+
+  $("search").addEventListener("input",e => {
+
+    searchTerm = e.target.value.trim();
+
+    renderPublicJobs();
+
+  });
+
+  $("categoryFilter").addEventListener("change",e => {
+
+    selectedCategory = e.target.value;
+
+    renderPublicJobs();
+
+  });
+
+  document.addEventListener("click",async e => {
+
+    const view = e.target.closest("[data-view]");
+
+    const approve = e.target.closest("[data-approve]");
+
+    const reject = e.target.closest("[data-reject]");
+
+    if (view) await viewJob(view.dataset.view);
+
+    else if (approve) await moderate(approve.dataset.approve,"active");
+
+    else if (reject) await moderate(reject.dataset.reject,"rejected");
+
+  });
+
+  init();
+
+})();
+
+</script>
+
+</body>
+
+</html>
