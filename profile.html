@@ -1,88 +1,991 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Profile | Zep Swipe</title>
-<meta name="theme-color" content="#080908"><meta name="description" content="Your Zep Swipe profile, opportunities and earnings.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070907">
+<meta name="description" content="Zep Swipe Student Provider Dashboard. Manage your services, enquiries, earnings and mobility opportunities.">
+<title>Provider Dashboard | Zep Swipe</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
+
 <style>
-:root{--bg:#080908;--panel:#111310;--panel2:#171a15;--line:#292d25;--lime:#b8ff3b;--text:#f4f6f0;--muted:#9ca394;--red:#ff7777;--radius:20px}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#17200e 0,#080908 42%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:100px}a{color:inherit;text-decoration:none}button,input{font:inherit}button{cursor:pointer}.wrap{width:min(1120px,100%);margin:auto;padding:22px 20px 30px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:-.5px}.logo{width:38px;height:38px;display:grid;place-items:center;background:var(--lime);color:#10130b;border-radius:13px}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:2px}.top-actions{display:flex;gap:8px}.iconbtn{width:42px;height:42px;border:1px solid var(--line);background:#11140f;border-radius:14px;color:var(--text);display:grid;place-items:center}.eyebrow{color:var(--lime);font-size:11px;font-weight:850;letter-spacing:2px;text-transform:uppercase}.hero{display:flex;justify-content:space-between;align-items:center;gap:22px;margin:16px 0 26px}.hero h1{font-size:clamp(30px,5vw,48px);line-height:1.05;letter-spacing:-1.8px;margin:9px 0}.hero p{color:var(--muted);margin:0;line-height:1.6}.avatar{width:76px;height:76px;flex:0 0 76px;border-radius:25px;background:linear-gradient(135deg,#b8ff3b,#587c18);color:#11150a;display:grid;place-items:center;font-size:26px;font-weight:900;overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:30px 0 14px}.section-head h2{font-size:15px;letter-spacing:1.4px;margin:0}.section-head span{color:var(--muted);font-size:12px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.tile{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(145deg,#151812,#0e100d);padding:18px;min-height:136px;display:flex;flex-direction:column;justify-content:space-between;transition:.18s}.tile:hover{border-color:#637e35;transform:translateY(-2px)}.tile-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.tile-icon{width:39px;height:39px;border-radius:13px;background:#242d19;color:var(--lime);display:grid;place-items:center}.count{font-size:23px;font-weight:850;letter-spacing:-.7px}.tile h3{font-size:14px;margin:16px 0 4px}.tile p{color:var(--muted);font-size:12px;margin:0;line-height:1.45}.arrow{color:#697260}.earnings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.money{padding:19px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}.money.primary{border-color:#577a25;background:linear-gradient(145deg,#1c2910,#11140e)}.money .label{color:var(--muted);font-size:12px}.money .amount{font-size:clamp(22px,3vw,30px);font-weight:900;letter-spacing:-1px;margin:10px 0 4px}.money .foot{font-size:11px;color:var(--muted)}.notice{border:1px solid #3c492d;background:#141a10;border-radius:14px;padding:13px 15px;color:#c7d3b8;font-size:12px;line-height:1.5;margin-top:13px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-top:26px}.panel h2{font-size:16px;margin:0 0 5px}.panel .sub{font-size:12px;color:var(--muted);margin:0 0 18px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.field input{width:100%;padding:13px 14px;background:#090b08;border:1px solid var(--line);border-radius:12px;color:var(--text);outline:none}.field input:focus{border-color:var(--lime)}.full{grid-column:1/-1}.btn{border:0;border-radius:12px;padding:12px 16px;background:var(--lime);color:#11150a;font-weight:850}.btn.secondary{background:#1b1e18;color:var(--text);border:1px solid var(--line)}.form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.status{font-size:12px;color:var(--muted);margin-top:12px;min-height:16px}.quicklinks{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}.pill{padding:9px 12px;border:1px solid var(--line);border-radius:999px;color:#d9dfd1;font-size:12px}.pill:hover{border-color:var(--lime)}.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(9,10,8,.94);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:9px 10px calc(9px + env(safe-area-inset-bottom))}.nav-inner{max-width:700px;margin:auto;display:flex;justify-content:space-around;gap:5px}.nav a{display:flex;min-width:54px;flex-direction:column;align-items:center;gap:5px;padding:7px 9px;color:#858d7c;font-size:10px}.nav a.active{color:var(--lime)}.nav i{width:19px;height:19px}.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--lime);color:#111;padding:12px 16px;border-radius:12px;font-weight:800;font-size:13px;display:none;z-index:50}.loading{color:var(--muted);font-size:12px}.signed-out{display:none;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}@media(max-width:700px){.wrap{padding:17px 14px 25px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.tile{padding:14px;min-height:132px}.earnings{grid-template-columns:1fr}.money{padding:16px;display:grid;grid-template-columns:1fr auto;align-items:center}.money .amount{margin:0}.money .foot{grid-column:1/-1;margin-top:5px}.hero{align-items:flex-start}.avatar{width:60px;height:60px;flex-basis:60px;border-radius:20px}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.panel{padding:16px}}@media(max-width:380px){.grid{grid-template-columns:1fr 1fr}.tile h3{font-size:13px}.tile p{font-size:11px}}
-</style></head>
+:root{
+ --bg:#070907;--panel:#10130f;--panel2:#171b14;--line:#292e26;
+ --lime:#b8ff3b;--white:#f6f8f2;--muted:#9ca596;
+ --gold:#f3c969;--red:#ff8a8a;--radius:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{
+ margin:0;color:var(--white);font-family:Inter,Arial,sans-serif;
+ background:radial-gradient(ellipse at 50% -15%,#25351a 0%,#10150e 27%,var(--bg) 67%);
+ min-height:100vh;padding-bottom:105px;overflow-x:hidden
+}
+a{color:inherit;text-decoration:none}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,
+textarea:focus-visible,select:focus-visible{
+ outline:2px solid var(--lime);outline-offset:3px
+}
+button:disabled{opacity:.55;cursor:not-allowed}
+.wrap{width:min(1220px,100%);margin:auto;padding:20px 22px 38px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-mark{width:42px;height:42px;background:var(--lime);color:#0a1005;
+ border-radius:14px;display:grid;place-items:center;flex:none}
+.brand-mark svg{width:23px;height:23px}
+.brand-name{font-size:15px;font-weight:900;letter-spacing:1px}
+.brand-sub{display:block;font-size:9px;letter-spacing:1.25px;color:var(--muted);margin-top:4px}
+.top-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:14px;
+ background:#11150f;color:var(--white);display:grid;place-items:center}
+.icon-btn:hover{border-color:#718d47}
+.account-mini{display:flex;align-items:center;gap:9px;margin-right:6px}
+.avatar{width:39px;height:39px;border-radius:50%;background:#26341a;color:var(--lime);
+ display:grid;place-items:center;font-weight:900;overflow:hidden;flex:none}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.user-name{font-size:11px;font-weight:800;max-width:145px;overflow-wrap:anywhere}
+.user-caption{font-size:10px;color:var(--muted);margin-top:4px}
+.hero{position:relative;isolation:isolate;overflow:hidden;border:1px solid #b8ff3b4a;
+ border-radius:27px;min-height:345px;display:flex;align-items:center;margin-bottom:19px;
+ background:#0a0d08;box-shadow:0 30px 90px #0005}
+.hero:before{content:"";position:absolute;inset:0;z-index:-2;
+ background:url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=2200&q=85") center 44%/cover;
+ animation:heroMotion 28s ease-in-out infinite alternate}
+.hero:after{content:"";position:absolute;inset:0;z-index:-1;
+ background:linear-gradient(90deg,#050805f5 0%,#050805dc 43%,#05080576 100%),
+ linear-gradient(0deg,#05080590,transparent 60%),
+ radial-gradient(circle at 80% 43%,#b8ff3b24,transparent 30%)}
+@keyframes heroMotion{from{transform:scale(1)}to{transform:scale(1.07) translateX(-1%)}}
+.hero-content{padding:clamp(25px,5vw,50px);max-width:790px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--lime);
+ text-transform:uppercase;letter-spacing:1.8px;font-size:10px;font-weight:900}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--lime);
+ box-shadow:0 0 12px #b8ff3b90}
+.hero h1{font-size:clamp(35px,5vw,60px);line-height:1.02;letter-spacing:-2.6px;
+ margin:16px 0 13px;max-width:700px}
+.hero h1 em{font-style:normal;color:var(--lime)}
+.hero-copy{color:#d2d9ca;font-size:13px;line-height:1.85;max-width:570px;margin:0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:21px}
+.btn{min-height:44px;border:1px solid transparent;border-radius:13px;padding:0 16px;
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:11px;
+ font-weight:850;transition:transform .18s,border-color .18s}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--lime);color:#0a1005}
+.btn-secondary{background:#0b0f09ca;color:var(--white);border-color:#ffffff36}
+.btn-dark{background:#1a2015;border-color:var(--line);color:var(--white)}
+.btn-danger{background:#351b1b;color:#ffc2c2;border-color:#6c3636}
+.hero-meta{display:flex;align-items:center;gap:7px;color:#c0c9b7;font-size:10px;margin-top:16px}
+.hero-meta svg{color:var(--lime)}
+.section{margin-top:29px;scroll-margin-top:16px}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.section-heading h2{font-size:15px;letter-spacing:.25px;margin:0;font-weight:850}
+.section-heading p{font-size:11px;color:var(--muted);line-height:1.5;margin:5px 0 0}
+.label-small{font-size:10px;color:var(--muted)}
+.text-btn{border:0;background:transparent;color:var(--lime);font-size:11px;
+ font-weight:800;padding:8px 0;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.metric{padding:15px;border:1px solid var(--line);border-radius:17px;
+ background:linear-gradient(145deg,#151a12,#0d100c);min-width:0}
+.metric-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.metric-icon{width:37px;height:37px;display:grid;place-items:center;border-radius:12px;
+ background:#b8ff3b14;color:var(--lime)}
+.metric-icon svg{width:19px;height:19px}
+.metric-number{font-size:25px;font-weight:900;letter-spacing:-1px;margin-top:16px;
+ overflow-wrap:anywhere}
+.metric-title{font-size:11px;font-weight:800;margin-top:4px}
+.metric-note{font-size:10px;color:var(--muted);line-height:1.5;margin-top:6px}
+.layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);
+ gap:16px;align-items:start}
+.panel{background:linear-gradient(145deg,#121610,#0d100c);
+ border:1px solid var(--line);border-radius:20px;padding:19px;min-width:0}
+.panel+.panel{margin-top:15px}
+.panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.panel-heading h2{font-size:14px;font-weight:850;margin:0}
+.panel-heading p{font-size:10px;color:var(--muted);margin:6px 0 0;line-height:1.5}
+.badge{font-size:9px;padding:6px 9px;border-radius:30px;background:#1c2812;
+ color:var(--lime);white-space:nowrap;font-weight:800}
+.badge-muted{background:#20231d;color:#bdc4b6}
+.status-banner{border:1px solid #39482b;background:#151d10;padding:12px 14px;
+ border-radius:13px;margin-bottom:13px;font-size:11px;line-height:1.7;color:#d3dec8}
+.status-banner strong{color:var(--lime)}
+.profile-progress{border:1px solid var(--line);padding:14px;border-radius:15px;background:#0b0e0a}
+.progress-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.progress-head strong{font-size:12px}
+.progress-head span{font-size:11px;color:var(--lime);font-weight:800}
+.progress-track{height:6px;background:#293023;border-radius:99px;overflow:hidden;margin-top:12px}
+.progress-fill{height:100%;width:0%;background:var(--lime);border-radius:99px;transition:width .25s}
+.progress-tip{font-size:10px;line-height:1.6;color:var(--muted);margin-top:10px}
+.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.quick-card{display:flex;align-items:center;gap:10px;border:1px solid var(--line);
+ border-radius:14px;padding:12px;background:#0d100c;color:var(--white);min-width:0}
+.quick-card:hover{border-color:#627e3d}
+.quick-icon{width:36px;height:36px;border-radius:11px;background:#b8ff3b13;
+ display:grid;place-items:center;color:var(--lime);flex:none}
+.quick-icon svg{width:18px;height:18px}
+.quick-card strong{display:block;font-size:11px}
+.quick-card small{display:block;color:var(--muted);font-size:9px;line-height:1.5;margin-top:4px}
+.mobility{position:relative;isolation:isolate;overflow:hidden;border:1px solid #b8ff3b66;
+ border-radius:22px;background:#090d08;box-shadow:0 18px 60px #0004}
+.mobility:before{content:"";position:absolute;inset:0;z-index:-2;
+ background:url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1800&q=85") center/cover}
+.mobility:after{content:"";position:absolute;inset:0;z-index:-1;
+ background:linear-gradient(90deg,#050805f0,#050805d8 55%,#0508058c),
+ linear-gradient(0deg,#050805cc,transparent)}
+.mobility-inner{padding:21px}
+.voucher{display:inline-flex;align-items:center;gap:8px;background:var(--lime);
+ color:#11170a;padding:8px 11px;border-radius:9px;font-size:10px;font-weight:900}
+.mobility h2{font-size:25px;line-height:1.1;letter-spacing:-.9px;margin:16px 0 10px}
+.mobility h2 span{color:var(--lime)}
+.mobility p{font-size:11px;line-height:1.8;color:#d2dbcb;margin:0;max-width:460px}
+.challenge-steps{display:grid;gap:11px;margin:17px 0}
+.challenge-step{display:flex;align-items:flex-start;gap:10px}
+.step-number{width:25px;height:25px;display:grid;place-items:center;border-radius:50%;
+ border:1px solid #b8ff3b7d;color:var(--lime);font-weight:900;font-size:10px;flex:none}
+.challenge-step strong{display:block;font-size:11px}
+.challenge-step small{display:block;font-size:10px;line-height:1.6;color:#aeb8a5;margin-top:4px}
+.mobility-status{padding:12px;border:1px solid #ffffff27;border-radius:12px;
+ background:#05080582;margin-bottom:14px}
+.mobility-status strong{display:block;font-size:11px}
+.mobility-status span{display:block;font-size:10px;line-height:1.6;color:#b9c3b0;margin-top:5px}
+.disclaimer{font-size:9px!important;line-height:1.65!important;color:#aab4a3!important;margin-top:11px!important}
+.earnings-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.earning{border:1px solid var(--line);border-radius:15px;padding:13px;background:#0d100c;min-width:0}
+.earning.featured{border-color:#506d29;background:linear-gradient(145deg,#1b2910,#11150e)}
+.earning-label{color:var(--muted);font-size:10px}
+.earning-value{font-size:clamp(18px,2.4vw,25px);font-weight:900;letter-spacing:-.7px;
+ margin-top:9px;overflow-wrap:anywhere}
+.earning-foot{font-size:9px;color:var(--muted);line-height:1.6;margin-top:7px}
+.service-list{display:grid;gap:9px}
+.service-row{display:flex;align-items:center;gap:11px;padding:11px;
+ border:1px solid var(--line);border-radius:14px;background:#0b0e0a;min-width:0}
+.service-image{width:53px;height:53px;object-fit:cover;border-radius:12px;
+ flex:none;background:#20251b}
+.service-copy{flex:1;min-width:0}
+.service-copy strong{display:block;font-size:11px;overflow-wrap:anywhere;line-height:1.5}
+.service-copy small{display:block;font-size:10px;color:var(--muted);line-height:1.5;margin-top:4px}
+.service-tag{display:inline-block;font-size:9px;padding:4px 7px;border-radius:7px;
+ margin-top:6px;background:#20241c;color:#cbd5c0}
+.service-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none}
+.price{font-size:11px;color:var(--lime);font-weight:850;white-space:nowrap}
+.small-btn{border:1px solid var(--line);border-radius:9px;padding:7px 9px;
+ background:#171b14;color:var(--white);font-size:9px;font-weight:800}
+.empty{padding:23px 14px;text-align:center;border:1px dashed #42483b;border-radius:14px;
+ color:var(--muted);font-size:11px;line-height:1.7}
+.empty svg{color:#8b9e73;margin-bottom:8px}
+.field{min-width:0}
+.field label{display:block;color:#c0c9b7;font-size:10px;font-weight:700;margin-bottom:7px}
+.field input,.field textarea,.field select{width:100%;min-width:0;background:#080b07;
+ color:var(--white);border:1px solid var(--line);border-radius:11px;padding:12px;
+ font-size:12px;outline:none}
+.field textarea{min-height:95px;resize:vertical;line-height:1.6}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--lime)}
+.field input::placeholder,.field textarea::placeholder{color:#707967}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.full{grid-column:1/-1}
+.form-note{font-size:10px;color:var(--muted);line-height:1.6;margin-top:12px}
+.form-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.modal-backdrop{position:fixed;inset:0;background:#000c;z-index:100;
+ display:none;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(8px)}
+.modal-backdrop.open{display:flex}
+.modal{background:#10140e;border:1px solid #3b4630;border-radius:22px;
+ width:min(620px,100%);max-height:min(90dvh,850px);overflow:auto;padding:21px}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:18px}
+.modal-head h2{font-size:18px;margin:0}
+.modal-head p{font-size:10px;line-height:1.6;color:var(--muted);margin:7px 0 0}
+.close-btn{width:35px;height:35px;border:1px solid var(--line);border-radius:11px;
+ background:#1a1e16;color:white;display:grid;place-items:center;flex:none}
+.form-status{font-size:11px;line-height:1.6;color:var(--muted);margin-top:12px;min-height:17px}
+.form-status.error{color:var(--red)}
+.form-status.success{color:var(--lime)}
+.footer-note{font-size:10px;line-height:1.7;color:#7f8976;text-align:center;margin-top:25px}
+.bottom-nav{position:fixed;z-index:60;bottom:0;left:0;right:0;
+ border-top:1px solid #ffffff1d;background:#090c09ed;backdrop-filter:blur(20px);
+ padding:8px 9px calc(8px + env(safe-area-inset-bottom))}
+.bottom-inner{max-width:700px;margin:auto;display:flex;justify-content:space-around;gap:4px}
+.nav-link{display:flex;flex:1;min-width:0;flex-direction:column;align-items:center;
+ justify-content:center;gap:5px;padding:7px 2px;color:#899281;font-size:9px;font-weight:700;
+ border:0;background:transparent;border-radius:12px}
+.nav-link svg{width:19px;height:19px}
+.nav-link.active{color:var(--lime);background:#b8ff3b0c}
+.toast{position:fixed;top:15px;left:50%;transform:translate(-50%,-150%);
+ z-index:150;width:max-content;max-width:calc(100% - 25px);padding:13px 16px;
+ border:1px solid #536e32;border-radius:13px;background:#182411;color:#eff8e6;
+ font-size:11px;line-height:1.6;box-shadow:0 15px 40px #0007;transition:transform .25s}
+.toast.show{transform:translate(-50%,0)}
+.login-screen{width:min(470px,calc(100% - 28px));margin:70px auto;
+ border:1px solid var(--line);border-radius:22px;background:var(--panel);padding:25px}
+.login-screen h1{font-size:26px;letter-spacing:-1px}
+.login-screen p{font-size:12px;color:var(--muted);line-height:1.8}
+.config-notice{border:1px solid #745f2d;background:#251f12;color:#f1dba4;padding:13px;
+ border-radius:13px;font-size:11px;line-height:1.7;margin-bottom:16px}
+#dashboard[hidden],#loginScreen[hidden]{display:none!important}
+@media(min-width:1000px){.hero{min-height:365px}}
+@media(max-width:920px){
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .layout{grid-template-columns:minmax(0,1fr)}
+ .right-column{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+ .right-column .panel{margin-top:0}
+}
+@media(max-width:600px){
+ .wrap{padding:14px 13px 28px}
+ .topbar{margin-bottom:19px;gap:8px}
+ .brand-mark{width:36px;height:36px;border-radius:12px}
+ .brand-name{font-size:13px}.brand-sub{font-size:8px;letter-spacing:.8px}
+ .account-mini{gap:7px}.avatar{width:34px;height:34px}
+ .user-name{max-width:90px;font-size:10px}.user-caption{font-size:9px}
+ .icon-btn{width:36px;height:36px;border-radius:12px}
+ .top-actions{gap:5px}
+ .hero{min-height:385px;border-radius:22px}
+ .hero:after{background:linear-gradient(90deg,#050805f2,#050805b9),
+ linear-gradient(0deg,#050805a8,transparent 70%)}
+ .hero-content{padding:23px 18px}
+ .hero h1{font-size:43px;letter-spacing:-2px}
+ .hero-copy{font-size:12px}
+ .actions .btn{flex:1}
+ .grid{gap:8px}
+ .metric{padding:12px;border-radius:15px}
+ .metric-number{font-size:23px;margin-top:13px}
+ .metric-title{font-size:10px}
+ .metric-note{font-size:9px}
+ .layout{gap:12px}
+ .panel{padding:14px;border-radius:17px}
+ .right-column{display:grid;grid-template-columns:1fr;gap:12px}
+ .right-column .panel{margin-top:0}
+ .earnings-grid{grid-template-columns:1fr}
+ .earning{display:grid;grid-template-columns:1fr auto;align-items:center;gap:0 10px}
+ .earning-value{margin-top:0}
+ .earning-foot{grid-column:1/-1}
+ .mobility-inner{padding:17px}
+ .mobility h2{font-size:24px}
+ .quick-card{padding:10px}
+ .quick-card strong{font-size:10px}
+ .quick-card small{font-size:9px}
+ .form-grid{grid-template-columns:1fr}
+ .full{grid-column:auto}
+ .service-row{align-items:flex-start;gap:8px;padding:9px}
+ .service-image{width:45px;height:45px}
+ .service-right{gap:7px}
+ .service-copy strong{font-size:10px}
+ .section{margin-top:24px}
+ .section-heading h2{font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}
+}
+</style>
+</head>
+
 <body>
+<div id="configNotice" class="config-notice" style="display:none;margin:15px">
+  Setup required: add your Supabase public anon/publishable key in this file.
+</div>
+
+<section class="login-screen" id="loginScreen" hidden>
+  <a class="brand" href="index.html">
+    <span class="brand-mark"><i data-lucide="zap"></i></span>
+    <span><span class="brand-name">ZEP SWIPE</span><small class="brand-sub">DISCOVER · EARN · CONNECT · BUILD</small></span>
+  </a>
+  <h1>Welcome to your provider hub.</h1>
+  <p>Sign in to manage your services, respond to enquiries and explore the Zep Swipe Mobility Completion Challenge.</p>
+  <button class="btn btn-primary" type="button" onclick="location.href='auth.html?redirect=provider.html'">
+    Sign in / Create account <i data-lucide="arrow-up-right"></i>
+  </button>
+  <p><a href="marketplace.html" style="color:var(--lime)">← Browse the marketplace</a></p>
+</section>
+
+<main id="dashboard" hidden>
 <div class="wrap">
-<header class="top"><a class="brand" href="index.html"><span class="logo"><i data-lucide="zap"></i></span><span>ZEP SWIPE<small>DISCOVER · EARN · CONNECT · BUILD</small></span></a><div class="top-actions"><button class="iconbtn" title="Marketplace" onclick="location.href='marketplace.html'"><i data-lucide="search"></i></button><button class="iconbtn" title="Sign out" onclick="signOut()"><i data-lucide="log-out"></i></button></div></header>
-<section class="hero"><div><div class="eyebrow">Your student account</div><h1>My Profile<span style="color:var(--lime)">.</span></h1><p>Everything you’re building and discovering on Zep Swipe.</p></div><div class="avatar" id="avatar">ZS</div></section>
-<div id="signedOut" class="signed-out"><h2>Sign in to see your profile</h2><p style="color:var(--muted);line-height:1.6">Your applications, services, saved opportunities and earnings are linked to your account.</p><button class="btn" onclick="location.href='auth.html'">Sign in / Create account</button></div>
-<div id="profileApp">
-<div class="section-head"><h2>MY OPPORTUNITIES</h2><span id="dataStatus">Loading your activity…</span></div>
-<div class="grid">
-<a class="tile" href="applications.html"><div class="tile-top"><span class="tile-icon"><i data-lucide="file-check-2"></i></span><span class="count" id="applicationsCount">—</span></div><div><h3>Applications</h3><p>Track opportunities you’ve applied for.</p></div></a>
-<a class="tile" href="provider.html"><div class="tile-top"><span class="tile-icon"><i data-lucide="briefcase-business"></i></span><span class="count" id="servicesCount">—</span></div><div><h3>Services offered</h3><p>Manage your skills and published services.</p></div></a>
-<a class="tile" href="enquiries.html"><div class="tile-top"><span class="tile-icon"><i data-lucide="messages-square"></i></span><span class="count" id="enquiriesCount">—</span></div><div><h3>Service enquiries</h3><p>See people interested in your services.</p></div></a>
-<a class="tile" href="saved.html"><div class="tile-top"><span class="tile-icon"><i data-lucide="bookmark"></i></span><span class="count" id="savedCount">—</span></div><div><h3>Saved opportunities</h3><p>Return to things you bookmarked.</p></div></a>
-<a class="tile" href="communities.html"><div class="tile-top"><span class="tile-icon"><i data-lucide="users"></i></span><span class="count" id="communitiesCount">—</span></div><div><h3>Communities</h3><p>Explore your student communities.</p></div></a>
-<a class="tile" href="mobility.html"><div class="tile-top"><span class="tile-icon"><i data-lucide="car-front"></i></span><span class="count" id="mobilityCount">—</span></div><div><h3>Mobility enquiries</h3><p>Follow up on your mobility requests.</p></div></a>
+  <header class="topbar">
+    <a class="brand" href="marketplace.html" aria-label="Zep Swipe marketplace">
+      <span class="brand-mark"><i data-lucide="zap"></i></span>
+      <span><span class="brand-name">ZEP SWIPE</span><small class="brand-sub">STUDENT PROVIDER HUB</small></span>
+    </a>
+    <div class="top-actions">
+      <div class="account-mini">
+        <div class="avatar" id="headerAvatar">ZS</div>
+        <div>
+          <div class="user-name" id="headerName">My dashboard</div>
+          <div class="user-caption" id="headerRole">Student provider</div>
+        </div>
+      </div>
+      <button class="icon-btn" type="button" title="Marketplace" aria-label="Marketplace" onclick="location.href='marketplace.html'"><i data-lucide="search"></i></button>
+      <button class="icon-btn" type="button" title="Sign out" aria-label="Sign out" id="signOutBtn"><i data-lucide="log-out"></i></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="eyebrow"><span class="live-dot"></span> Your student provider dashboard</div>
+      <h1>Turn your skills into <em>opportunity.</em></h1>
+      <p class="hero-copy">Publish your services, manage potential customers, follow your activity and discover more ways to participate in the student economy.</p>
+      <div class="actions">
+        <button class="btn btn-primary" type="button" id="newServiceHero"><i data-lucide="plus-circle"></i> Publish a service</button>
+        <a class="btn btn-secondary" href="marketplace.html"><i data-lucide="compass"></i> Explore marketplace</a>
+      </div>
+      <div class="hero-meta"><i data-lucide="shield-check" width="15"></i> Your account activity is private to your signed-in account, subject to access permissions.</div>
+    </div>
+  </section>
+
+  <section class="section" id="overview">
+    <div class="section-heading">
+      <div><h2>Your activity at a glance</h2><p>Counts are based on records available to your account.</p></div>
+      <span class="badge" id="connectionBadge">Checking account</span>
+    </div>
+    <div class="grid">
+      <article class="metric">
+        <div class="metric-top"><span class="metric-icon"><i data-lucide="briefcase-business"></i></span><i data-lucide="arrow-up-right" color="#7f8975"></i></div>
+        <div class="metric-number" id="servicesCount">—</div>
+        <div class="metric-title">My services</div>
+        <div class="metric-note" id="servicesSub">Your submitted listings</div>
+      </article>
+      <article class="metric">
+        <div class="metric-top"><span class="metric-icon"><i data-lucide="message-circle"></i></span><i data-lucide="arrow-up-right" color="#7f8975"></i></div>
+        <div class="metric-number" id="enquiriesCount">—</div>
+        <div class="metric-title">Service enquiries</div>
+        <div class="metric-note">Available enquiry records</div>
+      </article>
+      <article class="metric">
+        <div class="metric-top"><span class="metric-icon"><i data-lucide="eye"></i></span><i data-lucide="chart-no-axes-combined" color="#7f8975"></i></div>
+        <div class="metric-number" id="activeCount">—</div>
+        <div class="metric-title">Active listings</div>
+        <div class="metric-note">Services currently marked active</div>
+      </article>
+      <article class="metric">
+        <div class="metric-top"><span class="metric-icon"><i data-lucide="car-front"></i></span><i data-lucide="arrow-up-right" color="#7f8975"></i></div>
+        <div class="metric-number" id="mobilityStatusMetric">—</div>
+        <div class="metric-title">Mobility challenge</div>
+        <div class="metric-note" id="mobilitySubMetric">Complete the Mobility Solution</div>
+      </article>
+    </div>
+  </section>
+
+  <div class="layout section">
+    <div class="left-column">
+      <section class="panel" id="profileProgressPanel">
+        <div class="panel-heading">
+          <div><h2>Make your profile work for you</h2><p>Help customers understand your skills and what you offer.</p></div>
+          <span class="badge" id="profilePercent">—</span>
+        </div>
+        <div class="profile-progress">
+          <div class="progress-head"><strong>Profile completion</strong><span id="progressLabel">Calculating…</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-tip" id="profileTip">Add your details to build a stronger provider profile.</div>
+          <div class="form-actions"><a class="btn btn-primary" href="profile.html"><i data-lucide="user-round-pen"></i> Edit my profile</a></div>
+        </div>
+      </section>
+
+      <section class="panel" id="myServices">
+        <div class="panel-heading">
+          <div><h2>My services</h2><p>Manage the services you offer on Zep Swipe.</p></div>
+          <button class="text-btn" type="button" id="newServiceBtn">+ Add service</button>
+        </div>
+        <div class="service-list" id="serviceList">
+          <div class="empty">Loading your services…</div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="button" id="newServiceBottom"><i data-lucide="plus"></i> Publish a service</button>
+          <a class="btn btn-dark" href="marketplace.html">View marketplace</a>
+        </div>
+      </section>
+
+      <section class="panel" id="earnings">
+        <div class="panel-heading">
+          <div><h2>My earnings</h2><p>Amounts in South African rand, where wallet data is available.</p></div>
+          <span class="badge badge-muted">ZAR</span>
+        </div>
+        <div class="earnings-grid">
+          <article class="earning">
+            <div class="earning-label">Pending</div>
+            <div class="earning-value" id="pendingAmount">—</div>
+            <div class="earning-foot">Pending balance, if recorded in the wallet.</div>
+          </article>
+          <article class="earning featured">
+            <div class="earning-label">Available balance</div>
+            <div class="earning-value" id="availableAmount">—</div>
+            <div class="earning-foot">Reported wallet balance; withdrawal access may have additional rules.</div>
+          </article>
+          <article class="earning">
+            <div class="earning-label">Total earned</div>
+            <div class="earning-value" id="totalAmount">—</div>
+            <div class="earning-foot">Lifetime earnings, if recorded in the wallet.</div>
+          </article>
+        </div>
+        <div class="form-note" id="walletNote">Balances appear only when the wallet connection and permissions allow the data to be read.</div>
+      </section>
+    </div>
+
+    <aside class="right-column">
+      <section class="mobility" id="mobilityChallenge">
+        <div class="mobility-inner">
+          <div class="eyebrow"><span class="live-dot"></span> Zep Swipe Mobility</div>
+          <div style="margin-top:13px"><span class="voucher"><i data-lucide="gift" width="16"></i> TAKEALOT VOUCHER · R250–R500</span></div>
+          <h2>Complete your journey.<br><span>Enter to win.</span></h2>
+          <p>Complete the Zep Swipe Mobility Solution for a chance to win a Takealot voucher, subject to the campaign's published terms and verification.</p>
+          <div class="challenge-steps">
+            <div class="challenge-step"><span class="step-number">1</span><div><strong>Open the Mobility Solution</strong><small>Use your signed-in Zep Swipe account.</small></div></div>
+            <div class="challenge-step"><span class="step-number">2</span><div><strong>Complete the required form</strong><small>Provide accurate information and the required consent.</small></div></div>
+            <div class="challenge-step"><span class="step-number">3</span><div><strong>Verify your completion</strong><small>Eligibility depends on a verified completed submission and the published campaign rules.</small></div></div>
+          </div>
+          <div class="mobility-status">
+            <strong id="mobilityStatusTitle">Your completion status</strong>
+            <span id="mobilityStatusText">Checking for an existing Mobility Solution record…</span>
+          </div>
+          <button class="btn btn-primary" type="button" id="mobilityBtn" style="width:100%">
+            Complete Mobility Solution <i data-lucide="arrow-up-right"></i>
+          </button>
+          <p class="disclaimer">Prize availability, dates, eligibility and winner selection are governed by published campaign rules. The voucher is not guaranteed by completing the form alone. Zep Swipe should only announce the promotion after the prize budget and campaign rules are confirmed. Cartrack qualification is tracked separately.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Quick actions</h2><p>Keep your next step within reach.</p></div></div>
+        <div class="quick-grid">
+          <button class="quick-card" type="button" id="quickService">
+            <span class="quick-icon"><i data-lucide="plus-circle"></i></span>
+            <span><strong>Add a service</strong><small>List your skills</small></span>
+          </button>
+          <a class="quick-card" href="profile.html">
+            <span class="quick-icon"><i data-lucide="user-round"></i></span>
+            <span><strong>Edit profile</strong><small>Update your details</small></span>
+          </a>
+          <a class="quick-card" href="messages.html">
+            <span class="quick-icon"><i data-lucide="messages-square"></i></span>
+            <span><strong>Messages</strong><small>Open conversations</small></span>
+          </a>
+          <a class="quick-card" href="mobility.html">
+            <span class="quick-icon"><i data-lucide="car-front"></i></span>
+            <span><strong>Mobility</strong><small>Complete the solution</small></span>
+          </a>
+          <a class="quick-card" href="marketplace.html">
+            <span class="quick-icon"><i data-lucide="store"></i></span>
+            <span><strong>Marketplace</strong><small>See opportunities</small></span>
+          </a>
+          <a class="quick-card" href="enquiries.html">
+            <span class="quick-icon"><i data-lucide="message-circle"></i></span>
+            <span><strong>My enquiries</strong><small>View customer interest</small></span>
+          </a>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading"><div><h2>Provider tips</h2><p>Small improvements can make your offer clearer.</p></div></div>
+        <div class="status-banner"><strong>Use a clear title.</strong><br>Explain what you offer in simple words so students can quickly understand your service.</div>
+        <div class="status-banner"><strong>Set a fair price.</strong><br>Include a clear price or explain whether a quote is needed before work begins.</div>
+        <div class="status-banner" style="margin-bottom:0"><strong>Reply professionally.</strong><br>Respond promptly to enquiries and never promise work, income or results you cannot guarantee.</div>
+      </section>
+    </aside>
+  </div>
+
+  <footer class="footer-note">
+    Zep Swipe · Discover · Earn · Connect · Build<br>
+    Dashboard figures depend on successfully connected data tables and account permissions. Do not share private customer, wallet or lead data publicly.
+  </footer>
 </div>
-<div class="section-head"><h2>MY EARNINGS</h2><span>Balances in ZAR</span></div>
-<div class="earnings">
-<div class="money"><div><div class="label">Pending</div><div class="amount" id="pendingAmount">R0.00</div></div><i data-lucide="clock-3" style="color:#d6b46c"></i><div class="foot">Awaiting completion or approval</div></div>
-<div class="money primary"><div><div class="label">Available</div><div class="amount" id="availableAmount">R0.00</div></div><i data-lucide="wallet" style="color:var(--lime)"></i><div class="foot">Available balance reported by your wallet</div></div>
-<div class="money"><div><div class="label">Total earned</div><div class="amount" id="totalAmount">R0.00</div></div><i data-lucide="trending-up" style="color:var(--lime)"></i><div class="foot">Lifetime earnings, when supported by your wallet ledger</div></div>
+</main>
+
+<nav class="bottom-nav" id="bottomNav" hidden>
+ <div class="bottom-inner">
+  <a class="nav-link" href="index.html"><i data-lucide="house"></i><span>Home</span></a>
+  <a class="nav-link" href="marketplace.html"><i data-lucide="store"></i><span>Marketplace</span></a>
+  <a class="nav-link active" href="provider.html"><i data-lucide="briefcase-business"></i><span>Provider</span></a>
+  <a class="nav-link" href="mobility.html"><i data-lucide="car-front"></i><span>Mobility</span></a>
+  <a class="nav-link" href="profile.html"><i data-lucide="user-round"></i><span>Profile</span></a>
+ </div>
+</nav>
+
+<div class="modal-backdrop" id="serviceModal" role="dialog" aria-modal="true" aria-labelledby="serviceModalTitle">
+ <div class="modal">
+  <div class="modal-head">
+   <div><h2 id="serviceModalTitle">Publish a service</h2><p>Describe what you offer. Use accurate details that customers can understand.</p></div>
+   <button class="close-btn" type="button" id="closeServiceModal" aria-label="Close"><i data-lucide="x"></i></button>
+  </div>
+  <form id="serviceForm">
+   <input type="hidden" id="editServiceId">
+   <div class="form-grid">
+    <div class="field full">
+     <label for="serviceTitle">Service title *</label>
+     <input id="serviceTitle" maxlength="100" required placeholder="e.g. Maths tutoring for high school students">
+    </div>
+    <div class="field">
+     <label for="serviceCategory">Category *</label>
+     <select id="serviceCategory" required>
+      <option value="">Select category</option>
+      <option>Tutoring & Education</option><option>Graphic Design</option>
+      <option>Web & No-Code</option><option>AI & Technology</option>
+      <option>Virtual Assistance</option><option>Data Entry</option>
+      <option>Digital Marketing</option><option>Writing & Editing</option>
+      <option>Photography & Video</option><option>Transport & Mobility</option>
+      <option>Events</option><option>Other</option>
+     </select>
+    </div>
+    <div class="field">
+     <label for="servicePrice">Price in ZAR (R)</label>
+     <input id="servicePrice" type="number" min="0" step="0.01" placeholder="e.g. 150">
+    </div>
+    <div class="field full">
+     <label for="serviceDescription">Description *</label>
+     <textarea id="serviceDescription" required maxlength="2000" placeholder="What do you offer, who is it for, and what should a customer expect?"></textarea>
+    </div>
+    <div class="field">
+     <label for="serviceDelivery">Estimated delivery time</label>
+     <input id="serviceDelivery" maxlength="80" placeholder="e.g. 2 days">
+    </div>
+    <div class="field">
+     <label for="serviceImage">Image URL (optional)</label>
+     <input id="serviceImage" type="url" maxlength="1000" placeholder="https://…">
+    </div>
+   </div>
+   <p class="form-note">Your new service is submitted with an active status in this version so it can appear on a marketplace that lists active services. Confirm your database rules and moderation process before publishing publicly.</p>
+   <div class="form-actions">
+    <button type="submit" class="btn btn-primary" id="saveServiceBtn"><i data-lucide="check-circle-2"></i> Save service</button>
+    <button type="button" class="btn btn-dark" id="cancelServiceBtn">Cancel</button>
+   </div>
+   <div class="form-status" id="serviceFormStatus" role="status" aria-live="polite"></div>
+  </form>
+ </div>
 </div>
-<div class="notice"><strong>About your figures:</strong> counts and balances are loaded from your signed-in account where the matching Supabase tables and fields are available. A dash means that the relevant data source hasn’t returned a count; it does not mean zero. Available funds are not a promise of withdrawal eligibility.</div>
-<section class="panel" id="accountDetails"><h2>Account details</h2><p class="sub">Keep your contact and campus details up to date.</p><form id="profileForm"><div class="formgrid"><div class="field"><label for="fullName">Full name</label><input id="fullName" autocomplete="name" placeholder="Your full name"></div><div class="field"><label for="phone">Phone number</label><input id="phone" autocomplete="tel" placeholder="+27…"></div><div class="field"><label for="university">University / campus</label><input id="university" placeholder="Your university or campus"></div><div class="field"><label for="city">City</label><input id="city" placeholder="Your city"></div><div class="field full"><label for="bio">About you / skills</label><input id="bio" placeholder="Tell people what you do"></div></div><div class="form-actions"><button class="btn" type="submit">Save details</button><button class="btn secondary" type="button" onclick="location.href='provider.html'">Manage my services</button></div><div class="status" id="formStatus" role="status"></div></form><div class="quicklinks"><a class="pill" href="marketplace.html">Explore marketplace ↗</a><a class="pill" href="mobility.html">Mobility ↗</a><a class="pill" href="messages.html">Messages ↗</a></div></section>
-</div></div>
-<nav class="nav"><div class="nav-inner"><a href="index.html"><i data-lucide="home"></i><span>Home</span></a><a href="marketplace.html"><i data-lucide="shopping-bag"></i><span>Marketplace</span></a><a href="mobility.html"><i data-lucide="car-front"></i><span>Mobility</span></a><a href="marketplace.html#jobs"><i data-lucide="zap"></i><span>Opportunities</span></a><a class="active" href="profile.html"><i data-lucide="user-round"></i><span>Profile</span></a></div></nav><div class="toast" id="toast"></div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
-// Use the same public Supabase project URL and anon key as the other live Zep Swipe pages.
-const SUPABASE_URL="https://tieekcelcathtuluwcfc.supabase.co";
-const SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"; // Replace with the project's public anon/publishable key. Never use a service-role key here.
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-let currentUser=null, profileRow=null;
-const $=id=>document.getElementById(id);
-function money(v){const n=Number(v);return Number.isFinite(n)?n.toLocaleString('en-ZA',{style:'currency',currency:'ZAR'}):'R0.00'}
-function setCount(id,n){$(id).textContent=(n===null||n===undefined)?'—':String(n)}
-function toast(msg){$('toast').textContent=msg;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2600)}
-function setAvatar(name,url){$('avatar').innerHTML=url?`<img src="${String(url).replaceAll('"','&quot;')}" alt="Profile photo">`:((name||'ZS').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'ZS')}
-async function countOwned(table,column='user_id'){try{let q=db.from(table).select('*',{count:'exact',head:true}).eq(column,currentUser.id);let {count,error}=await q;if(error)return null;return count??0}catch(e){return null}}
-async function firstCount(candidates){for(const c of candidates){const n=await countOwned(c.table,c.column);if(n!==null)return n}return null}
+(() => {
+"use strict";
+
+/* IMPORTANT:
+   Use the public anon/publishable key from your marketplace Supabase project.
+   Never put a service-role or secret key in browser code.
+*/
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+const hasKey = SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY" &&
+               SUPABASE_ANON_KEY.trim().length > 20;
+const db = hasKey && window.supabase?.createClient
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+
+const $ = id => document.getElementById(id);
+let currentUser = null;
+let profileRow = {};
+let myServices = [];
+let mobilityRecord = null;
+let busy = false;
+let toastTimer = null;
+
+function icons(){window.lucide?.createIcons()}
+function safe(value){
+ return String(value ?? "").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+function showToast(message){
+ const el=$("toast");
+ el.textContent=message;
+ el.classList.add("show");
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>el.classList.remove("show"),3200);
+}
+function setStatus(el,message,type=""){
+ $(el).textContent=message;
+ $(el).className="form-status"+(type?" "+type:"");
+}
+function money(value){
+ const n=Number(value);
+ if(value===null||value===undefined||value==="")return "—";
+ if(!Number.isFinite(n))return "—";
+ return n.toLocaleString("en-ZA",{style:"currency",currency:"ZAR"});
+}
+function initials(name){
+ return String(name||"ZS").trim().split(/\s+/).slice(0,2)
+  .map(p=>p.charAt(0)).join("").toUpperCase()||"ZS";
+}
+function setAvatar(id,name,url){
+ const el=$(id);
+ if(!el)return;
+ if(url){
+  const img=document.createElement("img");
+  img.alt="Profile photo";
+  img.referrerPolicy="no-referrer";
+  img.src=url;
+  img.onerror=()=>{el.textContent=initials(name)};
+  el.replaceChildren(img);
+ }else{
+  el.textContent=initials(name);
+ }
+}
+function hideForLogin(){
+ $("dashboard").hidden=true;
+ $("bottomNav").hidden=true;
+ $("loginScreen").hidden=false;
+}
+function showDashboard(){
+ $("loginScreen").hidden=true;
+ $("dashboard").hidden=false;
+ $("bottomNav").hidden=false;
+}
+function setHeader(){
+ const meta=currentUser?.user_metadata||{};
+ const name=profileRow.full_name||meta.full_name||meta.name||
+   currentUser?.email?.split("@")[0]||"Student";
+ const avatar=profileRow.avatar_url||profileRow.profile_image||
+   meta.avatar_url||meta.picture||"";
+ $("headerName").textContent=name;
+ $("headerRole").textContent="Student provider";
+ setAvatar("headerAvatar",name,avatar);
+}
+function updateProfileProgress(){
+ const name=$("fullName")?.value?.trim()||profileRow.full_name||"";
+ const phone=$("phone")?.value?.trim()||profileRow.phone||"";
+ const university=$("university")?.value?.trim()||profileRow.university||"";
+ const bio=$("bio")?.value?.trim()||profileRow.bio||"";
+ const checks=[!!name,!!phone,!!university,!!bio];
+ const percent=Math.round(checks.filter(Boolean).length/checks.length*100);
+ if($("profileFill"))$("profileFill").style.width=percent+"%";
+ if($("progressFill"))$("progressFill").style.width=percent+"%";
+ if($("profilePercent"))$("profilePercent").textContent=percent+"%";
+ if($("progressLabel"))$("progressLabel").textContent=percent+"% complete";
+ if($("profileTip")){
+  const missing=checks.filter(v=>!v).length;
+  $("profileTip").textContent=missing===0
+   ?"Your basic profile details are complete. Keep your services up to date."
+   :"Add your name, phone, university/campus and a short skills bio to complete your basic profile.";
+ }
+}
 async function loadProfile(){
- const {data,error}=await db.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
- if(!error&&data){profileRow=data;$('fullName').value=data.full_name||'';$('phone').value=data.phone||'';$('university').value=data.university||'';$('bio').value=data.bio||'';$('city').value=data.city||'';setAvatar(data.full_name||currentUser.email,data.avatar_url||'')}
- else {const m=currentUser.user_metadata||{};$('fullName').value=m.full_name||m.name||'';$('phone').value=m.phone||'';$('university').value=m.university||'';$('bio').value=m.bio||'';$('city').value=m.city||'';setAvatar($('fullName').value||currentUser.email,'')}
+ profileRow={};
+ const {data,error}=await db.from("profiles")
+  .select("*").eq("id",currentUser.id).maybeSingle();
+ if(error)console.warn("Profile data could not be read:",error.message);
+ if(data)profileRow=data;
+
+ const meta=currentUser.user_metadata||{};
+ if($("fullName"))$("fullName").value=profileRow.full_name||meta.full_name||meta.name||"";
+ if($("phone"))$("phone").value=profileRow.phone||meta.phone||"";
+ if($("university"))$("university").value=profileRow.university||meta.university||"";
+ if($("city"))$("city").value=profileRow.city||meta.city||"";
+ if($("bio"))$("bio").value=profileRow.bio||meta.bio||"";
+
+ setHeader();
+ updateProfileProgress();
 }
-async function loadActivity(){
- const [apps,services,enquiries,saved,communities,mobility]=await Promise.all([
- firstCount([{table:'applications',column:'student_id'},{table:'applications',column:'user_id'},{table:'job_applications',column:'student_id'},{table:'job_applications',column:'user_id'}]),
- firstCount([{table:'services',column:'provider_id'}]),
- firstCount([{table:'service_enquiries',column:'provider_id'},{table:'service_enquiries',column:'user_id'},{table:'enquiries',column:'provider_id'}]),
- firstCount([{table:'saved_opportunities',column:'user_id'},{table:'saved_opportunities',column:'student_id'},{table:'saved_items',column:'user_id'},{table:'saved_items',column:'student_id'}]),
- firstCount([{table:'community_members',column:'user_id'},{table:'community_memberships',column:'user_id'},{table:'community_memberships',column:'student_id'}]),
- firstCount([{table:'cartrack_leads',column:'user_id'},{table:'mobility_enquiries',column:'user_id'}])
+async function loadServices(){
+ const {data,error}=await db.from("services").select("*")
+  .eq("provider_id",currentUser.id)
+  .order("created_at",{ascending:false}).limit(50);
+ if(error){
+  console.warn("Services could not be loaded:",error.message);
+  $("serviceList").innerHTML='<div class="empty">Your service list could not be loaded. Check the services table, provider_id field and Supabase permissions.</div>';
+  $("servicesCount").textContent="—";
+  $("activeCount").textContent="—";
+  return;
+ }
+ myServices=data||[];
+ const active=myServices.filter(s=>String(s.status||"").toLowerCase()==="active").length;
+ $("servicesCount").textContent=String(myServices.length);
+ $("activeCount").textContent=String(active);
+ $("servicesSub").textContent=myServices.length
+  ?active+" active · "+(myServices.length-active)+" other status"
+  :"Publish your first service";
+
+ if(!myServices.length){
+  $("serviceList").innerHTML='<div class="empty"><i data-lucide="briefcase-business"></i><br>You have not published a service yet.<br>Show students what you can do by creating your first listing.</div>';
+  icons();return;
+ }
+ $("serviceList").innerHTML=myServices.slice(0,8).map(s=>{
+  const status=String(s.status||"unspecified");
+  const statusClass=status==="active"?"badge": "badge badge-muted";
+  const image=s.image_url||"";
+  const price=s.price!==null&&s.price!==undefined&&s.price!==""
+   ?money(s.price):"Ask for quote";
+  const img=image?`<img class="service-image" src="${safe(image)}" alt="" loading="lazy">`
+   :`<span class="service-image" style="display:grid;place-items:center;color:var(--lime)"><i data-lucide="briefcase-business"></i></span>`;
+  return `<article class="service-row">
+   ${img}
+   <div class="service-copy">
+    <strong>${safe(s.title||"Untitled service")}</strong>
+    <small>${safe(s.category||"Uncategorised")}${s.delivery_time?" · "+safe(s.delivery_time):""}</small>
+    <span class="service-tag">${safe(status)}</span>
+   </div>
+   <div class="service-right">
+    <span class="price">${safe(price)}</span>
+    <button class="small-btn" type="button" data-edit-service="${safe(s.id)}">Edit</button>
+   </div>
+  </article>`;
+ }).join("");
+ $("serviceList").querySelectorAll("[data-edit-service]").forEach(btn=>{
+  btn.addEventListener("click",()=>editService(btn.dataset.editService));
+ });
+ icons();
+}
+async function tryCount(table,column){
+ try{
+  const {count,error}=await db.from(table).select("*",{count:"exact",head:true})
+    .eq(column,currentUser.id);
+  if(error)return null;
+  return count??0;
+ }catch(_){return null}
+}
+async function loadEnquiries(){
+ // Try known enquiry table shapes. A missing table/column is treated as unavailable,
+ // not as proof the student has zero enquiries.
+ const candidates=[
+  {table:"service_enquiries",column:"provider_id"},
+  {table:"enquiries",column:"provider_id"}
+ ];
+ for(const c of candidates){
+  const count=await tryCount(c.table,c.column);
+  if(count!==null){$("enquiriesCount").textContent=String(count);return}
+ }
+ $("enquiriesCount").textContent="—";
+}
+async function loadWallet(){
+ $("availableAmount").textContent="—";
+ $("pendingAmount").textContent="—";
+ $("totalAmount").textContent="—";
+ $("walletNote").textContent="Wallet information is unavailable until a matching wallet record and account permissions are confirmed.";
+ const candidates=[
+  {table:"mari_wallets",owner:"user_id"},
+  {table:"mari_wallets",owner:"profile_id"}
+ ];
+ for(const c of candidates){
+  try{
+   const {data,error}=await db.from(c.table).select("*")
+    .eq(c.owner,currentUser.id).limit(1).maybeSingle();
+   if(error||!data)continue;
+   const available=data.available_balance??data.available??data.balance;
+   const pending=data.pending_balance??data.pending;
+   const total=data.total_earned??data.total_earnings??data.lifetime_earned;
+   $("availableAmount").textContent=available===undefined?"—":money(available);
+   $("pendingAmount").textContent=pending===undefined?"—":money(pending);
+   $("totalAmount").textContent=total===undefined?"—":money(total);
+   $("walletNote").textContent="Values reflect fields available in your wallet record. Confirm the ledger and withdrawal rules before treating a balance as withdrawable.";
+   return;
+  }catch(_){}
+ }
+}
+function explicitCompletion(record){
+ if(!record)return false;
+ const booleanFlags=[
+  record.solution_complete,record.is_complete,record.mobility_complete,
+  record.verified_complete,record.completion_verified
+ ];
+ if(booleanFlags.some(v=>v===true))return true;
+ const status=String(record.completion_status||record.solution_status||"").toLowerCase();
+ return ["complete","completed","verified","qualified"].includes(status);
+}
+async function loadMobilityStatus(){
+ mobilityRecord=null;
+ $("mobilityStatusMetric").textContent="—";
+ $("mobilitySubMetric").textContent="Check completion status";
+ $("mobilityStatusTitle").textContent="Your completion status";
+ $("mobilityStatusText").textContent="Open the Mobility Solution to complete your entry. Verification depends on the secure mobility submission record.";
+
+ if(!db)return;
+ // These are defensive lookups, not a substitute for verifying your actual mobility schema.
+ const candidates=[
+  {table:"mobility_enquiries",column:"user_id"},
+  {table:"mobility_enquiries",column:"student_id"},
+  {table:"cartrack_leads",column:"user_id"}
+ ];
+ for(const c of candidates){
+  try{
+   const {data,error}=await db.from(c.table).select("*")
+    .eq(c.column,currentUser.id).order("created_at",{ascending:false}).limit(1);
+   if(error||!data?.length)continue;
+   mobilityRecord=data[0];
+   if(explicitCompletion(mobilityRecord)){
+    $("mobilityStatusMetric").textContent="Complete";
+    $("mobilitySubMetric").textContent="Completion flag found";
+    $("mobilityStatusTitle").textContent="Completion record found";
+    $("mobilityStatusText").textContent="A completion indicator was found. Campaign eligibility still depends on the published rules and final verification.";
+   }else{
+    $("mobilityStatusMetric").textContent="Review";
+    $("mobilitySubMetric").textContent="Submission needs checking";
+    $("mobilityStatusTitle").textContent="Submission record found";
+    $("mobilityStatusText").textContent="A mobility-related record exists, but a trusted completion flag was not found. Check your Mobility page and campaign status.";
+   }
+   return;
+  }catch(_){}
+ }
+ $("mobilityStatusMetric").textContent="Start";
+ $("mobilitySubMetric").textContent="Visit Mobility Solution";
+ $("mobilityStatusTitle").textContent="No verified completion displayed";
+ $("mobilityStatusText").textContent="Complete the required Mobility Solution form. This dashboard cannot verify completion until the relevant secure database tracking is connected.";
+}
+async function loadDashboardData(){
+ $("connectionBadge").textContent="Refreshing…";
+ await Promise.all([
+  loadServices(),loadEnquiries(),loadWallet(),loadMobilityStatus()
  ]);
- setCount('applicationsCount',apps);setCount('servicesCount',services);setCount('enquiriesCount',enquiries);setCount('savedCount',saved);setCount('communitiesCount',communities);setCount('mobilityCount',mobility);
- $('dataStatus').textContent='Activity checked';
+ $("connectionBadge").textContent="Account connected";
 }
-async function loadEarnings(){
- // Read only known wallet candidates. If the actual schema differs, leave zeros and show that it needs connecting.
- const candidates=[{table:'mari_wallets',owner:'user_id'},{table:'mari_wallets',owner:'profile_id'}];let found=false;
- for(const c of candidates){try{const {data,error}=await db.from(c.table).select('*').eq(c.owner,currentUser.id).limit(1).maybeSingle();if(error||!data)continue;found=true;
- const available=Number(data.available_balance??data.available??data.balance??0);const pending=Number(data.pending_balance??data.pending??0);const total=Number(data.total_earned??data.total_earnings??data.lifetime_earned??0);
- $('availableAmount').textContent=money(available);$('pendingAmount').textContent=money(pending);$('totalAmount').textContent=money(total);break;}catch(e){}}
- if(!found){$('availableAmount').textContent='—';$('pendingAmount').textContent='—';$('totalAmount').textContent='—';}
+function openServiceModal(service=null){
+ $("serviceForm").reset();
+ $("editServiceId").value="";
+ $("serviceModalTitle").textContent=service?"Edit service":"Publish a service";
+ $("saveServiceBtn").innerHTML=service?"<i data-lucide='save'></i> Save changes":"<i data-lucide='check-circle-2'></i> Publish service";
+ setStatus("serviceFormStatus","");
+ if(service){
+  $("editServiceId").value=service.id||"";
+  $("serviceTitle").value=service.title||"";
+  $("serviceCategory").value=service.category||"";
+  $("servicePrice").value=service.price??"";
+  $("serviceDescription").value=service.description||"";
+  $("serviceDelivery").value=service.delivery_time||"";
+  $("serviceImage").value=service.image_url||"";
+ }
+ $("serviceModal").classList.add("open");
+ document.body.style.overflow="hidden";
+ icons();
+ $("serviceTitle").focus();
 }
-async function saveProfile(e){e.preventDefault();if(!currentUser)return;const payload={id:currentUser.id,email:currentUser.email,full_name:$('fullName').value.trim(),phone:$('phone').value.trim(),university:$('university').value.trim(),bio:$('bio').value.trim(),updated_at:new Date().toISOString()};
- // City may be stored in auth metadata if the profiles table doesn't include a city column.
- const city=$('city').value.trim();let {error}=await db.from('profiles').upsert(payload,{onConflict:'id'});
- if(error){$('formStatus').textContent='Could not save profile to profiles table: '+error.message;return;}
- const {error:metaError}=await db.auth.updateUser({data:{city}});$('formStatus').textContent=metaError?'Profile saved. City could not be saved to account metadata.':'Profile details saved.';setAvatar(payload.full_name,currentUser.user_metadata?.avatar_url||'');toast('Profile saved');
+function closeServiceModal(){
+ $("serviceModal").classList.remove("open");
+ document.body.style.overflow="";
 }
-async function signOut(){await db.auth.signOut();location.href='auth.html'}
-async function init(){if(SUPABASE_ANON_KEY==='YOUR_SUPABASE_ANON_KEY'){$('dataStatus').textContent='Add your Supabase anon key';$('signedOut').style.display='block';$('profileApp').style.display='none';$('signedOut').querySelector('p').textContent='This file is ready to connect. Replace YOUR_SUPABASE_ANON_KEY with the same public anon/publishable key used by your other Zep Swipe pages.';return}
- const {data:{session}}=await db.auth.getSession();currentUser=session?.user||null;
- if(!currentUser){$('signedOut').style.display='block';$('profileApp').style.display='none';return}
- $('signedOut').style.display='none';$('profileApp').style.display='block';await loadProfile();await Promise.all([loadActivity(),loadEarnings()]);
+function editService(id){
+ const service=myServices.find(s=>String(s.id)===String(id));
+ if(!service)return;
+ openServiceModal(service);
 }
-$('profileForm').addEventListener('submit',saveProfile);db.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;if(currentUser)init()});init();if(window.lucide)lucide.createIcons();
-</script></body></html>
+async function saveService(event){
+ event.preventDefault();
+ if(!currentUser||!db)return;
+ if(busy)return;
+ const title=$("serviceTitle").value.trim();
+ const category=$("serviceCategory").value.trim();
+ const description=$("serviceDescription").value.trim();
+ const rawPrice=$("servicePrice").value.trim();
+ const rawImage=$("serviceImage").value.trim();
+ const price=rawPrice===""?null:Number(rawPrice);
+ if(!title||!category||!description){
+  setStatus("serviceFormStatus","Complete all required fields.","error");return;
+ }
+ if(rawPrice!==""&&(!Number.isFinite(price)||price<0)){
+  setStatus("serviceFormStatus","Enter a valid non-negative price.","error");return;
+ }
+ if(rawImage){
+  try{const u=new URL(rawImage);if(!["https:","http:"].includes(u.protocol))throw Error()}
+  catch(_){setStatus("serviceFormStatus","Enter a valid image URL or leave it blank.","error");return}
+ }
+ busy=true;$("saveServiceBtn").disabled=true;
+ $("saveServiceBtn").textContent="Saving…";
+ setStatus("serviceFormStatus","Saving your service…");
+ const payload={
+  provider_id:currentUser.id,category,title,description,price,
+  delivery_time:$("serviceDelivery").value.trim()||null,
+  image_url:rawImage||null
+ };
+ const editId=$("editServiceId").value;
+ try{
+  let result;
+  if(editId){
+   result=await db.from("services").update(payload)
+    .eq("id",editId).eq("provider_id",currentUser.id).select("id").maybeSingle();
+  }else{
+   payload.status="active";
+   result=await db.from("services").insert(payload).select("id").maybeSingle();
+  }
+  if(result.error)throw result.error;
+  if(editId&&!result.data){
+   throw new Error("No service was updated. Check that this service belongs to your account and that Supabase permits updates.");
+  }
+  setStatus("serviceFormStatus",editId?"Service updated successfully.":"Service published successfully.","success");
+  showToast(editId?"Service updated.":"Service published.");
+  await loadServices();
+  setTimeout(closeServiceModal,450);
+ }catch(e){
+  console.error("Service save failed:",e);
+  setStatus("serviceFormStatus","Could not save service: "+(e.message||"Check your schema and Supabase permissions."),"error");
+ }finally{
+  busy=false;$("saveServiceBtn").disabled=false;
+  $("saveServiceBtn").innerHTML=editId?"<i data-lucide='save'></i> Save changes":"<i data-lucide='check-circle-2'></i> Publish service";
+  icons();
+ }
+}
+async function saveProfile(event){
+ event.preventDefault();
+ if(!currentUser||!db)return;
+ const fullName=$("fullName").value.trim();
+ const phone=$("phone").value.trim();
+ const university=$("university").value.trim();
+ const city=$("city").value.trim();
+ const bio=$("bio").value.trim();
+ if(!fullName){showToast("Please enter your full name.");return}
+ const payload={
+  id:currentUser.id,full_name:fullName,phone,
+  university,bio,updated_at:new Date().toISOString()
+ };
+ try{
+  const {error}=await db.from("profiles").upsert(payload,{onConflict:"id"});
+  if(error)throw error;
+  const {error:metaError}=await db.auth.updateUser({data:{city}});
+  if(metaError)console.warn("City metadata update failed:",metaError.message);
+  profileRow={...profileRow,...payload,city};
+  setHeader();updateProfileProgress();
+  showToast(metaError?"Profile saved; city could not be updated.":"Profile details saved.");
+ }catch(e){
+  console.error(e);
+  showToast("Could not save profile: "+(e.message||"check your profile schema and RLS policies."));
+ }
+}
+async function signOut(){
+ if(!db){location.href="auth.html";return}
+ try{await db.auth.signOut()}catch(e){console.warn(e)}
+ location.href="auth.html";
+}
+function wire(){
+ ["newServiceHero","newServiceBtn","newServiceBottom","quickService"]
+  .forEach(id=>$(id).addEventListener("click",()=>openServiceModal()));
+ $("closeServiceModal").addEventListener("click",closeServiceModal);
+ $("cancelServiceBtn").addEventListener("click",closeServiceModal);
+ $("serviceModal").addEventListener("click",e=>{
+  if(e.target===$("serviceModal"))closeServiceModal();
+ });
+ document.addEventListener("keydown",e=>{
+  if(e.key==="Escape")closeServiceModal();
+ });
+ $("serviceForm").addEventListener("submit",saveService);
+ $("signOutBtn").addEventListener("click",signOut);
+ $("mobilityBtn").addEventListener("click",()=>location.href="mobility.html");
+ ["fullName","phone","university","bio"].forEach(id=>{
+  const el=$(id);if(el)el.addEventListener("input",updateProfileProgress);
+ });
+ const profileForm=$("profileInlineForm");
+ if(profileForm)profileForm.addEventListener("submit",saveProfile);
+}
+async function init(){
+ icons();
+ wire();
+ if(!db){
+  $("configNotice").style.display="block";
+  $("configNotice").textContent="Setup required: replace YOUR_SUPABASE_ANON_KEY with the PUBLIC anon/publishable key from the Zep Swipe Supabase project before using this dashboard.";
+  hideForLogin();
+  return;
+ }
+ try{
+  const {data,error}=await db.auth.getSession();
+  if(error)throw error;
+  currentUser=data.session?.user||null;
+  if(!currentUser){hideForLogin();return}
+  showDashboard();
+  await loadProfile();
+  await loadDashboardData();
+ }catch(e){
+  console.error("Provider dashboard initialisation failed:",e);
+  hideForLogin();
+  showToast("Could not verify your session. Please sign in again.");
+ }
+}
+init();
+})();
+</script>
+</body>
+</html>
