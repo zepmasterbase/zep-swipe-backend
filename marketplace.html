@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -134,6 +133,7 @@ white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 background:var(--green);color:#071006;flex:none}
 .empty{grid-column:1/-1;border:1px dashed #ffffff25;border-radius:15px;
 padding:20px;text-align:center;color:var(--muted);font-size:11px;line-height:1.6}
+.listing-meta{font-size:10px;color:var(--green);margin-top:5px;overflow-wrap:anywhere}
 .partner{position:relative;isolation:isolate;overflow:hidden;min-height:230px;
 border:1px solid #b8ff3b45;border-radius:23px;background:#0b0f09}
 .partner:before{content:"";position:absolute;inset:0;z-index:-2;
@@ -196,19 +196,19 @@ font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
 <main class="container">
 
 <header class="topbar">
-  <div class="brand">
+  <a class="brand" href="index.html" aria-label="Zep Swipe home">
     <span class="brand-mark">Z</span>
     <span class="brand-name"><span>zep</span> swipe</span>
-  </div>
+  </a>
   <div class="header-right">
     <div class="greeting">
       <strong id="greeting">Welcome to Zep Swipe</strong>
       <small id="location">Discover. Earn. Connect. Build.</small>
     </div>
-    <button class="icon-btn" id="notificationBtn" aria-label="Notifications">
+    <button class="icon-btn" id="notificationBtn" aria-label="Notifications" title="Notifications">
       <i data-lucide="bell"></i><span class="notif-dot" id="notifDot"></span>
     </button>
-    <button class="account-btn" id="accountBtn" aria-label="Join or log in">
+    <button class="account-btn" id="accountBtn" aria-label="Join or log in" title="Profile">
       <i class="account-icon" data-lucide="user-round"></i>
       <img id="avatar" alt="Your profile avatar" referrerpolicy="no-referrer">
     </button>
@@ -218,7 +218,7 @@ font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
 <div class="search">
   <i data-lucide="search" width="20"></i>
   <input id="searchInput" type="search" placeholder="Search jobs, services, deals and more…" aria-label="Search marketplace">
-  <button id="searchHelp" aria-label="Search tips"><i data-lucide="sliders-horizontal" width="19"></i></button>
+  <button id="searchHelp" aria-label="Search tips" type="button"><i data-lucide="sliders-horizontal" width="19"></i></button>
 </div>
 
 <section class="section" id="heroSection">
@@ -228,8 +228,8 @@ font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
       <h1>Your next opportunity is <em>closer.</em></h1>
       <p class="hero-copy">Discover work, find services, unlock student deals and turn your skills into income — all through one connected student economy.</p>
       <div class="actions">
-        <button class="btn primary" id="browseBtn">Explore opportunities <i data-lucide="arrow-up-right" width="17"></i></button>
-        <button class="btn secondary" id="joinBtn">Join Zep Swipe <i data-lucide="user-plus" width="16"></i></button>
+        <button class="btn primary" id="browseBtn" type="button">Explore opportunities <i data-lucide="arrow-up-right" width="17"></i></button>
+        <button class="btn secondary" id="joinBtn" type="button">Join Zep Swipe <i data-lucide="user-plus" width="16"></i></button>
       </div>
       <div class="hero-note"><i data-lucide="check-circle-2" width="14"></i> Browse public opportunities before creating an account.</div>
       <div class="pills">
@@ -242,33 +242,36 @@ font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
 </section>
 
 <section class="section" id="categoriesSection">
-  <div class="section-head"><h2>Explore by category</h2><button class="text-btn" id="seeAllCategories">See all →</button></div>
+  <div class="section-head"><h2>Explore by category</h2><button class="text-btn" id="seeAllCategories" type="button">See all →</button></div>
   <div class="categories">
-    <button class="cat active" data-category="Services"><i data-lucide="sparkles"></i><span>Services</span></button>
-    <button class="cat" data-category="Deals"><i data-lucide="ticket-percent"></i><span>Student deals</span></button>
-    <button class="cat" data-category="Jobs"><i data-lucide="briefcase-business"></i><span>Quick jobs</span></button>
-    <button class="cat" data-category="Business"><i data-lucide="store"></i><span>Businesses</span></button>
-    <button class="cat" data-category="Students"><i data-lucide="graduation-cap"></i><span>Student life</span></button>
-    <button class="cat" data-category="Opportunities"><i data-lucide="coins"></i><span>Ways to earn</span></button>
+    <button class="cat active" data-category="Services" type="button"><i data-lucide="sparkles"></i><span>Services</span></button>
+    <button class="cat" data-category="Deals" type="button"><i data-lucide="ticket-percent"></i><span>Student deals</span></button>
+    <button class="cat" data-category="Jobs" type="button"><i data-lucide="briefcase-business"></i><span>Quick jobs</span></button>
+    <button class="cat" data-category="Business" type="button"><i data-lucide="store"></i><span>Businesses</span></button>
+    <button class="cat" data-category="Students" type="button"><i data-lucide="graduation-cap"></i><span>Student life</span></button>
+    <button class="cat" data-category="Opportunities" type="button"><i data-lucide="coins"></i><span>Ways to earn</span></button>
   </div>
 </section>
 
 <section class="section" id="pathways">
   <div class="section-head"><div><h2>What brings you here?</h2><p>Choose a path and take your next step.</p></div></div>
   <div class="path-grid">
-    <button class="path-card" data-action="jobs"><span class="path-icon"><i data-lucide="briefcase-business"></i></span><strong>I'm looking for work</strong><p>Jobs, gigs and campus opportunities.</p><span class="path-cta">Find work →</span></button>
-    <button class="path-card" data-action="offer"><span class="path-icon"><i data-lucide="wrench"></i></span><strong>I have a skill</strong><p>Offer tutoring, design, tech and more.</p><span class="path-cta">Offer a service →</span></button>
-    <button class="path-card" data-action="service"><span class="path-icon"><i data-lucide="search-check"></i></span><strong>I need a service</strong><p>Find student talent and providers.</p><span class="path-cta">Find a service →</span></button>
-    <button class="path-card" data-action="deals"><span class="path-icon"><i data-lucide="ticket-percent"></i></span><strong>I want student deals</strong><p>Discover offers from businesses.</p><span class="path-cta">Explore deals →</span></button>
-    <button class="path-card" data-action="mobility"><span class="path-icon"><i data-lucide="car-front"></i></span><strong>Mobility opportunities</strong><p>Explore vehicle and mobility pathways.</p><span class="path-cta">Explore mobility →</span></button>
-    <button class="path-card" data-action="connect"><span class="path-icon"><i data-lucide="users"></i></span><strong>I want to connect</strong><p>Find campus communities and people.</p><span class="path-cta">Connect →</span></button>
-    <button class="path-card" data-action="build"><span class="path-icon"><i data-lucide="rocket"></i></span><strong>I have a business idea</strong><p>Get support from Student Startup Studio.</p><span class="path-cta">Start building →</span></button>
-    <button class="path-card" data-action="business"><span class="path-icon"><i data-lucide="building-2"></i></span><strong>I'm a business</strong><p>Reach students and publish deals.</p><span class="path-cta">Grow with us →</span></button>
+    <button class="path-card" data-action="jobs" type="button"><span class="path-icon"><i data-lucide="briefcase-business"></i></span><strong>I'm looking for work</strong><p>Jobs, gigs and campus opportunities.</p><span class="path-cta">Find work →</span></button>
+    <button class="path-card" data-action="offer" type="button"><span class="path-icon"><i data-lucide="wrench"></i></span><strong>I have a skill</strong><p>Offer tutoring, design, tech and more.</p><span class="path-cta">Offer a service →</span></button>
+    <button class="path-card" data-action="service" type="button"><span class="path-icon"><i data-lucide="search-check"></i></span><strong>I need a service</strong><p>Find student talent and providers.</p><span class="path-cta">Find a service →</span></button>
+    <button class="path-card" data-action="deals" type="button"><span class="path-icon"><i data-lucide="ticket-percent"></i></span><strong>I want student deals</strong><p>Discover offers from businesses.</p><span class="path-cta">Explore deals →</span></button>
+    <button class="path-card" data-action="mobility" type="button"><span class="path-icon"><i data-lucide="car-front"></i></span><strong>Mobility opportunities</strong><p>Explore vehicle and mobility pathways.</p><span class="path-cta">Explore mobility →</span></button>
+    <button class="path-card" data-action="connect" type="button"><span class="path-icon"><i data-lucide="users"></i></span><strong>I want to connect</strong><p>Find campus communities and people.</p><span class="path-cta">Connect →</span></button>
+    <button class="path-card" data-action="build" type="button"><span class="path-icon"><i data-lucide="rocket"></i></span><strong>I have a business idea</strong><p>Get support from Student Startup Studio.</p><span class="path-cta">Start building →</span></button>
+    <button class="path-card" data-action="business" type="button"><span class="path-icon"><i data-lucide="building-2"></i></span><strong>I'm a business</strong><p>Reach students and publish deals.</p><span class="path-cta">Grow with us →</span></button>
   </div>
 </section>
 
 <section class="section" id="liveSection">
-  <div class="section-head"><div><h2>Live on Zep Swipe</h2><p>Counts reflect active listings returned by the platform.</p></div><span class="eyebrow">● LIVE DATA</span></div>
+  <div class="section-head">
+    <div><h2>Live on Zep Swipe</h2><p>Counts reflect active listings returned by the platform.</p></div>
+    <span class="eyebrow">● LIVE DATA</span>
+  </div>
   <div class="stats">
     <div class="stat"><span class="stat-icon"><i data-lucide="briefcase-business"></i></span><div><b id="jobsCount">—</b><small>Active jobs</small></div></div>
     <div class="stat"><span class="stat-icon"><i data-lucide="store"></i></span><div><b id="servicesCount">—</b><small>Services</small></div></div>
@@ -277,10 +280,28 @@ font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
   </div>
 </section>
 
-<section class="section" id="servicesSection"><div class="section-head"><h2>Student services</h2><button class="text-btn" data-scroll="servicesSection">View all →</button></div><div class="list-grid" id="servicesGrid"><div class="empty">Loading services…</div></div></section>
-<section class="section" id="dealsSection"><div class="section-head"><h2>Student deals</h2><button class="text-btn" data-scroll="dealsSection">View all →</button></div><div class="list-grid" id="dealsGrid"><div class="empty">Loading deals…</div></div></section>
-<section class="section" id="jobsSection"><div class="section-head"><h2>Quick jobs &amp; gigs</h2><button class="text-btn" data-scroll="jobsSection">View all →</button></div><div class="list-grid" id="jobsGrid"><div class="empty">Loading jobs…</div></div></section>
-<section class="section" id="businessSection"><div class="section-head"><div><h2>Businesses on Zep Swipe</h2><p>Discover businesses creating student opportunities.</p></div><button class="text-btn" id="businessExplore">Explore →</button></div><div class="list-grid" id="businessGrid"><div class="empty">Loading businesses…</div></div></section>
+<section class="section" id="servicesSection">
+  <div class="section-head"><h2>Student services</h2><button class="text-btn" data-scroll="servicesSection" type="button">View all →</button></div>
+  <div class="list-grid" id="servicesGrid"><div class="empty">Loading services…</div></div>
+</section>
+
+<section class="section" id="dealsSection">
+  <div class="section-head">
+    <div><h2>Student deals</h2><p id="dealsSubtitle">Discover active offers from businesses.</p></div>
+    <button class="text-btn" id="dealsViewAll" type="button">View all →</button>
+  </div>
+  <div class="list-grid" id="dealsGrid"><div class="empty">Loading deals…</div></div>
+</section>
+
+<section class="section" id="jobsSection">
+  <div class="section-head"><h2>Quick jobs &amp; gigs</h2><button class="text-btn" data-scroll="jobsSection" type="button">View all →</button></div>
+  <div class="list-grid" id="jobsGrid"><div class="empty">Loading jobs…</div></div>
+</section>
+
+<section class="section" id="businessSection">
+  <div class="section-head"><div><h2>Businesses on Zep Swipe</h2><p>Discover businesses creating student opportunities.</p></div><button class="text-btn" id="businessExplore" type="button">Explore →</button></div>
+  <div class="list-grid" id="businessGrid"><div class="empty">Loading businesses…</div></div>
+</section>
 
 <section class="section" id="opportunitiesSection">
   <article class="partner">
@@ -288,18 +309,18 @@ font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
       <div class="eyebrow"><span class="pulse"></span> Partner network</div>
       <h2>More than a marketplace.</h2>
       <p>Explore mobility, campus communities, business partnerships and ways to build something of your own.</p>
-      <button class="btn primary" id="openOpportunity">Explore opportunities <i data-lucide="arrow-right" width="16"></i></button>
+      <button class="btn primary" id="openOpportunity" type="button">Explore opportunities <i data-lucide="arrow-right" width="16"></i></button>
     </div>
   </article>
 </section>
 </main>
 
 <nav class="bottom-nav" aria-label="Main navigation">
-  <button class="nav-item active" data-nav="marketplace.html"><i data-lucide="house"></i><span>Home</span></button>
-  <button class="nav-item" data-nav="deals.html"><i data-lucide="ticket-percent"></i><span>Deals</span></button>
-  <button class="nav-item" id="opportunityNav"><span class="nav-plus"><i data-lucide="plus" width="24"></i></span><span>Explore</span></button>
-  <button class="nav-item" data-nav="messages.html"><i data-lucide="message-square"></i><span>Messages</span></button>
-  <button class="nav-item" id="profileNav"><i data-lucide="user-round"></i><span>Profile</span></button>
+  <button class="nav-item active" data-nav="marketplace.html" type="button"><i data-lucide="house"></i><span>Home</span></button>
+  <button class="nav-item" data-nav="deals.html" type="button"><i data-lucide="ticket-percent"></i><span>Deals</span></button>
+  <button class="nav-item" id="opportunityNav" type="button"><span class="nav-plus"><i data-lucide="plus" width="24"></i></span><span>Explore</span></button>
+  <button class="nav-item" id="messagesNav" type="button"><i data-lucide="message-square"></i><span>Messages</span></button>
+  <button class="nav-item" id="profileNav" type="button"><i data-lucide="user-round"></i><span>Profile</span></button>
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -307,224 +328,518 @@ font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
 (() => {
 "use strict";
 
+/* Use the PUBLIC anon/publishable key from the correct Supabase project.
+   Never put a service-role or secret key in frontend JavaScript. */
 const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
-// Replace with your PUBLIC anon/publishable key. Never use a service-role key here.
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
-const db = window.supabase?.createClient &&
-  SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY"
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+const hasKey = SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY"
+  && SUPABASE_ANON_KEY.trim().length > 20;
+
+const db = window.supabase?.createClient && hasKey
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
 
 const $ = id => document.getElementById(id);
-let user = null, profile = {}, loading = false;
-const rows = {services:[],deals:[],jobs:[],businesses:[]};
-const images = {
- service:"https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=500&q=80",
- deal:"https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=500&q=80",
- job:"https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=500&q=80",
- business:"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=500&q=80"
+
+let user = null;
+let profile = {};
+let loading = false;
+let allDealsExpanded = false;
+let currentSearchTerm = "";
+let currentDealItems = [];
+let dealFetchError = false;
+
+const rows = {
+  services: [],
+  deals: [],
+  jobs: [],
+  businesses: []
 };
 
-function iconRefresh(){window.lucide?.createIcons()}
-function toast(message){
- const el=$("toast");el.textContent=message;el.classList.add("show");
- clearTimeout(window.__zepToast);window.__zepToast=setTimeout(()=>el.classList.remove("show"),3000);
-}
-function safe(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function go(path){if(path)window.location.href=path}
-function auth(path){go(user?path:"auth.html?redirect="+encodeURIComponent(path))}
-function dashboard(){
- const role=profile.role||user?.user_metadata?.role;
- return role==="provider"?"provider.html":role==="business"?"business-deals.html":"customer.html";
+const images = {
+  service: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=500&q=80",
+  deal: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=500&q=80",
+  job: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=500&q=80",
+  business: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=500&q=80"
+};
+
+function iconRefresh() {
+  window.lucide?.createIcons();
 }
 
-function loggedOutHeader(){
- user=null;profile={};
- $("greeting").textContent="Welcome to Zep Swipe";
- $("location").textContent="Discover. Earn. Connect. Build.";
- $("avatar").removeAttribute("src");
- $("accountBtn").classList.remove("has-avatar");
- $("accountBtn").setAttribute("aria-label","Join or log in");
- $("notifDot").style.display="none";
+function toast(message) {
+  const el = $("toast");
+  el.textContent = message;
+  el.classList.add("show");
+  clearTimeout(window.__zepToast);
+  window.__zepToast = setTimeout(() => el.classList.remove("show"), 3000);
 }
 
-async function session(){
- loggedOutHeader();
- if(!db)return;
- try{
-  const {data,error}=await db.auth.getSession();
-  if(error)throw error;
-  user=data.session?.user||null;
-  if(!user)return;
+function safe(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
 
-  try{
-   const result=await db.from("profiles").select("*").eq("id",user.id).maybeSingle();
-   if(!result.error)profile=result.data||{};
-  }catch(e){console.warn("Profile lookup:",e)}
+function go(path) {
+  if (path) window.location.href = path;
+}
 
-  const name=profile.first_name||profile.full_name?.split(" ")[0]||
-    user.user_metadata?.first_name||"there";
-  $("greeting").textContent="Welcome back, "+name;
-  $("location").textContent=profile.university||profile.institution||"Your opportunities are waiting";
+function auth(path) {
+  go(user
+    ? path
+    : "auth.html?redirect=" + encodeURIComponent(path));
+}
 
-  const avatar=profile.avatar_url||profile.profile_image||user.user_metadata?.avatar_url;
-  if(avatar){
-   $("avatar").src=avatar;
-   $("accountBtn").classList.add("has-avatar");
-   $("accountBtn").setAttribute("aria-label","Open your profile");
+function dashboard() {
+  const role = profile.role || user?.user_metadata?.role;
+  if (role === "provider") return "provider.html";
+  if (role === "business") return "business-deals.html";
+  return "customer.html";
+}
+
+function loggedOutHeader() {
+  user = null;
+  profile = {};
+  $("greeting").textContent = "Welcome to Zep Swipe";
+  $("location").textContent = "Discover. Earn. Connect. Build.";
+  $("avatar").removeAttribute("src");
+  $("accountBtn").classList.remove("has-avatar");
+  $("accountBtn").setAttribute("aria-label", "Join or log in");
+  $("notifDot").style.display = "none";
+}
+
+async function session() {
+  loggedOutHeader();
+  if (!db) return;
+
+  try {
+    const { data, error } = await db.auth.getSession();
+    if (error) throw error;
+
+    user = data.session?.user || null;
+    if (!user) return;
+
+    try {
+      const result = await db.from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (!result.error) profile = result.data || {};
+      else console.warn("Profile lookup:", result.error.message);
+    } catch (e) {
+      console.warn("Profile lookup:", e);
+    }
+
+    const name = profile.first_name ||
+      profile.full_name?.split(" ")[0] ||
+      user.user_metadata?.first_name ||
+      "there";
+
+    $("greeting").textContent = "Welcome back, " + name;
+    $("location").textContent =
+      profile.university || profile.institution || "Your opportunities are waiting";
+
+    // Only show a real avatar if supplied by the signed-in user's profile.
+    const avatar = profile.avatar_url ||
+      profile.profile_image ||
+      user.user_metadata?.avatar_url ||
+      user.user_metadata?.picture;
+
+    if (avatar) {
+      $("avatar").src = avatar;
+      $("accountBtn").classList.add("has-avatar");
+      $("accountBtn").setAttribute("aria-label", "Open your profile");
+    }
+
+    try {
+      const n = await db.from("notifications")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("read", false)
+        .limit(1);
+
+      if (!n.error && n.data?.length) {
+        $("notifDot").style.display = "block";
+      }
+    } catch (_) {
+      // Notifications are optional; a missing table does not break the marketplace.
+    }
+  } catch (e) {
+    console.warn("Session lookup failed:", e);
+    loggedOutHeader();
   }
-  try{
-   const n=await db.from("notifications").select("id").eq("user_id",user.id).eq("read",false).limit(1);
-   if(!n.error&&n.data?.length)$("notifDot").style.display="block";
-  }catch(_){}
- }catch(e){console.warn("Session lookup failed:",e);loggedOutHeader()}
 }
 
-function makeCard(item,type){
- let title,sub,route;
- if(type==="service"){
-  title=item.title||item.name||"Student service";
-  sub=[item.category,item.price!=null?"R"+item.price:""].filter(Boolean).join(" · ")||"Student service";
-  route="service.html?id="+encodeURIComponent(item.id);
- }else if(type==="deal"){
-  title=item.title||item.offer||"Student deal";
-  sub=item.category||item.offer||"Student offer";
-  route="deal.html?id="+encodeURIComponent(item.id);
- }else if(type==="job"){
-  title=item.title||item.name||"Work opportunity";
-  sub=[item.category,item.location].filter(Boolean).join(" · ")||"Job or gig";
-  route="job.html?id="+encodeURIComponent(item.id);
- }else{
-  title=item.name||item.business_name||"Business";
-  sub=item.category||item.city||item.description||"Student-facing business";
-  route="business.html?id="+encodeURIComponent(item.id||"");
- }
- const image=item.image_url||item.image||item.cover_url||images[type];
- return `<button class="listing" type="button" data-route="${safe(route)}">
- <img src="${safe(image)}" alt="" loading="lazy">
- <span class="listing-info"><strong>${safe(title)}</strong><p>${safe(sub)}</p></span>
- <span class="arrow"><i data-lucide="arrow-up-right" width="15"></i></span></button>`;
+function makeCard(item, type) {
+  let title = "";
+  let sub = "";
+  let route = "";
+
+  if (type === "service") {
+    title = item.title || item.name || "Student service";
+    sub = [
+      item.category,
+      item.price !== null && item.price !== undefined && item.price !== ""
+        ? "R" + item.price
+        : ""
+    ].filter(Boolean).join(" · ") || "Student service";
+    route = "service.html?id=" + encodeURIComponent(item.id ?? "");
+  } else if (type === "deal") {
+    title = item.title || item.offer || item.name || "Student deal";
+
+    // Use common deal fields without assuming every schema contains all of them.
+    const discount = item.discount || item.discount_percentage || item.offer;
+    const business = item.business_name || item.business || item.merchant_name;
+    sub = [discount, item.category, business]
+      .filter(v => typeof v === "string" && v.trim())
+      .join(" · ");
+
+    if (!sub) {
+      sub = item.description || item.terms || "Student offer";
+    }
+
+    route = "deal.html?id=" + encodeURIComponent(item.id ?? "");
+  } else if (type === "job") {
+    title = item.title || item.name || "Work opportunity";
+    sub = [item.category, item.location].filter(Boolean).join(" · ") || "Job or gig";
+    route = "job.html?id=" + encodeURIComponent(item.id ?? "");
+  } else {
+    title = item.name || item.business_name || "Business";
+    sub = item.category || item.city || item.description || "Student-facing business";
+    route = "business.html?id=" + encodeURIComponent(item.id ?? "");
+  }
+
+  const image = item.image_url || item.image || item.cover_url || images[type];
+  const description = type === "deal"
+    ? (item.short_description || item.description || item.terms || "")
+    : "";
+
+  const metadata = type === "deal" && description
+    ? `<span class="listing-meta">${safe(description)}</span>`
+    : "";
+
+  return `<button class="listing" type="button" data-route="${safe(route)}"
+      aria-label="View ${safe(title)}">
+    <img src="${safe(image)}" alt="" loading="lazy">
+    <span class="listing-info">
+      <strong>${safe(title)}</strong>
+      <p>${safe(sub)}</p>
+      ${metadata}
+    </span>
+    <span class="arrow"><i data-lucide="arrow-up-right" width="15"></i></span>
+  </button>`;
 }
 
-function render(id,items,type,error=false){
- const el=$(id);
- if(error){el.innerHTML='<div class="empty">This section could not load. Please check back shortly.</div>';return}
- if(!items.length){el.innerHTML='<div class="empty">No active listings here yet. Check back soon.</div>';return}
- el.innerHTML=items.slice(0,8).map(x=>makeCard(x,type)).join("");
- el.querySelectorAll("[data-route]").forEach(card=>{
-  card.addEventListener("click",()=>go(card.dataset.route));
- });
- iconRefresh();
-}
-
-async function queryActive(table,limit){
- const {data,error}=await db.from(table).select("*")
-  .eq("status","active").order("created_at",{ascending:false}).limit(limit);
- if(error)throw error;
- return data||[];
-}
-
-async function loadListings(){
- if(!db||loading)return;
- loading=true;
- try{
-  const results=await Promise.allSettled([
-   queryActive("services",20),queryActive("deals",20),
-   queryActive("jobs",20),queryActive("businesses",12)
-  ]);
-  const names=["services","deals","jobs","businesses"];
-  results.forEach((r,i)=>{rows[names[i]]=r.status==="fulfilled"?r.value:[]});
-  render("servicesGrid",rows.services,"service",results[0].status==="rejected");
-  render("dealsGrid",rows.deals,"deal",results[1].status==="rejected");
-  render("jobsGrid",rows.jobs,"job",results[2].status==="rejected");
-  render("businessGrid",rows.businesses,"business",results[3].status==="rejected");
-
-  $("servicesCount").textContent=results[0].status==="fulfilled"?rows.services.length:"—";
-  $("dealsCount").textContent=results[1].status==="fulfilled"?rows.deals.length:"—";
-  $("jobsCount").textContent=results[2].status==="fulfilled"?rows.jobs.length:"—";
-  $("businessesCount").textContent=results[3].status==="fulfilled"?rows.businesses.length:"—";
-  if($("searchInput").value.trim())search($("searchInput").value);
- }finally{loading=false}
-}
-
-function search(term){
- const q=term.trim().toLowerCase();
- const filter=arr=>q?arr.filter(item=>JSON.stringify(item).toLowerCase().includes(q)):arr;
- render("servicesGrid",filter(rows.services),"service");
- render("dealsGrid",filter(rows.deals),"deal");
- render("jobsGrid",filter(rows.jobs),"job");
- render("businessGrid",filter(rows.businesses),"business");
-}
-function scroll(id){$(id)?.scrollIntoView({behavior:"smooth",block:"start"})}
-
-function chooseCategory(category){
- document.querySelectorAll(".cat").forEach(el=>
-  el.classList.toggle("active",el.dataset.category===category));
- const target={
-  Services:"servicesSection",Deals:"dealsSection",Jobs:"jobsSection",
-  Business:"businessSection",Students:"pathways",Opportunities:"pathways"
- }[category]||"pathways";
- scroll(target);
-}
-
-function wire(){
- $("searchInput").addEventListener("input",e=>search(e.target.value));
- $("searchHelp").addEventListener("click",()=>{
-  $("searchInput").focus();toast("Search by name, category, location or keyword.");
- });
- document.querySelectorAll(".cat").forEach(el=>
-  el.addEventListener("click",()=>chooseCategory(el.dataset.category)));
-
- document.querySelectorAll(".path-card").forEach(el=>el.addEventListener("click",()=>{
-  const actions={
-   jobs:()=>scroll("jobsSection"),
-   offer:()=>auth("provider.html"),
-   service:()=>scroll("servicesSection"),
-   deals:()=>scroll("dealsSection"),
-   mobility:()=>go("mobility.html"),
-   connect:()=>go("communities.html"),
-   build:()=>window.open("https://www.studentstartupstudio.com/","_blank","noopener,noreferrer"),
-   business:()=>auth("business-deals.html")
-  };
-  actions[el.dataset.action]?.();
- }));
-
- document.querySelectorAll("[data-scroll]").forEach(el=>
-  el.addEventListener("click",()=>scroll(el.dataset.scroll)));
-
- $("browseBtn").addEventListener("click",()=>scroll("pathways"));
- $("joinBtn").addEventListener("click",()=>auth("customer.html"));
- $("seeAllCategories").addEventListener("click",()=>scroll("categoriesSection"));
- $("businessExplore").addEventListener("click",()=>scroll("businessSection"));
- $("openOpportunity").addEventListener("click",()=>go("opportunity.html"));
- $("opportunityNav").addEventListener("click",()=>go("opportunity.html"));
- $("notificationBtn").addEventListener("click",()=>auth("notifications.html"));
-
- const openAccount=()=>user?go(dashboard()):auth("customer.html");
- $("accountBtn").addEventListener("click",openAccount);
- $("profileNav").addEventListener("click",openAccount);
- document.querySelectorAll("[data-nav]").forEach(el=>
-  el.addEventListener("click",()=>go(el.dataset.nav)));
-}
-
-async function init(){
- iconRefresh();wire();await session();
- if(!db){
-  ["servicesGrid","dealsGrid","jobsGrid","businessGrid"].forEach(id=>{
-   $(id).innerHTML='<div class="empty">Marketplace data is not connected yet. Add your Supabase public anon/publishable key to load listings.</div>';
+function attachCardRoutes(container) {
+  container.querySelectorAll("[data-route]").forEach(card => {
+    card.addEventListener("click", () => go(card.dataset.route));
   });
-  return;
- }
- await loadListings();
- window.setInterval(loadListings,60000);
- try{
-  db.channel("zep-marketplace-live")
-   .on("postgres_changes",{event:"*",schema:"public",table:"services"},loadListings)
-   .on("postgres_changes",{event:"*",schema:"public",table:"deals"},loadListings)
-   .on("postgres_changes",{event:"*",schema:"public",table:"jobs"},loadListings)
-   .on("postgres_changes",{event:"*",schema:"public",table:"businesses"},loadListings)
-   .subscribe();
- }catch(e){console.warn("Realtime unavailable:",e)}
 }
+
+function render(id, items, type, error = false) {
+  const el = $(id);
+
+  if (error) {
+    el.innerHTML = '<div class="empty">This section could not load. Please check the Supabase table, status values and permissions.</div>';
+    return;
+  }
+
+  if (!items.length) {
+    el.innerHTML = '<div class="empty">No active listings here yet. Check back soon.</div>';
+    return;
+  }
+
+  // Keep the original compact layout for services, jobs and businesses.
+  el.innerHTML = items.slice(0, 8).map(item => makeCard(item, type)).join("");
+  attachCardRoutes(el);
+  iconRefresh();
+}
+
+function renderDeals(items, error = false) {
+  const el = $("dealsGrid");
+  currentDealItems = items;
+
+  if (error) {
+    el.innerHTML = '<div class="empty">Deals could not be loaded. Check the Supabase deals table, status values and read permissions.</div>';
+    $("dealsViewAll").style.display = "none";
+    $("dealsSubtitle").textContent = "Unable to load deals at this time.";
+    return;
+  }
+
+  if (!items.length) {
+    el.innerHTML = '<div class="empty">No active deals are available right now. Check back soon.</div>';
+    $("dealsViewAll").style.display = "none";
+    $("dealsSubtitle").textContent = "No matching active offers found.";
+    return;
+  }
+
+  const searching = currentSearchTerm.length > 0;
+  const showAll = allDealsExpanded || searching;
+  const visible = showAll ? items : items.slice(0, 8);
+
+  el.innerHTML = visible.map(item => makeCard(item, "deal")).join("");
+  attachCardRoutes(el);
+  iconRefresh();
+
+  $("dealsSubtitle").textContent = searching
+    ? items.length + " matching deal" + (items.length === 1 ? "" : "s")
+    : items.length + " active deal" + (items.length === 1 ? "" : "s") + " available";
+
+  const button = $("dealsViewAll");
+  if (items.length <= 8 || searching) {
+    button.style.display = "none";
+  } else {
+    button.style.display = "inline-block";
+    button.textContent = allDealsExpanded ? "Show less ↑" : "View all (" + items.length + ") →";
+  }
+}
+
+/*
+  Fetch active listings in pages to avoid a single small limit.
+  The current maximum is 1,000 rows per table; increase MAX_ROWS if needed.
+  Supabase RLS and the table's actual columns still control which rows are returned.
+*/
+async function queryActive(table, maxRows = 100) {
+  const batchSize = 100;
+  const results = [];
+
+  for (let start = 0; start < maxRows; start += batchSize) {
+    const end = Math.min(start + batchSize - 1, maxRows - 1);
+
+    const { data, error } = await db.from(table)
+      .select("*")
+      .eq("status", "active")
+      .order("created_at", { ascending: false })
+      .range(start, end);
+
+    if (error) throw error;
+
+    const batch = data || [];
+    results.push(...batch);
+
+    if (batch.length < (end - start + 1)) break;
+  }
+
+  return results;
+}
+
+async function loadListings() {
+  if (!db || loading) return;
+  loading = true;
+
+  try {
+    const results = await Promise.allSettled([
+      queryActive("services", 100),
+      queryActive("deals", 1000),
+      queryActive("jobs", 100),
+      queryActive("businesses", 100)
+    ]);
+
+    const names = ["services", "deals", "jobs", "businesses"];
+
+    results.forEach((result, index) => {
+      rows[names[index]] = result.status === "fulfilled" ? result.value : [];
+    });
+
+    render("servicesGrid", rows.services, "service", results[0].status === "rejected");
+    renderDeals(rows.deals, results[1].status === "rejected");
+    render("jobsGrid", rows.jobs, "job", results[2].status === "rejected");
+    render("businessGrid", rows.businesses, "business", results[3].status === "rejected");
+
+    $("servicesCount").textContent =
+      results[0].status === "fulfilled" ? rows.services.length : "—";
+    $("dealsCount").textContent =
+      results[1].status === "fulfilled" ? rows.deals.length : "—";
+    $("jobsCount").textContent =
+      results[2].status === "fulfilled" ? rows.jobs.length : "—";
+    $("businessesCount").textContent =
+      results[3].status === "fulfilled" ? rows.businesses.length : "—";
+
+    if ($("searchInput").value.trim()) {
+      search($("searchInput").value);
+    }
+  } finally {
+    loading = false;
+  }
+}
+
+function search(term) {
+  currentSearchTerm = term.trim().toLowerCase();
+
+  const filter = items => {
+    if (!currentSearchTerm) return items;
+    return items.filter(item =>
+      JSON.stringify(item).toLowerCase().includes(currentSearchTerm)
+    );
+  };
+
+  render("servicesGrid", filter(rows.services), "service");
+  renderDeals(filter(rows.deals));
+  render("jobsGrid", filter(rows.jobs), "job");
+  render("businessGrid", filter(rows.businesses), "business");
+}
+
+function scroll(id) {
+  $(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function chooseCategory(category) {
+  document.querySelectorAll(".cat").forEach(el => {
+    el.classList.toggle("active", el.dataset.category === category);
+  });
+
+  const mapping = {
+    Services: "servicesSection",
+    Deals: "dealsSection",
+    Jobs: "jobsSection",
+    Business: "businessSection",
+    Students: "pathways",
+    Opportunities: "pathways"
+  };
+
+  const target = mapping[category] || "pathways";
+
+  // Expand deals when the user chooses the deals category.
+  if (category === "Deals") {
+    allDealsExpanded = true;
+    renderDeals(currentSearchTerm
+      ? rows.deals.filter(item => JSON.stringify(item).toLowerCase().includes(currentSearchTerm))
+      : rows.deals);
+  }
+
+  scroll(target);
+}
+
+async function openMessages() {
+  const destination = "message.html";
+
+  // Fail closed: without Supabase configuration, do not open private messaging.
+  if (!db) {
+    go("auth.html?redirect=" + encodeURIComponent(destination));
+    return;
+  }
+
+  try {
+    const { data, error } = await db.auth.getSession();
+
+    if (error || !data.session?.user) {
+      go("auth.html?redirect=" + encodeURIComponent(destination));
+      return;
+    }
+
+    go(destination);
+  } catch (error) {
+    console.error("Could not verify the session:", error);
+    go("auth.html?redirect=" + encodeURIComponent(destination));
+  }
+}
+
+function wire() {
+  $("searchInput").addEventListener("input", event => search(event.target.value));
+
+  $("searchHelp").addEventListener("click", () => {
+    $("searchInput").focus();
+    toast("Search by title, business, category, description or keyword.");
+  });
+
+  $("dealsViewAll").addEventListener("click", () => {
+    if (currentSearchTerm) {
+      $("searchInput").value = "";
+      currentSearchTerm = "";
+    }
+
+    allDealsExpanded = !allDealsExpanded;
+    renderDeals(rows.deals);
+    scroll("dealsSection");
+  });
+
+  document.querySelectorAll(".cat").forEach(el => {
+    el.addEventListener("click", () => chooseCategory(el.dataset.category));
+  });
+
+  document.querySelectorAll(".path-card").forEach(el => {
+    el.addEventListener("click", () => {
+      const actions = {
+        jobs: () => scroll("jobsSection"),
+        offer: () => auth("provider.html"),
+        service: () => scroll("servicesSection"),
+        deals: () => {
+          allDealsExpanded = true;
+          renderDeals(rows.deals);
+          scroll("dealsSection");
+        },
+        mobility: () => go("mobility.html"),
+        connect: () => go("communities.html"),
+        build: () => window.open(
+          "https://www.studentstartupstudio.com/",
+          "_blank",
+          "noopener,noreferrer"
+        ),
+        business: () => auth("business-deals.html")
+      };
+
+      actions[el.dataset.action]?.();
+    });
+  });
+
+  document.querySelectorAll("[data-scroll]").forEach(el => {
+    el.addEventListener("click", () => scroll(el.dataset.scroll));
+  });
+
+  $("browseBtn").addEventListener("click", () => scroll("pathways"));
+  $("joinBtn").addEventListener("click", () => auth("customer.html"));
+  $("seeAllCategories").addEventListener("click", () => scroll("categoriesSection"));
+  $("businessExplore").addEventListener("click", () => scroll("businessSection"));
+  $("openOpportunity").addEventListener("click", () => go("opportunity.html"));
+  $("opportunityNav").addEventListener("click", () => go("opportunity.html"));
+
+  $("notificationBtn").addEventListener("click", () => auth("notifications.html"));
+
+  // Messages now use the singular message.html page and require a verified session.
+  $("messagesNav").addEventListener("click", openMessages);
+
+  const openAccount = () => user ? go(dashboard()) : auth("customer.html");
+  $("accountBtn").addEventListener("click", openAccount);
+  $("profileNav").addEventListener("click", openAccount);
+
+  document.querySelectorAll("[data-nav]").forEach(el => {
+    el.addEventListener("click", () => go(el.dataset.nav));
+  });
+}
+
+async function init() {
+  iconRefresh();
+  wire();
+  await session();
+
+  if (!db) {
+    ["servicesGrid", "dealsGrid", "jobsGrid", "businessGrid"].forEach(id => {
+      $(id).innerHTML = '<div class="empty">Marketplace data is not connected yet. Add your Supabase public anon/publishable key to load listings.</div>';
+    });
+    $("dealsViewAll").style.display = "none";
+    return;
+  }
+
+  await loadListings();
+
+  // Periodic refresh complements realtime updates. This page still depends on RLS.
+  window.setInterval(loadListings, 60000);
+
+  try {
+    db.channel("zep-marketplace-live")
+      .on("postgres_changes", { event: "*", schema: "public", table: "services" }, loadListings)
+      .on("postgres_changes", { event: "*", schema: "public", table: "deals" }, loadListings)
+      .on("postgres_changes", { event: "*", schema: "public", table: "jobs" }, loadListings)
+      .on("postgres_changes", { event: "*", schema: "public", table: "businesses" }, loadListings)
+      .subscribe();
+  } catch (error) {
+    console.warn("Realtime unavailable:", error);
+  }
+}
+
 init();
 })();
 </script>
