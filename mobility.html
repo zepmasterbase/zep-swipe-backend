@@ -1,409 +1,342 @@
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#070907">
-<meta name="description" content="Zep Swipe Mobility — request vehicle, tracking and fleet information from Cartrack.">
-<title>Mobility | Zep Swipe</title>
+<meta name="description" content="Discover vehicle tracking and fleet enquiry options with Zep Swipe Mobility.">
+<title>Zep Swipe Mobility | Move with confidence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://images.unsplash.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-:root{--bg:#070907;--panel:#10140f;--panel2:#151a13;--line:#ffffff1c;--text:#f6f9f3;--muted:#a0aa98;--green:#b8ff3b;--cyan:#57d8ff;--nav:#0a0e09;--red:#ff7788;--yellow:#ffd166}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;overflow-x:hidden}button,input,select,textarea{font:inherit}button,a{-webkit-tap-highlight-color:transparent}button{cursor:pointer}a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:3px}.shell{min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:238px;padding:23px 14px;background:var(--nav);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:40}.brand{display:flex;align-items:center;gap:10px;padding:0 9px 28px}.brand-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:var(--green);color:#071006;font-size:24px;font-weight:900;font-style:italic;box-shadow:0 0 24px #b8ff3b26}.brand-name{font-weight:900;font-size:18px;letter-spacing:-.6px}.brand-name span{color:var(--green)}.brand small{display:block;color:#899483;font-size:9px;font-weight:600;letter-spacing:.4px;margin-top:3px}.side-label{font-size:9px;color:#687262;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;padding:0 12px;margin:8px 0 10px}.nav{display:grid;gap:5px}.nav a,.nav button{display:flex;align-items:center;gap:11px;width:100%;padding:12px;border:1px solid transparent;background:none;border-radius:12px;color:#aab3a1;text-align:left;font-size:11px;font-weight:750}.nav a:hover,.nav button:hover,.nav .active{color:var(--green);background:#b8ff3b0d;border-color:#b8ff3b21}.nav svg{width:18px;height:18px}.sidebar-bottom{margin-top:auto}.side-promo{padding:14px;border-radius:15px;background:linear-gradient(145deg,#17200f,#0c1009);border:1px solid #b8ff3b35;margin-bottom:15px}.side-promo svg{color:var(--green)}.side-promo strong{display:block;font-size:11px;margin:10px 0 6px}.side-promo p{font-size:9px;color:var(--muted);line-height:1.65;margin:0 0 11px}.side-promo a{font-size:10px;font-weight:800;color:var(--green)}.side-profile{padding:14px 5px 0;border-top:1px solid var(--line);display:flex;align-items:center;gap:9px}.avatar{width:34px;height:34px;border-radius:50%;background:#1a2115;border:1px solid #b8ff3b30;color:var(--green);display:grid;place-items:center;font-size:10px;font-weight:900;overflow:hidden;flex:none}.avatar img{width:100%;height:100%;object-fit:cover}.profile-meta{min-width:0;flex:1}.profile-meta strong{font-size:10px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.profile-meta small{font-size:9px;color:var(--muted);display:block;margin-top:3px}.main{margin-left:238px;min-width:0}.topbar{position:sticky;top:0;z-index:30;height:68px;padding:0 25px;background:#080b08ed;backdrop-filter:blur(16px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.search{display:flex;align-items:center;gap:9px;width:min(470px,52vw);padding:10px 13px;border:1px solid var(--line);border-radius:12px;background:#11160f;color:#899483}.search input{flex:1;min-width:0;color:var(--text);background:transparent;border:0;outline:0;font-size:11px}.search input::placeholder{color:#7f8978}.actions{display:flex;align-items:center;gap:7px}.icon-button{height:39px;width:39px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:#dce4d5;display:grid;place-items:center}.icon-button:hover{color:var(--green);border-color:#b8ff3b50}.top-person{display:flex;align-items:center;gap:8px;margin-left:3px}.top-person strong{font-size:10px;display:block}.top-person small{font-size:9px;color:var(--muted);display:block;margin-top:3px}.content{max-width:1500px;margin:auto;padding:25px 25px 90px}.hero{min-height:380px;position:relative;isolation:isolate;overflow:hidden;border:1px solid #b8ff3b3d;border-radius:24px;background:#0b1109}.hero:before{content:"";position:absolute;inset:0;z-index:-2;background:url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=85') center/cover;opacity:.72}.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#050805f5 0%,#050805d9 43%,#05080553 100%),linear-gradient(0deg,#050805a3,transparent 70%),radial-gradient(circle at 80% 28%,#b8ff3b26,transparent 32%)}.hero-content{padding:clamp(23px,4vw,42px);max-width:800px}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--green);font-size:9px;font-weight:900;letter-spacing:1.4px;text-transform:uppercase}.pulse{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}.hero h1{font-size:clamp(38px,5vw,62px);font-weight:900;letter-spacing:-2.5px;line-height:.99;margin:18px 0 13px}.hero h1 span{color:var(--green)}.hero p{font-size:12px;line-height:1.85;color:#d0d9c8;max-width:560px;margin:0}.button-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:21px}.btn{min-height:43px;padding:0 15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:12px;font-size:10px;font-weight:850;transition:.18s}.btn:hover{transform:translateY(-1px)}.btn-primary{background:var(--green);color:#071006}.btn-secondary{background:#0b100bcc;border-color:#ffffff42;color:#fff}.btn-outline{background:transparent;border-color:var(--line);color:#dce4d7}.microcopy{display:flex;gap:7px;align-items:center;color:#aab6a0;font-size:9px;margin-top:15px}.microcopy svg{color:var(--green)}.section{margin-top:27px;scroll-margin-top:85px}.section-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:13px}.section-heading h2{font-size:17px;font-weight:900;letter-spacing:-.45px;margin:0}.section-heading p{font-size:10px;color:var(--muted);line-height:1.6;margin:5px 0 0}.text-link{font-size:10px;font-weight:800;color:var(--green);border:0;background:none;white-space:nowrap}.choice-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.choice{min-height:145px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;padding:15px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#141a12,#0b0e09);color:var(--text);transition:.2s}.choice:hover{border-color:#b8ff3b77;transform:translateY(-2px)}.choice-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:11px;background:#b8ff3b12;color:var(--green)}.choice strong{font-size:11px;margin:11px 0 5px}.choice small{font-size:9px;line-height:1.55;color:var(--muted)}.choice .arrow{margin-top:auto;padding-top:10px;color:var(--green)}.partner-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.partner-card{min-height:270px;position:relative;isolation:isolate;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#11180f}.partner-card:before{content:"";position:absolute;inset:0;z-index:-2;background-size:cover;background-position:center;opacity:.6}.partner-card:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#07090720 0%,#070907ee 78%)}.partner-card.personal:before{background-image:url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1000&q=85')}.partner-card.fleet:before{background-image:url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d8?auto=format&fit=crop&w=1000&q=85')}.partner-card.student:before{background-image:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=85')}.partner-copy{position:absolute;inset:auto 0 0;padding:17px}.partner-label{display:inline-flex;align-items:center;gap:6px;font-size:8px;letter-spacing:.8px;font-weight:900;text-transform:uppercase;color:var(--green);border:1px solid #b8ff3b65;background:#071006b8;padding:6px 8px;border-radius:30px}.partner-copy h3{font-size:17px;letter-spacing:-.5px;margin:12px 0 6px}.partner-copy p{font-size:10px;color:#d1dbca;line-height:1.65;margin:0 0 13px}.stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.stat{display:flex;align-items:center;gap:11px;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.stat-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:#b8ff3b12;color:var(--green);flex:none}.stat strong{font-size:11px;display:block}.stat span{font-size:9px;color:var(--muted);line-height:1.5;display:block;margin-top:4px}.two-col{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(250px,.75fr);gap:13px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:17px;min-width:0}.panel h3{font-size:13px;margin:0 0 6px}.panel>p{font-size:10px;line-height:1.65;color:var(--muted);margin:0 0 13px}.activity-list{display:grid;gap:8px}.activity-row{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid #ffffff14;background:#131811;border-radius:12px}.activity-icon{width:33px;height:33px;display:grid;place-items:center;border-radius:10px;background:#b8ff3b12;color:var(--green);flex:none}.activity-copy{min-width:0;flex:1}.activity-copy strong{font-size:10px;display:block}.activity-copy small{font-size:9px;line-height:1.5;color:var(--muted);display:block;margin-top:4px}.status{font-size:8px;font-weight:850;color:var(--green);background:#b8ff3b13;padding:5px 7px;border-radius:30px;white-space:nowrap}.status.pending{color:var(--yellow);background:#ffd16615}.notice{display:flex;align-items:flex-start;gap:10px;border:1px solid #ffd1662f;background:#ffd16609;border-radius:13px;padding:13px;color:#d7d2bd;font-size:9px;line-height:1.7}.notice svg{color:var(--yellow);width:16px;height:16px;flex:none;margin-top:1px}.footer{text-align:center;color:#6f7968;font-size:9px;line-height:1.7;margin-top:30px}.mobile-nav{display:none}.modal-backdrop{position:fixed;inset:0;z-index:100;background:#000c;backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:14px}.modal-backdrop.open{display:flex}.modal{width:min(590px,100%);max-height:94vh;overflow:auto;background:#0d110b;border:1px solid #b8ff3b42;border-radius:21px;box-shadow:0 25px 90px #000b}.modal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:18px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#0d110bf5;z-index:2}.modal-head h2{font-size:16px;margin:0}.modal-head p{font-size:9px;color:var(--muted);line-height:1.6;margin:5px 0 0}.close{height:33px;width:33px;display:grid;place-items:center;border:1px solid var(--line);border-radius:10px;color:#fff;background:#151a13}.form-body{padding:19px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.field.full{grid-column:1/-1}.field label{font-size:10px;color:#cbd4c5;font-weight:750}.field input,.field select,.field textarea{width:100%;min-width:0;background:#151a13;border:1px solid #ffffff22;border-radius:10px;padding:11px;color:#f7faf4;outline:0;font-size:10px}.field input:focus,.field select:focus,.field textarea:focus{border-color:#b8ff3b7a}.field select option{background:#11160f}.field textarea{min-height:75px;resize:vertical;line-height:1.6}.field .help{font-size:8px;color:var(--muted);line-height:1.5}.consent{display:flex;align-items:flex-start;gap:9px;color:#b5c0ae;font-size:9px;line-height:1.65}.consent input{margin-top:2px;accent-color:var(--green);flex:none}.form-error{display:none;background:#ff77880c;border:1px solid #ff77884a;border-radius:10px;padding:11px;color:#ff9da9;font-size:10px;line-height:1.5;margin-bottom:13px}.form-success{display:none;text-align:center;padding:30px 20px}.success-icon{width:54px;height:54px;border-radius:50%;margin:0 auto 15px;background:#b8ff3b18;color:var(--green);display:grid;place-items:center}.form-success h3{font-size:21px;margin:0 0 9px}.form-success p{max-width:380px;margin:0 auto 16px;color:var(--muted);font-size:10px;line-height:1.75}.form-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:17px}.honeypot{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}.toast{position:fixed;z-index:150;top:14px;left:50%;transform:translate(-50%,-150%);max-width:calc(100% - 24px);background:#151b12;border:1px solid #b8ff3b5c;color:#fff;padding:12px 16px;border-radius:12px;font-size:10px;line-height:1.5;box-shadow:0 14px 35px #0008;transition:transform .25s}.toast.show{transform:translate(-50%,0)}.toast.error{border-color:#ff778875}.spinner{width:15px;height:15px;display:inline-block;border:2px solid #07100655;border-top-color:#071006;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.empty{font-size:10px;line-height:1.7;color:var(--muted);padding:14px;text-align:center;border:1px dashed #ffffff22;border-radius:12px}
-@media(max-width:1100px){.sidebar{width:210px}.main{margin-left:210px}.content{padding:20px 18px 75px}.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.partner-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.partner-card{min-height:260px}}
-@media(max-width:820px){.sidebar{display:none}.main{margin-left:0}.topbar{padding:0 15px}.content{padding:17px 15px 105px}.mobile-nav{position:fixed;bottom:9px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 18px));display:grid;grid-template-columns:repeat(5,1fr);z-index:50;padding:6px;border:1px solid #ffffff25;border-radius:22px;background:#080b08ee;backdrop-filter:blur(18px);box-shadow:0 14px 40px #0009}.mobile-nav button,.mobile-nav a{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;border:0;background:none;color:#a0aa98;font-size:8px;font-weight:800;padding:7px 2px}.mobile-nav svg{width:19px;height:19px}.mobile-nav .active{color:var(--green)}.mobile-nav .add{width:41px;height:41px;border-radius:50%;margin-top:-19px;border:4px solid #080b08;background:var(--green);color:#071006}.partner-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.two-col{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){.topbar{height:60px;padding:0 10px}.search{width:min(60vw,410px);padding:9px 10px}.search input{font-size:10px}.top-person{display:none}.actions{gap:4px}.icon-button{width:34px;height:34px}.content{padding:12px 12px 100px}.hero{min-height:440px;border-radius:20px}.hero-content{padding:21px 17px}.hero h1{font-size:43px;letter-spacing:-2px}.hero p{font-size:11px}.btn{min-height:41px;padding:0 11px;font-size:9px}.section{margin-top:23px}.section-heading h2{font-size:15px}.section-heading p{font-size:9px}.choice-grid{gap:8px}.choice{min-height:140px;padding:12px}.choice strong{font-size:10px}.choice small{font-size:8px}.partner-grid{display:flex;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.partner-grid::-webkit-scrollbar{display:none}.partner-card{min-width:245px;min-height:265px}.stat-grid{grid-template-columns:1fr}.stat{padding:12px}.two-col{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.modal-backdrop{padding:7px}.modal{max-height:96vh;border-radius:17px}.modal-head,.form-body{padding:15px}.form-actions .btn{flex:1}.footer{font-size:8px}}
+:root{--bg:#070907;--panel:#10140f;--panel2:#151b13;--line:#ffffff20;--text:#f6f9f3;--muted:#a0aa98;--green:#b8ff3b;--green2:#d9ff79;--nav:#0a0e09;--red:#ff929d;--gold:#ffd166}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+img{max-width:100%;display:block}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+.layout{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:236px;background:var(--nav);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;z-index:30}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 28px}
+.brand img{width:48px;height:48px;object-fit:contain;flex:none;filter:drop-shadow(0 0 10px #b8ff3b37)}
+.brand-name{font-size:18px;font-weight:900;letter-spacing:-.7px}
+.brand-name span{color:var(--green)}
+.brand-name small{display:block;color:#899483;font-size:8px;letter-spacing:1.1px;margin-top:4px}
+.navlabel{padding:0 12px;margin:6px 0 10px;font-size:9px;font-weight:800;color:#677161;letter-spacing:1.6px;text-transform:uppercase}
+.nav{display:grid;gap:6px}
+.nav a{display:flex;align-items:center;gap:11px;padding:12px;border-radius:12px;color:#aab3a1;font-size:11px;font-weight:750;border:1px solid transparent}
+.nav a:hover,.nav a.active{color:var(--green);background:#b8ff3b0d;border-color:#b8ff3b24}
+.nav svg{width:17px;height:17px}
+.sidebottom{margin-top:auto}
+.sidecard{padding:14px;border:1px solid #b8ff3b32;border-radius:15px;background:linear-gradient(145deg,#17200f,#0c1009);margin-bottom:14px}
+.sidecard strong{display:block;font-size:11px;margin:9px 0 5px}
+.sidecard p{font-size:9px;line-height:1.7;color:var(--muted);margin:0 0 10px}
+.sidecard button{border:0;background:none;color:var(--green);font-size:10px;font-weight:800;padding:0}
+.member{border-top:1px solid var(--line);padding:14px 4px 0;display:flex;gap:9px;align-items:center}
+.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#1a2115;border:1px solid #b8ff3b40;color:var(--green);font-size:10px;font-weight:900;overflow:hidden;flex:none}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.membertext{min-width:0}
+.membertext strong{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.membertext small{display:block;color:var(--muted);font-size:9px;margin-top:4px}
+.main{margin-left:236px;min-width:0}
+.topbar{height:68px;position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 24px;background:#080b08ec;border-bottom:1px solid var(--line);backdrop-filter:blur(16px)}
+.search{display:flex;align-items:center;gap:9px;width:min(470px,58vw);background:#11160f;border:1px solid var(--line);border-radius:12px;padding:9px 12px;color:#879181}
+.search input{min-width:0;flex:1;background:transparent;border:0;outline:0;color:#fff;font-size:11px}
+.search input::placeholder{color:#7f8978}
+.search button{width:28px;height:28px;border:0;background:transparent;color:var(--green)}
+.topactions{display:flex;align-items:center;gap:8px}
+.iconbtn{width:38px;height:38px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);color:#e0e7da;border-radius:11px}
+.iconbtn:hover{color:var(--green);border-color:#b8ff3b65}
+.welcometext strong{display:block;font-size:10px}
+.welcometext small{display:block;margin-top:4px;color:var(--muted);font-size:9px}
+.content{max-width:1500px;margin:auto;padding:24px 24px 80px}
+.hero{position:relative;isolation:isolate;overflow:hidden;min-height:390px;border:1px solid #b8ff3b42;border-radius:24px;background:#0a1008}
+.hero:before{content:"";position:absolute;inset:0;z-index:-2;background:url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=85') center/cover;opacity:.68}
+.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#050805f5 0%,#050805d9 46%,#05080545 100%),linear-gradient(0deg,#050805a8,transparent 72%),radial-gradient(circle at 82% 20%,#b8ff3b30,transparent 34%)}
+.herocopy{padding:clamp(23px,4vw,44px);max-width:780px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--green);font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+h1{margin:18px 0 14px;font-size:clamp(39px,5.4vw,65px);line-height:.98;letter-spacing:-3px;font-weight:900}
+h1 span{color:var(--green)}
+.hero p{max-width:550px;color:#d0d9c8;font-size:12px;line-height:1.9;margin:0}
+.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:23px}
+.btn{min-height:44px;display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:0 15px;border:1px solid transparent;border-radius:12px;font-size:10px;font-weight:850;transition:transform .18s,background .18s}
+.btn:hover{transform:translateY(-1px)}
+.primary{background:var(--green);color:#071006}
+.secondary{background:#091008c9;border-color:#ffffff45;color:#fff}
+.outline{background:transparent;border-color:var(--line);color:#e1e8da}
+.subnote{display:flex;align-items:center;gap:7px;color:#aab6a0;font-size:9px;margin-top:15px}
+.subnote svg{color:var(--green)}
+.section{margin-top:28px;scroll-margin-top:85px}
+.sectionhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px}
+.sectionhead h2{font-size:17px;letter-spacing:-.5px;font-weight:900;margin:0}
+.sectionhead p{font-size:10px;line-height:1.6;color:var(--muted);margin:5px 0 0}
+.linkbtn{border:0;background:none;color:var(--green);font-size:10px;font-weight:800;white-space:nowrap}
+.choicegrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.choice{min-height:156px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;padding:15px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#141a12,#0b0e09);color:var(--text);transition:.2s}
+.choice:hover{border-color:#b8ff3b7a;transform:translateY(-2px)}
+.choiceicon{width:37px;height:37px;display:grid;place-items:center;border-radius:11px;background:#b8ff3b14;color:var(--green)}
+.choice strong{font-size:11px;margin:11px 0 5px}
+.choice small{font-size:9px;color:var(--muted);line-height:1.6}
+.choice .arrow{margin-top:auto;padding-top:10px;color:var(--green)}
+.featuregrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.feature{min-height:278px;position:relative;isolation:isolate;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#11180f}
+.feature:before{content:"";position:absolute;inset:0;z-index:-2;background-size:cover;background-position:center;opacity:.63}
+.feature:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#07090712 0%,#070907ef 82%)}
+.feature.personal:before{background-image:url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1000&q=85')}
+.feature.fleet:before{background-image:url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d8?auto=format&fit=crop&w=1000&q=85')}
+.feature.student:before{background-image:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=85')}
+.featurecopy{position:absolute;inset:auto 0 0;padding:17px}
+.pill{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;border:1px solid #b8ff3b65;background:#071006b8;padding:6px 8px;border-radius:30px}
+.feature h3{font-size:17px;letter-spacing:-.5px;margin:12px 0 6px}
+.feature p{font-size:10px;line-height:1.7;color:#d1dbca;margin:0 0 13px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.step{display:flex;align-items:center;gap:11px;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}
+.stepicon{width:36px;height:36px;display:grid;place-items:center;flex:none;border-radius:10px;background:#b8ff3b12;color:var(--green)}
+.step strong{display:block;font-size:10px}
+.step span{display:block;margin-top:4px;color:var(--muted);font-size:9px;line-height:1.55}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:17px}
+.activity{display:grid;gap:8px}
+.activityrow{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid #ffffff14;background:#131811;border-radius:12px}
+.activityicon{width:33px;height:33px;display:grid;place-items:center;border-radius:10px;background:#b8ff3b12;color:var(--green);flex:none}
+.activitycopy{min-width:0;flex:1}
+.activitycopy strong{font-size:10px;display:block}
+.activitycopy small{font-size:9px;line-height:1.5;color:var(--muted);display:block;margin-top:4px}
+.status{font-size:8px;font-weight:850;color:var(--green);background:#b8ff3b13;padding:5px 7px;border-radius:30px;white-space:nowrap}
+.empty{font-size:10px;line-height:1.7;color:var(--muted);padding:14px;text-align:center;border:1px dashed #ffffff22;border-radius:12px}
+.notice{display:flex;align-items:flex-start;gap:10px;border:1px solid #ffd16632;background:#ffd16609;border-radius:13px;padding:13px;color:#d7d2bd;font-size:9px;line-height:1.8}
+.notice svg{color:var(--gold);width:16px;height:16px;flex:none;margin-top:2px}
+.footer{text-align:center;color:#6f7968;font-size:9px;line-height:1.8;margin-top:29px}
+.mobilebar{display:none}
+.backdrop{position:fixed;inset:0;z-index:100;background:#000c;backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:13px}
+.backdrop.open{display:flex}
+.modal{width:min(590px,100%);max-height:95vh;overflow:auto;background:#0d110b;border:1px solid #b8ff3b45;border-radius:20px;box-shadow:0 25px 90px #000b}
+.modalhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2;background:#0d110bf5}
+.modalhead h2{font-size:16px;margin:0}
+.modalhead p{font-size:9px;line-height:1.6;color:var(--muted);margin:5px 0 0}
+.close{height:33px;width:33px;display:grid;place-items:center;border:1px solid var(--line);border-radius:10px;color:#fff;background:#151a13}
+.formbody{padding:19px}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-size:10px;color:#cbd4c5;font-weight:750}
+.field input,.field select,.field textarea{width:100%;min-width:0;background:#151a13;border:1px solid #ffffff22;border-radius:10px;padding:11px;color:#f7faf4;outline:0;font-size:10px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#b8ff3b7a}
+.field select option{background:#11160f}
+.field textarea{min-height:73px;resize:vertical;line-height:1.6}
+.errorbox{display:none;background:#ff77880c;border:1px solid #ff77884a;border-radius:10px;padding:11px;color:#ff9da9;font-size:10px;line-height:1.5;margin-bottom:13px}
+.consent{display:flex;align-items:flex-start;gap:9px;color:#b5c0ae;font-size:9px;line-height:1.7}
+.consent input{margin-top:2px;accent-color:var(--green);flex:none}
+.formactions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:17px}
+.successview{display:none;text-align:center;padding:32px 20px}
+.successicon{width:55px;height:55px;border-radius:50%;margin:0 auto 15px;background:#b8ff3b18;color:var(--green);display:grid;place-items:center}
+.successview h3{font-size:21px;margin:0 0 9px}
+.successview p{max-width:380px;margin:0 auto 16px;color:var(--muted);font-size:10px;line-height:1.8}
+.honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+.toast{position:fixed;z-index:150;top:14px;left:50%;transform:translate(-50%,-150%);max-width:calc(100% - 24px);background:#151b12;border:1px solid #b8ff3b5c;color:#fff;padding:12px 16px;border-radius:12px;font-size:10px;line-height:1.5;box-shadow:0 14px 35px #0008;transition:transform .25s}
+.toast.show{transform:translate(-50%,0)}
+.toast.error{border-color:#ff778875}
+.spinner{width:15px;height:15px;display:inline-block;border:2px solid #07100655;border-top-color:#071006;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:1100px){.sidebar{width:205px}.main{margin-left:205px}.content{padding:18px 17px 75px}.choicegrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:820px){.sidebar{display:none}.main{margin-left:0}.topbar{padding:0 15px}.content{padding:16px 15px 103px}.mobilebar{position:fixed;bottom:9px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 18px));display:grid;grid-template-columns:repeat(5,1fr);z-index:50;padding:6px;border:1px solid #ffffff25;border-radius:22px;background:#080b08ee;backdrop-filter:blur(18px);box-shadow:0 14px 40px #0009}.mobilebar a,.mobilebar button{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;border:0;background:none;color:#a0aa98;font-size:8px;font-weight:800;padding:7px 2px}.mobilebar svg{width:19px;height:19px}.mobilebar .active{color:var(--green)}.mobilebar .add{width:41px;height:41px;border-radius:50%;margin-top:-19px;border:4px solid #080b08;background:var(--green);color:#071006}.featuregrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.topbar{height:60px;padding:0 10px}.search{width:min(65vw,410px);padding:8px 9px}.search input{font-size:10px}.welcometext{display:none}.iconbtn{width:34px;height:34px}.content{padding:12px 12px 100px}.hero{min-height:440px;border-radius:20px}.herocopy{padding:22px 17px}h1{font-size:43px;letter-spacing:-2px}.hero p{font-size:11px}.btn{min-height:41px;padding:0 11px;font-size:9px}.section{margin-top:23px}.sectionhead h2{font-size:15px}.sectionhead p{font-size:9px}.choicegrid{gap:8px}.choice{min-height:145px;padding:12px}.choice strong{font-size:10px}.choice small{font-size:8px}.featuregrid{display:flex;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.featuregrid::-webkit-scrollbar{display:none}.feature{min-width:245px;min-height:265px}.steps{grid-template-columns:1fr}.step{padding:12px}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.backdrop{padding:7px}.modal{max-height:96vh;border-radius:17px}.modalhead,.formbody{padding:15px}.formactions .btn{flex:1}.footer{font-size:8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<div class="shell">
+<div class="layout">
 <aside class="sidebar">
-  <a class="brand" href="marketplace.html"><span class="brand-mark">Z</span><span class="brand-name"><span>zep</span> swipe<small>OPPORTUNITIES FOR A BETTER YOU</small></span></a>
-  <div class="side-label">Explore Zep Swipe</div>
+  <a class="brand" href="marketplace.html"><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo"><span class="brand-name"><span>zep</span> swipe<small>THE STUDENT ECONOMY</small></span></a>
+  <div class="navlabel">Explore Zep Swipe</div>
   <nav class="nav" aria-label="Main navigation">
     <a href="marketplace.html"><i data-lucide="store"></i> Marketplace</a>
     <a class="active" href="mobility.html"><i data-lucide="car-front"></i> Mobility</a>
-    <a href="opportunity.html"><i data-lucide="compass"></i> Opportunities</a>
-    <a href="provider.html"><i data-lucide="graduation-cap"></i> Student dashboard</a>
-    <a href="business-deals.html"><i data-lucide="briefcase-business"></i> Business dashboard</a>
-    <a href="message.html"><i data-lucide="message-square"></i> Messages</a>
+    <a href="#needs"><i data-lucide="compass"></i> Explore mobility</a>
+    <a href="auth.html?redirect=mobility.html"><i data-lucide="user-round"></i> Sign in / Account</a>
   </nav>
-  <div class="sidebar-bottom">
-    <div class="side-promo"><i data-lucide="shield-check" width="22"></i><strong>Need a vehicle solution?</strong><p>Tell us what you need and request information from Cartrack.</p><a href="#enquiry" data-open-enquiry>Request information ↗</a></div>
-    <div class="side-profile"><div class="avatar" id="sideAvatar">ZS</div><div class="profile-meta"><strong id="sideName">Guest visitor</strong><small id="sideSub">Mobility discovery</small></div></div>
+  <div class="sidebottom">
+    <div class="sidecard"><i data-lucide="shield-check" width="22"></i><strong>Need a vehicle solution?</strong><p>Tell us what you need and submit an enquiry. You can start without creating an account.</p><button type="button" data-open-enquiry>Request information ↗</button></div>
+    <div class="member"><div class="avatar" id="sideAvatar">ZS</div><div class="membertext"><strong id="sideName">Guest visitor</strong><small id="sideSub">Mobility discovery</small></div></div>
   </div>
 </aside>
 
 <div class="main">
 <header class="topbar">
-  <div class="search"><i data-lucide="search" width="17"></i><input id="siteSearch" type="search" placeholder="Search vehicle, security or fleet solutions" aria-label="Search mobility solutions"><button class="icon-button" id="searchButton" aria-label="Search" style="width:30px;height:30px"><i data-lucide="arrow-right" width="15"></i></button></div>
-  <div class="actions"><button class="icon-button" id="accountButton" aria-label="Account" title="Account"><i data-lucide="user-round" width="17"></i></button><a class="icon-button" href="marketplace.html" aria-label="Return to marketplace" title="Marketplace"><i data-lucide="house" width="17"></i></a><div class="top-person"><strong id="topName">Welcome</strong><small id="topSub">Zep Swipe Mobility</small></div></div>
+  <div class="search"><i data-lucide="search" width="17"></i><input id="siteSearch" type="search" placeholder="Search vehicle, security or fleet solutions" aria-label="Search mobility solutions"><button id="searchButton" type="button" aria-label="Search"><i data-lucide="arrow-right" width="15"></i></button></div>
+  <div class="topactions"><button class="iconbtn" id="accountButton" type="button" aria-label="Account" title="Account"><i data-lucide="user-round" width="17"></i></button><a class="iconbtn" href="marketplace.html" aria-label="Marketplace" title="Marketplace"><i data-lucide="house" width="17"></i></a><div class="welcometext"><strong id="topName">Welcome</strong><small id="topSub">Zep Swipe Mobility</small></div></div>
 </header>
 
 <main class="content">
-<section class="hero" id="top">
-  <div class="hero-content">
-    <div class="eyebrow"><span class="pulse"></span> ZEP SWIPE MOBILITY</div>
-    <h1>Protect what<br>moves <span>you.</span></h1>
-    <p>Discover vehicle tracking and fleet-management options for personal vehicles, students, drivers and businesses. Tell us what you need and request contact from Cartrack through the relevant enquiry process.</p>
-    <div class="button-row"><button class="btn btn-primary" data-open-enquiry><i data-lucide="shield-check" width="16"></i> Request Cartrack callback</button><button class="btn btn-secondary" id="fleetHeroBtn"><i data-lucide="truck" width="16"></i> Fleet solutions</button></div>
-    <div class="microcopy"><i data-lucide="check-circle-2" width="14"></i> You can enquire without creating a Zep Swipe account.</div>
+<section class="hero" id="top"><div class="herocopy">
+  <div class="eyebrow"><span class="pulse"></span> ZEP SWIPE MOBILITY</div>
+  <h1>Protect what<br>moves <span>you.</span></h1>
+  <p>Explore vehicle tracking and fleet-management enquiry options for personal vehicles, students, drivers and businesses. Tell us what you need and request follow-up through the relevant provider process.</p>
+  <div class="buttons"><button class="btn primary" data-open-enquiry type="button"><i data-lucide="shield-check" width="16"></i> Request a Cartrack callback</button><a class="btn secondary" href="marketplace.html"><i data-lucide="store" width="16"></i> Explore marketplace</a></div>
+  <div class="subnote"><i data-lucide="check-circle-2" width="14"></i> You can enquire without creating a Zep Swipe account.</div>
+</div></section>
+
+<section class="section" id="needs"><div class="sectionhead"><div><h2>What mobility solution do you need?</h2><p>Choose a category to start a relevant enquiry.</p></div></div>
+  <div class="choicegrid">
+    <button class="choice" data-type="personal_vehicle" type="button"><span class="choiceicon"><i data-lucide="car-front"></i></span><strong>Protect my vehicle</strong><small>Request information about tracking and security for a personal vehicle.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
+    <button class="choice" data-type="business_fleet" type="button"><span class="choiceicon"><i data-lucide="truck"></i></span><strong>Manage my fleet</strong><small>Explore vehicle tracking and fleet needs for your business.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
+    <button class="choice" data-type="student_driver" type="button"><span class="choiceicon"><i data-lucide="graduation-cap"></i></span><strong>Student or young driver</strong><small>Find information relevant to your vehicle and driving situation.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
+    <button class="choice" data-type="delivery_gig_vehicle" type="button"><span class="choiceicon"><i data-lucide="package-check"></i></span><strong>Delivery or gig vehicle</strong><small>Explore options for a vehicle you rely on to earn income.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
   </div>
 </section>
 
-<section class="section" id="needs">
-  <div class="section-heading"><div><h2>What mobility solution do you need?</h2><p>Choose your situation to start a relevant enquiry.</p></div></div>
-  <div class="choice-grid">
-    <button class="choice" data-type="personal_vehicle" type="button"><span class="choice-icon"><i data-lucide="car-front"></i></span><strong>Protect my vehicle</strong><small>Explore tracking and security options for a personal vehicle.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
-    <button class="choice" data-type="business_fleet" type="button"><span class="choice-icon"><i data-lucide="truck"></i></span><strong>Manage my fleet</strong><small>Explore vehicle tracking and fleet needs for your business.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
-    <button class="choice" data-type="student_driver" type="button"><span class="choice-icon"><i data-lucide="graduation-cap"></i></span><strong>Student or young driver</strong><small>Request information relevant to your vehicle and driving situation.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
-    <button class="choice" data-type="delivery_gig_vehicle" type="button"><span class="choice-icon"><i data-lucide="package-check"></i></span><strong>Delivery or gig vehicle</strong><small>Explore options for a vehicle you rely on to earn income.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
+<section class="section" id="pathways"><div class="sectionhead"><div><h2>Explore mobility pathways</h2><p>Start with the option that best fits your situation.</p></div></div>
+  <div class="featuregrid">
+    <article class="feature personal"><div class="featurecopy"><span class="pill"><i data-lucide="shield-check" width="12"></i> PERSONAL VEHICLES</span><h3>Protect your vehicle</h3><p>Request information about tracking and security options for your car.</p><button class="btn primary" data-type="personal_vehicle" type="button">Get information <i data-lucide="arrow-right" width="14"></i></button></div></article>
+    <article class="feature fleet"><div class="featurecopy"><span class="pill"><i data-lucide="truck" width="12"></i> BUSINESS & FLEET</span><h3>Make fleet enquiries</h3><p>Tell us how many vehicles your business operates and what you need.</p><button class="btn primary" data-type="business_fleet" type="button">Request consultation <i data-lucide="arrow-right" width="14"></i></button></div></article>
+    <article class="feature student"><div class="featurecopy"><span class="pill"><i data-lucide="graduation-cap" width="12"></i> STUDENT MOBILITY</span><h3>Keep moving forward</h3><p>Explore mobility information for students, drivers and delivery workers.</p><button class="btn primary" data-type="student_driver" type="button">Explore options <i data-lucide="arrow-right" width="14"></i></button></div></article>
   </div>
 </section>
 
-<section class="section" id="partnerOptions">
-  <div class="section-heading"><div><h2>Explore mobility pathways</h2><p>Choose the pathway that best fits your need.</p></div></div>
-  <div class="partner-grid">
-    <article class="partner-card personal"><div class="partner-copy"><span class="partner-label"><i data-lucide="shield-check" width="12"></i> PERSONAL VEHICLES</span><h3>Protect your vehicle</h3><p>Request information about tracking and security solutions for your vehicle.</p><button class="btn btn-primary" data-type="personal_vehicle">Get information <i data-lucide="arrow-right" width="14"></i></button></div></article>
-    <article class="partner-card fleet"><div class="partner-copy"><span class="partner-label"><i data-lucide="truck" width="12"></i> BUSINESS & FLEET</span><h3>Make fleet enquiries</h3><p>Tell us how many vehicles your business operates and what you need help with.</p><button class="btn btn-primary" data-type="business_fleet">Request consultation <i data-lucide="arrow-right" width="14"></i></button></div></article>
-    <article class="partner-card student"><div class="partner-copy"><span class="partner-label"><i data-lucide="graduation-cap" width="12"></i> STUDENT MOBILITY</span><h3>Keep moving forward</h3><p>Explore mobility information for students, drivers and delivery workers.</p><button class="btn btn-primary" data-type="student_driver">Explore options <i data-lucide="arrow-right" width="14"></i></button></div></article>
+<section class="section"><div class="sectionhead"><div><h2>A simple, transparent process</h2><p>Know what happens after you submit your enquiry.</p></div></div>
+  <div class="steps">
+    <div class="step"><span class="stepicon"><i data-lucide="clipboard-list"></i></span><div><strong>1. Tell us what you need</strong><span>Share your enquiry and preferred contact details.</span></div></div>
+    <div class="step"><span class="stepicon"><i data-lucide="shield-check"></i></span><div><strong>2. Confirm consent</strong><span>Your details are used for the enquiry you agreed to.</span></div></div>
+    <div class="step"><span class="stepicon"><i data-lucide="phone-call"></i></span><div><strong>3. Await follow-up</strong><span>Provider follow-up depends on the agreed process.</span></div></div>
   </div>
 </section>
 
-<section class="section">
-  <div class="section-heading"><div><h2>A simple, transparent process</h2><p>From your enquiry to the right next step.</p></div></div>
-  <div class="stat-grid">
-    <div class="stat"><span class="stat-icon"><i data-lucide="clipboard-list"></i></span><div><strong>1. Tell us what you need</strong><span>Share your mobility interest and preferred contact details.</span></div></div>
-    <div class="stat"><span class="stat-icon"><i data-lucide="shield-check"></i></span><div><strong>2. Confirm consent</strong><span>Your details are shared for the enquiry purpose you agree to.</span></div></div>
-    <div class="stat"><span class="stat-icon"><i data-lucide="phone-call"></i></span><div><strong>3. Await follow-up</strong><span>Cartrack can follow up according to its agreed process.</span></div></div>
-  </div>
+<section class="section" id="activity"><div class="sectionhead"><div><h2>Your mobility enquiries</h2><p id="activitySubtitle">Sign in to see enquiry history associated with your account.</p></div><button class="linkbtn" id="refreshActivity" type="button">Refresh activity ↻</button></div>
+  <div class="panel"><div class="activity" id="activityList"><div class="empty">You can submit an enquiry above, even without signing in. Enquiry history is shown when it is linked to your account and database permissions allow access.</div></div></div>
 </section>
 
-<section class="section" id="activity">
-  <div class="section-heading"><div><h2 id="activityTitle">Your mobility enquiries</h2><p id="activitySubtitle">Sign in to view enquiries associated with your Zep Swipe account.</p></div><button class="text-link" id="refreshActivity" type="button">Refresh activity ↻</button></div>
-  <div class="panel"><div class="activity-list" id="activityList"><div class="empty">You can submit a new enquiry above. If you submit while signed in, your account may be able to show your enquiry history if the database permissions allow it.</div></div></div>
-</section>
-
-<section class="section" id="enquiry">
-  <div class="notice"><i data-lucide="info"></i><div><strong>Privacy and partner handoff.</strong> When you submit this form, Zep Swipe will use the details to process your enquiry and share the information required with Cartrack for this request. This is not consent to unrelated marketing. Only submit your own details or details you are authorised to provide.</div></div>
-</section>
-<footer class="footer">Zep Swipe Mobility · Discover · Connect · Move Forward<br>Cartrack product enquiries are subject to the provider's availability, eligibility and terms.</footer>
+<section class="section"><div class="notice"><i data-lucide="info"></i><div><strong>Privacy and partner handoff.</strong> When you submit this form, Zep Swipe uses the information to process your enquiry and share the necessary details with Cartrack for this request. This is not consent to unrelated marketing. Only submit your own details or details you are authorised to provide.</div></div></section>
+<footer class="footer">Zep Swipe Mobility · Discover · Connect · Move Forward<br>Product information, availability and any follow-up are subject to the provider's terms and the agreed enquiry process.</footer>
 </main>
 </div>
 </div>
 
-<nav class="mobile-nav" aria-label="Mobile navigation"><a href="marketplace.html"><i data-lucide="house"></i><span>Home</span></a><a class="active" href="#top"><i data-lucide="car-front"></i><span>Mobility</span></a><button class="add" type="button" data-open-enquiry aria-label="Request a callback"><i data-lucide="plus"></i></button><a href="opportunity.html"><i data-lucide="compass"></i><span>Explore</span></a><a href="provider.html"><i data-lucide="user-round"></i><span>Account</span></a></nav>
+<nav class="mobilebar" aria-label="Mobile navigation"><a href="marketplace.html"><i data-lucide="house"></i><span>Marketplace</span></a><a class="active" href="#top"><i data-lucide="car-front"></i><span>Mobility</span></a><button class="add" type="button" data-open-enquiry aria-label="Request information"><i data-lucide="plus"></i></button><a href="#needs"><i data-lucide="compass"></i><span>Explore</span></a><a href="auth.html?redirect=mobility.html"><i data-lucide="user-round"></i><span>Account</span></a></nav>
 
-<div class="modal-backdrop" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal">
-    <div class="modal-head"><div><h2 id="modalTitle">Request Cartrack information</h2><p>Tell us a little about your need so your enquiry can be directed appropriately.</p></div><button class="close" id="closeModal" type="button" aria-label="Close form"><i data-lucide="x" width="17"></i></button></div>
-    <form id="leadForm" novalidate>
-      <div class="form-body" id="leadFormView">
-        <div class="form-error" id="formError" role="alert"></div>
-        <div class="form-grid">
-          <div class="field"><label for="firstName">First name *</label><input id="firstName" name="firstName" autocomplete="given-name" maxlength="80" required></div>
-          <div class="field"><label for="lastName">Last name *</label><input id="lastName" name="lastName" autocomplete="family-name" maxlength="80" required></div>
-          <div class="field"><label for="phone">Mobile number *</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="e.g. 082 123 4567" required></div>
-          <div class="field"><label for="email">Email (optional)</label><input id="email" name="email" type="email" autocomplete="email" maxlength="160" placeholder="you@example.com"></div>
-          <div class="field"><label for="city">City or town *</label><input id="city" name="city" autocomplete="address-level2" maxlength="100" placeholder="e.g. Johannesburg" required></div>
-          <div class="field"><label for="leadType">Your situation *</label><select id="leadType" name="leadType" required><option value="personal_vehicle">Personal vehicle owner</option><option value="business_fleet">Business / fleet</option><option value="student_driver">Student / young driver</option><option value="delivery_gig_vehicle">Delivery / gig vehicle</option></select></div>
-          <div class="field"><label for="vehicleCount">Number of vehicles *</label><select id="vehicleCount" name="vehicleCount" required><option value="1">1 vehicle</option><option value="2-5">2–5 vehicles</option><option value="6-20">6–20 vehicles</option><option value="20+">20+ vehicles</option><option value="not_sure">Not sure</option></select></div>
-          <div class="field"><label for="interest">What are you interested in? *</label><select id="interest" name="interest" required><option value="vehicle_tracking">Vehicle tracking</option><option value="vehicle_safety">Vehicle safety and security</option><option value="fleet_solution">Fleet solution</option><option value="vehicle_recovery">Stolen-vehicle recovery information</option><option value="not_sure">Help me choose</option></select></div>
-          <div class="field full"><label for="vehicleInfo">Vehicle or fleet details (optional)</label><textarea id="vehicleInfo" name="vehicleInfo" maxlength="500" placeholder="For example, vehicle make/model, type of business, or number of vehicles. Do not include sensitive information."></textarea><span class="help">Please don't enter identity numbers, banking details or other sensitive personal information here.</span></div>
-          <div class="field full honeypot" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
-          <div class="field full"><label class="consent"><input id="consent" type="checkbox" required><span>I agree that Zep Swipe may share the information I submit with Cartrack so the relevant team can contact me about this specific enquiry. I understand this is not consent to unrelated marketing. *</span></label></div>
-        </div>
-        <div class="form-actions"><button class="btn btn-outline" id="cancelModal" type="button">Cancel</button><button class="btn btn-primary" id="submitLead" type="submit"><i data-lucide="send" width="15"></i> Submit enquiry</button></div>
-        <p class="help" style="margin:13px 0 0">You can submit without signing up. If you are signed in, the enquiry may be linked to your account for reference.</p>
+<div class="backdrop" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal">
+  <div class="modalhead"><div><h2 id="modalTitle">Request Cartrack information</h2><p>Tell us about your need so your enquiry can be handled appropriately.</p></div><button class="close" id="closeModal" type="button" aria-label="Close form"><i data-lucide="x" width="17"></i></button></div>
+  <form id="leadForm" novalidate>
+    <div class="formbody" id="leadFormView"><div class="errorbox" id="formError" role="alert"></div>
+      <div class="formgrid">
+        <div class="field"><label for="firstName">First name *</label><input id="firstName" name="firstName" autocomplete="given-name" maxlength="80" required></div>
+        <div class="field"><label for="lastName">Last name *</label><input id="lastName" name="lastName" autocomplete="family-name" maxlength="80" required></div>
+        <div class="field"><label for="phone">Mobile number *</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="e.g. 082 123 4567" required></div>
+        <div class="field"><label for="email">Email (optional)</label><input id="email" name="email" type="email" autocomplete="email" maxlength="160" placeholder="you@example.com"></div>
+        <div class="field"><label for="city">City or town *</label><input id="city" name="city" autocomplete="address-level2" maxlength="100" placeholder="e.g. Johannesburg" required></div>
+        <div class="field"><label for="leadType">Your situation *</label><select id="leadType" name="leadType" required><option value="personal_vehicle">Personal vehicle owner</option><option value="business_fleet">Business / fleet</option><option value="student_driver">Student / young driver</option><option value="delivery_gig_vehicle">Delivery / gig vehicle</option></select></div>
+        <div class="field"><label for="vehicleCount">Number of vehicles *</label><select id="vehicleCount" name="vehicleCount" required><option value="1">1 vehicle</option><option value="2-5">2–5 vehicles</option><option value="6-20">6–20 vehicles</option><option value="21-50">21–50 vehicles</option><option value="50+">More than 50 vehicles</option><option value="unsure">Not sure yet</option></select></div>
+        <div class="field"><label for="interest">What are you interested in? *</label><select id="interest" name="interest" required><option value="vehicle_tracking">Vehicle tracking</option><option value="vehicle_security">Vehicle security</option><option value="fleet_management">Fleet management</option><option value="driver_safety">Driver safety</option><option value="general_information">General information</option></select></div>
+        <div class="field full"><label for="vehicleInfo">Extra details (optional)</label><textarea id="vehicleInfo" name="vehicleInfo" maxlength="1200" placeholder="Vehicle type, fleet size, preferred contact time or questions..."></textarea></div>
+        <div class="honeypot" aria-hidden="true"><label for="website">Leave this field empty</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="field full"><label class="consent"><input id="consent" type="checkbox" required><span>I agree that Zep Swipe may use these details to process this specific enquiry and share the necessary information with Cartrack for follow-up. I understand that this does not sign me up for unrelated marketing.</span></label></div>
       </div>
-      <div class="form-success" id="successView"><div class="success-icon"><i data-lucide="check" width="25"></i></div><h3>Enquiry received</h3><p id="successText">Thank you. Your enquiry has been recorded. Cartrack follow-up depends on the agreed partner process and the information you supplied.</p><button class="btn btn-primary" id="doneBtn" type="button">Done</button></div>
-    </form>
-  </div>
-</div>
+      <div class="formactions"><button class="btn outline" id="cancelModal" type="button">Cancel</button><button class="btn primary" id="submitLead" type="submit"><i data-lucide="send" width="15"></i> Submit enquiry</button></div>
+      <p style="font-size:9px;color:var(--muted);line-height:1.6;margin:12px 0 0">You may submit without registering. When signed in, your enquiry can be linked to your account.</p>
+    </div>
+    <div class="successview" id="successView"><div class="successicon"><i data-lucide="check" width="25"></i></div><h3>Enquiry received</h3><p id="successText">Thank you. Your enquiry has been recorded.</p><button class="btn primary" id="doneBtn" type="button">Done</button></div>
+  </form>
+</div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (() => {
 "use strict";
 
-/* Supabase project used by the Zep Swipe marketplace. Use only the public
-   anon/publishable key in browser code. Never expose a service-role key. */
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
-const hasKey = SUPABASE_ANON_KEY !== "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo" && SUPABASE_ANON_KEY.trim().length > 20;
+// Replace this placeholder with the PUBLIC anon/publishable key from the
+// Supabase project used by Zep Swipe. Never put a service-role key in HTML.
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const hasKey = SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY" && SUPABASE_ANON_KEY.trim().length > 20;
 const db = (hasKey && window.supabase?.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const $ = id => document.getElementById(id);
 let currentUser = null;
 let currentProfile = {};
 let submitting = false;
 let toastTimer = null;
-let recentLeads = [];
 const LEAD_TABLE = "cartrack_leads";
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
-}
-function icons() { window.lucide?.createIcons(); }
-function showToast(message, error = false) {
-  const node = $("toast"); node.textContent = message; node.classList.toggle("error", error); node.classList.add("show");
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => node.classList.remove("show"), 3600);
-}
-function openLeadModal(type) {
-  if (type && $("leadType")) $("leadType").value = type;
-  $("formError").style.display = "none";
-  $("leadFormView").style.display = "block";
-  $("successView").style.display = "none";
-  $("leadModal").classList.add("open");
-  document.body.style.overflow = "hidden";
-  icons();
-  setTimeout(() => $("firstName").focus(), 80);
-}
-function closeLeadModal() {
-  if (submitting) return;
-  $("leadModal").classList.remove("open"); document.body.style.overflow = "";
-}
-function setFormError(message) {
-  $("formError").textContent = message; $("formError").style.display = message ? "block" : "none";
-}
-function validPhone(phone) {
-  const digits = String(phone || "").replace(/\D/g, "");
-  return digits.length >= 9 && digits.length <= 15;
-}
-function queryParam(name) {
-  try { return new URL(window.location.href).searchParams.get(name) || ""; } catch (_) { return ""; }
-}
-function campaignMeta() {
-  return {
-    source: queryParam("utm_source") || queryParam("source") || "zep-mobility",
-    campaign: queryParam("utm_campaign") || queryParam("campaign") || "mobility-organic",
-    page: window.location.pathname.split("/").pop() || "mobility.html"
-  };
-}
-async function initialiseSession() {
-  if (!db) {
-    $("topName").textContent = "Guest visitor"; $("topSub").textContent = "Mobility discovery";
-    $("sideName").textContent = "Guest visitor"; $("sideSub").textContent = "Enquiries available without signup";
-    return;
-  }
-  try {
-    const { data, error } = await db.auth.getSession();
-    if (error) throw error;
-    currentUser = data.session?.user || null;
-    if (!currentUser) {
-      $("topName").textContent = "Guest visitor"; $("topSub").textContent = "Zep Swipe Mobility";
-      $("sideName").textContent = "Guest visitor"; $("sideSub").textContent = "Enquiries available without signup";
-      return;
-    }
-    const { data: profile, error: profileError } = await db.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
-    if (!profileError) currentProfile = profile || {};
-    const name = currentProfile.first_name || currentProfile.full_name?.split(" ")[0] || currentUser.user_metadata?.first_name || currentUser.email?.split("@")[0] || "Zep member";
-    const fullName = currentProfile.full_name || currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || name;
-    $("topName").textContent = "Welcome, " + name; $("topSub").textContent = "Zep Swipe member";
-    $("sideName").textContent = fullName; $("sideSub").textContent = currentProfile.university || currentProfile.institution || "Registered member";
-    const avatarUrl = currentProfile.avatar_url || currentProfile.profile_image || currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture;
-    if (avatarUrl) {
-      $("sideAvatar").innerHTML = '<img src="' + escapeHTML(avatarUrl) + '" alt="" referrerpolicy="no-referrer">';
-    } else {
-      $("sideAvatar").textContent = fullName.split(/\s+/).map(x => x[0] || "").join("").slice(0,2).toUpperCase();
-    }
+function icons(){ window.lucide?.createIcons(); }
+function escapeHTML(value){return String(value ?? "").replace(/[&<>\"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function showToast(message, isError=false){const node=$("toast");node.textContent=message;node.classList.toggle("error",isError);node.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>node.classList.remove("show"),3600);}
+function openLeadModal(type){if(type)$("leadType").value=type;setFormError("");$("leadFormView").style.display="block";$("successView").style.display="none";$("leadModal").classList.add("open");document.body.style.overflow="hidden";icons();setTimeout(()=>$("firstName").focus(),80);}
+function closeLeadModal(){if(submitting)return;$("leadModal").classList.remove("open");document.body.style.overflow="";}
+function setFormError(message){$("formError").textContent=message;$("formError").style.display=message?"block":"none";}
+function validPhone(phone){const digits=String(phone||"").replace(/\D/g,"");return digits.length>=9&&digits.length<=15;}
+function queryParam(name){try{return new URL(window.location.href).searchParams.get(name)||"";}catch(_){return "";}}
+function campaignMeta(){return {source:queryParam("utm_source")||queryParam("source")||"zep-mobility",campaign:queryParam("utm_campaign")||queryParam("campaign")||"mobility-organic",page:window.location.pathname.split("/").pop()||"mobility.html"};}
+
+async function initialiseSession(){
+  if(!db){$("topName").textContent="Welcome";$("topSub").textContent="Mobility discovery";$("sideName").textContent="Guest visitor";$("sideSub").textContent="Enquiries available without signup";return;}
+  try{
+    const {data,error}=await db.auth.getSession();if(error)throw error;currentUser=data.session?.user||null;
+    if(!currentUser){$("topName").textContent="Welcome";$("topSub").textContent="Zep Swipe Mobility";$("sideName").textContent="Guest visitor";$("sideSub").textContent="Enquiries available without signup";return;}
+    const {data:profile,error:profileError}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();if(!profileError)currentProfile=profile||{};
+    const name=currentProfile.full_name?.split(" ")[0]||currentUser.user_metadata?.full_name?.split(" ")[0]||currentUser.email?.split("@")[0]||"Zep member";
+    const fullName=currentProfile.full_name||currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||name;
+    $("topName").textContent="Welcome, "+name;$("topSub").textContent="Zep Swipe member";$("sideName").textContent=fullName;$("sideSub").textContent=currentProfile.university||currentProfile.institution||"Registered member";
+    const avatarUrl=currentProfile.avatar_url||currentProfile.profile_image||currentUser.user_metadata?.avatar_url||currentUser.user_metadata?.picture;
+    if(avatarUrl)$("sideAvatar").innerHTML='<img src="'+escapeHTML(avatarUrl)+'" alt="" referrerpolicy="no-referrer">';else $("sideAvatar").textContent=fullName.split(/\s+/).map(x=>x[0]||"").join("").slice(0,2).toUpperCase();
     await loadMyEnquiries();
-  } catch (error) {
-    console.warn("Could not load session/profile:", error);
-  }
+  }catch(error){console.warn("Could not load session/profile:",error);}
 }
-function statusLabel(value) {
-  const s = String(value || "submitted").toLowerCase().replace(/[_-]+/g," ");
-  return s.charAt(0).toUpperCase() + s.slice(1);
+function statusLabel(value){const s=String(value||"submitted").toLowerCase().replace(/[_-]+/g," ");return s.charAt(0).toUpperCase()+s.slice(1);}
+async function loadMyEnquiries(){
+  if(!db||!currentUser){$("activitySubtitle").textContent="Sign in to see enquiry history associated with your account.";$("activityList").innerHTML='<div class="empty">You can submit an enquiry without signing in. Sign in before submitting if you want your enquiry linked to your account.</div>';return;}
+  $("activitySubtitle").textContent="Recent enquiries submitted while signed in.";
+  try{
+    const {data,error}=await db.from(LEAD_TABLE).select("id,lead_type,status,created_at,interest").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(10);if(error)throw error;
+    if(!data?.length){$("activityList").innerHTML='<div class="empty">No enquiry history found for this account yet. Enquiries submitted while signed in can appear here.</div>';return;}
+    $("activityList").innerHTML=data.map(row=>{const type=statusLabel(row.lead_type||row.interest||"Mobility enquiry");const when=row.created_at?new Date(row.created_at).toLocaleDateString("en-ZA",{day:"numeric",month:"short",year:"numeric"}):"Date unavailable";return '<div class="activityrow"><span class="activityicon"><i data-lucide="car-front"></i></span><div class="activitycopy"><strong>'+escapeHTML(type)+'</strong><small>Submitted '+escapeHTML(when)+'</small></div><span class="status">'+escapeHTML(statusLabel(row.status||"submitted"))+'</span></div>';}).join("");icons();
+  }catch(error){console.info("Enquiry history not available:",error.message||error);$("activityList").innerHTML='<div class="empty">Enquiry history is unavailable in this view. You can still submit a new request.</div>';}
 }
-async function loadMyEnquiries() {
-  if (!db || !currentUser) {
-    $("activityTitle").textContent = "Your mobility enquiries";
-    $("activitySubtitle").textContent = "Sign in to see enquiry history associated with your account.";
-    $("activityList").innerHTML = '<div class="empty">You can submit an enquiry without creating an account. Sign in before submitting to make it easier to associate your enquiry with your Zep Swipe account.</div>';
-    return;
-  }
-  $("activitySubtitle").textContent = "Enquiries submitted while signed in may appear here when your account is allowed to read its records.";
-  try {
-    const { data, error } = await db.from(LEAD_TABLE).select("*").eq("user_id", currentUser.id).order("created_at", {ascending:false}).limit(10);
-    if (error) throw error;
-    recentLeads = data || [];
-    if (!recentLeads.length) {
-      $("activityList").innerHTML = '<div class="empty">No enquiry history found for this account yet. Your submitted enquiry history will appear here if it is linked to your account and the database permissions allow it.</div>';
-      return;
-    }
-    $("activityList").innerHTML = recentLeads.map(row => {
-      const kind = row.lead_type || row.interest || "Mobility enquiry";
-      const when = row.created_at ? new Date(row.created_at).toLocaleDateString("en-ZA", {day:"numeric",month:"short",year:"numeric"}) : "Date unavailable";
-      const state = statusLabel(row.status || "submitted");
-      return '<div class="activity-row"><span class="activity-icon"><i data-lucide="car-front"></i></span><div class="activity-copy"><strong>' + escapeHTML(statusLabel(kind)) + '</strong><small>Submitted ' + escapeHTML(when) + '</small></div><span class="status ' + (state.toLowerCase() === "pending" ? "pending" : "") + '">' + escapeHTML(state) + '</span></div>';
-    }).join("");
-    icons();
-  } catch (error) {
-    console.info("Enquiry history not available:", error.message || error);
-    $("activityList").innerHTML = '<div class="empty">Your enquiry history is not available in this view. You can still submit a new request above.</div>';
-  }
+async function submitLead(event){
+  event.preventDefault();if(submitting)return;setFormError("");
+  if($("website").value.trim()){showToast("Thank you. Your request has been received.");closeLeadModal();return;}
+  if(!db||!hasKey){setFormError("The mobility form is not connected yet. Add your Supabase public anon/publishable key and confirm the cartrack_leads insert policy.");return;}
+  const firstName=$("firstName").value.trim(),lastName=$("lastName").value.trim(),phone=$("phone").value.trim(),email=$("email").value.trim(),city=$("city").value.trim(),leadType=$("leadType").value,vehicleCount=$("vehicleCount").value,interest=$("interest").value,vehicleInfo=$("vehicleInfo").value.trim();
+  if(!firstName||!lastName||!phone||!city||!leadType||!interest){setFormError("Please complete all required fields.");return;}
+  if(!validPhone(phone)){setFormError("Enter a valid mobile number, including your area or country code if applicable.");return;}
+  if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setFormError("Enter a valid email address or leave the email field blank.");return;}
+  if(!$("consent").checked){setFormError("Please confirm that you consent to Zep Swipe sharing this enquiry with Cartrack.");return;}
+  let sessionUser=currentUser;try{const {data}=await db.auth.getSession();sessionUser=data.session?.user||currentUser||null;}catch(_){}
+  const meta=campaignMeta(),now=new Date().toISOString();
+  const payload={user_id:sessionUser?.id||null,first_name:firstName,last_name:lastName,phone,email:email||null,city,lead_type:leadType,vehicle_count:vehicleCount,vehicle_info:vehicleInfo||null,interest,source:meta.source,campaign:meta.campaign,page:meta.page,consent:true,status:"submitted",submitted_at:now,created_at:now};
+  submitting=true;const button=$("submitLead");button.disabled=true;button.innerHTML='<span class="spinner"></span> Submitting…';
+  try{
+    const {error}=await db.from(LEAD_TABLE).insert(payload);if(error)throw error;
+    $("leadForm").reset();$("leadFormView").style.display="none";$("successView").style.display="block";$("successText").textContent="Thank you, "+firstName+". Your enquiry has been recorded. Any provider follow-up depends on the agreed process.";icons();if(sessionUser)await loadMyEnquiries();
+  }catch(error){
+    console.error("Mobility enquiry insert failed:",error);const message=String(error?.message||"");
+    if(error?.code==="42501"||/row-level security|permission denied|not allowed/i.test(message))setFormError("Supabase rejected the enquiry. Check the cartrack_leads insert grant and Row Level Security policy. Details: "+message);
+    else setFormError("We could not save this enquiry. Check the cartrack_leads columns and Supabase permissions. Details: "+(message||"Unknown error"));
+  }finally{submitting=false;button.disabled=false;button.innerHTML='<i data-lucide="send" width="15"></i> Submit enquiry';icons();}
 }
-function schemaMismatch(error) {
-  const message = String(error?.message || "").toLowerCase();
-  return ["pgrst204","42703","pgrst200"].includes(String(error?.code || "").toLowerCase()) ||
-    message.includes("schema cache") || message.includes("column") || message.includes("could not find") || message.includes("does not exist");
+function searchSolutions(){
+  const term=$("siteSearch").value.trim().toLowerCase();
+  if(!term){$("needs").scrollIntoView({behavior:"smooth"});return;}
+  const targets=[...document.querySelectorAll(".choice,.feature")];
+  const match=targets.find(el=>el.textContent.toLowerCase().includes(term));
+  if(match){match.scrollIntoView({behavior:"smooth",block:"center"});showToast("Showing a matching mobility option.");}
+  else{showToast("No exact match. Choose the closest option or request help.");$("needs").scrollIntoView({behavior:"smooth"});}
 }
-async function insertLead(payload) {
-  const first = await db.from(LEAD_TABLE).insert(payload);
-  if (!first.error) return;
-  if (!schemaMismatch(first.error)) throw first.error;
-
-  /* Compatibility fallback for the older form contract already used by the
-     existing mobility.html. This doesn't bypass RLS or other constraints. */
-  const fallback = {
-    user_id: payload.user_id,
-    first_name: payload.first_name,
-    last_name: payload.last_name,
-    phone: payload.phone,
-    email: payload.email,
-    lead_type: payload.lead_type,
-    vehicle_count: payload.vehicle_count,
-    source: payload.source,
-    consent: payload.consent,
-    created_at: payload.created_at
-  };
-  const second = await db.from(LEAD_TABLE).insert(fallback);
-  if (second.error) throw second.error;
+function openAccount(){if(currentUser){$("activity").scrollIntoView({behavior:"smooth",block:"start"});showToast("Your mobility enquiries are shown below.");}else location.href="auth.html?redirect="+encodeURIComponent("mobility.html");}
+function wire(){
+  document.querySelectorAll("[data-open-enquiry]").forEach(el=>el.addEventListener("click",event=>{event.preventDefault();openLeadModal();}));
+  document.querySelectorAll("[data-type]").forEach(el=>el.addEventListener("click",()=>openLeadModal(el.dataset.type)));
+  $("closeModal").addEventListener("click",closeLeadModal);$("cancelModal").addEventListener("click",closeLeadModal);$("doneBtn").addEventListener("click",()=>{closeLeadModal();showToast("Thank you for your enquiry.");});
+  $("leadModal").addEventListener("click",event=>{if(event.target===$("leadModal"))closeLeadModal();});
+  document.addEventListener("keydown",event=>{if(event.key==="Escape"&&$("leadModal").classList.contains("open"))closeLeadModal();});
+  $("leadForm").addEventListener("submit",submitLead);$("searchButton").addEventListener("click",searchSolutions);$("siteSearch").addEventListener("keydown",event=>{if(event.key==="Enter")searchSolutions();});$("accountButton").addEventListener("click",openAccount);$("refreshActivity").addEventListener("click",async()=>{await loadMyEnquiries();showToast("Activity refreshed where available.");});
 }
-async function submitLead(event) {
-  event.preventDefault();
-  if (submitting) return;
-  setFormError("");
-
-  if ($("website").value.trim()) {
-    showToast("Thank you. If your enquiry was valid, it will be processed.");
-    closeLeadModal();
-    return;
-  }
-  if (!hasKey || !db) {
-    setFormError("The mobility form is not connected to Supabase yet. Add your project's public anon/publishable key and verify the cartrack_leads insert policy before publishing.");
-    return;
-  }
-
-  const firstName = $("firstName").value.trim();
-  const lastName = $("lastName").value.trim();
-  const phone = $("phone").value.trim();
-  const email = $("email").value.trim();
-  const city = $("city").value.trim();
-  const leadType = $("leadType").value;
-  const vehicleCount = $("vehicleCount").value;
-  const interest = $("interest").value;
-  const vehicleInfo = $("vehicleInfo").value.trim();
-
-  if (!firstName || !lastName || !phone || !city || !leadType || !interest) {
-    setFormError("Please complete all required fields."); return;
-  }
-  if (!validPhone(phone)) {
-    setFormError("Enter a valid mobile number, including the area/country code if applicable."); return;
-  }
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    setFormError("Enter a valid email address or leave the email field blank."); return;
-  }
-  if (!$("consent").checked) {
-    setFormError("Please confirm that you consent to Zep Swipe sharing this enquiry with Cartrack."); return;
-  }
-
-  let sessionUser = currentUser;
-  try {
-    const {data} = await db.auth.getSession();
-    sessionUser = data.session?.user || currentUser || null;
-  } catch (_) {}
-
-  const meta = campaignMeta();
-  const now = new Date().toISOString();
-  const payload = {
-    user_id: sessionUser?.id || null,
-    first_name: firstName,
-    last_name: lastName,
-    phone,
-    email: email || null,
-    city,
-    lead_type: leadType,
-    vehicle_count: vehicleCount,
-    vehicle_info: vehicleInfo || null,
-    interest,
-    source: meta.source,
-    campaign: meta.campaign,
-    page: meta.page,
-    consent: true,
-    status: "submitted",
-    submitted_at: now,
-    created_at: now
-  };
-
-  submitting = true;
-  const button = $("submitLead"); button.disabled = true; button.innerHTML = '<span class="spinner"></span> Submitting…';
-  try {
-    await insertLead(payload);
-    $("leadForm").reset();
-    $("leadFormView").style.display = "none";
-    $("successView").style.display = "block";
-    $("successText").textContent = "Thank you, " + firstName + ". Your enquiry has been recorded. Cartrack follow-up depends on the agreed partner process and the information you supplied.";
-    icons();
-    if (sessionUser) await loadMyEnquiries();
-  } catch (error) {
-    console.error("Mobility enquiry insert failed:", error);
-    const msg = String(error?.message || "");
-    if (error?.code === "42501" || /row-level security|permission denied|not allowed/i.test(msg)) {
-      setFormError("The database rejected this enquiry because its insert permissions do not allow this submission. Check the cartrack_leads Row Level Security policy for the intended public or authenticated flow.");
-    } else {
-      setFormError("We could not save this enquiry. Check that cartrack_leads has the expected fields and that its Supabase insert policy permits this submission. " + (msg ? "Details: " + msg : ""));
-    }
-  } finally {
-    submitting = false; button.disabled = false; button.innerHTML = '<i data-lucide="send" width="15"></i> Submit enquiry'; icons();
-  }
-}
-function searchSolutions() {
-  const term = $("siteSearch").value.trim().toLowerCase();
-  if (!term) { $("needs").scrollIntoView({behavior:"smooth"}); return; }
-  const targets = [...document.querySelectorAll(".choice,.partner-card")];
-  let match = null;
-  for (const el of targets) {
-    if (el.textContent.toLowerCase().includes(term)) { match = el; break; }
-  }
-  if (match) { match.scrollIntoView({behavior:"smooth",block:"center"}); showToast("Showing a matching mobility pathway."); }
-  else { showToast("No exact match. Choose the closest mobility option or request help."); $("needs").scrollIntoView({behavior:"smooth"}); }
-}
-function openAccount() {
-  if (currentUser) {
-    const role = String(currentProfile.role || currentUser.user_metadata?.role || "").toLowerCase();
-    window.location.href = role === "business" ? "business-deals.html" : role === "provider" ? "provider.html" : "customer.html";
-  } else {
-    window.location.href = "auth.html?redirect=" + encodeURIComponent("mobility.html");
-  }
-}
-function wire() {
-  document.querySelectorAll("[data-open-enquiry]").forEach(el => el.addEventListener("click", event => { event.preventDefault(); openLeadModal(); }));
-  document.querySelectorAll("[data-type]").forEach(el => el.addEventListener("click", () => openLeadModal(el.dataset.type)));
-  $("fleetHeroBtn").addEventListener("click", () => openLeadModal("business_fleet"));
-  $("closeModal").addEventListener("click", closeLeadModal);
-  $("cancelModal").addEventListener("click", closeLeadModal);
-  $("doneBtn").addEventListener("click", () => { closeLeadModal(); showToast("Thank you for your enquiry."); });
-  $("leadModal").addEventListener("click", event => { if (event.target === $("leadModal")) closeLeadModal(); });
-  document.addEventListener("keydown", event => { if (event.key === "Escape" && $("leadModal").classList.contains("open")) closeLeadModal(); });
-  $("leadForm").addEventListener("submit", submitLead);
-  $("searchButton").addEventListener("click", searchSolutions);
-  $("siteSearch").addEventListener("keydown", event => { if (event.key === "Enter") searchSolutions(); });
-  $("accountButton").addEventListener("click", openAccount);
-  $("refreshActivity").addEventListener("click", async () => { await loadMyEnquiries(); showToast("Enquiry activity refreshed where available."); });
-}
-async function init() {
-  icons(); wire();
-  await initialiseSession();
-  if (!hasKey) {
-    showToast("Supabase key is still a placeholder. The page displays, but enquiries cannot be saved yet.", true);
-  }
-}
-document.addEventListener("DOMContentLoaded", init);
+async function init(){icons();wire();await initialiseSession();if(!hasKey)showToast("Add the Supabase public key before accepting live enquiries.",true);}
+document.addEventListener("DOMContentLoaded",init);
 })();
 </script>
 </body>
