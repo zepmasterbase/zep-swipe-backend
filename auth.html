@@ -1,1263 +1,418 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1,viewport-fit=cover">
-
-<title>Zep Swipe | Sign In</title>
-
-<link
-  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-  rel="stylesheet"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070707">
+<meta name="description" content="Create your Zep Swipe account and discover student opportunities, services, deals and mobility solutions.">
+<title>Zep Swipe | Sign In or Create Account</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root{
-  --bg:#030403;
-  --panel:#0d100c;
-  --card:#111510;
-  --line:#252a23;
-  --accent:#b8ff3b;
-  --accent2:#d9ff79;
-  --muted:#8e9588;
-  --danger:#ff7777;
-}
-
-*{
-  box-sizing:border-box;
-  font-family:Inter,sans-serif;
-}
-
-html,body{
-  margin:0;
-  min-height:100%;
-  background:var(--bg);
-  color:#fff;
-}
-
-body{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:18px;
-  overflow-x:hidden;
-}
-
-/* Ambient background */
-
-body:before{
-  content:"";
-  position:fixed;
-  width:620px;
-  height:620px;
-  top:-280px;
-  left:50%;
-  transform:translateX(-50%);
-  background:radial-gradient(
-    circle,
-    rgba(184,255,59,.18),
-    rgba(184,255,59,.05) 35%,
-    transparent 70%
-  );
-  pointer-events:none;
-}
-
-body:after{
-  content:"";
-  position:fixed;
-  width:400px;
-  height:400px;
-  bottom:-220px;
-  right:-150px;
-  background:radial-gradient(
-    circle,
-    rgba(184,255,59,.07),
-    transparent 70%
-  );
-  pointer-events:none;
-}
-
-.auth{
-  width:100%;
-  max-width:460px;
-  position:relative;
-  z-index:2;
-}
-
-/* =========================
-   BRAND
-========================= */
-
-.brand{
-  text-align:center;
-  margin-bottom:20px;
-}
-
-.logo-orb{
-  width:116px;
-  height:116px;
-  margin:0 auto 14px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  position:relative;
-
-  background:
-    radial-gradient(
-      circle at 35% 30%,
-      #253a16 0%,
-      #10170c 40%,
-      #050705 75%
-    );
-
-  border:1px solid rgba(184,255,59,.65);
-
-  box-shadow:
-    0 0 0 5px rgba(184,255,59,.035),
-    0 0 25px rgba(184,255,59,.25),
-    0 0 60px rgba(184,255,59,.15),
-    inset 0 0 28px rgba(184,255,59,.12);
-
-  animation:logoPulse 2.8s ease-in-out infinite;
-}
-
-.logo-orb:before,
-.logo-orb:after{
-  content:"";
-  position:absolute;
-  border-radius:50%;
-  border:1px solid rgba(184,255,59,.2);
-  animation:orbRing 3s ease-out infinite;
-}
-
-.logo-orb:before{
-  inset:-9px;
-}
-
-.logo-orb:after{
-  inset:-19px;
-  animation-delay:1.45s;
-}
-
-.logo-orb img{
-  width:76px;
-  height:76px;
-  object-fit:contain;
-  border-radius:50%;
-
-  filter:
-    drop-shadow(0 0 8px rgba(184,255,59,.5))
-    drop-shadow(0 0 18px rgba(184,255,59,.25));
-}
-
-@keyframes logoPulse{
-  0%,100%{
-    transform:scale(1);
-    box-shadow:
-      0 0 0 5px rgba(184,255,59,.035),
-      0 0 25px rgba(184,255,59,.25),
-      0 0 60px rgba(184,255,59,.15),
-      inset 0 0 28px rgba(184,255,59,.12);
-  }
-
-  50%{
-    transform:scale(1.035);
-    box-shadow:
-      0 0 0 8px rgba(184,255,59,.045),
-      0 0 45px rgba(184,255,59,.42),
-      0 0 95px rgba(184,255,59,.18),
-      inset 0 0 35px rgba(184,255,59,.18);
-  }
-}
-
-@keyframes orbRing{
-  0%{
-    transform:scale(.88);
-    opacity:.8;
-  }
-
-  100%{
-    transform:scale(1.18);
-    opacity:0;
-  }
-}
-
-.wordmark{
-  font-size:29px;
-  font-weight:900;
-  letter-spacing:-1.6px;
-}
-
-.wordmark span{
-  color:var(--accent);
-}
-
-.tagline{
-  margin-top:5px;
-  color:#687064;
-  font-size:9px;
-  letter-spacing:2.6px;
-  text-transform:uppercase;
-}
-
-/* =========================
-   MAIN PANEL
-========================= */
-
-.panel{
-  background:
-    linear-gradient(
-      145deg,
-      rgba(18,22,17,.97),
-      rgba(7,9,7,.98)
-    );
-
-  border:1px solid var(--line);
-  border-radius:28px;
-  padding:23px;
-
-  box-shadow:
-    0 30px 100px rgba(0,0,0,.6),
-    inset 0 1px rgba(255,255,255,.035);
-
-  backdrop-filter:blur(20px);
-}
-
-/* =========================
-   SESSION LOADING
-========================= */
-
-.session-loading{
-  display:none;
-  text-align:center;
-  padding:20px;
-  color:#9ba393;
-  font-size:11px;
-}
-
-.session-loading.show{
-  display:block;
-}
-
-.session-spinner{
-  width:26px;
-  height:26px;
-  margin:0 auto 10px;
-
-  border:3px solid #30352d;
-  border-top-color:var(--accent);
-  border-radius:50%;
-
-  animation:spin .7s linear infinite;
-}
-
-@keyframes spin{
-  to{
-    transform:rotate(360deg);
-  }
-}
-
-/* =========================
-   STATUS
-========================= */
-
-.status{
-  display:flex;
-  align-items:center;
-  gap:9px;
-
-  padding:10px 12px;
-
-  border-radius:13px;
-
-  background:rgba(184,255,59,.045);
-  border:1px solid rgba(184,255,59,.14);
-
-  color:#aeb8a5;
-  font-size:9px;
-
-  margin-bottom:20px;
-}
-
-.status-dot{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-
-  background:var(--accent);
-
-  box-shadow:
-    0 0 8px var(--accent),
-    0 0 15px rgba(184,255,59,.6);
-
-  animation:dotPulse 1.8s infinite;
-}
-
-@keyframes dotPulse{
-  50%{
-    transform:scale(1.35);
-    box-shadow:0 0 15px var(--accent);
-  }
-}
-
-h1{
-  font-size:27px;
-  letter-spacing:-1.5px;
-  margin:0 0 7px;
-}
-
-.intro{
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.6;
-  margin:0 0 20px;
-}
-
-/* =========================
-   ROLE SELECTOR
-========================= */
-
-.role-heading{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  margin-bottom:9px;
-
-  color:#aeb5a8;
-  font-size:9px;
-  font-weight:800;
-
-  letter-spacing:1px;
-  text-transform:uppercase;
-}
-
-.selected{
-  color:var(--accent);
-  font-size:8px;
-  text-transform:none;
-  letter-spacing:0;
-}
-
-.roles{
-  display:grid;
-  gap:9px;
-  margin-bottom:18px;
-}
-
-.role{
-  width:100%;
-  min-height:68px;
-
-  position:relative;
-
-  padding:13px 45px 13px 15px;
-
-  border-radius:16px;
-
-  border:1px solid var(--line);
-
-  background:
-    linear-gradient(
-      145deg,
-      #111510,
-      #090b09
-    );
-
-  color:#fff;
-
-  cursor:pointer;
-  text-align:left;
-
-  transition:
-    transform .18s,
-    border-color .18s,
-    background .18s,
-    box-shadow .18s;
-
-  appearance:none;
-}
-
-.role:hover{
-  transform:translateY(-1px);
-  border-color:#3b4435;
-}
-
-.role:active{
-  transform:scale(.985);
-}
-
-.role.active{
-  border-color:var(--accent);
-
-  background:
-    linear-gradient(
-      145deg,
-      #1b270e,
-      #0c1109
-    );
-
-  box-shadow:
-    0 0 0 1px rgba(184,255,59,.08),
-    0 0 28px rgba(184,255,59,.08);
-}
-
-.role strong{
-  display:block;
-  font-size:12px;
-}
-
-.role small{
-  display:block;
-  color:#858c80;
-  margin-top:5px;
-  font-size:9.5px;
-  line-height:1.35;
-}
-
-.tick{
-  position:absolute;
-
-  right:13px;
-  top:50%;
-
-  transform:translateY(-50%);
-
-  width:21px;
-  height:21px;
-
-  border-radius:50%;
-
-  border:1px solid #3b4138;
-
-  display:grid;
-  place-items:center;
-
-  color:transparent;
-  font-size:11px;
-  font-weight:900;
-}
-
-.role.active .tick{
-  background:var(--accent);
-  border-color:var(--accent);
-  color:#050505;
-
-  box-shadow:
-    0 0 15px rgba(184,255,59,.45);
-}
-
-/* =========================
-   INPUTS
-========================= */
-
-.field{
-  margin-top:11px;
-}
-
-label{
-  display:block;
-
-  color:#969d91;
-
-  font-size:9px;
-  font-weight:600;
-
-  letter-spacing:.8px;
-
-  margin:0 0 6px 2px;
-}
-
-.input-wrap{
-  position:relative;
-}
-
-input{
-  width:100%;
-
-  padding:14px;
-
-  border-radius:13px;
-
-  border:1px solid var(--line);
-
-  background:#080a08;
-
-  color:#fff;
-
-  outline:none;
-
-  font-size:12px;
-
-  transition:
-    border-color .2s,
-    box-shadow .2s;
-}
-
-input::placeholder{
-  color:#4e554b;
-}
-
-input:focus{
-  border-color:rgba(184,255,59,.6);
-
-  box-shadow:
-    0 0 0 3px rgba(184,255,59,.05),
-    0 0 20px rgba(184,255,59,.04);
-}
-
-/* Password eye */
-
-.eye{
-  position:absolute;
-
-  right:6px;
-  top:6px;
-
-  width:38px;
-  height:38px;
-
-  border:0;
-
-  background:transparent;
-
-  color:#777;
-
-  cursor:pointer;
-
-  border-radius:10px;
-}
-
-/* =========================
-   BUTTONS
-========================= */
-
-button{
-  font-family:inherit;
-}
-
-.primary,
-.secondary{
-  width:100%;
-
-  padding:14px;
-
-  border-radius:14px;
-
-  font-weight:900;
-
-  cursor:pointer;
-
-  margin-top:12px;
-
-  transition:
-    transform .18s,
-    box-shadow .2s,
-    background .2s;
-}
-
-.primary{
-  border:0;
-
-  background:
-    linear-gradient(
-      135deg,
-      var(--accent2),
-      var(--accent) 55%,
-      #8dff27
-    );
-
-  color:#050505;
-
-  box-shadow:
-    0 10px 30px rgba(184,255,59,.13);
-}
-
-.primary:hover{
-  transform:translateY(-1px);
-
-  box-shadow:
-    0 15px 40px rgba(184,255,59,.25);
-}
-
-.primary:active{
-  transform:scale(.985);
-}
-
-.secondary{
-  border:1px solid rgba(184,255,59,.5);
-
-  background:
-    rgba(184,255,59,.025);
-
-  color:var(--accent);
-}
-
-.secondary:hover{
-  background:rgba(184,255,59,.07);
-  border-color:var(--accent);
-}
-
-.secondary:active{
-  transform:scale(.985);
-}
-
-/* =========================
-   MESSAGE
-========================= */
-
-#msg{
-  min-height:20px;
-
-  text-align:center;
-
-  margin-top:12px;
-
-  color:var(--accent);
-
-  font-size:10.5px;
-
-  line-height:1.45;
-}
-
-#msg.error{
-  color:var(--danger);
-}
-
-/* =========================
-   FOOTER
-========================= */
-
-.footer{
-  text-align:center;
-
-  margin-top:18px;
-
-  color:#5f665d;
-
-  font-size:9px;
-
-  line-height:1.5;
-}
-
-.secure{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-
-  color:#697167;
-}
-
-/* Mobile */
-
-@media(max-width:420px){
-
-  body{
-    padding:13px;
-  }
-
-  .panel{
-    padding:18px;
-    border-radius:24px;
-  }
-
-  .logo-orb{
-    width:96px;
-    height:96px;
-  }
-
-  .logo-orb img{
-    width:65px;
-    height:65px;
-  }
-
-  h1{
-    font-size:24px;
-  }
-
-  .wordmark{
-    font-size:26px;
-  }
-}
+:root{--bg:#070707;--panel:#111310;--line:#292d26;--accent:#b8ff3b;--accent2:#dcff8c;--text:#f7f9f4;--muted:#969d90;--danger:#ff7777;--success:#c8ff73}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg)}
+body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 50% -15%,rgba(184,255,59,.11),transparent 42%),var(--bg);display:flex;align-items:center;justify-content:center;padding:24px 16px}
+button,input{font:inherit}
+button{cursor:pointer}
+.shell{width:100%;max-width:470px;position:relative}
+.topbar{display:flex;justify-content:center;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
+.brand img{width:48px;height:48px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 13px rgba(184,255,59,.22))}
+.brand-name{font-size:24px;font-weight:900;letter-spacing:-1.3px;line-height:1}
+.brand-name span{color:var(--accent)}
+.brand-tag{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#818a79;margin-top:6px}
+.card{background:linear-gradient(155deg,rgba(20,23,18,.98),rgba(10,11,9,.99));border:1px solid var(--line);border-radius:26px;padding:25px;box-shadow:0 28px 90px rgba(0,0,0,.45),inset 0 1px rgba(255,255,255,.025)}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(184,255,59,.19);background:rgba(184,255,59,.055);border-radius:999px;padding:7px 10px;color:var(--accent2);font-size:9px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase}
+.pip{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+h1{font-size:30px;line-height:1.12;letter-spacing:-1.4px;margin:15px 0 9px;font-weight:900}
+.lede{color:var(--muted);font-size:12px;line-height:1.7;margin:0 0 20px}
+.mode-tabs{display:grid;grid-template-columns:1fr 1fr;padding:4px;gap:4px;background:#080908;border:1px solid #23261f;border-radius:14px;margin-bottom:20px}
+.mode-tabs button{border:0;border-radius:10px;padding:11px 8px;color:#8f9689;background:transparent;font-size:11px;font-weight:800}
+.mode-tabs button.active{background:var(--accent);color:#080a05}
+.field-label{display:block;color:#d5dacd;font-size:10px;font-weight:700;margin:14px 0 7px}
+.field{width:100%;border:1px solid #30352c;border-radius:12px;background:#090a08;color:#fff;padding:13px 14px;outline:none;font-size:13px;min-height:46px}
+.field::placeholder{color:#62695d}
+.field:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(184,255,59,.08)}
+.password-wrap{position:relative}
+.password-wrap .field{padding-right:76px}
+.show-password{position:absolute;right:8px;top:7px;border:0;background:transparent;color:var(--accent);font-size:10px;font-weight:800;padding:8px}
+.roles{display:grid;gap:8px}
+.role-option{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid #292d25;border-radius:13px;background:#0b0c0a;cursor:pointer;transition:border-color .15s,background .15s}
+.role-option.selected{border-color:rgba(184,255,59,.8);background:rgba(184,255,59,.055)}
+.role-option input{accent-color:var(--accent);width:15px;height:15px;margin:0;flex:0 0 auto}
+.role-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#171b13;font-size:16px;flex:0 0 auto}
+.role-copy{flex:1;min-width:0}
+.role-title{font-size:11px;font-weight:800}
+.role-desc{font-size:9px;color:var(--muted);line-height:1.5;margin-top:3px}
+.primary{width:100%;min-height:48px;border:0;border-radius:13px;margin-top:20px;padding:13px;background:linear-gradient(135deg,var(--accent2),var(--accent) 60%,#96ed2d);color:#080a05;font-size:12px;font-weight:900;box-shadow:0 9px 26px rgba(184,255,59,.11);transition:transform .15s,opacity .15s}
+.primary:hover{transform:translateY(-1px)}
+.primary:disabled{cursor:wait;opacity:.6;transform:none}
+.forgot{display:block;text-align:right;color:var(--accent);font-size:10px;text-decoration:none;margin-top:10px}
+.forgot:hover{text-decoration:underline}
+.message{display:none;margin-top:15px;padding:12px 13px;border:1px solid #34392e;border-radius:12px;background:#0a0b09;color:#dbe2d2;font-size:11px;line-height:1.65;overflow-wrap:anywhere}
+.message.show{display:block}
+.message.success{border-color:rgba(184,255,59,.25);color:var(--success)}
+.message.error{border-color:rgba(255,119,119,.3);color:var(--danger)}
+.trust{display:flex;justify-content:center;gap:13px;flex-wrap:wrap;margin-top:17px;color:#727a6b;font-size:9px}
+.trust span{display:flex;align-items:center;gap:5px}
+.foot{color:#61685b;font-size:9px;line-height:1.7;text-align:center;margin:18px 8px 0}
+#signupFields{display:none}
+#signupFields.show{display:block}
+#loginFields.hide{display:none}
+.back-home{display:block;text-align:center;margin-top:15px;color:#899181;text-decoration:none;font-size:10px}
+.back-home:hover{color:var(--accent)}
+@media(max-width:420px){body{padding:18px 12px}.card{padding:21px 17px;border-radius:22px}h1{font-size:27px}.brand-name{font-size:22px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
-
 <body>
-
-<div class="auth">
-
-  <!-- BRAND -->
-
-  <div class="brand">
-
-    <div class="logo-orb">
-      <img
-        src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
-        alt="Zep Swipe Logo"
-      >
-    </div>
-
-    <div class="wordmark">
-      ZEP <span>SWIPE</span>
-    </div>
-
-    <div class="tagline">
-      The Student Economy
-    </div>
-
+<main class="shell">
+  <div class="topbar">
+    <a class="brand" href="marketplace.html" aria-label="Zep Swipe home">
+      <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
+      <div>
+        <div class="brand-name">ZEP <span>SWIPE</span></div>
+        <div class="brand-tag">The Student Economy</div>
+      </div>
+    </a>
   </div>
 
-  <!-- PANEL -->
+  <section class="card" aria-labelledby="pageTitle">
+    <div class="eyebrow"><span class="pip"></span> Discover · Earn · Connect · Build</div>
+    <h1 id="pageTitle">Your next opportunity starts here.</h1>
+    <p class="lede" id="pageDescription">Sign in to explore student services, exclusive deals, opportunities and mobility solutions.</p>
 
-  <div class="panel">
-
-    <!-- Persistent session loading -->
-
-    <div id="sessionLoading" class="session-loading">
-
-      <div class="session-spinner"></div>
-
-      <strong>Welcome back</strong>
-
-      <div>Opening your Zep Swipe dashboard...</div>
-
+    <div class="mode-tabs" role="tablist" aria-label="Account action">
+      <button id="loginTab" class="active" type="button" role="tab" aria-selected="true">Sign in</button>
+      <button id="signupTab" type="button" role="tab" aria-selected="false">Create account</button>
     </div>
 
-    <div class="status">
+    <form id="authForm" novalidate>
+      <div id="signupFields">
+        <label class="field-label" for="fullName">Full name</label>
+        <input class="field" id="fullName" name="fullName" type="text" autocomplete="name" maxlength="100" placeholder="Your first and last name">
 
-      <span class="status-dot"></span>
-
-      <span>Secure Zep Swipe account gateway</span>
-
-    </div>
-
-    <h1>
-      Welcome to Zep Swipe.
-    </h1>
-
-    <p class="intro">
-      Choose how you'll use Zep Swipe. Create an account or sign in below.
-    </p>
-
-    <!-- ROLE -->
-
-    <div class="role-heading">
-
-      <span>Choose account type</span>
-
-      <span class="selected" id="selectedLabel">
-        Customer selected
-      </span>
-
-    </div>
-
-    <div class="roles">
-
-      <button
-        type="button"
-        class="role active"
-        data-role="customer"
-      >
-        <strong>👤 Customer</strong>
-
-        <small>
-          Book trusted student services & redeem deals
-        </small>
-
-        <span class="tick">✓</span>
-      </button>
-
-      <button
-        type="button"
-        class="role"
-        data-role="provider"
-      >
-        <strong>💼 Student Provider</strong>
-
-        <small>
-          Offer your skills, complete services & earn
-        </small>
-
-        <span class="tick">✓</span>
-      </button>
-
-      <button
-        type="button"
-        class="role"
-        data-role="business"
-      >
-        <strong>🏪 Business</strong>
-
-        <small>
-          Reach students through deals & opportunities
-        </small>
-
-        <span class="tick">✓</span>
-      </button>
-
-    </div>
-
-    <!-- EMAIL -->
-
-    <div class="field">
-
-      <label for="email">
-        EMAIL
-      </label>
-
-      <input
-        id="email"
-        type="email"
-        autocomplete="email"
-        placeholder="you@example.com"
-      >
-
-    </div>
-
-    <!-- PASSWORD -->
-
-    <div class="field">
-
-      <label for="password">
-        PASSWORD
-      </label>
-
-      <div class="input-wrap">
-
-        <input
-          id="password"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Enter your password"
-        >
-
-        <button
-          type="button"
-          class="eye"
-          onclick="togglePassword()"
-          aria-label="Show password"
-        >
-          ◉
-        </button>
-
+        <div class="field-label">Choose your account type</div>
+        <div class="roles">
+          <label class="role-option selected">
+            <input type="radio" name="role" value="customer" checked>
+            <span class="role-icon" aria-hidden="true">👤</span>
+            <span class="role-copy"><span class="role-title">Customer / Student</span><span class="role-desc">Discover deals, services and opportunities.</span></span>
+          </label>
+          <label class="role-option">
+            <input type="radio" name="role" value="provider">
+            <span class="role-icon" aria-hidden="true">🛠️</span>
+            <span class="role-copy"><span class="role-title">Student Provider</span><span class="role-desc">Showcase your skills and offer services.</span></span>
+          </label>
+          <label class="role-option">
+            <input type="radio" name="role" value="business">
+            <span class="role-icon" aria-hidden="true">🏪</span>
+            <span class="role-copy"><span class="role-title">Business</span><span class="role-desc">Connect with students and promote your offers.</span></span>
+          </label>
+        </div>
       </div>
 
+      <label class="field-label" for="email">Email address</label>
+      <input class="field" id="email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com">
+
+      <label class="field-label" for="password">Password</label>
+      <div class="password-wrap">
+        <input class="field" id="password" name="password" type="password" autocomplete="current-password" required minlength="8" placeholder="At least 8 characters">
+        <button class="show-password" id="togglePassword" type="button">Show</button>
+      </div>
+
+      <div id="loginFields">
+        <a class="forgot" href="#" id="forgotLink">Forgot password?</a>
+      </div>
+
+      <button class="primary" id="submitBtn" type="submit">SIGN IN →</button>
+    </form>
+
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+
+    <div class="trust">
+      <span>🔒 Secure sign-in</span>
+      <span>⚡ Africa-first opportunities</span>
     </div>
+  </section>
 
-    <!-- ACTIONS -->
-
-    <button
-      class="primary"
-      type="button"
-      onclick="signup()"
-    >
-      CREATE ACCOUNT →
-    </button>
-
-    <button
-      class="secondary"
-      type="button"
-      onclick="login()"
-    >
-      SIGN IN
-    </button>
-
-    <div id="msg"></div>
-
-    <div class="footer">
-
-      <span class="secure">
-        🛡 Secure authentication
-      </span>
-
-      <br>
-
-      Your Zep Swipe account keeps your session active
-      until you sign out.
-
-    </div>
-
-  </div>
-
-</div>
+  <a class="back-home" href="marketplace.html">← Back to Zep Swipe</a>
+  <div class="foot">By creating an account, you agree to use Zep Swipe responsibly. Your account type helps us personalise your experience. Keep your password private.</div>
+</main>
 
 <script>
+// Use your Supabase project's PUBLIC anon/publishable key only.
+// Never put a service-role key in a browser file.
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-/* =========================
-   SUPABASE
-========================= */
-
-const SUPABASE_URL="https://qhwjtdsbkjfdgwevemiv.supabase.co";
-
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
-
-const db=supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
-
-const redirectUrl="https://zepmasterbase.github.io/zep-swipe-backend/verify.html";
-
-
-/* =========================
-   ROLE
-========================= */
-
-let role="customer";
-
-const roleNames={
-  customer:"Customer selected",
-  provider:"Student Provider selected",
-  business:"Business selected"
-};
-
-document.querySelectorAll(".role").forEach(el=>{
-
-  el.onclick=()=>{
-
-    document
-      .querySelectorAll(".role")
-      .forEach(x=>x.classList.remove("active"));
-
-    el.classList.add("active");
-
-    role=el.dataset.role;
-
-    document.getElementById("selectedLabel").textContent=
-      roleNames[role];
-
-  };
-
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
 });
 
+const $ = id => document.getElementById(id);
+let mode = "login";
+let busy = false;
 
-/* =========================
-   MESSAGE
-========================= */
-
-function msg(text,isError=false){
-
-  const element=document.getElementById("msg");
-
-  element.textContent=text;
-
-  element.classList.toggle("error",isError);
-
+function getReturnPage() {
+  const params = new URLSearchParams(window.location.search);
+  const requested = params.get("redirect") || "";
+  if (requested === "mobility.html" || requested.endsWith("/mobility.html")) return "mobility.html";
+  if (requested === "marketplace.html" || requested.endsWith("/marketplace.html")) return "marketplace.html";
+  return "marketplace.html";
 }
 
-
-/* =========================
-   PASSWORD
-========================= */
-
-function togglePassword(){
-
-  const input=
-    document.getElementById("password");
-
-  input.type=
-    input.type==="password"
-      ?"text"
-      :"password";
-
+function setMessage(text, type = "") {
+  const el = $("message");
+  el.textContent = text;
+  el.className = "message show" + (type ? " " + type : "");
 }
 
+function clearMessage() {
+  $("message").textContent = "";
+  $("message").className = "message";
+}
 
-/* =========================
-   SIGNUP
-========================= */
+function setMode(nextMode) {
+  mode = nextMode;
+  const signup = mode === "signup";
+  $("loginTab").classList.toggle("active", !signup);
+  $("signupTab").classList.toggle("active", signup);
+  $("loginTab").setAttribute("aria-selected", String(!signup));
+  $("signupTab").setAttribute("aria-selected", String(signup));
+  $("signupFields").classList.toggle("show", signup);
+  $("loginFields").classList.toggle("hide", signup);
+  $("pageTitle").textContent = signup ? "Join the student economy." : "Your next opportunity starts here.";
+  $("pageDescription").textContent = signup
+    ? "Create your free account and start discovering services, deals, opportunities and mobility solutions."
+    : "Sign in to explore student services, exclusive deals, opportunities and mobility solutions.";
+  $("submitBtn").textContent = signup ? "CREATE MY ACCOUNT →" : "SIGN IN →";
+  $("password").setAttribute("autocomplete", signup ? "new-password" : "current-password");
+  clearMessage();
+}
 
-async function signup(){
+function updateRoleStyles() {
+  document.querySelectorAll(".role-option").forEach(label => {
+    const radio = label.querySelector('input[name="role"]');
+    label.classList.toggle("selected", radio.checked);
+  });
+}
 
-  const email=emailEl().value.trim();
-  const password=passEl().value;
+document.querySelectorAll('input[name="role"]').forEach(radio => radio.addEventListener("change", updateRoleStyles));
+$("loginTab").addEventListener("click", () => setMode("login"));
+$("signupTab").addEventListener("click", () => setMode("signup"));
+$("togglePassword").addEventListener("click", () => {
+  const input = $("password");
+  const visible = input.type === "password";
+  input.type = visible ? "text" : "password";
+  $("togglePassword").textContent = visible ? "Hide" : "Show";
+});
 
-  if(!email || !password){
-    msg("Enter your email and password.",true);
+function setBusy(value, label) {
+  busy = value;
+  $("submitBtn").disabled = value;
+  $("submitBtn").textContent = label || (mode === "signup" ? "CREATE MY ACCOUNT →" : "SIGN IN →");
+}
+
+async function roleForUser(user) {
+  try {
+    const { data, error } = await db.from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+    if (!error && data && ["customer", "provider", "business"].includes(data.role)) {
+      return data.role;
+    }
+  } catch (e) {
+    console.warn("Profile role lookup failed:", e);
+  }
+  const metaRole = user.user_metadata?.role;
+  return ["customer", "provider", "business"].includes(metaRole) ? metaRole : "customer";
+}
+
+async function goToApp(user) {
+  // Retrieve the saved role for future role-aware functionality.
+  const role = await roleForUser(user);
+  console.info("Signed-in account role:", role);
+
+  // Only marketplace.html and mobility.html currently exist as destinations.
+  // Dedicated customer/provider/business dashboard files are not configured.
+  if (getReturnPage() === "mobility.html") {
+    window.location.replace("mobility.html");
+  } else {
+    window.location.replace("marketplace.html");
+  }
+}
+
+async function signup() {
+  const fullName = $("fullName").value.trim();
+  const email = $("email").value.trim().toLowerCase();
+  const password = $("password").value;
+  const selectedRole = document.querySelector('input[name="role"]:checked')?.value || "customer";
+
+  if (fullName.length < 2) {
+    setMessage("Please enter your full name.", "error");
+    $("fullName").focus();
+    return;
+  }
+  if (!email || !$("email").checkValidity()) {
+    setMessage("Please enter a valid email address.", "error");
+    $("email").focus();
+    return;
+  }
+  if (password.length < 8) {
+    setMessage("Your password must contain at least 8 characters.", "error");
+    $("password").focus();
     return;
   }
 
-  msg("Creating account...");
+  setBusy(true, "CREATING ACCOUNT...");
+  try {
+    const currentUrl = new URL(window.location.href);
+    const callback = new URL(currentUrl.pathname, window.location.origin);
+    callback.searchParams.set("verified", "1");
+    callback.searchParams.set("redirect", getReturnPage());
 
-  try{
-    const {data,error}=await db.auth.signUp({
+    const { data, error } = await db.auth.signUp({
       email,
       password,
-      options:{
-        emailRedirectTo:redirectUrl,
-        data:{ role:role }
+      options: {
+        emailRedirectTo: callback.toString(),
+        data: {
+          full_name: fullName,
+          name: fullName,
+          role: selectedRole
+        }
       }
     });
 
-    if(error){
-      msg(error.message,true);
+    if (error) throw error;
+
+    if (data.session && data.user) {
+      setMessage("Account created. Opening Zep Swipe...", "success");
+      await goToApp(data.user);
       return;
     }
 
-    if(data.user && data.session){
-      msg("Account created. Opening your dashboard...");
-      redirect(role);
-    }else{
-      msg("Account created. Verify your email, then sign in.");
-    }
-
-  }catch(error){
-    console.error("Signup error:",error);
-    msg("Something went wrong while creating your account.",true);
+    setMessage(
+      "Your account has been created. Check your inbox for the Zep Swipe verification email, then open the verification link. After verification, sign in if prompted. We saved your selected account type as " + selectedRole + ".",
+      "success"
+    );
+  } catch (error) {
+    console.error("Sign-up error:", error);
+    setMessage(error.message || "We couldn't create your account. Please try again.", "error");
+  } finally {
+    setBusy(false);
   }
-
 }
 
-/* =========================
-   LOGIN
-========================= */
+async function login() {
+  const email = $("email").value.trim().toLowerCase();
+  const password = $("password").value;
 
-async function login(){
-
-  const email=
-    emailEl().value.trim();
-
-  const password=
-    passEl().value;
-
-  if(!email || !password){
-
-    msg(
-      "Enter your email and password.",
-      true
-    );
-
+  if (!email || !$("email").checkValidity()) {
+    setMessage("Please enter a valid email address.", "error");
+    $("email").focus();
+    return;
+  }
+  if (!password) {
+    setMessage("Enter your password to sign in.", "error");
+    $("password").focus();
     return;
   }
 
-  msg("Signing in...");
+  setBusy(true, "SIGNING IN...");
+  try {
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    if (!data.user) throw new Error("Sign-in succeeded, but the user session was not returned. Please try again.");
+    setMessage("Signed in successfully. Opening Zep Swipe...", "success");
+    await goToApp(data.user);
+  } catch (error) {
+    console.error("Sign-in error:", error);
+    setMessage(error.message || "Unable to sign in. Check your details and try again.", "error");
+  } finally {
+    setBusy(false);
+  }
+}
 
-  try{
+async function resetPassword() {
+  const email = $("email").value.trim().toLowerCase();
+  if (!email || !$("email").checkValidity()) {
+    setMessage("Enter your email address first, then select Forgot password again.", "error");
+    $("email").focus();
+    return;
+  }
+  try {
+    setBusy(true, "SENDING RESET EMAIL...");
+    const resetUrl = new URL("auth.html", window.location.origin).toString();
+    const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: resetUrl });
+    if (error) throw error;
+    setMessage("If an account exists for that email, a password reset link has been sent. Check your inbox.", "success");
+  } catch (error) {
+    console.error("Password reset error:", error);
+    setMessage(error.message || "Couldn't send the reset email. Please try again.", "error");
+  } finally {
+    setBusy(false);
+  }
+}
 
-    const {data,error} =
-      await db.auth.signInWithPassword({
+$("forgotLink").addEventListener("click", event => {
+  event.preventDefault();
+  resetPassword();
+});
 
-        email,
-        password
+$("authForm").addEventListener("submit", event => {
+  event.preventDefault();
+  if (busy) return;
+  if (mode === "signup") signup();
+  else login();
+});
 
-      });
+async function init() {
+  updateRoleStyles();
+  const params = new URLSearchParams(window.location.search);
+  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+  const urlError = params.get("error_description") || hash.get("error_description") || params.get("error");
 
-    if(error){
-
-      msg(error.message,true);
-
-      return;
-    }
-
-    const {
-      data:profile,
-      error:profileError
-    } =
-      await db
-        .from("profiles")
-        .select("role")
-        .eq("id",data.user.id)
-        .maybeSingle();
-
-    if(profileError){
-
-      console.error(
-        "Profile lookup error:",
-        profileError
-      );
-
-      msg(
-        "Your account is active, but your profile could not be loaded.",
-        true
-      );
-
-      return;
-    }
-
-    if(!profile?.role){
-
-      msg(
-        "Your account is active, but no account role was found.",
-        true
-      );
-
-      return;
-    }
-
-    msg(
-      "Welcome back. Opening your dashboard..."
-    );
-
-    redirect(profile.role);
-
-  }catch(error){
-
-    console.error(error);
-
-    msg(
-      "Something went wrong while signing in.",
-      true
-    );
-
+  if (urlError) {
+    setMessage("Verification link issue: " + urlError.replace(/\+/g, " ") + ". You can try signing in or request another verification email.", "error");
+    setMode("login");
+    return;
   }
 
-}
+  try {
+    const { data, error } = await db.auth.getSession();
+    if (error) throw error;
 
+    const session = data.session;
+    const isCallback = params.has("code") || params.get("verified") === "1" || hash.has("access_token") || hash.has("type");
 
-/* =========================
-   PERSISTENT SESSION
-========================= */
-
-async function checkExistingSession(){
-
-  const loading=
-    document.getElementById("sessionLoading");
-
-  try{
-
-    const {
-      data,
-      error
-    } =
-      await db.auth.getSession();
-
-    if(error){
-
-      console.error(
-        "Session check error:",
-        error
-      );
-
+    if (session && isCallback) {
+      setMessage("Email verified. Preparing your Zep Swipe experience...", "success");
+      await goToApp(session.user);
       return;
     }
 
-    /*
-      No active session.
-      Keep showing the normal auth page.
-    */
-
-    if(!data.session){
-
-      return;
+    if (params.get("verified") === "1" && !session) {
+      setMessage("Your email link has opened. If verification is complete, sign in below to continue to your account.", "success");
+      setMode("login");
     }
-
-    /*
-      Existing session found.
-      Show the loading state before redirect.
-    */
-
-    loading.classList.add("show");
-
-    const user=
-      data.session.user;
-
-    const {
-      data:profile,
-      error:profileError
-    } =
-      await db
-        .from("profiles")
-        .select("role")
-        .eq("id",user.id)
-        .maybeSingle();
-
-    if(profileError){
-
-      console.error(
-        "Persistent profile lookup error:",
-        profileError
-      );
-
-      loading.classList.remove("show");
-
-      return;
-    }
-
-    if(!profile?.role){
-
-      loading.classList.remove("show");
-
-      msg(
-        "Your account is active, but no account role was found.",
-        true
-      );
-
-      return;
-    }
-
-    redirect(profile.role);
-
-  }catch(error){
-
-    console.error(
-      "Persistent session error:",
-      error
-    );
-
-    loading.classList.remove("show");
-
+  } catch (error) {
+    console.error("Auth initialization error:", error);
+    setMessage("We couldn't check your current session. Please sign in below.", "error");
   }
-
 }
 
-
-/* =========================
-   REDIRECT
-========================= */
-
-function redirect(r){
-
-  if(r==="customer"){
-
-    location.replace("customer.html");
-
-  }else if(r==="provider"){
-
-    location.replace("provider.html");
-
-  }else if(r==="business"){
-
-    location.replace("business-deals.html");
-
-  }else{
-
-    msg(
-      "Your account role is not recognized.",
-      true
-    );
-
-  }
-
-}
-
-
-/* =========================
-   HELPERS
-========================= */
-
-function emailEl(){
-
-  return document.getElementById("email");
-
-}
-
-function passEl(){
-
-  return document.getElementById("password");
-
-}
-
-
-/* =========================
-   START PERSISTENCE CHECK
-========================= */
-
-checkExistingSession();
-
+init();
 </script>
-
 </body>
 </html>
