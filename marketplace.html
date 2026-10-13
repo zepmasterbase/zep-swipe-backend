@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,9 +31,13 @@ button:focus-visible,a:focus-visible,input:focus-visible{
 .container{width:min(1160px,100%);margin:auto;padding:18px 18px 110px}
 .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
 .brand{display:flex;align-items:center;gap:9px;flex:none}
-.brand-mark{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;
-background:var(--green);color:#081006;font-weight:900;font-size:25px;font-style:italic;
-box-shadow:0 0 25px #b8ff3b25}
+.brand-mark{
+  width:43px;height:43px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 30%,#253a16,#10170c 60%,#050705 100%);
+  border:1px solid #b8ff3b88;padding:4px;overflow:hidden;
+  box-shadow:0 0 25px #b8ff3b25;flex:none
+}
+.brand-mark img{display:block;width:100%;height:100%;object-fit:contain;border-radius:50%}
 .brand-name{font-weight:900;font-size:17px;letter-spacing:-.7px}
 .brand-name span{color:var(--green)}
 .header-right{display:flex;align-items:center;gap:9px}
@@ -58,11 +63,12 @@ border:1px solid #ffffff30;border-radius:30px;background:#0c100cdb;backdrop-filt
 .section-head h2{font-size:17px;letter-spacing:-.4px;margin:0;font-weight:800}
 .section-head p{font-size:11px;line-height:1.5;color:var(--muted);margin:6px 0 0}
 .text-btn{border:0;background:none;color:white;font-size:11px;font-weight:700;white-space:nowrap}
+
 .hero{position:relative;isolation:isolate;overflow:hidden;min-height:490px;
 display:flex;align-items:center;border:1px solid #b8ff3b58;border-radius:27px;
 background:#0a0d08;box-shadow:0 25px 80px #0009}
 .hero:before{content:"";position:absolute;inset:0;z-index:-2;
-background:url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=2200&q=85") center 45%/cover;
+background:url("https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=2200&q=85") center 45%/cover;
 animation:cinematic 24s ease-in-out infinite alternate}
 .hero:after{content:"";position:absolute;inset:0;z-index:-1;
 background:linear-gradient(90deg,#030603f5 0%,#030603dc 38%,#03060375 72%,#03060335),
@@ -91,6 +97,7 @@ font-size:12px;font-weight:800;transition:transform .2s}
 .pill{font-size:9px;color:#e0e8da;padding:8px 10px;border:1px solid #ffffff25;
 border-radius:25px;background:#ffffff0b;display:flex;align-items:center;gap:6px}
 .pill svg{color:var(--green)}
+
 .categories{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:2px 1px 8px}
 .categories::-webkit-scrollbar{display:none}
 .cat{min-width:100px;height:92px;border:1px solid var(--line);border-radius:18px;
@@ -100,6 +107,7 @@ text-align:left;flex:none}
 .cat svg{color:var(--green);width:21px;height:21px}
 .cat span{font-size:11px;font-weight:800}
 .cat.active{border-color:var(--green);box-shadow:0 0 20px #b8ff3b15}
+
 .path-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
 .path-card{padding:16px;border:1px solid var(--line);border-radius:18px;
 background:linear-gradient(145deg,#131710,#0a0d09);min-height:158px;
@@ -111,6 +119,7 @@ display:grid;place-items:center;color:var(--green)}
 .path-card strong{font-size:12px;margin:12px 0 6px}
 .path-card p{font-size:10px;line-height:1.5;color:var(--muted);margin:0}
 .path-cta{font-size:10px;color:var(--green);font-weight:800;margin-top:auto;padding-top:12px}
+
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .stat{display:flex;align-items:center;gap:10px;padding:14px;
 border:1px solid var(--line);border-radius:16px;background:#10140f}
@@ -118,6 +127,7 @@ border:1px solid var(--line);border-radius:16px;background:#10140f}
 display:grid;place-items:center;color:var(--green);flex:none}
 .stat b{display:block;font-size:20px}
 .stat small{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+
 .list-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .listing{width:100%;min-width:0;display:flex;align-items:center;gap:12px;
 padding:10px;border:1px solid var(--line);border-radius:17px;background:#0e120d;
@@ -134,6 +144,7 @@ background:var(--green);color:#071006;flex:none}
 .empty{grid-column:1/-1;border:1px dashed #ffffff25;border-radius:15px;
 padding:20px;text-align:center;color:var(--muted);font-size:11px;line-height:1.6}
 .listing-meta{font-size:10px;color:var(--green);margin-top:5px;overflow-wrap:anywhere}
+
 .partner{position:relative;isolation:isolate;overflow:hidden;min-height:230px;
 border:1px solid #b8ff3b45;border-radius:23px;background:#0b0f09}
 .partner:before{content:"";position:absolute;inset:0;z-index:-2;
@@ -143,6 +154,7 @@ background:linear-gradient(90deg,#050805f5,#050805d6 60%,#05080570)}
 .partner-content{padding:27px;max-width:620px}
 .partner h2{font-size:25px;letter-spacing:-1px;margin:15px 0 9px}
 .partner p{font-size:12px;line-height:1.7;color:#c0c9b9;margin:0 0 18px}
+
 .bottom-nav{position:fixed;z-index:50;bottom:12px;left:50%;transform:translateX(-50%);
 width:min(680px,calc(100% - 22px));display:grid;grid-template-columns:repeat(5,1fr);
 padding:7px;border:1px solid #ffffff24;border-radius:30px;background:#080b08ed;
@@ -158,6 +170,7 @@ display:grid;place-items:center;background:var(--green);color:#071006;border:4px
 background:#141a10;border:1px solid #b8ff3b66;border-radius:13px;padding:12px 16px;
 font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
 .toast.show{transform:translate(-50%,0)}
+
 @media(max-width:850px){
  .path-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -197,7 +210,7 @@ font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
 
 <header class="topbar">
   <a class="brand" href="index.html" aria-label="Zep Swipe home">
-    <span class="brand-mark">Z</span>
+    <span class="brand-mark"><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo"></span>
     <span class="brand-name"><span>zep</span> swipe</span>
   </a>
   <div class="header-right">
@@ -317,7 +330,7 @@ font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
 
 <nav class="bottom-nav" aria-label="Main navigation">
   <button class="nav-item active" data-nav="marketplace.html" type="button"><i data-lucide="house"></i><span>Home</span></button>
-  <button class="nav-item" data-nav="deals.html" type="button"><i data-lucide="ticket-percent"></i><span>Deals</span></button>
+  <button class="nav-item" id="dealsNav" type="button"><i data-lucide="ticket-percent"></i><span>Deals</span></button>
   <button class="nav-item" id="opportunityNav" type="button"><span class="nav-plus"><i data-lucide="plus" width="24"></i></span><span>Explore</span></button>
   <button class="nav-item" id="messagesNav" type="button"><i data-lucide="message-square"></i><span>Messages</span></button>
   <button class="nav-item" id="profileNav" type="button"><i data-lucide="user-round"></i><span>Profile</span></button>
@@ -330,10 +343,10 @@ font-size:12px;max-width:calc(100% - 24px);transition:transform .25s}
 
 /* Use the PUBLIC anon/publishable key from the correct Supabase project.
    Never put a service-role or secret key in frontend JavaScript. */
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
 
-const hasKey = SUPABASE_ANON_KEY !== "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo"
+const hasKey = SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY"
   && SUPABASE_ANON_KEY.trim().length > 20;
 
 const db = window.supabase?.createClient && hasKey
@@ -349,6 +362,7 @@ let allDealsExpanded = false;
 let currentSearchTerm = "";
 let currentDealItems = [];
 let dealFetchError = false;
+let jobFetchError = false;
 
 const rows = {
   services: [],
@@ -392,6 +406,39 @@ function auth(path) {
     : "auth.html?redirect=" + encodeURIComponent(path));
 }
 
+function requireRegisteredUser(destination) {
+  if (!db) {
+    go("auth.html?redirect=" + encodeURIComponent(destination));
+    return false;
+  }
+
+  return db.auth.getSession().then(({data, error}) => {
+    if (error || !data.session?.user) {
+      go("auth.html?redirect=" + encodeURIComponent(destination));
+      return false;
+    }
+    user = data.session.user;
+    return true;
+  }).catch(error => {
+    console.error("Authentication check failed:", error);
+    go("auth.html?redirect=" + encodeURIComponent(destination));
+    return false;
+  });
+}
+
+async function openListingSection(kind) {
+  const sectionId = kind === "deals" ? "dealsSection" : "jobsSection";
+  if (kind === "deals") allDealsExpanded = true;
+  if ($("searchInput").value.trim()) {
+    $("searchInput").value = "";
+    currentSearchTerm = "";
+  }
+  await loadListings();
+  if (kind === "deals") renderDeals(rows.deals, dealFetchError);
+  if (kind === "jobs") render("jobsGrid", rows.jobs, "job", jobFetchError);
+  scroll(sectionId);
+}
+
 function dashboard() {
   const role = profile.role || user?.user_metadata?.role;
   if (role === "provider") return "provider.html";
@@ -415,7 +462,7 @@ async function session() {
   if (!db) return;
 
   try {
-    const { data, error } = await db.auth.getSession();
+    const {data, error} = await db.auth.getSession();
     if (error) throw error;
 
     user = data.session?.user || null;
@@ -442,7 +489,6 @@ async function session() {
     $("location").textContent =
       profile.university || profile.institution || "Your opportunities are waiting";
 
-    // Only show a real avatar if supplied by the signed-in user's profile.
     const avatar = profile.avatar_url ||
       profile.profile_image ||
       user.user_metadata?.avatar_url ||
@@ -489,18 +535,13 @@ function makeCard(item, type) {
     route = "service.html?id=" + encodeURIComponent(item.id ?? "");
   } else if (type === "deal") {
     title = item.title || item.offer || item.name || "Student deal";
-
-    // Use common deal fields without assuming every schema contains all of them.
     const discount = item.discount || item.discount_percentage || item.offer;
     const business = item.business_name || item.business || item.merchant_name;
     sub = [discount, item.category, business]
       .filter(v => typeof v === "string" && v.trim())
       .join(" · ");
 
-    if (!sub) {
-      sub = item.description || item.terms || "Student offer";
-    }
-
+    if (!sub) sub = item.description || item.terms || "Student offer";
     route = "deal.html?id=" + encodeURIComponent(item.id ?? "");
   } else if (type === "job") {
     title = item.title || item.name || "Work opportunity";
@@ -552,7 +593,6 @@ function render(id, items, type, error = false) {
     return;
   }
 
-  // Keep the original compact layout for services, jobs and businesses.
   el.innerHTML = items.slice(0, 8).map(item => makeCard(item, type)).join("");
   attachCardRoutes(el);
   iconRefresh();
@@ -560,7 +600,6 @@ function render(id, items, type, error = false) {
 
 function renderDeals(items, error = false) {
   const el = $("dealsGrid");
-  currentDealItems = items;
 
   if (error) {
     el.innerHTML = '<div class="empty">Deals could not be loaded. Check the Supabase deals table, status values and read permissions.</div>';
@@ -597,11 +636,6 @@ function renderDeals(items, error = false) {
   }
 }
 
-/*
-  Fetch active listings in pages to avoid a single small limit.
-  The current maximum is 1,000 rows per table; increase MAX_ROWS if needed.
-  Supabase RLS and the table's actual columns still control which rows are returned.
-*/
 async function queryActive(table, maxRows = 100) {
   const batchSize = 100;
   const results = [];
@@ -609,18 +643,16 @@ async function queryActive(table, maxRows = 100) {
   for (let start = 0; start < maxRows; start += batchSize) {
     const end = Math.min(start + batchSize - 1, maxRows - 1);
 
-    const { data, error } = await db.from(table)
+    const {data, error} = await db.from(table)
       .select("*")
       .eq("status", "active")
-      .order("created_at", { ascending: false })
+      .order("created_at", {ascending: false})
       .range(start, end);
 
     if (error) throw error;
-
     const batch = data || [];
     results.push(...batch);
-
-    if (batch.length < (end - start + 1)) break;
+    if (batch.length < end - start + 1) break;
   }
 
   return results;
@@ -631,6 +663,8 @@ async function loadListings() {
   loading = true;
 
   try {
+    // Everyone can browse public active listings. Private account actions
+    // still require a session.
     const results = await Promise.allSettled([
       queryActive("services", 100),
       queryActive("deals", 1000),
@@ -639,14 +673,16 @@ async function loadListings() {
     ]);
 
     const names = ["services", "deals", "jobs", "businesses"];
-
     results.forEach((result, index) => {
       rows[names[index]] = result.status === "fulfilled" ? result.value : [];
     });
 
+    dealFetchError = results[1].status === "rejected";
+    jobFetchError = results[2].status === "rejected";
+
     render("servicesGrid", rows.services, "service", results[0].status === "rejected");
-    renderDeals(rows.deals, results[1].status === "rejected");
-    render("jobsGrid", rows.jobs, "job", results[2].status === "rejected");
+    renderDeals(rows.deals, dealFetchError);
+    render("jobsGrid", rows.jobs, "job", jobFetchError);
     render("businessGrid", rows.businesses, "business", results[3].status === "rejected");
 
     $("servicesCount").textContent =
@@ -658,9 +694,7 @@ async function loadListings() {
     $("businessesCount").textContent =
       results[3].status === "fulfilled" ? rows.businesses.length : "—";
 
-    if ($("searchInput").value.trim()) {
-      search($("searchInput").value);
-    }
+    if ($("searchInput").value.trim()) search($("searchInput").value);
   } finally {
     loading = false;
   }
@@ -677,16 +711,25 @@ function search(term) {
   };
 
   render("servicesGrid", filter(rows.services), "service");
-  renderDeals(filter(rows.deals));
-  render("jobsGrid", filter(rows.jobs), "job");
+  renderDeals(filter(rows.deals), dealFetchError);
+  render("jobsGrid", filter(rows.jobs), "job", jobFetchError);
   render("businessGrid", filter(rows.businesses), "business");
 }
 
 function scroll(id) {
-  $(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 function chooseCategory(category) {
+  if (category === "Deals") {
+    openListingSection("deals");
+    return;
+  }
+  if (category === "Jobs") {
+    openListingSection("jobs");
+    return;
+  }
+
   document.querySelectorAll(".cat").forEach(el => {
     el.classList.toggle("active", el.dataset.category === category);
   });
@@ -700,30 +743,37 @@ function chooseCategory(category) {
     Opportunities: "pathways"
   };
 
-  const target = mapping[category] || "pathways";
+  scroll(mapping[category] || "pathways");
+}
 
-  // Expand deals when the user chooses the deals category.
-  if (category === "Deals") {
-    allDealsExpanded = true;
-    renderDeals(currentSearchTerm
-      ? rows.deals.filter(item => JSON.stringify(item).toLowerCase().includes(currentSearchTerm))
-      : rows.deals);
+async function openListingSection(kind) {
+  const sectionId = kind === "deals" ? "dealsSection" : "jobsSection";
+
+  if (kind === "deals") allDealsExpanded = true;
+
+  if ($("searchInput").value.trim()) {
+    $("searchInput").value = "";
+    currentSearchTerm = "";
   }
 
-  scroll(target);
+  await loadListings();
+
+  if (kind === "deals") renderDeals(rows.deals, dealFetchError);
+  if (kind === "jobs") render("jobsGrid", rows.jobs, "job", jobFetchError);
+
+  scroll(sectionId);
 }
 
 async function openMessages() {
   const destination = "message.html";
 
-  // Fail closed: without Supabase configuration, do not open private messaging.
   if (!db) {
     go("auth.html?redirect=" + encodeURIComponent(destination));
     return;
   }
 
   try {
-    const { data, error } = await db.auth.getSession();
+    const {data,error} = await db.auth.getSession();
 
     if (error || !data.session?.user) {
       go("auth.html?redirect=" + encodeURIComponent(destination));
@@ -732,7 +782,7 @@ async function openMessages() {
 
     go(destination);
   } catch (error) {
-    console.error("Could not verify the session:", error);
+    console.error("Could not verify session:", error);
     go("auth.html?redirect=" + encodeURIComponent(destination));
   }
 }
@@ -746,13 +796,13 @@ function wire() {
   });
 
   $("dealsViewAll").addEventListener("click", () => {
-    if (currentSearchTerm) {
+    if ($("searchInput").value.trim()) {
       $("searchInput").value = "";
       currentSearchTerm = "";
     }
 
     allDealsExpanded = !allDealsExpanded;
-    renderDeals(rows.deals);
+    renderDeals(rows.deals, dealFetchError);
     scroll("dealsSection");
   });
 
@@ -763,30 +813,18 @@ function wire() {
   document.querySelectorAll(".path-card").forEach(el => {
     el.addEventListener("click", () => {
       const actions = {
-        jobs: () => scroll("jobsSection"),
+        jobs: () => openListingSection("jobs"),
         offer: () => auth("provider.html"),
         service: () => scroll("servicesSection"),
-        deals: () => {
-          allDealsExpanded = true;
-          renderDeals(rows.deals);
-          scroll("dealsSection");
-        },
+        deals: () => openListingSection("deals"),
         mobility: () => go("mobility.html"),
         connect: () => go("communities.html"),
-        build: () => window.open(
-          "https://www.studentstartupstudio.com/",
-          "_blank",
-          "noopener,noreferrer"
-        ),
+        build: () => go("https://studentstartupstudio.com/"),
         business: () => auth("business-deals.html")
       };
 
       actions[el.dataset.action]?.();
     });
-  });
-
-  document.querySelectorAll("[data-scroll]").forEach(el => {
-    el.addEventListener("click", () => scroll(el.dataset.scroll));
   });
 
   $("browseBtn").addEventListener("click", () => scroll("pathways"));
@@ -795,19 +833,14 @@ function wire() {
   $("businessExplore").addEventListener("click", () => scroll("businessSection"));
   $("openOpportunity").addEventListener("click", () => go("opportunity.html"));
   $("opportunityNav").addEventListener("click", () => go("opportunity.html"));
+  $("dealsNav").addEventListener("click", () => openListingSection("deals"));
 
   $("notificationBtn").addEventListener("click", () => auth("notifications.html"));
-
-  // Messages now use the singular message.html page and require a verified session.
   $("messagesNav").addEventListener("click", openMessages);
 
   const openAccount = () => user ? go(dashboard()) : auth("customer.html");
   $("accountBtn").addEventListener("click", openAccount);
   $("profileNav").addEventListener("click", openAccount);
-
-  document.querySelectorAll("[data-nav]").forEach(el => {
-    el.addEventListener("click", () => go(el.dataset.nav));
-  });
 }
 
 async function init() {
@@ -816,27 +849,32 @@ async function init() {
   await session();
 
   if (!db) {
-    ["servicesGrid", "dealsGrid", "jobsGrid", "businessGrid"].forEach(id => {
-      $(id).innerHTML = '<div class="empty">Marketplace data is not connected yet. Add your Supabase public anon/publishable key to load listings.</div>';
-    });
+    const disconnected =
+      '<div class="empty">Marketplace data is not connected yet. Replace YOUR_SUPABASE_ANON_KEY with the public anon/publishable key for this project.</div>';
+
+    ["servicesGrid","dealsGrid","jobsGrid","businessGrid"]
+      .forEach(id => $(id).innerHTML = disconnected);
+
+    ["servicesCount","dealsCount","jobsCount","businessesCount"]
+      .forEach(id => $(id).textContent = "—");
+
     $("dealsViewAll").style.display = "none";
     return;
   }
 
   await loadListings();
 
-  // Periodic refresh complements realtime updates. This page still depends on RLS.
   window.setInterval(loadListings, 60000);
 
   try {
     db.channel("zep-marketplace-live")
-      .on("postgres_changes", { event: "*", schema: "public", table: "services" }, loadListings)
-      .on("postgres_changes", { event: "*", schema: "public", table: "deals" }, loadListings)
-      .on("postgres_changes", { event: "*", schema: "public", table: "jobs" }, loadListings)
-      .on("postgres_changes", { event: "*", schema: "public", table: "businesses" }, loadListings)
+      .on("postgres_changes",{event:"*",schema:"public",table:"services"},loadListings)
+      .on("postgres_changes",{event:"*",schema:"public",table:"deals"},loadListings)
+      .on("postgres_changes",{event:"*",schema:"public",table:"jobs"},loadListings)
+      .on("postgres_changes",{event:"*",schema:"public",table:"businesses"},loadListings)
       .subscribe();
   } catch (error) {
-    console.warn("Realtime unavailable:", error);
+    console.warn("Realtime unavailable:",error);
   }
 }
 
