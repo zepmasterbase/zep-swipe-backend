@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070707">
+<title>Provider Dashboard | Zep Swipe</title>
+<meta name="description" content="Manage your services, connect with customers and discover mobility opportunities on Zep Swipe.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root {
+  --bg:#070707;
+  --surface:#111111;
+  --card:#151515;
+  --line:#282828;
+  --text:#f5f5f5;
+  --muted:#929292;
+  --green:#b8ff3b;
+  --green-dark:#91d923;
+  --radius:20px;
+}
+* {box-sizing:border-box}
+html {scroll-behavior:smooth}
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:14px;
+  line-height:1.5;
+}
+a {color:inherit;text-decoration:none}
+button,input,textarea,select {font:inherit}
+button {cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible {
+  outline:2px solid var(--green);
+  outline-offset:3px;
+}
+.shell {max-width:1440px;margin:auto;min-height:100vh}
+.sidebar {
+  position:fixed;
+  inset:0 auto 0 0;
+  width:245px;
+  padding:27px 19px;
+  background:#0b0b0b;
+  border-right:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  z-index:10;
+}
+.brand {display:flex;align-items:center;gap:11px;padding:0 8px 29px}
+.brand img {width:42px;height:42px;object-fit:contain}
+.brand-name {font-weight:900;font-size:20px;letter-spacing:-1px}
+.brand-name span {color:var(--green)}
+.brand-sub {font-size:10px;color:var(--muted);letter-spacing:1.6px}
+.nav-label {
+  margin:14px 10px 8px;
+  color:#6e6e6e;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1.5px;
+}
+.nav-link {
+  display:flex;align-items:center;gap:12px;
+  padding:12px 13px;
+  margin:3px 0;
+  border-radius:12px;
+  color:#a7a7a7;
+  font-size:13px;
+  font-weight:600;
+  transition:.2s;
+}
+.nav-link svg {width:18px;height:18px}
+.nav-link:hover,.nav-link.active {
+  color:var(--green);
+  background:#182010;
+}
+.sidebar-bottom {margin-top:auto}
+.user-mini {
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:13px;
+  display:flex;align-items:center;gap:10px;
+}
+.avatar {
+  width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;
+  background:#26341b;color:var(--green);
+  font-weight:900;flex-shrink:0;
+}
+.user-name {font-weight:700;font-size:12px}
+.user-role {font-size:11px;color:var(--muted)}
+.main {margin-left:245px;padding:0 34px 60px}
+.topbar {
+  min-height:82px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:18px;border-bottom:1px solid var(--line);
+}
+.breadcrumb {font-size:12px;color:var(--muted)}
+.breadcrumb strong {color:white}
+.top-actions {display:flex;gap:10px;align-items:center}
+.btn {
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:8px;padding:11px 15px;border-radius:12px;
+  border:1px solid var(--line);background:#171717;
+  color:white;font-weight:700;font-size:12px;
+  transition:.2s;
+}
+.btn svg {width:16px;height:16px}
+.btn:hover {border-color:#555;transform:translateY(-1px)}
+.btn.primary {background:var(--green);border-color:var(--green);color:#080808}
+.btn.primary:hover {background:#c8ff70}
+.btn.subtle {background:transparent}
+.btn:disabled {opacity:.5;cursor:not-allowed;transform:none}
+.mobile-brand {display:none}
+.hero {padding:31px 0 25px}
+.eyebrow {
+  display:flex;align-items:center;gap:8px;
+  color:var(--green);font-size:10px;
+  letter-spacing:1.7px;font-weight:900;text-transform:uppercase;
+}
+.dot {width:7px;height:7px;border-radius:50%;background:var(--green)}
+h1 {font-size:clamp(28px,4vw,40px);letter-spacing:-1.8px;line-height:1.13;margin:13px 0 11px}
+h1 span {color:var(--green)}
+.hero p {color:var(--muted);max-width:650px;margin:0;font-size:13px}
+.section {margin-top:27px}
+.section-heading {
+  display:flex;justify-content:space-between;align-items:center;
+  gap:14px;margin-bottom:14px;
+}
+h2 {font-size:17px;letter-spacing:-.4px;margin:0}
+.section-description {font-size:12px;color:var(--muted);margin:5px 0 0}
+.stats {
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;
+}
+.stat {
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:20px;
+  min-height:126px;
+}
+.stat-top {display:flex;justify-content:space-between;align-items:center}
+.stat-icon {
+  width:37px;height:37px;border-radius:12px;
+  display:grid;place-items:center;background:#202020;color:var(--green);
+}
+.stat-icon svg {width:19px;height:19px}
+.stat-label {color:var(--muted);font-size:11px;margin-top:16px}
+.stat-value {font-size:27px;line-height:1.2;font-weight:900;letter-spacing:-1px;margin-top:3px}
+.stat-note {font-size:10px;color:#777;margin-top:5px}
+.notice {
+  margin-top:15px;padding:13px 15px;
+  border:1px solid #303c22;border-radius:13px;
+  background:#11170c;color:#c8d5b8;font-size:11px;
+}
+.notice strong {color:var(--green)}
+.grid-two {display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
+.panel {
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius);padding:21px;
+}
+.panel-header {display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:17px}
+.tag {
+  display:inline-flex;align-items:center;gap:6px;
+  border-radius:99px;padding:5px 9px;
+  background:#202020;color:#c3c3c3;font-size:10px;font-weight:700;
+}
+.tag.green {background:#1c2a10;color:var(--green)}
+.mobility-card {
+  position:relative;overflow:hidden;
+  background:linear-gradient(125deg,#182410 0%,#10150d 48%,#111 100%);
+  border:1px solid #334b20;border-radius:var(--radius);
+  padding:24px;display:grid;
+  grid-template-columns:1fr 140px;gap:15px;align-items:center;
+}
+.mobility-card h2 {font-size:23px;line-height:1.22;max-width:420px;margin:13px 0}
+.mobility-card p {font-size:12px;color:#b7c0ad;max-width:470px;margin:0 0 18px}
+.mobility-art {
+  width:120px;height:120px;border-radius:32px;
+  display:grid;place-items:center;
+  background:#202d17;border:1px solid #40582b;
+  color:var(--green);transform:rotate(4deg);justify-self:center;
+}
+.mobility-art svg {width:63px;height:63px;stroke-width:1.4}
+.mobility-bottom {display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.feature-list {display:grid;gap:12px}
+.feature {
+  display:flex;align-items:flex-start;gap:11px;
+  padding:13px 0;border-bottom:1px solid var(--line);
+}
+.feature:last-child {border-bottom:0}
+.feature-icon {
+  width:35px;height:35px;border-radius:11px;
+  background:#202020;color:var(--green);
+  display:grid;place-items:center;flex-shrink:0;
+}
+.feature-icon svg {width:17px;height:17px}
+.feature strong {font-size:12px}
+.feature p {font-size:11px;color:var(--muted);margin:4px 0 0}
+.quick-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.quick-card {
+  padding:18px;background:var(--surface);
+  border:1px solid var(--line);border-radius:17px;
+  transition:.2s;display:flex;flex-direction:column;min-height:160px;
+}
+.quick-card:hover {border-color:#566a3e;transform:translateY(-2px)}
+.quick-icon {color:var(--green);margin-bottom:14px}
+.quick-icon svg {width:23px;height:23px}
+.quick-card strong {font-size:13px}
+.quick-card p {color:var(--muted);font-size:11px;margin:6px 0 15px}
+.quick-link {font-size:11px;color:var(--green);font-weight:800;margin-top:auto}
+.services-empty {
+  text-align:center;padding:32px 15px;
+  border:1px dashed #353535;border-radius:15px;
+}
+.services-empty .empty-icon {color:var(--green)}
+.services-empty svg {width:30px;height:30px}
+.services-empty h3 {font-size:14px;margin:12px 0 5px}
+.services-empty p {font-size:11px;color:var(--muted);max-width:370px;margin:0 auto 16px}
+.listing-form {display:none;margin-top:17px}
+.listing-form.open {display:block}
+.form-grid {display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field {display:flex;flex-direction:column;gap:7px}
+.field.full {grid-column:1/-1}
+.field label {font-size:11px;font-weight:700;color:#c9c9c9}
+.field input,.field textarea,.field select {
+  width:100%;border:1px solid #343434;background:#090909;
+  border-radius:10px;padding:12px;color:white;
+  outline:none;
+}
+.field textarea {min-height:85px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus {border-color:var(--green)}
+.form-actions {display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.helper {font-size:10px;color:var(--muted);margin-top:9px}
+.footer {
+  border-top:1px solid var(--line);margin-top:35px;padding-top:20px;
+  color:#777;font-size:10px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.footer-links {display:flex;gap:15px}
+.footer-links a:hover {color:var(--green)}
+.toast {
+  position:fixed;left:50%;bottom:25px;transform:translate(-50%,20px);
+  opacity:0;pointer-events:none;z-index:100;
+  padding:13px 17px;background:#202020;border:1px solid #444;
+  color:white;border-radius:12px;font-size:12px;
+  box-shadow:0 10px 35px #0009;transition:.25s;
+  max-width:calc(100% - 30px);
+}
+.toast.show {opacity:1;transform:translate(-50%,0)}
+.bottom-nav {display:none}
+@media(max-width:1100px) {
+  .sidebar {width:215px}
+  .main {margin-left:215px;padding:0 23px 45px}
+  .grid-two {grid-template-columns:1fr}
+}
+@media(max-width:760px) {
+  .sidebar {display:none}
+  .main {margin:0;padding:0 17px 100px}
+  .topbar {min-height:66px}
+  .mobile-brand {display:flex;align-items:center;gap:8px}
+  .mobile-brand img {width:30px;height:30px;object-fit:contain}
+  .mobile-brand strong {font-size:15px}
+  .breadcrumb {display:none}
+  .top-actions .desktop-only {display:none}
+  .hero {padding:27px 0 16px}
+  .stats {grid-template-columns:1fr 1fr}
+  .stat:last-child {grid-column:1/-1}
+  .stat {padding:15px;min-height:112px}
+  .stat-value {font-size:24px}
+  .mobility-card {grid-template-columns:1fr;padding:20px}
+  .mobility-art {display:none}
+  .quick-grid {grid-template-columns:1fr}
+  .quick-card {min-height:125px}
+  .panel {padding:16px}
+  .section {margin-top:22px}
+  .bottom-nav {
+    display:flex;position:fixed;z-index:20;
+    inset:auto 0 0;background:#0d0d0df5;
+    border-top:1px solid var(--line);
+    padding:9px 5px calc(9px + env(safe-area-inset-bottom));
+    justify-content:space-around;backdrop-filter:blur(16px)
+  }
+  .bottom-nav a {
+    flex:1;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:4px;
+    color:#898989;font-size:9px;font-weight:600;padding:5px 1px;
+  }
+  .bottom-nav a svg {width:19px;height:19px}
+  .bottom-nav a.active {color:var(--green)}
+}
+@media(max-width:420px) {
+  .form-grid {grid-template-columns:1fr}
+  .field.full {grid-column:auto}
+  .section-heading {align-items:flex-start}
+  .top-actions .btn {padding:9px 10px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce) {
+  * {scroll-behavior:auto!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+  <a class="brand" href="marketplace.html">
+    <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe">
+    <div>
+      <div class="brand-name">ZEP <span>SWIPE</span></div>
+      <div class="brand-sub">THE STUDENT ECONOMY</div>
+    </div>
+  </a>
+  <div class="nav-label">WORKSPACE</div>
+  <a class="nav-link active" href="#overview"><i data-lucide="layout-dashboard"></i> Overview</a>
+  <a class="nav-link" href="#services"><i data-lucide="briefcase-business"></i> My services</a>
+  <a class="nav-link" href="mobility.html"><i data-lucide="car-front"></i> Mobility leads</a>
+  <a class="nav-link" href="#customer-enquiries"><i data-lucide="message-square"></i> Customer enquiries</a>
+  <div class="nav-label">DISCOVER</div>
+  <a class="nav-link" href="marketplace.html"><i data-lucide="compass"></i> Marketplace</a>
+  <a class="nav-link" href="mobility.html"><i data-lucide="route"></i> Mobility solutions</a>
+  <a class="nav-link" href="account.html"><i data-lucide="user-round"></i> My account</a>
+  <div class="sidebar-bottom">
+    <div class="user-mini">
+      <div class="avatar">ZS</div>
+      <div>
+        <div class="user-name">Student Provider</div>
+        <div class="user-role">Provider workspace</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <a class="mobile-brand" href="marketplace.html">
+      <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="">
+      <strong>ZEP <span style="color:var(--green)">SWIPE</span></strong>
+    </a>
+    <div class="breadcrumb">Workspace / <strong>Provider dashboard</strong></div>
+    <div class="top-actions">
+      <a class="btn subtle desktop-only" href="marketplace.html"><i data-lucide="store"></i> Marketplace</a>
+      <a class="btn primary" href="mobility.html"><i data-lucide="car-front"></i> Explore Mobility</a>
+    </div>
+  </header>
+  <section class="hero" id="overview">
+    <div class="eyebrow"><span class="dot"></span> YOUR PROVIDER WORKSPACE</div>
+    <h1>Turn your skills into<br><span>opportunities.</span></h1>
+    <p>Showcase your services, connect directly with customers and discover opportunities across the Zep Swipe student economy.</p>
+  </section>
+  <section class="stats" aria-label="Provider dashboard overview">
+    <article class="stat">
+      <div class="stat-top">
+        <span class="stat-icon"><i data-lucide="briefcase-business"></i></span>
+        <span class="tag">Services</span>
+      </div>
+      <div class="stat-label">Your service listings</div>
+      <div class="stat-value">Manage</div>
+      <div class="stat-note">Show customers what you offer</div>
+    </article>
+    <article class="stat">
+      <div class="stat-top">
+        <span class="stat-icon"><i data-lucide="messages-square"></i></span>
+        <span class="tag">Direct contact</span>
+      </div>
+      <div class="stat-label">Customer enquiries</div>
+      <div class="stat-value">Connect</div>
+      <div class="stat-note">Arrange work directly with customers</div>
+    </article>
+    <article class="stat">
+      <div class="stat-top">
+        <span class="stat-icon"><i data-lucide="car-front"></i></span>
+        <span class="tag green">Mobility</span>
+      </div>
+      <div class="stat-label">Partner opportunities</div>
+      <div class="stat-value">Discover</div>
+      <div class="stat-note">Explore vehicle and fleet solutions</div>
+    </article>
+  </section>
+  <div class="notice">
+    <strong>How payments work:</strong> Customers and student providers arrange payment directly outside Zep Swipe. This dashboard does not process payments or hold funds.
+  </div>
+  <section class="section" id="mobility">
+    <div class="section-heading">
+      <div>
+        <h2>Mobility opportunities</h2>
+        <p class="section-description">Discover vehicle tracking, security and fleet management solutions.</p>
+      </div>
+      <span class="tag green">Zep Swipe Mobility</span>
+    </div>
+    <article class="mobility-card">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> OPPORTUNITY MOVES</div>
+        <h2>Connect customers to mobility solutions.</h2>
+        <p>Help interested vehicle owners, drivers and businesses discover relevant vehicle tracking, security and fleet solutions through Zep Swipe Mobility.</p>
+        <div class="mobility-bottom">
+          <a class="btn primary" href="mobility.html?source=provider-dashboard&utm_source=provider-dashboard&utm_campaign=provider-mobility">
+            Explore Mobility <i data-lucide="arrow-up-right"></i>
+          </a>
+          <a class="btn" href="mobility.html">Open enquiry form</a>
+        </div>
+      </div>
+      <div class="mobility-art" aria-hidden="true">
+        <i data-lucide="car-front"></i>
+      </div>
+    </article>
+  </section>
+  <section class="section grid-two">
+    <article class="panel">
+      <div class="panel-header">
+        <div>
+          <h2>Build your provider profile</h2>
+          <p class="section-description">Make it easy for customers to understand your skills.</p>
+        </div>
+        <span class="tag">Your brand</span>
+      </div>
+      <div class="feature-list">
+        <div class="feature">
+          <div class="feature-icon"><i data-lucide="user-round"></i></div>
+          <div>
+            <strong>Introduce yourself</strong>
+            <p>Keep your name, contact information and provider details up to date in your account.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><i data-lucide="wrench"></i></div>
+          <div>
+            <strong>Describe your services</strong>
+            <p>Explain what you do, where you work and how customers can contact you.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><i data-lucide="handshake"></i></div>
+          <div>
+            <strong>Agree directly with customers</strong>
+            <p>Confirm the scope, price, timing and payment arrangements before starting work.</p>
+          </div>
+        </div>
+      </div>
+      <a class="btn primary" href="account.html" style="margin-top:10px">
+        Open my account <i data-lucide="arrow-right"></i>
+      </a>
+    </article>
+    <article class="panel" id="customer-enquiries">
+      <div class="panel-header">
+        <div>
+          <h2>Customer enquiries</h2>
+          <p class="section-description">A simple workflow for managing incoming requests.</p>
+        </div>
+        <i data-lucide="messages-square" style="color:var(--green)"></i>
+      </div>
+      <div class="feature-list">
+        <div class="feature">
+          <div class="feature-icon"><i data-lucide="inbox"></i></div>
+          <div>
+            <strong>Review the request</strong>
+            <p>Understand what the customer needs and ask any necessary questions.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><i data-lucide="calendar-check"></i></div>
+          <div>
+            <strong>Confirm the arrangement</strong>
+            <p>Agree on the price, delivery date and communication method.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><i data-lucide="check-circle"></i></div>
+          <div>
+            <strong>Complete the service</strong>
+            <p>Deliver the agreed work and follow up with your customer.</p>
+          </div>
+        </div>
+      </div>
+      <div class="notice">
+        This section explains the workflow. Live enquiry counts and messages will appear here when a connected enquiry system is implemented.
+      </div>
+    </article>
+  </section>
+  <section class="section" id="services">
+    <div class="section-heading">
+      <div>
+        <h2>My services</h2>
+        <p class="section-description">Prepare the information customers need to choose your service.</p>
+      </div>
+      <button class="btn primary" id="toggleListing" type="button">
+        <i data-lucide="plus"></i> Prepare a listing
+      </button>
+    </div>
+    <article class="panel">
+      <div class="services-empty">
+        <div class="empty-icon"><i data-lucide="briefcase-business"></i></div>
+        <h3>Make your skills discoverable</h3>
+        <p>Use your provider account and the marketplace's supported listing workflow to publish services. The form below is a local draft and does not publish directly to the database.</p>
+        <button class="btn" id="emptyListingButton" type="button">Prepare my service details</button>
+      </div>
+      <form class="listing-form" id="listingForm">
+        <div class="form-grid">
+          <div class="field">
+            <label for="serviceTitle">Service name</label>
+            <input id="serviceTitle" maxlength="100" required placeholder="e.g. Graphic design">
+          </div>
+          <div class="field">
+            <label for="serviceCategory">Category</label>
+            <select id="serviceCategory" required>
+              <option value="">Choose a category</option>
+              <option>Design and creative</option>
+              <option>Tutoring and education</option>
+              <option>Technology</option>
+              <option>Writing and editing</option>
+              <option>Photography and video</option>
+              <option>Cleaning and home services</option>
+              <option>Beauty and wellness</option>
+              <option>Delivery and errands</option>
+              <option>Events and entertainment</option>
+              <option>Other services</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="serviceLocation">Service area</label>
+            <input id="serviceLocation" maxlength="100" placeholder="e.g. Johannesburg">
+          </div>
+          <div class="field">
+            <label for="servicePrice">Starting price (R)</label>
+            <input id="servicePrice" type="number" min="0" step="0.01" placeholder="Optional">
+          </div>
+          <div class="field full">
+            <label for="serviceDescription">Description</label>
+            <textarea id="serviceDescription" maxlength="1000" required placeholder="Describe what you offer, who you help and how customers can work with you."></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Save local draft</button>
+          <button class="btn" type="button" id="cancelListing">Cancel</button>
+        </div>
+        <p class="helper">Your draft stays in this browser session only. It is not published or saved to Supabase.</p>
+      </form>
+    </article>
+  </section>
+  <section class="section">
+    <div class="section-heading">
+      <div>
+        <h2>Keep building</h2>
+        <p class="section-description">Use the main Zep Swipe destinations to grow your presence.</p>
+      </div>
+    </div>
+    <div class="quick-grid">
+      <a class="quick-card" href="marketplace.html">
+        <div class="quick-icon"><i data-lucide="store"></i></div>
+        <strong>Explore marketplace</strong>
+        <p>Discover services, deals and opportunities.</p>
+        <span class="quick-link">Open marketplace ↗</span>
+      </a>
+      <a class="quick-card" href="mobility.html">
+        <div class="quick-icon"><i data-lucide="car-front"></i></div>
+        <strong>Mobility solutions</strong>
+        <p>Explore vehicle and fleet solution enquiries.</p>
+        <span class="quick-link">Visit Mobility ↗</span>
+      </a>
+      <a class="quick-card" href="account.html">
+        <div class="quick-icon"><i data-lucide="user-round"></i></div>
+        <strong>My account</strong>
+        <p>Review your account and provider details.</p>
+        <span class="quick-link">Manage account ↗</span>
+      </a>
+    </div>
+  </section>
+  <footer class="footer">
+    <span>© <span id="year"></span> Zep Swipe. Opportunity Moves.</span>
+    <div class="footer-links">
+      <a href="marketplace.html">Marketplace</a>
+      <a href="mobility.html">Mobility</a>
+      <a href="account.html">Account</a>
+    </div>
+  </footer>
+</main>
+<nav class="bottom-nav" aria-label="Main navigation">
+  <a href="marketplace.html"><i data-lucide="house"></i><span>Home</span></a>
+  <a class="active" href="provider.html"><i data-lucide="layout-dashboard"></i><span>Provider</span></a>
+  <a href="mobility.html"><i data-lucide="car-front"></i><span>Mobility</span></a>
+  <a href="account.html"><i data-lucide="user-round"></i><span>Account</span></a>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(() => {
+  "use strict";
+  const $ = id => document.getElementById(id);
+  function toast(message) {
+    const el = $("toast");
+    el.textContent = message;
+    el.classList.add("show");
+    window.clearTimeout(window.__providerToastTimer);
+    window.__providerToastTimer = window.setTimeout(
+      () => el.classList.remove("show"), 3000
+    );
+  }
+  function toggleListing() {
+    const form = $("listingForm");
+    form.classList.toggle("open");
+    if (form.classList.contains("open")) {
+      form.scrollIntoView({ behavior: "smooth", block: "center" });
+      $("serviceTitle").focus();
+    }
+  }
+  $("toggleListing").addEventListener("click", toggleListing);
+  $("emptyListingButton").addEventListener("click", toggleListing);
+  $("cancelListing").addEventListener("click", () => {
+    $("listingForm").reset();
+    $("listingForm").classList.remove("open");
+  });
+  $("listingForm").addEventListener("submit", event => {
+    event.preventDefault();
+    const draft = {
+      title: $("serviceTitle").value.trim(),
+      category: $("serviceCategory").value,
+      location: $("serviceLocation").value.trim(),
+      startingPrice: $("servicePrice").value,
+      description: $("serviceDescription").value.trim()
+    };
+    if (!draft.title || !draft.category || !draft.description) {
+      toast("Complete the required service details.");
+      return;
+    }
+    // This form intentionally saves no data remotely.
+    // Connect it to the verified services schema and RLS policy
+    // before enabling database publishing.
+    toast("Draft details checked. Connect the service publishing workflow to publish.");
+  });
+  $("year").textContent = new Date().getFullYear();
+  if (window.lucide) window.lucide.createIcons();
+})();
+</script>
+</body>
+</html>
