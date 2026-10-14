@@ -1,12 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#070707">
-<title>Zep Swipe | My Account</title>
+<title>Account Center | Zep Swipe</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,337 +14,324 @@
 <style>
 :root{
   --bg:#070707;
-  --panel:#111310;
-  --panel2:#161914;
-  --line:#292d26;
+  --panel:#111311;
+  --panel2:#171917;
+  --line:#292d28;
   --green:#b8ff3b;
-  --muted:#92988c;
-  --white:#f6f8f3;
-  --red:#ff7474;
-  --radius:19px;
+  --text:#f5f7f2;
+  --muted:#90978c;
+  --red:#ff7878;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;background:var(--bg);color:var(--white);
-  font-family:Inter,Arial,sans-serif;font-size:14px;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,sans-serif;
+  font-size:14px;
 }
-button,input,textarea,select{font:inherit}
-button,a{-webkit-tap-highlight-color:transparent}
-a{color:inherit;text-decoration:none}
+button,input,textarea{font:inherit}
 button{cursor:pointer}
 button:disabled{opacity:.55;cursor:not-allowed}
-.layout{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--green);
+  outline-offset:3px;
+}
+.app{min-height:100vh}
 .sidebar{
-  background:#0b0c0a;border-right:1px solid var(--line);
-  padding:22px 15px;display:flex;flex-direction:column;
-  position:sticky;top:0;height:100vh;overflow:auto;z-index:10;
+  position:fixed;inset:0 auto 0 0;width:255px;
+  background:#0b0c0b;border-right:1px solid var(--line);
+  display:flex;flex-direction:column;padding:25px 16px;
+  z-index:20;overflow-y:auto;
 }
-.brand{display:flex;align-items:center;gap:11px;padding:0 9px 24px}
-.brand img{
-  width:45px;height:45px;object-fit:contain;border-radius:50%;
-  background:#11150d;border:1px solid #344525;
-}
-.brand-name{font-weight:900;letter-spacing:-1px;font-size:18px}
-.brand-name span{color:var(--green)}
-.brand-sub{font-size:9px;letter-spacing:1.7px;color:var(--muted);margin-top:4px}
+.brand{padding:5px 12px 24px;border-bottom:1px solid var(--line)}
+.brand-title{font-size:23px;font-weight:900;letter-spacing:-1.2px}
+.brand-title span{color:var(--green)}
+.brand-sub{margin-top:6px;color:var(--muted);font-size:10px;letter-spacing:1.5px;text-transform:uppercase}
 .side-label{
-  padding:14px 11px 8px;color:#71786b;font-size:9px;
-  font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  padding:24px 12px 10px;color:#777e73;
+  text-transform:uppercase;letter-spacing:1.5px;font-size:9px;font-weight:800
 }
+.nav{display:grid;gap:5px}
 .nav-btn{
-  width:100%;display:flex;align-items:center;gap:12px;
-  padding:12px 13px;border:1px solid transparent;border-radius:12px;
-  background:transparent;color:#b4b9ae;text-align:left;
-  font-size:12px;font-weight:650;margin:2px 0;transition:.18s;
+  border:1px solid transparent;background:transparent;color:#aeb4a9;
+  padding:12px 13px;display:flex;align-items:center;gap:12px;
+  text-align:left;border-radius:11px;font-size:12px;font-weight:650;
+  width:100%;transition:.2s;
 }
 .nav-btn svg{width:17px;height:17px;flex-shrink:0}
-.nav-btn:hover,.nav-btn.active{
-  color:var(--green);background:#18200f;border-color:#2e4020;
-}
-.nav-btn .nav-tag{
-  margin-left:auto;font-size:8px;border-radius:5px;
-  padding:3px 5px;background:#22261f;color:#a9b09f;
-}
+.nav-btn:hover{background:#171a16;color:#fff}
+.nav-btn.active{background:rgba(184,255,59,.09);color:var(--green);border-color:rgba(184,255,59,.18)}
+.nav-btn.locked{opacity:.75}
+.nav-btn .nav-role{margin-left:auto;font-size:9px;color:#777e73}
 .sidebar-bottom{margin-top:auto;padding-top:20px}
-.mini-profile{
-  border-top:1px solid var(--line);padding:17px 8px 5px;
-  display:flex;gap:10px;align-items:center;min-width:0;
+.user-mini{
+  display:flex;align-items:center;gap:11px;padding:14px 10px;
+  border-top:1px solid var(--line);margin-top:12px;min-width:0;
 }
 .avatar{
-  width:39px;height:39px;border-radius:13px;display:grid;
-  place-items:center;background:#20281a;border:1px solid #344525;
-  color:var(--green);font-size:15px;font-weight:900;flex-shrink:0;
+  width:38px;height:38px;flex-shrink:0;border-radius:13px;
+  background:#1b2610;border:1px solid #384a29;color:var(--green);
+  display:grid;place-items:center;font-weight:900;font-size:13px;
 }
-.mini-info{min-width:0;flex:1}
-.mini-name{font-size:11px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mini-role{font-size:10px;color:var(--muted);margin-top:4px}
-.main{min-width:0}
+.user-mini-text{min-width:0}
+.user-mini-name{font-size:11px;font-weight:800;overflow-wrap:anywhere}
+.user-mini-role{font-size:10px;color:var(--muted);margin-top:4px}
+.main{margin-left:255px;min-height:100vh}
 .topbar{
-  position:sticky;top:0;z-index:8;background:rgba(7,7,7,.91);
-  border-bottom:1px solid var(--line);backdrop-filter:blur(16px);
-  padding:15px 29px;display:flex;align-items:center;gap:15px;
+  height:76px;padding:0 32px;display:flex;align-items:center;
+  justify-content:space-between;gap:15px;
+  border-bottom:1px solid var(--line);background:rgba(7,7,7,.92);
+  position:sticky;top:0;z-index:10;backdrop-filter:blur(16px);
 }
-.topbar-title{font-size:14px;font-weight:800;flex:1}
-.topbar-title small{display:block;color:var(--muted);font-size:10px;font-weight:500;margin-top:4px}
-.top-actions{display:flex;align-items:center;gap:8px}
+.topbar-left{display:flex;align-items:center;gap:13px;min-width:0}
+.topbar h1{font-size:18px;letter-spacing:-.5px;margin:0}
+.topbar-sub{font-size:10px;color:var(--muted);margin-top:5px}
+.top-actions{display:flex;align-items:center;gap:9px}
+.pill{
+  border:1px solid var(--line);border-radius:30px;padding:8px 11px;
+  color:#b9c1b3;font-size:10px;white-space:nowrap;
+}
+.pill .green-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px}
 .icon-btn{
-  width:38px;height:38px;display:grid;place-items:center;
-  border:1px solid var(--line);border-radius:12px;background:#111;color:#ddd;
+  width:38px;height:38px;border:1px solid var(--line);border-radius:11px;
+  background:var(--panel);color:#fff;display:grid;place-items:center
 }
 .icon-btn svg{width:17px;height:17px}
-.mobile-brand{display:none;align-items:center;gap:8px;font-weight:900}
-.mobile-brand img{width:30px;height:30px;object-fit:contain;border-radius:50%}
-.content{max-width:1420px;margin:0 auto;padding:28px 30px 60px}
-.page-head{
-  display:flex;align-items:flex-end;justify-content:space-between;
-  gap:20px;margin-bottom:25px;flex-wrap:wrap;
-}
+.menu-btn{display:none}
+.content{max-width:1300px;margin:auto;padding:32px}
+.page{display:none;animation:appear .22s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 .eyebrow{
-  font-size:9px;color:var(--green);font-weight:800;
-  letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;
+  color:var(--green);text-transform:uppercase;letter-spacing:1.8px;
+  font-size:9px;font-weight:850;margin-bottom:10px
 }
-h1{font-size:clamp(25px,3vw,36px);letter-spacing:-1.5px;margin:0;font-weight:900}
-.page-head p{font-size:12px;line-height:1.7;color:var(--muted);margin:9px 0 0;max-width:590px}
+.page-heading{font-size:28px;letter-spacing:-1.2px;margin:0 0 10px;font-weight:850}
+.page-desc{color:var(--muted);font-size:12px;line-height:1.7;max-width:660px;margin:0}
+.hero{
+  border:1px solid #30382a;border-radius:22px;padding:27px;
+  background:radial-gradient(ellipse at 90% 0%,rgba(184,255,59,.1),transparent 40%),linear-gradient(135deg,#151914,#0c0e0c);
+  margin-bottom:23px;position:relative;overflow:hidden;
+}
+.hero-row{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.hero h2{font-size:25px;letter-spacing:-1.1px;line-height:1.2;margin:0 0 11px;max-width:560px}
+.hero p{font-size:12px;line-height:1.7;color:#a4ada0;max-width:590px;margin:0}
+.hero-symbol{
+  flex-shrink:0;width:86px;height:86px;border-radius:24px;
+  border:1px solid rgba(184,255,59,.22);background:rgba(184,255,59,.05);
+  color:var(--green);display:grid;place-items:center
+}
+.hero-symbol svg{width:38px;height:38px}
 .btn{
-  display:inline-flex;justify-content:center;align-items:center;gap:8px;
-  padding:11px 15px;border:1px solid var(--line);border-radius:12px;
-  color:#e9ede4;background:#151713;font-size:11px;font-weight:800;
+  border:1px solid var(--line);background:var(--panel2);color:#fff;
+  padding:11px 14px;border-radius:10px;display:inline-flex;
+  align-items:center;justify-content:center;gap:8px;
+  font-size:11px;font-weight:800;transition:.18s;
 }
 .btn svg{width:15px;height:15px}
-.btn:hover{border-color:#566247}
-.btn-primary{background:var(--green);color:#070707;border-color:var(--green)}
-.btn-primary:hover{background:#ceff78}
-.btn-quiet{background:transparent}
-.btn-danger{color:#ff9a9a}
-.hero{
-  position:relative;overflow:hidden;display:grid;
-  grid-template-columns:minmax(0,1.5fr) minmax(180px,.7fr);
-  gap:20px;padding:27px;border:1px solid #303a25;border-radius:23px;
-  background:radial-gradient(ellipse at 85% 15%,rgba(184,255,59,.13),transparent 45%),
-             linear-gradient(135deg,#151a11,#0c0d0b 70%);
-  margin-bottom:23px;
+.btn:hover{border-color:#566149}
+.btn-primary{background:var(--green);border-color:var(--green);color:#090b07}
+.btn-primary:hover{background:#d2ff83}
+.btn-danger{color:#ff9191;border-color:#553030;background:#1d1010}
+.hero .btn{margin-top:19px}
+.section-head{
+  display:flex;align-items:end;justify-content:space-between;gap:15px;
+  margin:28px 0 14px
 }
-.hero:after{
-  content:"";position:absolute;right:-65px;bottom:-140px;
-  width:280px;height:280px;border-radius:50%;
-  border:1px solid rgba(184,255,59,.1);
-  box-shadow:0 0 0 22px rgba(184,255,59,.018),0 0 0 48px rgba(184,255,59,.012);
-  pointer-events:none;
+.section-head h3{font-size:15px;letter-spacing:-.3px;margin:0}
+.section-head p{color:var(--muted);font-size:10px;margin:6px 0 0;line-height:1.6}
+.grid{display:grid;gap:14px}
+.stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.stat,.card{
+  border:1px solid var(--line);border-radius:16px;padding:19px;background:var(--panel)
 }
-.hero-copy,.hero-side{position:relative;z-index:1}
-.pill{
-  display:inline-flex;align-items:center;gap:7px;border:1px solid #354626;
-  background:#19220f;border-radius:30px;padding:7px 10px;
-  font-size:9px;color:var(--green);font-weight:800;
-}
-.pill-dot{width:6px;height:6px;background:var(--green);border-radius:50%}
-.hero h2{font-size:clamp(21px,2.5vw,30px);letter-spacing:-1px;line-height:1.2;margin:17px 0 10px;max-width:560px}
-.hero p{font-size:11px;color:#a7aea0;line-height:1.8;max-width:520px;margin:0 0 19px}
-.hero-actions{display:flex;flex-wrap:wrap;gap:9px}
-.hero-side{
-  display:flex;flex-direction:column;justify-content:center;gap:10px;
-  border-left:1px solid rgba(255,255,255,.07);padding-left:22px;
-}
-.hero-mini{padding:13px;border-radius:14px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.07)}
-.hero-mini strong{font-size:12px;display:block;margin-bottom:5px}
-.hero-mini span{font-size:10px;color:var(--muted);line-height:1.6}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:25px}
-.stat{
-  background:var(--panel);border:1px solid var(--line);border-radius:16px;
-  padding:17px;min-width:0;
-}
-.stat-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.stat-label{font-size:10px;color:var(--muted);font-weight:650}
+.stat-top{display:flex;align-items:center;justify-content:space-between;gap:9px}
+.stat-label{font-size:10px;color:var(--muted);line-height:1.5}
 .stat-icon{
-  width:31px;height:31px;border-radius:10px;background:#1d2515;
-  color:var(--green);display:grid;place-items:center;flex-shrink:0;
+  width:34px;height:34px;border-radius:10px;background:#1b2116;
+  color:var(--green);display:grid;place-items:center
 }
-.stat-icon svg{width:15px;height:15px}
-.stat-number{font-size:25px;letter-spacing:-1px;font-weight:900;margin-top:16px}
-.stat-note{font-size:9px;color:#7e8678;margin-top:6px}
-.section{margin-top:27px}
-.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-.section-head h2{font-size:16px;letter-spacing:-.5px;margin:0}
-.section-head p{font-size:10px;color:var(--muted);margin:5px 0 0}
-.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
-.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.card{
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:var(--radius);padding:19px;min-width:0;
+.stat-icon svg{width:17px;height:17px}
+.stat-value{font-size:27px;font-weight:850;letter-spacing:-1px;margin:16px 0 6px}
+.stat-note{font-size:9px;color:#777e73;line-height:1.6}
+.shortcuts{grid-template-columns:repeat(3,minmax(0,1fr))}
+.shortcut{
+  text-align:left;width:100%;min-height:140px;display:flex;
+  flex-direction:column;align-items:flex-start;gap:10px;
+  border:1px solid var(--line);border-radius:16px;padding:20px;
+  background:var(--panel);color:#fff;transition:.2s
 }
-.card-title{font-size:12px;font-weight:850;margin:0 0 7px}
-.card-sub{font-size:10px;line-height:1.7;color:var(--muted);margin:0}
-.action-card{display:flex;gap:13px;align-items:flex-start}
-.action-icon{
-  width:42px;height:42px;display:grid;place-items:center;flex-shrink:0;
-  border:1px solid #303d25;background:#19220f;border-radius:13px;color:var(--green);
+.shortcut:hover{border-color:#526044;transform:translateY(-2px)}
+.shortcut-icon{
+  width:37px;height:37px;border-radius:11px;background:#1b2116;
+  color:var(--green);display:grid;place-items:center
 }
-.action-icon svg{width:19px;height:19px}
-.action-card .btn{margin-top:15px}
-.action-copy{min-width:0}
-.action-copy .card-title{font-size:13px}
-.list{display:flex;flex-direction:column}
+.shortcut-icon svg{width:18px;height:18px}
+.shortcut strong{font-size:12px}
+.shortcut span:last-child{color:var(--muted);font-size:10px;line-height:1.6}
+.columns{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(250px,.7fr);gap:15px}
+.list{display:grid}
 .list-item{
-  display:flex;align-items:center;gap:12px;padding:13px 0;
-  border-bottom:1px solid #22251f;min-width:0;
+  display:flex;align-items:center;gap:12px;padding:14px 0;
+  border-bottom:1px solid var(--line)
 }
-.list-item:last-child{border-bottom:0}
+.list-item:last-child{border-bottom:0;padding-bottom:0}
 .list-icon{
-  width:35px;height:35px;display:grid;place-items:center;flex-shrink:0;
-  background:#1a1d17;border:1px solid #2b3027;border-radius:11px;color:#c4cbbd;
+  display:grid;place-items:center;flex-shrink:0;width:38px;height:38px;
+  border-radius:12px;background:#1a1d19;color:var(--green)
 }
-.list-icon svg{width:16px;height:16px}
+.list-icon svg{width:17px;height:17px}
 .list-copy{min-width:0;flex:1}
-.list-copy strong{display:block;font-size:11px;overflow-wrap:anywhere}
-.list-copy small{display:block;font-size:9px;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}
-.status-badge{
-  display:inline-flex;padding:5px 8px;border-radius:7px;
-  background:#1c2118;border:1px solid #303a26;color:#c4d8aa;
-  font-size:9px;font-weight:800;white-space:nowrap;
+.list-copy strong{display:block;font-size:11px}
+.list-copy span{display:block;font-size:10px;color:var(--muted);line-height:1.6;margin-top:4px}
+.list-arrow{color:#757d71}
+.list-arrow svg{width:15px;height:15px}
+.role-lock{
+  border:1px solid #45442e;border-radius:18px;padding:24px;
+  background:linear-gradient(140deg,#17170f,#10110e);margin-top:24px
 }
-.status-badge.pending{color:#f0d18b;background:#272113;border-color:#514323}
-.status-badge.rejected{color:#ff9999;background:#2a1717;border-color:#4c2929}
-.empty{
-  text-align:center;padding:27px 15px;border:1px dashed #30352c;
-  border-radius:14px;color:var(--muted);font-size:11px;line-height:1.8;
+.role-lock-icon{
+  width:43px;height:43px;background:#232315;color:#f6dc7e;
+  border-radius:13px;display:grid;place-items:center;margin-bottom:15px
 }
-.empty svg{width:26px;height:26px;color:#626b58;margin-bottom:10px}
-.empty strong{display:block;color:#dfe5d8;font-size:12px;margin-bottom:5px}
-.panel-view{display:none}
-.panel-view.active{display:block;animation:fadeIn .2s ease}
-@keyframes fadeIn{from{opacity:.5;transform:translateY(3px)}to{opacity:1;transform:none}}
-.role-chip{font-size:9px;color:var(--green);background:#18210f;border:1px solid #344626;padding:6px 9px;border-radius:20px}
-.profile-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr);gap:17px}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
-.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.role-lock-icon svg{width:21px;height:21px}
+.role-lock h3{margin:0 0 9px;font-size:17px}
+.role-lock p{color:var(--muted);font-size:11px;line-height:1.8;margin:0;max-width:620px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.field{display:grid;gap:8px}
 .field.full{grid-column:1/-1}
-.field label{font-size:10px;font-weight:750;color:#c7cdc0}
-.field input,.field textarea,.field select{
-  width:100%;min-width:0;padding:12px;border:1px solid #30342d;
-  background:#090a08;color:#fff;border-radius:11px;outline:none;font-size:11px;
+.field label{font-size:10px;color:#c8cec1;font-weight:750}
+.field input,.field textarea{
+  width:100%;border:1px solid var(--line);background:#090a09;
+  color:#fff;padding:13px;border-radius:10px;font-size:12px;min-width:0;
 }
-.field textarea{resize:vertical;min-height:85px}
-.field input:focus,.field textarea:focus{border-color:#66883d}
-.field input:disabled{opacity:.65}
-.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:17px;flex-wrap:wrap}
+.field textarea{resize:vertical;min-height:105px;line-height:1.7}
+.field input::placeholder,.field textarea::placeholder{color:#666e61}
+.form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
 .notice{
-  padding:13px 14px;border-radius:12px;background:#171b13;border:1px solid #2b3522;
-  color:#b7c6a8;font-size:10px;line-height:1.8;margin-top:14px;
+  display:flex;gap:11px;align-items:flex-start;
+  border:1px solid var(--line);border-radius:13px;padding:14px;
+  color:var(--muted);font-size:10px;line-height:1.8;background:#0c0e0c
 }
-.notice strong{color:var(--green)}
-.mobile-tabs{display:none}
+.notice svg{width:16px;height:16px;color:var(--green);flex-shrink:0;margin-top:2px}
+.loading{color:var(--muted);font-size:11px;padding:15px 0}
+.empty{
+  border:1px dashed #33392e;border-radius:15px;padding:26px 18px;
+  text-align:center;color:var(--muted);font-size:11px;line-height:1.8
+}
+.empty svg{width:25px;height:25px;color:var(--green);margin-bottom:12px}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);
+  border-radius:20px;padding:7px 9px;color:#b5bcae;font-size:9px
+}
+.badge-green{border-color:#334824;color:var(--green);background:#10190a}
+.status-bar{height:3px;background:#252a23;border-radius:5px;margin-top:13px;overflow:hidden}
+.status-fill{height:100%;width:100%;background:var(--green);border-radius:5px}
 .toast{
-  position:fixed;bottom:22px;right:22px;z-index:99;
-  max-width:min(380px,calc(100vw - 30px));padding:14px 17px;
-  background:#1a2014;border:1px solid #435a2d;border-radius:13px;
-  color:#f4f8ed;font-size:11px;box-shadow:0 15px 45px #0008;
-  display:none;
+  position:fixed;bottom:22px;right:22px;z-index:80;max-width:min(390px,calc(100% - 30px));
+  border:1px solid #3a4731;border-radius:13px;background:#171b14;color:#fff;
+  box-shadow:0 12px 45px rgba(0,0,0,.45);padding:14px 17px;
+  font-size:11px;line-height:1.7;display:none
 }
-.toast.show{display:block}
-.loading{color:var(--muted);font-size:11px;padding:16px 0}
-.footer{
-  padding-top:25px;margin-top:38px;border-top:1px solid var(--line);
-  color:#6f7769;font-size:9px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
-}
-.footer strong{color:#c3c9bb}
-@media(max-width:1100px){
-  .layout{grid-template-columns:220px minmax(0,1fr)}
-  .content{padding:24px 20px 50px}
-  .topbar{padding:14px 20px}
-  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .grid-3{grid-template-columns:repeat(2,minmax(0,1fr))}
+.toast.show{display:block;animation:appear .2s ease}
+.error-text{color:var(--red)}
+.mobile-overlay{display:none}
+@media(max-width:1050px){
+  .sidebar{width:225px}
+  .main{margin-left:225px}
+  .content{padding:25px}
+  .columns{grid-template-columns:1fr}
 }
 @media(max-width:760px){
-  .layout{display:block}
-  .sidebar{display:none}
-  .topbar{padding:12px 15px}
-  .mobile-brand{display:flex}
-  .topbar-title{font-size:12px}
-  .topbar-title small{font-size:9px}
-  .content{padding:22px 15px 95px}
-  .hero{grid-template-columns:1fr;padding:22px}
-  .hero-side{border-left:0;border-top:1px solid rgba(255,255,255,.07);padding:15px 0 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
-  .stats{gap:9px}
-  .stat{padding:13px}
-  .stat-number{font-size:23px}
-  .grid-2,.grid-3,.profile-layout{grid-template-columns:1fr}
-  .mobile-tabs{
-    position:fixed;bottom:0;left:0;right:0;z-index:20;
-    display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
-    padding:8px 5px calc(8px + env(safe-area-inset-bottom));
-    background:rgba(10,11,9,.97);border-top:1px solid var(--line);
-    backdrop-filter:blur(18px);
+  .sidebar{
+    transform:translateX(-100%);transition:transform .22s ease;width:275px;
+    box-shadow:20px 0 70px rgba(0,0,0,.4)
   }
-  .mobile-tab{
-    display:flex;align-items:center;justify-content:center;gap:5px;
-    flex-direction:column;padding:6px 1px;border:0;border-radius:10px;
-    color:#92998b;background:transparent;font-size:8px;font-weight:750;
-  }
-  .mobile-tab svg{width:18px;height:18px}
-  .mobile-tab.active{color:var(--green);background:#18200f}
-  .hero-side .hero-mini{padding:11px}
-}
-@media(max-width:390px){
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .mobile-overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:15}
+  .menu-btn{display:grid}
+  .topbar{height:69px;padding:0 16px}
+  .content{padding:20px 15px 35px}
+  .pill{display:none}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .shortcuts{grid-template-columns:1fr 1fr}
+  .hero{padding:21px}
+  .hero-symbol{width:58px;height:58px;border-radius:16px}
+  .hero-symbol svg{width:28px;height:28px}
+  .hero h2{font-size:22px}
+  .page-heading{font-size:25px}
+}
+@media(max-width:450px){
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{padding:15px}
+  .stat-value{font-size:23px}
+  .shortcuts{grid-template-columns:1fr}
+  .shortcut{min-height:120px}
+  .hero-symbol{display:none}
   .form-grid{grid-template-columns:1fr}
   .field.full{grid-column:auto}
-  .topbar-title{display:none}
-  .hero-actions .btn{flex:1}
-  .section-head h2{font-size:14px}
+  .topbar h1{font-size:15px}
+  .topbar-sub{font-size:9px}
 }
 </style>
 </head>
 
 <body>
-<div class="layout">
+<div class="app">
 
-  <aside class="sidebar">
-    <a href="marketplace.html" class="brand" aria-label="Zep Swipe home">
-      <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-      <div>
-        <div class="brand-name">ZEP <span>SWIPE</span></div>
-        <div class="brand-sub">THE STUDENT ECONOMY</div>
-      </div>
-    </a>
+  <div class="mobile-overlay" id="mobileOverlay" onclick="closeSidebar()"></div>
 
-    <div class="side-label">Account</div>
-    <button class="nav-btn active" data-view="overview">
-      <i data-lucide="layout-dashboard"></i> Overview
-    </button>
-    <button class="nav-btn" data-view="profile">
-      <i data-lucide="user-round"></i> My Profile
-    </button>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-title">ACCOUNT <span>CENTER</span></div>
+      <div class="brand-sub">Your opportunity workspace</div>
+    </div>
 
-    <div class="side-label">Workspaces</div>
-    <button class="nav-btn" data-view="customer">
-      <i data-lucide="shopping-bag"></i> Customer Dashboard
-    </button>
-    <button class="nav-btn" data-view="provider">
-      <i data-lucide="briefcase-business"></i> Student Provider
-    </button>
-    <button class="nav-btn" data-view="business">
-      <i data-lucide="store"></i> Business Dashboard
-    </button>
+    <div class="side-label">Workspace</div>
+    <nav class="nav" aria-label="Account navigation">
+      <button class="nav-btn active" data-view="overview" onclick="showView('overview')">
+        <i data-lucide="layout-dashboard"></i> Overview
+      </button>
+      <button class="nav-btn" data-view="customer" onclick="showView('customer')">
+        <i data-lucide="user-round"></i> Customer Dashboard
+        <span class="nav-role" id="customerNavRole"></span>
+      </button>
+      <button class="nav-btn" data-view="provider" onclick="showView('provider')">
+        <i data-lucide="briefcase-business"></i> Student Provider
+        <span class="nav-role" id="providerNavRole"></span>
+      </button>
+      <button class="nav-btn" data-view="business" onclick="showView('business')">
+        <i data-lucide="store"></i> Business Dashboard
+        <span class="nav-role" id="businessNavRole"></span>
+      </button>
+    </nav>
 
-    <div class="side-label">Explore Zep Swipe</div>
-    <a class="nav-btn" href="marketplace.html">
-      <i data-lucide="compass"></i> Marketplace
-    </a>
-    <a class="nav-btn" href="mobility.html">
-      <i data-lucide="car-front"></i> Mobility
-      <span class="nav-tag">LIVE</span>
-    </a>
+    <div class="side-label">My Account</div>
+    <nav class="nav" aria-label="Profile navigation">
+      <button class="nav-btn" data-view="profile" onclick="showView('profile')">
+        <i data-lucide="contact-round"></i> My Profile
+      </button>
+      <button class="nav-btn" data-view="mobility" onclick="showView('mobility')">
+        <i data-lucide="car-front"></i> Mobility Enquiries
+      </button>
+    </nav>
 
     <div class="sidebar-bottom">
-      <button class="nav-btn" id="sidebarLogout">
-        <i data-lucide="log-out"></i> Sign Out
+      <button class="nav-btn" onclick="refreshCurrentView()">
+        <i data-lucide="refresh-cw"></i> Refresh account data
       </button>
-      <div class="mini-profile">
-        <div class="avatar" id="sideAvatar">Z</div>
-        <div class="mini-info">
-          <div class="mini-name" id="sideName">Loading account...</div>
-          <div class="mini-role" id="sideRole">Zep Swipe Member</div>
+      <button class="nav-btn" onclick="signOut()">
+        <i data-lucide="log-out"></i> Sign out
+      </button>
+      <div class="user-mini">
+        <div class="avatar" id="sideAvatar">ZS</div>
+        <div class="user-mini-text">
+          <div class="user-mini-name" id="sideName">Loading account...</div>
+          <div class="user-mini-role" id="sideRole">Checking profile</div>
         </div>
       </div>
     </div>
@@ -352,23 +339,19 @@ h1{font-size:clamp(25px,3vw,36px);letter-spacing:-1.5px;margin:0;font-weight:900
 
   <main class="main">
     <header class="topbar">
-      <a class="mobile-brand" href="marketplace.html">
-        <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-        <span>ZEP <span style="color:var(--green)">SWIPE</span></span>
-      </a>
-      <div class="topbar-title">
-        My Account
-        <small id="topSubtitle">Your Zep Swipe workspace</small>
+      <div class="topbar-left">
+        <button class="icon-btn menu-btn" onclick="toggleSidebar()" aria-label="Open menu">
+          <i data-lucide="menu"></i>
+        </button>
+        <div>
+          <h1 id="topTitle">Account Overview</h1>
+          <div class="topbar-sub" id="topSubtitle">Your account and opportunities in one place</div>
+        </div>
       </div>
       <div class="top-actions">
-        <a class="icon-btn" href="marketplace.html" aria-label="Marketplace" title="Marketplace">
-          <i data-lucide="compass"></i>
-        </a>
-        <a class="icon-btn" href="mobility.html" aria-label="Mobility" title="Mobility">
-          <i data-lucide="car-front"></i>
-        </a>
-        <button class="icon-btn" id="topLogout" aria-label="Sign out" title="Sign out">
-          <i data-lucide="log-out"></i>
+        <div class="pill"><span class="green-dot"></span><span id="connectionStatus">Connecting to account</span></div>
+        <button class="icon-btn" onclick="refreshCurrentView()" aria-label="Refresh">
+          <i data-lucide="refresh-cw"></i>
         </button>
       </div>
     </header>
@@ -376,325 +359,417 @@ h1{font-size:clamp(25px,3vw,36px);letter-spacing:-1.5px;margin:0;font-weight:900
     <div class="content">
 
       <!-- OVERVIEW -->
-      <section class="panel-view active" id="view-overview">
-        <div class="page-head">
-          <div>
-            <div class="eyebrow">Your account · Your opportunities</div>
-            <h1>Welcome, <span id="welcomeName">Member</span>.</h1>
-            <p>Discover opportunities, manage your activity, and access your Customer, Student Provider, or Business workspace from one place.</p>
-          </div>
-          <span class="role-chip" id="currentRoleChip">CUSTOMER ACCOUNT</span>
-        </div>
-
+      <section class="page active" id="page-overview">
         <div class="hero">
-          <div class="hero-copy">
-            <span class="pill"><span class="pill-dot"></span> DISCOVER · EARN · CONNECT · BUILD</span>
-            <h2>Your next opportunity starts here.</h2>
-            <p>Find services and student deals, grow your provider profile, connect with customers, or reach the student economy through Zep Swipe Mobility.</p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="marketplace.html"><i data-lucide="compass"></i> Explore Marketplace</a>
-              <a class="btn" href="mobility.html"><i data-lucide="car-front"></i> Explore Mobility</a>
+          <div class="hero-row">
+            <div>
+              <div class="eyebrow">Your account workspace</div>
+              <h2 id="welcomeTitle">Welcome to your account.</h2>
+              <p id="welcomeDescription">
+                Manage your profile and explore the opportunities available to your account.
+              </p>
+              <button class="btn btn-primary" onclick="showView('profile')">
+                <i data-lucide="user-round"></i> Complete my profile
+              </button>
             </div>
-          </div>
-          <div class="hero-side">
-            <div class="hero-mini">
-              <strong>For customers</strong>
-              <span>Discover services, make enquiries, and explore student deals.</span>
-            </div>
-            <div class="hero-mini">
-              <strong>For providers and businesses</strong>
-              <span>Manage your workspace and grow your reach.</span>
-            </div>
+            <div class="hero-symbol"><i data-lucide="layers-3"></i></div>
           </div>
         </div>
 
-        <div class="stats">
+        <div class="section-head">
+          <div>
+            <h3>Your account at a glance</h3>
+            <p>Numbers are loaded from Supabase where your permissions allow access.</p>
+          </div>
+          <span class="badge" id="roleBadge">Loading role</span>
+        </div>
+
+        <div class="grid stats">
           <div class="stat">
-            <div class="stat-top"><span class="stat-label">Service enquiries</span><span class="stat-icon"><i data-lucide="messages-square"></i></span></div>
-            <div class="stat-number" id="overviewRequests">—</div>
-            <div class="stat-note">Your recorded enquiries</div>
+            <div class="stat-top">
+              <div class="stat-label">Available services</div>
+              <div class="stat-icon"><i data-lucide="briefcase-business"></i></div>
+            </div>
+            <div class="stat-value" id="overviewServices">—</div>
+            <div class="stat-note">Active services on the marketplace</div>
           </div>
           <div class="stat">
-            <div class="stat-top"><span class="stat-label">My services</span><span class="stat-icon"><i data-lucide="briefcase-business"></i></span></div>
-            <div class="stat-number" id="overviewServices">—</div>
-            <div class="stat-note">Services linked to your account</div>
+            <div class="stat-top">
+              <div class="stat-label">Student deals</div>
+              <div class="stat-icon"><i data-lucide="ticket-percent"></i></div>
+            </div>
+            <div class="stat-value" id="overviewDeals">—</div>
+            <div class="stat-note">Active deals available to browse</div>
           </div>
           <div class="stat">
-            <div class="stat-top"><span class="stat-label">My deals</span><span class="stat-icon"><i data-lucide="ticket-percent"></i></span></div>
-            <div class="stat-number" id="overviewDeals">—</div>
-            <div class="stat-note">Deals linked to your account</div>
-          </div>
-          <div class="stat">
-            <div class="stat-top"><span class="stat-label">Account role</span><span class="stat-icon"><i data-lucide="shield-check"></i></span></div>
-            <div class="stat-number" style="font-size:17px" id="overviewRole">Customer</div>
-            <div class="stat-note">Your saved account type</div>
+            <div class="stat-top">
+              <div class="stat-label">My mobility enquiries</div>
+              <div class="stat-icon"><i data-lucide="car-front"></i></div>
+            </div>
+            <div class="stat-value" id="overviewMobility">—</div>
+            <div class="stat-note">Enquiries linked to your account</div>
           </div>
         </div>
 
-        <div class="section">
-          <div class="section-head">
-            <div><h2>Choose your workspace</h2><p>Open a dashboard without leaving this page.</p></div>
-          </div>
-          <div class="grid-3">
-            <div class="card action-card">
-              <div class="action-icon"><i data-lucide="shopping-bag"></i></div>
-              <div class="action-copy">
-                <div class="card-title">Customer Dashboard</div>
-                <p class="card-sub">Review your service enquiries and manage your customer profile.</p>
-                <button class="btn" data-open-view="customer">Open dashboard <i data-lucide="arrow-up-right"></i></button>
-              </div>
-            </div>
-            <div class="card action-card">
-              <div class="action-icon"><i data-lucide="briefcase-business"></i></div>
-              <div class="action-copy">
-                <div class="card-title">Student Provider</div>
-                <p class="card-sub">Review your listed services and incoming service requests.</p>
-                <button class="btn" data-open-view="provider">Open dashboard <i data-lucide="arrow-up-right"></i></button>
-              </div>
-            </div>
-            <div class="card action-card">
-              <div class="action-icon"><i data-lucide="store"></i></div>
-              <div class="action-copy">
-                <div class="card-title">Business Dashboard</div>
-                <p class="card-sub">Review your student deals and access your business workspace.</p>
-                <button class="btn" data-open-view="business">Open dashboard <i data-lucide="arrow-up-right"></i></button>
-              </div>
-            </div>
+        <div class="section-head">
+          <div>
+            <h3>Quick access</h3>
+            <p>Move between your account areas without leaving this page.</p>
           </div>
         </div>
 
-        <div class="section">
-          <div class="section-head">
-            <div><h2>Recommended next steps</h2><p>Make your Zep Swipe account useful from day one.</p></div>
+        <div class="grid shortcuts">
+          <button class="shortcut" onclick="openRoleView('customer')">
+            <span class="shortcut-icon"><i data-lucide="user-round"></i></span>
+            <strong>Customer workspace</strong>
+            <span>Discover services, student deals and marketplace opportunities.</span>
+          </button>
+          <button class="shortcut" onclick="openRoleView('provider')">
+            <span class="shortcut-icon"><i data-lucide="briefcase-business"></i></span>
+            <strong>Provider workspace</strong>
+            <span>View your service listing totals and provider account details.</span>
+          </button>
+          <button class="shortcut" onclick="openRoleView('business')">
+            <span class="shortcut-icon"><i data-lucide="store"></i></span>
+            <strong>Business workspace</strong>
+            <span>View your deal totals and business account information.</span>
+          </button>
+        </div>
+
+        <div class="section-head">
+          <div>
+            <h3>Account checklist</h3>
+            <p>Keep your account ready for opportunities.</p>
           </div>
-          <div class="grid-2">
-            <div class="card action-card">
-              <div class="action-icon"><i data-lucide="user-round-pen"></i></div>
-              <div class="action-copy">
-                <div class="card-title">Complete your profile</div>
-                <p class="card-sub">Keep your name, phone number, city and other details up to date.</p>
-                <button class="btn" data-open-view="profile">Edit profile <i data-lucide="arrow-right"></i></button>
-              </div>
+        </div>
+
+        <div class="card list">
+          <div class="list-item">
+            <span class="list-icon"><i data-lucide="contact"></i></span>
+            <div class="list-copy">
+              <strong>Review your profile</strong>
+              <span>Keep your name, contact number and location up to date.</span>
             </div>
-            <div class="card action-card">
-              <div class="action-icon"><i data-lucide="car-front"></i></div>
-              <div class="action-copy">
-                <div class="card-title">Zep Swipe Mobility</div>
-                <p class="card-sub">Explore vehicle tracking, security and fleet management enquiries.</p>
-                <a class="btn btn-primary" href="mobility.html">Explore Mobility <i data-lucide="arrow-up-right"></i></a>
-              </div>
+            <button class="btn" onclick="showView('profile')">Open profile</button>
+          </div>
+          <div class="list-item">
+            <span class="list-icon"><i data-lucide="shield-check"></i></span>
+            <div class="list-copy">
+              <strong>Account permissions</strong>
+              <span>Your account role determines which workspace features are available.</span>
             </div>
+          </div>
+          <div class="list-item">
+            <span class="list-icon"><i data-lucide="car-front"></i></span>
+            <div class="list-copy">
+              <strong>Mobility enquiries</strong>
+              <span>Review mobility enquiries associated with your signed-in account.</span>
+            </div>
+            <button class="btn" onclick="showView('mobility')">View enquiries</button>
           </div>
         </div>
       </section>
 
       <!-- CUSTOMER DASHBOARD -->
-      <section class="panel-view" id="view-customer">
-        <div class="page-head">
-          <div>
-            <div class="eyebrow">Customer workspace</div>
-            <h1>Customer Dashboard</h1>
-            <p>Manage your service enquiries and discover opportunities across the Zep Swipe marketplace.</p>
-          </div>
-          <a href="marketplace.html" class="btn btn-primary"><i data-lucide="compass"></i> Browse services</a>
+      <section class="page" id="page-customer">
+        <div class="eyebrow">Member workspace</div>
+        <h2 class="page-heading">Customer Dashboard</h2>
+        <p class="page-desc">Explore services, discover student deals and manage your Zep Swipe opportunities from this account center.</p>
+
+        <div id="customerLocked" class="role-lock" hidden>
+          <div class="role-lock-icon"><i data-lucide="lock-keyhole"></i></div>
+          <h3>Customer workspace unavailable</h3>
+          <p id="customerLockedText">This workspace requires a customer account.</p>
         </div>
 
-        <div class="stats">
-          <div class="stat"><div class="stat-label">Total enquiries</div><div class="stat-number" id="customerTotal">—</div><div class="stat-note">Your service requests</div></div>
-          <div class="stat"><div class="stat-label">Pending</div><div class="stat-number" id="customerPending">—</div><div class="stat-note">Awaiting a response or action</div></div>
-          <div class="stat"><div class="stat-label">Completed</div><div class="stat-number" id="customerCompleted">—</div><div class="stat-note">Marked completed</div></div>
-          <div class="stat"><div class="stat-label">Saved services</div><div class="stat-number" id="customerSaved">—</div><div class="stat-note">Saved items, if available</div></div>
-        </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <div class="section-head"><div><h2>My service enquiries</h2><p>Recent activity linked to your account.</p></div><button class="btn" id="refreshCustomer">Refresh</button></div>
-            <div class="list" id="customerRequests"><div class="loading">Loading enquiries...</div></div>
+        <div id="customerContent">
+          <div class="section-head"><div><h3>Marketplace overview</h3><p>Live totals from public marketplace records.</p></div></div>
+          <div class="grid stats">
+            <div class="stat">
+              <div class="stat-label">Active services</div>
+              <div class="stat-value" id="customerServices">—</div>
+              <div class="stat-note">Services currently listed</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Active student deals</div>
+              <div class="stat-value" id="customerDeals">—</div>
+              <div class="stat-note">Deals currently available</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">My mobility enquiries</div>
+              <div class="stat-value" id="customerMobility">—</div>
+              <div class="stat-note">Enquiries linked to you</div>
+            </div>
           </div>
-          <div class="card">
-            <div class="section-head"><div><h2>Explore more</h2><p>Continue discovering opportunities.</p></div></div>
-            <div class="list">
-              <div class="list-item"><div class="list-icon"><i data-lucide="search"></i></div><div class="list-copy"><strong>Find a service</strong><small>Explore services listed on Zep Swipe.</small></div><a class="btn" href="marketplace.html">Explore</a></div>
-              <div class="list-item"><div class="list-icon"><i data-lucide="ticket-percent"></i></div><div class="list-copy"><strong>Student deals</strong><small>Discover offers from participating businesses.</small></div><a class="btn" href="marketplace.html">Browse</a></div>
-              <div class="list-item"><div class="list-icon"><i data-lucide="car-front"></i></div><div class="list-copy"><strong>Mobility enquiries</strong><small>Explore vehicle and fleet solutions.</small></div><a class="btn" href="mobility.html">Open</a></div>
+
+          <div class="section-head"><div><h3>Customer actions</h3><p>These sections stay within the account page.</p></div></div>
+          <div class="card list">
+            <div class="list-item">
+              <span class="list-icon"><i data-lucide="search"></i></span>
+              <div class="list-copy"><strong>Discover opportunities</strong><span>Browse available services, deals and other opportunities on Zep Swipe.</span></div>
+              <button class="btn" onclick="showToast('Use the Marketplace link on your main website to browse all listings.')">Details</button>
+            </div>
+            <div class="list-item">
+              <span class="list-icon"><i data-lucide="car-front"></i></span>
+              <div class="list-copy"><strong>Mobility enquiries</strong><span>See the mobility enquiries associated with your account.</span></div>
+              <button class="btn" onclick="showView('mobility')">View enquiries</button>
+            </div>
+            <div class="list-item">
+              <span class="list-icon"><i data-lucide="contact"></i></span>
+              <div class="list-copy"><strong>My information</strong><span>Update your contact details in your account profile.</span></div>
+              <button class="btn" onclick="showView('profile')">Edit profile</button>
             </div>
           </div>
         </div>
       </section>
 
       <!-- STUDENT PROVIDER DASHBOARD -->
-      <section class="panel-view" id="view-provider">
-        <div class="page-head">
-          <div>
-            <div class="eyebrow">Earn through your skills</div>
-            <h1>Student Provider Dashboard</h1>
-            <p>Review services associated with your account and check service requests from potential customers.</p>
-          </div>
-          <a href="provider.html" class="btn btn-primary"><i data-lucide="external-link"></i> Open provider tools</a>
+      <section class="page" id="page-provider">
+        <div class="eyebrow">Earn with your skills</div>
+        <h2 class="page-heading">Student Provider Dashboard</h2>
+        <p class="page-desc">Keep track of your service listings and manage your provider account from this page.</p>
+
+        <div id="providerLocked" class="role-lock" hidden>
+          <div class="role-lock-icon"><i data-lucide="lock-keyhole"></i></div>
+          <h3>Provider workspace unavailable</h3>
+          <p id="providerLockedText">This workspace requires a student provider account.</p>
         </div>
 
-        <div class="notice"><strong>Provider workspace:</strong> This account page gives you an overview. Use the provider tools page to create or edit services and manage additional provider features.</div>
-
-        <div class="stats" style="margin-top:20px">
-          <div class="stat"><div class="stat-label">My services</div><div class="stat-number" id="providerTotal">—</div><div class="stat-note">Services associated with your user ID</div></div>
-          <div class="stat"><div class="stat-label">Active services</div><div class="stat-number" id="providerActive">—</div><div class="stat-note">Currently marked active</div></div>
-          <div class="stat"><div class="stat-label">Incoming requests</div><div class="stat-number" id="providerRequests">—</div><div class="stat-note">Requests assigned to you</div></div>
-          <div class="stat"><div class="stat-label">Pending requests</div><div class="stat-number" id="providerPending">—</div><div class="stat-note">Requests not completed</div></div>
-        </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <div class="section-head"><div><h2>My listed services</h2><p>Service listings linked to your account.</p></div><button class="btn" id="refreshProvider">Refresh</button></div>
-            <div class="list" id="providerServices"><div class="loading">Loading services...</div></div>
+        <div id="providerContent">
+          <div class="section-head"><div><h3>Your service listings</h3><p>Counts reflect records visible to your signed-in account.</p></div></div>
+          <div class="grid stats">
+            <div class="stat">
+              <div class="stat-label">My total services</div>
+              <div class="stat-value" id="providerServices">—</div>
+              <div class="stat-note">Service records linked to you</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Active services</div>
+              <div class="stat-value" id="providerActive">—</div>
+              <div class="stat-note">Listings marked active</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">My mobility enquiries</div>
+              <div class="stat-value" id="providerMobility">—</div>
+              <div class="stat-note">Your linked mobility enquiries</div>
+            </div>
           </div>
-          <div class="card">
-            <div class="section-head"><div><h2>Incoming service requests</h2><p>Recent requests assigned to you.</p></div></div>
-            <div class="list" id="providerRequestList"><div class="loading">Loading requests...</div></div>
-            <a href="provider.html" class="btn" style="margin-top:12px">Manage provider services <i data-lucide="arrow-up-right"></i></a>
+
+          <div class="section-head"><div><h3>Provider account</h3><p>Continue managing your work without leaving this page.</p></div></div>
+          <div class="card list">
+            <div class="list-item">
+              <span class="list-icon"><i data-lucide="briefcase-business"></i></span>
+              <div class="list-copy"><strong>Service listings</strong><span>View your service totals. Listing creation and editing depend on the provider page and database permissions.</span></div>
+              <button class="btn" onclick="showToast('Service listing management is provided by your provider workspace. This account page does not change listing records.')">Details</button>
+            </div>
+            <div class="list-item">
+              <span class="list-icon"><i data-lucide="user-check"></i></span>
+              <div class="list-copy"><strong>Provider profile</strong><span>Keep your name, university, bio and contact information up to date.</span></div>
+              <button class="btn" onclick="showView('profile')">Edit profile</button>
+            </div>
+            <div class="list-item">
+              <span class="list-icon"><i data-lucide="car-front"></i></span>
+              <div class="list-copy"><strong>Mobility opportunities</strong><span>Review mobility enquiries linked to your account.</span></div>
+              <button class="btn" onclick="showView('mobility')">View enquiries</button>
+            </div>
+          </div>
+
+          <div class="notice" style="margin-top:15px">
+            <i data-lucide="info"></i>
+            <div>This page displays provider listing counts only. Earnings, orders, ratings and service requests are not displayed as fabricated figures; those features need the relevant live tables and permissions.</div>
           </div>
         </div>
       </section>
 
       <!-- BUSINESS DASHBOARD -->
-      <section class="panel-view" id="view-business">
-        <div class="page-head">
-          <div>
-            <div class="eyebrow">Reach the student economy</div>
-            <h1>Business Dashboard</h1>
-            <p>Review student deals associated with your account and access the business growth workspace.</p>
-          </div>
-          <a href="business-deals.html" class="btn btn-primary"><i data-lucide="store"></i> Open business tools</a>
+      <section class="page" id="page-business">
+        <div class="eyebrow">Reach the student economy</div>
+        <h2 class="page-heading">Business Dashboard</h2>
+        <p class="page-desc">Review your student deal totals and account details from this page.</p>
+
+        <div id="businessLocked" class="role-lock" hidden>
+          <div class="role-lock-icon"><i data-lucide="lock-keyhole"></i></div>
+          <h3>Business workspace unavailable</h3>
+          <p id="businessLockedText">This workspace requires a business account.</p>
         </div>
 
-        <div class="notice"><strong>Business workspace:</strong> Your deal counts come from the Supabase records associated with your account. Views, redemptions and sales are not displayed unless the connected backend provides those measurements.</div>
-
-        <div class="stats" style="margin-top:20px">
-          <div class="stat"><div class="stat-label">My deals</div><div class="stat-number" id="businessTotal">—</div><div class="stat-note">Deals linked to your account</div></div>
-          <div class="stat"><div class="stat-label">Active deals</div><div class="stat-number" id="businessActive">—</div><div class="stat-note">Currently marked active</div></div>
-          <div class="stat"><div class="stat-label">Pending deals</div><div class="stat-number" id="businessPending">—</div><div class="stat-note">Awaiting review or action</div></div>
-          <div class="stat"><div class="stat-label">Business role</div><div class="stat-number" style="font-size:17px">Workspace</div><div class="stat-note">Manage your business presence</div></div>
-        </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <div class="section-head"><div><h2>My student deals</h2><p>Deals associated with your business account.</p></div><button class="btn" id="refreshBusiness">Refresh</button></div>
-            <div class="list" id="businessDeals"><div class="loading">Loading deals...</div></div>
-          </div>
-          <div class="card">
-            <div class="section-head"><div><h2>Grow your business</h2><p>Tools for reaching customers and partners.</p></div></div>
-            <div class="list">
-              <div class="list-item"><div class="list-icon"><i data-lucide="ticket-percent"></i></div><div class="list-copy"><strong>Create or manage a deal</strong><small>Open your business dashboard to manage offers.</small></div><a class="btn" href="business-deals.html">Open</a></div>
-              <div class="list-item"><div class="list-icon"><i data-lucide="car-front"></i></div><div class="list-copy"><strong>Mobility solutions</strong><small>Explore vehicle tracking and fleet enquiries.</small></div><a class="btn" href="mobility.html">Explore</a></div>
-              <div class="list-item"><div class="list-icon"><i data-lucide="users"></i></div><div class="list-copy"><strong>Student audience</strong><small>Connect your business with the student economy.</small></div><a class="btn" href="marketplace.html">View</a></div>
+        <div id="businessContent">
+          <div class="section-head"><div><h3>Your business deals</h3><p>Counts are based on your account's deal records.</p></div></div>
+          <div class="grid stats">
+            <div class="stat">
+              <div class="stat-label">My total deals</div>
+              <div class="stat-value" id="businessDeals">—</div>
+              <div class="stat-note">Deals assigned to your account</div>
             </div>
+            <div class="stat">
+              <div class="stat-label">Active deals</div>
+              <div class="stat-value" id="businessActive">—</div>
+              <div class="stat-note">Deals marked active</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">My mobility enquiries</div>
+              <div class="stat-value" id="businessMobility">—</div>
+              <div class="stat-note">Your linked mobility enquiries</div>
+            </div>
+          </div>
+
+          <div class="section-head"><div><h3>Business account</h3><p>Account information and workspace actions.</p></div></div>
+          <div class="card list">
+            <div class="list-item">
+              <span class="list-icon"><i data-lucide="ticket-percent"></i></span>
+              <div class="list-copy"><strong>Student deals</strong><span>View the deal totals linked to your business account. Deal publishing remains subject to backend approval rules.</span></div>
+              <button class="btn" onclick="showToast('Deal management is governed by your existing business dashboard and database permissions.')">Details</button>
+            </div>
+            <div class="list-item">
+              <span class="list-icon"><i data-lucide="contact"></i></span>
+              <div class="list-copy"><strong>Business contact information</strong><span>Update your account contact details.</span></div>
+              <button class="btn" onclick="showView('profile')">Edit profile</button>
+            </div>
+            <div class="list-item">
+              <span class="list-icon"><i data-lucide="car-front"></i></span>
+              <div class="list-copy"><strong>Mobility enquiries</strong><span>Review enquiries that are linked to your user account.</span></div>
+              <button class="btn" onclick="showView('mobility')">View enquiries</button>
+            </div>
+          </div>
+
+          <div class="notice" style="margin-top:15px">
+            <i data-lucide="info"></i>
+            <div>Deal views, redemptions, leads, paid subscriptions and revenue are not estimated here. They need the matching records and secure tracking in your live database.</div>
           </div>
         </div>
       </section>
 
       <!-- PROFILE -->
-      <section class="panel-view" id="view-profile">
-        <div class="page-head">
-          <div>
-            <div class="eyebrow">Account settings</div>
-            <h1>My Profile</h1>
-            <p>Update your personal information. Your account type is managed separately from your editable profile details.</p>
-          </div>
-          <span class="role-chip" id="profileRoleChip">MEMBER</span>
-        </div>
+      <section class="page" id="page-profile">
+        <div class="eyebrow">Personal information</div>
+        <h2 class="page-heading">My Profile</h2>
+        <p class="page-desc">Manage the information associated with your signed-in account. Your account role is read-only here.</p>
 
-        <div class="profile-layout">
+        <div class="grid columns" style="margin-top:24px">
           <div class="card">
-            <div class="section-head"><div><h2>Personal information</h2><p>Changes are saved to your Supabase profile.</p></div></div>
+            <div class="section-head" style="margin-top:0">
+              <div><h3>Personal details</h3><p>Changes are saved to your Supabase profile.</p></div>
+            </div>
             <form id="profileForm">
               <div class="form-grid">
-                <div class="field">
+                <div class="field full">
                   <label for="profileName">Full name</label>
-                  <input id="profileName" name="full_name" maxlength="120" placeholder="Your full name">
+                  <input id="profileName" name="full_name" maxlength="120" autocomplete="name" placeholder="Your full name">
                 </div>
-                <div class="field">
+                <div class="field full">
                   <label for="profileEmail">Email address</label>
-                  <input id="profileEmail" type="email" disabled>
+                  <input id="profileEmail" type="email" readonly>
                 </div>
                 <div class="field">
                   <label for="profilePhone">Phone number</label>
-                  <input id="profilePhone" name="phone" maxlength="40" placeholder="Your phone number">
+                  <input id="profilePhone" name="phone" type="tel" maxlength="40" autocomplete="tel" placeholder="Your phone number">
                 </div>
                 <div class="field">
                   <label for="profileCity">City</label>
-                  <input id="profileCity" name="city" maxlength="120" placeholder="e.g. Johannesburg">
-                </div>
-                <div class="field">
-                  <label for="profileUniversity">University / college</label>
-                  <input id="profileUniversity" name="university" maxlength="180" placeholder="Your institution">
-                </div>
-                <div class="field">
-                  <label for="profileAvatar">Avatar image URL</label>
-                  <input id="profileAvatar" name="avatar_url" type="url" maxlength="500" placeholder="Optional image URL">
+                  <input id="profileCity" name="city" maxlength="120" autocomplete="address-level2" placeholder="Your city">
                 </div>
                 <div class="field full">
-                  <label for="profileBio">About you</label>
-                  <textarea id="profileBio" name="bio" maxlength="1000" placeholder="Tell the Zep Swipe community a little about yourself"></textarea>
+                  <label for="profileUniversity">University / institution</label>
+                  <input id="profileUniversity" name="university" maxlength="180" placeholder="Your institution (optional)">
+                </div>
+                <div class="field full">
+                  <label for="profileBio">Short bio</label>
+                  <textarea id="profileBio" name="bio" maxlength="1000" placeholder="Tell people a little about yourself (optional)"></textarea>
                 </div>
               </div>
               <div class="form-actions">
-                <button class="btn" type="button" id="cancelProfile">Cancel</button>
-                <button class="btn btn-primary" type="submit" id="saveProfile"><i data-lucide="save"></i> Save changes</button>
+                <button class="btn btn-primary" id="saveProfileBtn" type="submit">
+                  <i data-lucide="save"></i> Save profile
+                </button>
+                <button class="btn" type="button" onclick="loadProfile()">Discard changes</button>
               </div>
             </form>
           </div>
 
-          <div>
-            <div class="card">
-              <div class="section-head"><div><h2>Account information</h2><p>Your current identity on Zep Swipe.</p></div></div>
-              <div class="list">
-                <div class="list-item"><div class="list-icon"><i data-lucide="shield-check"></i></div><div class="list-copy"><strong>Account type</strong><small id="profileRoleValue">Loading...</small></div></div>
-                <div class="list-item"><div class="list-icon"><i data-lucide="mail"></i></div><div class="list-copy"><strong>Email</strong><small id="profileEmailStatus">Checking verification status...</small></div></div>
-                <div class="list-item"><div class="list-icon"><i data-lucide="calendar"></i></div><div class="list-copy"><strong>Member since</strong><small id="profileCreated">Not available</small></div></div>
+          <div class="card">
+            <div class="section-head" style="margin-top:0"><div><h3>Account details</h3><p>Your current sign-in information.</p></div></div>
+            <div class="list">
+              <div class="list-item">
+                <span class="list-icon"><i data-lucide="shield-check"></i></span>
+                <div class="list-copy"><strong>Account type</strong><span id="profileRole">Loading...</span></div>
               </div>
-              <div class="notice">For your security, this page does not let you change your account role or email address. Use the appropriate secure account process for those changes.</div>
+              <div class="list-item">
+                <span class="list-icon"><i data-lucide="mail-check"></i></span>
+                <div class="list-copy"><strong>Email status</strong><span id="emailStatus">Checking your account</span></div>
+              </div>
+              <div class="list-item">
+                <span class="list-icon"><i data-lucide="calendar-days"></i></span>
+                <div class="list-copy"><strong>Member since</strong><span id="memberSince">—</span></div>
+              </div>
             </div>
-            <div class="card" style="margin-top:15px">
-              <div class="card-title">Need another workspace?</div>
-              <p class="card-sub">Switch between the dashboard views using the sidebar. Each view uses your signed-in account and database permissions.</p>
-              <button class="btn" style="margin-top:14px" data-open-view="overview">Back to overview</button>
+            <div class="notice" style="margin-top:20px">
+              <i data-lucide="shield"></i>
+              <div>For security, this page does not let you change your role. Changes to account permissions should be handled through an authorized process.</div>
             </div>
+            <button class="btn btn-danger" style="margin-top:18px;width:100%" onclick="signOut()">
+              <i data-lucide="log-out"></i> Sign out of Zep Swipe
+            </button>
           </div>
         </div>
       </section>
 
-      <footer class="footer">
-        <span><strong>ZEP SWIPE</strong> · The Student Economy</span>
-        <span>DISCOVER → EARN → CONNECT → BUILD</span>
-      </footer>
+      <!-- MOBILITY ENQUIRIES -->
+      <section class="page" id="page-mobility">
+        <div class="eyebrow">Vehicle and fleet opportunities</div>
+        <h2 class="page-heading">Mobility Enquiries</h2>
+        <p class="page-desc">Review the Cartrack mobility enquiries linked to your signed-in user account. This page does not expose other users' enquiries.</p>
+
+        <div class="section-head">
+          <div><h3>My enquiries</h3><p id="mobilityCaption">Loading your mobility enquiry records.</p></div>
+          <button class="btn" onclick="loadMobility()"><i data-lucide="refresh-cw"></i> Refresh</button>
+        </div>
+
+        <div id="mobilityList" class="card">
+          <div class="loading">Loading enquiries...</div>
+        </div>
+
+        <div class="notice" style="margin-top:16px">
+          <i data-lucide="lock-keyhole"></i>
+          <div>Only enquiries visible under your account's Supabase permissions will appear here. This page does not show all platform leads or private Cartrack partner records.</div>
+        </div>
+      </section>
+
     </div>
   </main>
 </div>
 
-<!-- Mobile navigation -->
-<nav class="mobile-tabs" aria-label="Account navigation">
-  <button class="mobile-tab active" data-view="overview"><i data-lucide="layout-dashboard"></i>Home</button>
-  <button class="mobile-tab" data-view="customer"><i data-lucide="shopping-bag"></i>Customer</button>
-  <button class="mobile-tab" data-view="provider"><i data-lucide="briefcase-business"></i>Provider</button>
-  <button class="mobile-tab" data-view="business"><i data-lucide="store"></i>Business</button>
-  <button class="mobile-tab" data-view="profile"><i data-lucide="user-round"></i>Profile</button>
-</nav>
-
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-/* =========================================================
-   ZEP SWIPE ACCOUNT HUB
-   Supabase JS v2
+"use strict";
 
-   Before publishing:
-   1. Confirm the project URL below.
-   2. Replace YOUR_SUPABASE_ANON_KEY with your PUBLIC anon /
-      publishable key. Never use a service-role or secret key.
-   3. Confirm database RLS policies for the signed-in user.
-   ========================================================= */
+/* ============================================================
+   ZEP SWIPE ACCOUNT CENTER
+   ------------------------------------------------------------
+   Configure the Supabase URL and PUBLIC anon/publishable key.
+   Never put a Supabase service-role key in browser code.
 
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+   Expected existing tables:
+   profiles: id, email, role, full_name, phone, city,
+             university, bio, created_at
+   services: id, provider_id, status
+   deals: id, business_id, status
+   cartrack_leads: id, user_id, lead_type, status, created_at
+
+   Your existing RLS policies remain responsible for access.
+   This file does not grant permissions or change account roles.
+   ============================================================ */
+
+const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+
+if (!window.supabase) {
+  document.body.innerHTML =
+    '<div style="max-width:650px;margin:80px auto;padding:24px;color:white;font-family:Arial">' +
+    '<h2>Supabase library could not load</h2>' +
+    '<p>Refresh this page or check your internet connection.</p></div>';
+  throw new Error("Supabase JS library failed to load.");
+}
 
 const db = window.supabase.createClient(
   SUPABASE_URL,
@@ -702,486 +777,535 @@ const db = window.supabase.createClient(
 );
 
 let currentUser = null;
-let currentProfile = {};
+let currentProfile = null;
 let activeView = "overview";
 let toastTimer = null;
+let initialized = false;
 
 const $ = id => document.getElementById(id);
 
-function escapeHTML(value){
+const titles = {
+  overview: ["Account Overview", "Your account and opportunities in one place"],
+  customer: ["Customer Dashboard", "Your customer workspace"],
+  provider: ["Student Provider Dashboard", "Your services and earning workspace"],
+  business: ["Business Dashboard", "Your student economy workspace"],
+  profile: ["My Profile", "Manage your personal account information"],
+  mobility: ["Mobility Enquiries", "Review enquiries linked to your account"]
+};
+
+function showToast(message, isError=false) {
+  const el = $("toast");
+  el.textContent = message;
+  el.classList.toggle("error-text", isError);
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 3600);
+}
+
+function roleOf(profile, user=currentUser) {
+  const raw = String(
+    profile?.role ||
+    profile?.user_type ||
+    profile?.account_type ||
+    user?.user_metadata?.role ||
+    "customer"
+  ).toLowerCase();
+
+  if (["provider","student_provider"].includes(raw)) return "provider";
+  if (["business","merchant","business_owner"].includes(raw)) return "business";
+  return "customer";
+}
+
+function roleLabel(role) {
+  return ({
+    customer: "Customer",
+    provider: "Student Provider",
+    business: "Business"
+  })[role] || "Customer";
+}
+
+function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, ch => ({
     "&":"&amp;",
     "<":"&lt;",
     ">":"&gt;",
     '"':"&quot;",
-    "'":"&#39;"
-  }[ch]));
+    "'":"&#039;"
+  })[ch]);
 }
 
-function showToast(message, error=false){
-  const el = $("toast");
-  el.textContent = message;
-  el.style.borderColor = error ? "#754040" : "#435a2d";
-  el.style.background = error ? "#261313" : "#1a2014";
-  el.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove("show"), 3500);
+function closeSidebar() {
+  $("sidebar").classList.remove("open");
+  $("mobileOverlay").classList.remove("show");
 }
 
-function titleCase(value){
-  return String(value || "customer")
-    .replace(/[_-]/g," ")
-    .replace(/\b\w/g,c => c.toUpperCase());
+function toggleSidebar() {
+  $("sidebar").classList.toggle("open");
+  $("mobileOverlay").classList.toggle("show");
 }
 
-function normalizeRole(profile){
-  const value = String(
-    profile?.role ||
-    currentUser?.user_metadata?.role ||
-    "customer"
-  ).toLowerCase();
-
-  if(["provider","student_provider"].includes(value)) return "provider";
-  if(["business","merchant","business_owner"].includes(value)) return "business";
-  return "customer";
-}
-
-function userDisplayName(){
-  return currentProfile.full_name ||
-    currentUser?.user_metadata?.full_name ||
-    currentUser?.user_metadata?.name ||
-    (currentUser?.email ? currentUser.email.split("@")[0] : "Member");
-}
-
-function initials(name){
-  const parts = String(name || "Z").trim().split(/\s+/);
-  return parts.slice(0,2).map(x => x[0] || "").join("").toUpperCase() || "Z";
-}
-
-function renderIcons(){
-  if(window.lucide) lucide.createIcons();
-}
-
-function switchView(view){
-  const allowed = ["overview","customer","provider","business","profile"];
-  if(!allowed.includes(view)) view = "overview";
-
+function showView(view) {
+  if (!titles[view]) return;
   activeView = view;
 
-  document.querySelectorAll(".panel-view").forEach(el => {
-    el.classList.toggle("active", el.id === "view-" + view);
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.toggle("active", page.id === "page-" + view);
   });
 
-  document.querySelectorAll("[data-view]").forEach(el => {
-    el.classList.toggle("active", el.dataset.view === view);
+  document.querySelectorAll(".nav-btn[data-view]").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.view === view);
   });
 
-  document.querySelectorAll("[data-open-view]").forEach(el => {
-    // Buttons do not need active styling, but their target is explicit.
-    el.setAttribute("aria-label","Open " + titleCase(el.dataset.openView));
+  $("topTitle").textContent = titles[view][0];
+  $("topSubtitle").textContent = titles[view][1];
+
+  closeSidebar();
+
+  if (view === "profile") loadProfile();
+  if (view === "mobility") loadMobility();
+  if (view === "customer" || view === "provider" || view === "business") {
+    renderRoleAccess();
+    loadDashboardData();
+  }
+
+  if (window.lucide) window.lucide.createIcons();
+}
+
+function openRoleView(view) {
+  showView(view);
+}
+
+function setText(id, value) {
+  const el = $(id);
+  if (el) el.textContent = value == null ? "—" : String(value);
+}
+
+function formatDate(value) {
+  if (!value) return "Not available";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Not available";
+  return date.toLocaleDateString(undefined, {
+    year: "numeric", month: "short", day: "numeric"
   });
-
-  const titles = {
-    overview:"Your Zep Swipe workspace",
-    customer:"Customer workspace",
-    provider:"Student Provider workspace",
-    business:"Business workspace",
-    profile:"Your account profile"
-  };
-  $("topSubtitle").textContent = titles[view] || titles.overview;
-
-  history.replaceState(null,"","#" + view);
-  window.scrollTo({top:0,behavior:"smooth"});
-  renderIcons();
 }
 
-document.querySelectorAll("[data-view]").forEach(el => {
-  el.addEventListener("click", () => switchView(el.dataset.view));
-});
-
-document.querySelectorAll("[data-open-view]").forEach(el => {
-  el.addEventListener("click", () => switchView(el.dataset.openView));
-});
-
-function statusClass(status){
-  const s = String(status || "unknown").toLowerCase();
-  if(["pending","submitted","in_review","processing"].includes(s)) return "pending";
-  if(["rejected","cancelled","canceled","failed"].includes(s)) return "rejected";
-  return "";
+function setCount(ids, value) {
+  ids.forEach(id => setText(id, value));
 }
 
-function emptyHTML(title, message){
-  return `<div class="empty">
-    <i data-lucide="inbox"></i>
-    <strong>${escapeHTML(title)}</strong>
-    ${escapeHTML(message)}
-  </div>`;
+function markCountUnavailable(ids) {
+  setCount(ids, "—");
 }
 
-function listItem(icon, title, detail, status){
-  const badge = status
-    ? `<span class="status-badge ${statusClass(status)}">${escapeHTML(titleCase(status))}</span>`
-    : "";
-  return `<div class="list-item">
-    <div class="list-icon"><i data-lucide="${escapeHTML(icon)}"></i></div>
-    <div class="list-copy">
-      <strong>${escapeHTML(title || "Untitled")}</strong>
-      <small>${escapeHTML(detail || "No additional details")}</small>
-    </div>
-    ${badge}
-  </div>`;
-}
-
-function setCount(id, value){
-  $(id).textContent = Number.isFinite(Number(value)) ? String(value) : "—";
-}
-
-function setProfileUI(){
-  const name = userDisplayName();
-  const role = normalizeRole(currentProfile);
-  const roleLabel = titleCase(role);
-
-  $("welcomeName").textContent = name.split(/\s+/)[0];
-  $("sideName").textContent = name;
-  $("sideRole").textContent = roleLabel + " account";
-  $("sideAvatar").textContent = initials(name);
-  $("currentRoleChip").textContent = roleLabel.toUpperCase() + " ACCOUNT";
-  $("overviewRole").textContent = roleLabel;
-  $("profileRoleChip").textContent = roleLabel.toUpperCase();
-  $("profileRoleValue").textContent = roleLabel;
-  $("profileEmail").value = currentUser.email || "";
-  $("profileEmailStatus").textContent = currentUser.email_confirmed_at
-    ? "Verified"
-    : "Not confirmed or status unavailable";
-
-  $("profileName").value = currentProfile.full_name || "";
-  $("profilePhone").value = currentProfile.phone || "";
-  $("profileCity").value = currentProfile.city || "";
-  $("profileUniversity").value = currentProfile.university || "";
-  $("profileAvatar").value = currentProfile.avatar_url || "";
-  $("profileBio").value = currentProfile.bio || "";
-
-  $("profileCreated").textContent = currentUser.created_at
-    ? new Date(currentUser.created_at).toLocaleDateString()
-    : "Not available";
-}
-
-async function loadProfile(){
-  const {data:{user}, error:userError} = await db.auth.getUser();
-
-  if(userError) throw userError;
-  if(!user) {
-    location.replace("auth.html?redirect=account.html");
-    return false;
-  }
-
-  currentUser = user;
-
-  const {data, error} = await db
-    .from("profiles")
-    .select("id,email,full_name,phone,avatar_url,university,bio,role,city,created_at")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if(error){
-    console.warn("Profile query:", error.message);
-    currentProfile = {
-      id:user.id,
-      email:user.email,
-      full_name:user.user_metadata?.full_name || user.user_metadata?.name || "",
-      role:user.user_metadata?.role || "customer"
-    };
-  }else{
-    currentProfile = data || {
-      id:user.id,
-      email:user.email,
-      full_name:user.user_metadata?.full_name || user.user_metadata?.name || "",
-      role:user.user_metadata?.role || "customer"
-    };
-  }
-
-  setProfileUI();
-  return true;
-}
-
-async function countRows(table, configure){
-  let query = db.from(table).select("id", {count:"exact",head:true});
-  if(configure) query = configure(query);
-  const {count,error} = await query;
-  if(error){
-    console.warn("Count unavailable for " + table + ":", error.message);
-    return null;
-  }
+async function exactCount(table, configure) {
+  let query = db.from(table).select("id", {
+    count: "exact",
+    head: true
+  });
+  if (typeof configure === "function") query = configure(query);
+  const {count, error} = await query;
+  if (error) throw error;
   return count ?? 0;
 }
 
-async function getRows(table, columns, configure){
-  let query = db.from(table).select(columns);
-  if(configure) query = configure(query);
-  const {data,error} = await query;
-  if(error){
-    console.warn("Could not load " + table + ":", error.message);
-    return {data:null,error};
+async function ownMobilityCount() {
+  if (!currentUser) throw new Error("No active user.");
+  return exactCount("cartrack_leads", q => q.eq("user_id", currentUser.id));
+}
+
+async function publicServiceCount() {
+  return exactCount("services", q => q.eq("status", "active"));
+}
+
+async function publicDealCount() {
+  // Existing project SQL can expose deals with status 'active' or
+  // 'approved'. Count both without assuming every row is public.
+  return exactCount("deals", q => q.in("status", ["active", "approved"]));
+}
+
+function showRoleLock(role) {
+  const roles = ["customer", "provider", "business"];
+
+  roles.forEach(r => {
+    const isAllowed = r === role;
+    const content = $(r + "Content");
+    const lock = $(r + "Locked");
+    if (content) content.hidden = !isAllowed;
+    if (lock) lock.hidden = isAllowed;
+    if (!isAllowed) {
+      const lockText = $(r + "LockedText");
+      if (lockText) {
+        lockText.textContent =
+          "Your current account type is " + roleLabel(role) +
+          ". Sign in with an account registered as " + roleLabel(r) +
+          " to use this workspace. Your account role cannot be switched from this page.";
+      }
+    }
+  });
+
+  document.querySelectorAll(".nav-btn[data-view]").forEach(btn => {
+    if (["customer","provider","business"].includes(btn.dataset.view)) {
+      btn.classList.toggle("locked", btn.dataset.view !== role);
+    }
+  });
+
+  setText("customerNavRole", role === "customer" ? "ACTIVE" : "");
+  setText("providerNavRole", role === "provider" ? "ACTIVE" : "");
+  setText("businessNavRole", role === "business" ? "ACTIVE" : "");
+}
+
+function renderRoleAccess() {
+  const role = roleOf(currentProfile);
+  showRoleLock(role);
+}
+
+async function loadOverviewData() {
+  const jobs = [
+    {
+      ids:["overviewServices","customerServices"],
+      run:publicServiceCount
+    },
+    {
+      ids:["overviewDeals","customerDeals"],
+      run:publicDealCount
+    },
+    {
+      ids:["overviewMobility","customerMobility","providerMobility","businessMobility"],
+      run:ownMobilityCount
+    }
+  ];
+
+  await Promise.all(jobs.map(async job => {
+    try {
+      const count = await job.run();
+      setCount(job.ids, count.toLocaleString());
+    } catch (error) {
+      console.warn("Count unavailable:", error.message);
+      markCountUnavailable(job.ids);
+    }
+  }));
+}
+
+async function loadDashboardData() {
+  if (!currentUser) return;
+
+  const role = roleOf(currentProfile);
+
+  if (role !== "customer") {
+    markCountUnavailable(["customerServices","customerDeals","customerMobility"]);
   }
-  return {data:data || [],error:null};
-}
-
-function userRequestsQuery(query){
-  return query.or(
-    "customer_id.eq." + currentUser.id + ",user_id.eq." + currentUser.id
-  ).order("created_at",{ascending:false}).limit(10);
-}
-
-function providerRequestsQuery(query){
-  return query.eq("provider_id",currentUser.id)
-    .order("created_at",{ascending:false}).limit(10);
-}
-
-async function loadCustomer(){
-  $("customerRequests").innerHTML = '<div class="loading">Loading enquiries...</div>';
-
-  const userFilter = q => userRequestsQuery(q);
-  const [all,pending,completed,saved,requests] = await Promise.all([
-    countRows("service_requests",userFilter),
-    countRows("service_requests",q => userRequestsQuery(q).in("status",["pending","submitted","in_review"])),
-    countRows("service_requests",q => userRequestsQuery(q).eq("status","completed")),
-    countRows("saved_services",q => q.eq("user_id",currentUser.id)),
-    getRows("service_requests","id,service_name,service_title,status,created_at,amount",userRequestsQuery)
-  ]);
-
-  setCount("customerTotal",all);
-  setCount("customerPending",pending);
-  setCount("customerCompleted",completed);
-  setCount("customerSaved",saved);
-  setCount("overviewRequests",all);
-
-  const rows = requests.data;
-  if(!rows){
-    $("customerRequests").innerHTML = emptyHTML(
-      "Enquiries unavailable",
-      "Check the service_requests table and your Supabase read policies."
-    );
-  }else if(!rows.length){
-    $("customerRequests").innerHTML = emptyHTML(
-      "No service enquiries yet",
-      "When you submit a service request through the marketplace, it will appear here."
-    );
-  }else{
-    $("customerRequests").innerHTML = rows.map(row => {
-      const title = row.service_name || row.service_title || "Service enquiry";
-      const date = row.created_at ? new Date(row.created_at).toLocaleDateString() : "Date unavailable";
-      return listItem("messages-square",title,date,row.status);
-    }).join("");
+  if (role !== "provider") {
+    markCountUnavailable(["providerServices","providerActive","providerMobility"]);
   }
-}
-
-async function loadProvider(){
-  $("providerServices").innerHTML = '<div class="loading">Loading services...</div>';
-  $("providerRequestList").innerHTML = '<div class="loading">Loading requests...</div>';
-
-  const [all,active,requests,services] = await Promise.all([
-    countRows("services",q => q.eq("provider_id",currentUser.id)),
-    countRows("services",q => q.eq("provider_id",currentUser.id).eq("status","active")),
-    getRows("service_requests","id,service_name,service_title,status,created_at",providerRequestsQuery),
-    getRows("services","id,title,service_name,status,created_at",q =>
-      q.eq("provider_id",currentUser.id).order("created_at",{ascending:false}).limit(10))
-  ]);
-
-  const pendingCount = requests.data
-    ? requests.data.filter(x => ["pending","submitted","in_review"].includes(String(x.status || "").toLowerCase())).length
-    : null;
-
-  setCount("providerTotal",all);
-  setCount("providerActive",active);
-  setCount("providerRequests",requests.data ? requests.data.length : null);
-  setCount("providerPending",pendingCount);
-  setCount("overviewServices",all);
-
-  if(!services.data){
-    $("providerServices").innerHTML = emptyHTML(
-      "Services unavailable",
-      "Check the services table and provider_id read policies."
-    );
-  }else if(!services.data.length){
-    $("providerServices").innerHTML = emptyHTML(
-      "No services listed",
-      "Your service listings will appear here after you create them."
-    );
-  }else{
-    $("providerServices").innerHTML = services.data.map(row =>
-      listItem("briefcase-business",row.title || row.service_name || "Untitled service",
-        row.created_at ? new Date(row.created_at).toLocaleDateString() : "Date unavailable",
-        row.status)
-    ).join("");
+  if (role !== "business") {
+    markCountUnavailable(["businessDeals","businessActive","businessMobility"]);
   }
 
-  if(!requests.data){
-    $("providerRequestList").innerHTML = emptyHTML(
-      "Requests unavailable",
-      "Check the service_requests table and provider access policies."
-    );
-  }else if(!requests.data.length){
-    $("providerRequestList").innerHTML = emptyHTML(
-      "No incoming requests",
-      "Requests assigned to your provider account will appear here."
-    );
-  }else{
-    $("providerRequestList").innerHTML = requests.data.map(row =>
-      listItem("messages-square",row.service_name || row.service_title || "Service request",
-        row.created_at ? new Date(row.created_at).toLocaleDateString() : "Date unavailable",
-        row.status)
-    ).join("");
+  await loadOverviewData();
+
+  if (role === "provider") {
+    try {
+      const total = await exactCount("services", q => q.eq("provider_id", currentUser.id));
+      setText("providerServices", total.toLocaleString());
+    } catch (error) {
+      setText("providerServices", "—");
+      console.warn("Provider service count unavailable:", error.message);
+    }
+
+    try {
+      const active = await exactCount("services", q =>
+        q.eq("provider_id", currentUser.id).eq("status", "active")
+      );
+      setText("providerActive", active.toLocaleString());
+    } catch (error) {
+      setText("providerActive", "—");
+      console.warn("Active service count unavailable:", error.message);
+    }
   }
-}
 
-async function loadBusiness(){
-  $("businessDeals").innerHTML = '<div class="loading">Loading deals...</div>';
+  if (role === "business") {
+    try {
+      const total = await exactCount("deals", q => q.eq("business_id", currentUser.id));
+      setText("businessDeals", total.toLocaleString());
+    } catch (error) {
+      setText("businessDeals", "—");
+      console.warn("Business deal count unavailable:", error.message);
+    }
 
-  const [all,active,pending,deals] = await Promise.all([
-    countRows("deals",q => q.eq("business_id",currentUser.id)),
-    countRows("deals",q => q.eq("business_id",currentUser.id).eq("status","active")),
-    countRows("deals",q => q.eq("business_id",currentUser.id).eq("status","pending")),
-    getRows("deals","id,title,offer,status,created_at",q =>
-      q.eq("business_id",currentUser.id).order("created_at",{ascending:false}).limit(10))
-  ]);
-
-  setCount("businessTotal",all);
-  setCount("businessActive",active);
-  setCount("businessPending",pending);
-  setCount("overviewDeals",all);
-
-  if(!deals.data){
-    $("businessDeals").innerHTML = emptyHTML(
-      "Deals unavailable",
-      "Check the deals table, business_id field and Supabase access policies."
-    );
-  }else if(!deals.data.length){
-    $("businessDeals").innerHTML = emptyHTML(
-      "No deals created yet",
-      "Deals associated with your business account will appear here."
-    );
-  }else{
-    $("businessDeals").innerHTML = deals.data.map(row => {
-      const detail = [
-        row.offer || "",
-        row.created_at ? new Date(row.created_at).toLocaleDateString() : ""
-      ].filter(Boolean).join(" · ");
-      return listItem("ticket-percent",row.title || "Student deal",detail,row.status);
-    }).join("");
+    try {
+      const active = await exactCount("deals", q =>
+        q.eq("business_id", currentUser.id).in("status", ["active", "approved"])
+      );
+      setText("businessActive", active.toLocaleString());
+    } catch (error) {
+      setText("businessActive", "—");
+      console.warn("Active business deal count unavailable:", error.message);
+    }
   }
 }
 
-async function refreshAll(){
-  await Promise.allSettled([
-    loadCustomer(),
-    loadProvider(),
-    loadBusiness()
-  ]);
-  renderIcons();
-}
+async function loadProfile() {
+  if (!currentUser) return;
 
-$("refreshCustomer").addEventListener("click",async()=>{
-  await loadCustomer();renderIcons();showToast("Customer dashboard refreshed.");
-});
-$("refreshProvider").addEventListener("click",async()=>{
-  await loadProvider();renderIcons();showToast("Provider dashboard refreshed.");
-});
-$("refreshBusiness").addEventListener("click",async()=>{
-  await loadBusiness();renderIcons();showToast("Business dashboard refreshed.");
-});
+  $("profileEmail").value = currentUser.email || "";
+  $("profileName").value = currentProfile?.full_name || currentUser.user_metadata?.full_name || "";
+  $("profilePhone").value = currentProfile?.phone || "";
+  $("profileCity").value = currentProfile?.city || "";
+  $("profileUniversity").value = currentProfile?.university || "";
+  $("profileBio").value = currentProfile?.bio || "";
 
-$("profileForm").addEventListener("submit",async event=>{
-  event.preventDefault();
-  const btn = $("saveProfile");
-  btn.disabled = true;
-  btn.textContent = "Saving...";
+  const role = roleOf(currentProfile);
+  setText("profileRole", roleLabel(role));
+  setText(
+    "emailStatus",
+    currentUser.email_confirmed_at ? "Verified" : "Not confirmed"
+  );
+  setText("memberSince", formatDate(currentUser.created_at));
 
-  const updates = {
-    full_name:$("profileName").value.trim(),
-    phone:$("profilePhone").value.trim() || null,
-    city:$("profileCity").value.trim() || null,
-    university:$("profileUniversity").value.trim() || null,
-    avatar_url:$("profileAvatar").value.trim() || null,
-    bio:$("profileBio").value.trim() || null
-  };
-
-  try{
-    // Deliberately do not update role or email here.
-    const {data,error} = await db
+  try {
+    const {data, error} = await db
       .from("profiles")
-      .update(updates)
-      .eq("id",currentUser.id)
-      .select("id,email,full_name,phone,avatar_url,university,bio,role,city,created_at")
+      .select("id,email,role,full_name,phone,city,university,bio,created_at")
+      .eq("id", currentUser.id)
       .maybeSingle();
 
-    if(error) throw error;
-    if(!data){
-      throw new Error("No profile row was updated. Check that your profile exists and your RLS policy allows updates to your own profile.");
+    if (error) throw error;
+
+    if (data) {
+      currentProfile = {...currentProfile, ...data};
+      $("profileName").value = data.full_name || "";
+      $("profilePhone").value = data.phone || "";
+      $("profileCity").value = data.city || "";
+      $("profileUniversity").value = data.university || "";
+      $("profileBio").value = data.bio || "";
+      setText("profileRole", roleLabel(roleOf(currentProfile)));
+      setText("memberSince", formatDate(data.created_at || currentUser.created_at));
     }
-
-    currentProfile = data;
-    setProfileUI();
-    showToast("Profile saved successfully.");
-  }catch(error){
-    console.error("Profile update:",error);
-    showToast(error.message || "Could not save profile.",true);
-  }finally{
-    btn.disabled = false;
-    btn.innerHTML = '<i data-lucide="save"></i> Save changes';
-    renderIcons();
-  }
-});
-
-$("cancelProfile").addEventListener("click",()=>{
-  setProfileUI();
-  showToast("Changes discarded.");
-});
-
-async function signOut(){
-  if(!confirm("Sign out of your Zep Swipe account?")) return;
-  const {error} = await db.auth.signOut();
-  if(error){
-    showToast(error.message || "Could not sign out.",true);
-    return;
-  }
-  location.replace("auth.html");
-}
-
-$("sidebarLogout").addEventListener("click",signOut);
-$("topLogout").addEventListener("click",signOut);
-
-async function init(){
-  if(SUPABASE_ANON_KEY === "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo"){
-    showToast("Add your Supabase public anon/publishable key to account.html.",true);
-    $("welcomeName").textContent = "Member";
-    return;
-  }
-
-  try{
-    const ok = await loadProfile();
-    if(!ok) return;
-
-    await refreshAll();
-
-    const requestedView = location.hash.replace("#","");
-    if(["overview","customer","provider","business","profile"].includes(requestedView)){
-      switchView(requestedView);
-    }else{
-      switchView("overview");
-    }
-
-    renderIcons();
-  }catch(error){
-    console.error("Account initialization:",error);
-    showToast(error.message || "Could not load your account.",true);
+  } catch (error) {
+    console.warn("Profile load:", error.message);
+    showToast("Some profile fields could not load. Check the profiles table and its SELECT policy.", true);
   }
 }
 
-db.auth.onAuthStateChange((event,session)=>{
-  if(event === "SIGNED_OUT"){
+$("profileForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const button = $("saveProfileBtn");
+  button.disabled = true;
+  button.textContent = "Saving profile...";
+
+  const changes = {
+    full_name: $("profileName").value.trim(),
+    phone: $("profilePhone").value.trim(),
+    city: $("profileCity").value.trim(),
+    university: $("profileUniversity").value.trim(),
+    bio: $("profileBio").value.trim()
+  };
+
+  try {
+    const {data, error} = await db
+      .from("profiles")
+      .update(changes)
+      .eq("id", currentUser.id)
+      .select("id,full_name,phone,city,university,bio")
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data) {
+      throw new Error("No profile record was updated. Confirm your profile exists and your update policy allows editing your own profile.");
+    }
+
+    currentProfile = {...currentProfile, ...data};
+    updateUserDisplay();
+    showToast("Your profile has been saved.");
+  } catch (error) {
+    console.error("Profile save:", error);
+    showToast(error.message || "Profile could not be saved. Check your profiles table and RLS policies.", true);
+  } finally {
+    button.disabled = false;
+    button.innerHTML = '<i data-lucide="save"></i> Save profile';
+    if (window.lucide) window.lucide.createIcons();
+  }
+});
+
+async function loadMobility() {
+  const wrap = $("mobilityList");
+  if (!currentUser) return;
+
+  wrap.innerHTML = '<div class="loading">Loading enquiries...</div>';
+
+  try {
+    const {data, error} = await db
+      .from("cartrack_leads")
+      .select("id,lead_type,status,created_at")
+      .eq("user_id", currentUser.id)
+      .order("created_at", {ascending:false})
+      .limit(20);
+
+    if (error) throw error;
+
+    const rows = data || [];
+    setText("mobilityCaption", rows.length + " recent record(s) visible to your account.");
+
+    if (!rows.length) {
+      wrap.innerHTML = `
+        <div class="empty">
+          <i data-lucide="car-front"></i><br>
+          <strong>No mobility enquiries found</strong><br>
+          Enquiries you submit while signed in will appear here if your database policies permit access.
+        </div>`;
+    } else {
+      wrap.innerHTML = '<div class="list">' + rows.map(row => `
+        <div class="list-item">
+          <span class="list-icon"><i data-lucide="car-front"></i></span>
+          <div class="list-copy">
+            <strong>${escapeHTML(String(row.lead_type || "Mobility enquiry").replaceAll("_"," "))}</strong>
+            <span>Submitted ${escapeHTML(formatDate(row.created_at))}</span>
+          </div>
+          <span class="badge">${escapeHTML(row.status || "submitted")}</span>
+        </div>
+      `).join("") + '</div>';
+    }
+
+    if (window.lucide) window.lucide.createIcons();
+  } catch (error) {
+    console.error("Mobility enquiries:", error);
+    setText("mobilityCaption", "Your mobility records could not be loaded.");
+    wrap.innerHTML = `
+      <div class="empty">
+        <i data-lucide="shield-alert"></i><br>
+        <strong>Enquiries unavailable</strong><br>
+        ${escapeHTML(error.message || "Check the cartrack_leads table and its SELECT policy.")}
+      </div>`;
+    if (window.lucide) window.lucide.createIcons();
+  }
+}
+
+function updateUserDisplay() {
+  const role = roleOf(currentProfile);
+  const name =
+    currentProfile?.full_name ||
+    currentProfile?.name ||
+    currentUser?.user_metadata?.full_name ||
+    currentUser?.email?.split("@")[0] ||
+    "Zep Swipe member";
+
+  const initials = name.trim().split(/\s+/).slice(0,2).map(s => s[0]).join("").toUpperCase() || "ZS";
+
+  setText("sideName", name);
+  setText("sideRole", roleLabel(role));
+  setText("sideAvatar", initials);
+  setText("welcomeTitle", "Welcome, " + name + ".");
+  setText("welcomeDescription",
+    "Your " + roleLabel(role) + " workspace brings your account information and relevant opportunities together in one place."
+  );
+  setText("roleBadge", roleLabel(role));
+  setText("connectionStatus", "Connected");
+
+  renderRoleAccess();
+}
+
+async function signOut() {
+  try {
+    const {error} = await db.auth.signOut();
+    if (error) throw error;
     location.replace("auth.html");
+  } catch (error) {
+    console.error("Sign-out:", error);
+    showToast(error.message || "Could not sign out. Please try again.", true);
   }
-});
+}
+
+async function refreshCurrentView() {
+  if (!currentUser) return;
+
+  if (activeView === "profile") await loadProfile();
+  else if (activeView === "mobility") await loadMobility();
+  else if (["customer","provider","business"].includes(activeView)) {
+    await loadDashboardData();
+  } else {
+    await loadProfileSummary();
+    await loadDashboardData();
+  }
+  showToast("Account data refreshed.");
+}
+
+async function loadProfileSummary() {
+  try {
+    const {data, error} = await db
+      .from("profiles")
+      .select("id,email,role,full_name,phone,city,university,bio,created_at")
+      .eq("id", currentUser.id)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (data) currentProfile = {...currentProfile, ...data};
+    updateUserDisplay();
+  } catch (error) {
+    console.warn("Account profile summary:", error.message);
+  }
+}
+
+async function init() {
+  if (initialized) return;
+  initialized = true;
+
+  if (
+    !SUPABASE_URL.startsWith("https://") ||
+    !SUPABASE_ANON_KEY ||
+    SUPABASE_ANON_KEY === "YOUR_SUPABASE_ANON_KEY"
+  ) {
+    setText("connectionStatus", "Setup required");
+    showToast("Replace YOUR_SUPABASE_ANON_KEY with your project's public anon/publishable key.", true);
+    return;
+  }
+
+  try {
+    const {data:{session}, error} = await db.auth.getSession();
+    if (error) throw error;
+
+    currentUser = session?.user || null;
+
+    if (!currentUser) {
+      location.replace("auth.html?redirect=account.html");
+      return;
+    }
+
+    const {data:profile, error:profileError} = await db
+      .from("profiles")
+      .select("id,email,role,full_name,phone,city,university,bio,created_at")
+      .eq("id", currentUser.id)
+      .maybeSingle();
+
+    if (profileError) console.warn("Profile query:", profileError.message);
+
+    currentProfile = profile || {
+      id: currentUser.id,
+      email: currentUser.email,
+      role: currentUser.user_metadata?.role || "customer",
+      full_name: currentUser.user_metadata?.full_name || ""
+    };
+
+    updateUserDisplay();
+    await loadDashboardData();
+
+    if (window.lucide) window.lucide.createIcons();
+
+    db.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
+        location.replace("auth.html");
+      } else if (event === "USER_UPDATED" && session?.user) {
+        currentUser = session.user;
+      }
+    });
+
+  } catch (error) {
+    console.error("Account initialization:", error);
+    setText("connectionStatus", "Connection issue");
+    showToast(error.message || "Could not load your account. Please sign in again.", true);
+  }
+}
 
 init();
 </script>
