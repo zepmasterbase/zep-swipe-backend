@@ -1,342 +1,1211 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#070907">
-<meta name="description" content="Discover vehicle tracking and fleet enquiry options with Zep Swipe Mobility.">
-<title>Zep Swipe Mobility | Move with confidence</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://images.unsplash.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<style>
-:root{--bg:#070907;--panel:#10140f;--panel2:#151b13;--line:#ffffff20;--text:#f6f9f3;--muted:#a0aa98;--green:#b8ff3b;--green2:#d9ff79;--nav:#0a0e09;--red:#ff929d;--gold:#ffd166}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:90px}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-img{max-width:100%;display:block}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:3px}
-.layout{min-height:100vh}
-.sidebar{position:fixed;inset:0 auto 0 0;width:236px;background:var(--nav);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;z-index:30}
-.brand{display:flex;align-items:center;gap:10px;padding:0 8px 28px}
-.brand img{width:48px;height:48px;object-fit:contain;flex:none;filter:drop-shadow(0 0 10px #b8ff3b37)}
-.brand-name{font-size:18px;font-weight:900;letter-spacing:-.7px}
-.brand-name span{color:var(--green)}
-.brand-name small{display:block;color:#899483;font-size:8px;letter-spacing:1.1px;margin-top:4px}
-.navlabel{padding:0 12px;margin:6px 0 10px;font-size:9px;font-weight:800;color:#677161;letter-spacing:1.6px;text-transform:uppercase}
-.nav{display:grid;gap:6px}
-.nav a{display:flex;align-items:center;gap:11px;padding:12px;border-radius:12px;color:#aab3a1;font-size:11px;font-weight:750;border:1px solid transparent}
-.nav a:hover,.nav a.active{color:var(--green);background:#b8ff3b0d;border-color:#b8ff3b24}
-.nav svg{width:17px;height:17px}
-.sidebottom{margin-top:auto}
-.sidecard{padding:14px;border:1px solid #b8ff3b32;border-radius:15px;background:linear-gradient(145deg,#17200f,#0c1009);margin-bottom:14px}
-.sidecard strong{display:block;font-size:11px;margin:9px 0 5px}
-.sidecard p{font-size:9px;line-height:1.7;color:var(--muted);margin:0 0 10px}
-.sidecard button{border:0;background:none;color:var(--green);font-size:10px;font-weight:800;padding:0}
-.member{border-top:1px solid var(--line);padding:14px 4px 0;display:flex;gap:9px;align-items:center}
-.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#1a2115;border:1px solid #b8ff3b40;color:var(--green);font-size:10px;font-weight:900;overflow:hidden;flex:none}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.membertext{min-width:0}
-.membertext strong{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.membertext small{display:block;color:var(--muted);font-size:9px;margin-top:4px}
-.main{margin-left:236px;min-width:0}
-.topbar{height:68px;position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 24px;background:#080b08ec;border-bottom:1px solid var(--line);backdrop-filter:blur(16px)}
-.search{display:flex;align-items:center;gap:9px;width:min(470px,58vw);background:#11160f;border:1px solid var(--line);border-radius:12px;padding:9px 12px;color:#879181}
-.search input{min-width:0;flex:1;background:transparent;border:0;outline:0;color:#fff;font-size:11px}
-.search input::placeholder{color:#7f8978}
-.search button{width:28px;height:28px;border:0;background:transparent;color:var(--green)}
-.topactions{display:flex;align-items:center;gap:8px}
-.iconbtn{width:38px;height:38px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);color:#e0e7da;border-radius:11px}
-.iconbtn:hover{color:var(--green);border-color:#b8ff3b65}
-.welcometext strong{display:block;font-size:10px}
-.welcometext small{display:block;margin-top:4px;color:var(--muted);font-size:9px}
-.content{max-width:1500px;margin:auto;padding:24px 24px 80px}
-.hero{position:relative;isolation:isolate;overflow:hidden;min-height:390px;border:1px solid #b8ff3b42;border-radius:24px;background:#0a1008}
-.hero:before{content:"";position:absolute;inset:0;z-index:-2;background:url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2200&q=85') center/cover;opacity:.68}
-.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#050805f5 0%,#050805d9 46%,#05080545 100%),linear-gradient(0deg,#050805a8,transparent 72%),radial-gradient(circle at 82% 20%,#b8ff3b30,transparent 34%)}
-.herocopy{padding:clamp(23px,4vw,44px);max-width:780px}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--green);font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase}
-.pulse{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
-h1{margin:18px 0 14px;font-size:clamp(39px,5.4vw,65px);line-height:.98;letter-spacing:-3px;font-weight:900}
-h1 span{color:var(--green)}
-.hero p{max-width:550px;color:#d0d9c8;font-size:12px;line-height:1.9;margin:0}
-.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:23px}
-.btn{min-height:44px;display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:0 15px;border:1px solid transparent;border-radius:12px;font-size:10px;font-weight:850;transition:transform .18s,background .18s}
-.btn:hover{transform:translateY(-1px)}
-.primary{background:var(--green);color:#071006}
-.secondary{background:#091008c9;border-color:#ffffff45;color:#fff}
-.outline{background:transparent;border-color:var(--line);color:#e1e8da}
-.subnote{display:flex;align-items:center;gap:7px;color:#aab6a0;font-size:9px;margin-top:15px}
-.subnote svg{color:var(--green)}
-.section{margin-top:28px;scroll-margin-top:85px}
-.sectionhead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px}
-.sectionhead h2{font-size:17px;letter-spacing:-.5px;font-weight:900;margin:0}
-.sectionhead p{font-size:10px;line-height:1.6;color:var(--muted);margin:5px 0 0}
-.linkbtn{border:0;background:none;color:var(--green);font-size:10px;font-weight:800;white-space:nowrap}
-.choicegrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.choice{min-height:156px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;padding:15px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#141a12,#0b0e09);color:var(--text);transition:.2s}
-.choice:hover{border-color:#b8ff3b7a;transform:translateY(-2px)}
-.choiceicon{width:37px;height:37px;display:grid;place-items:center;border-radius:11px;background:#b8ff3b14;color:var(--green)}
-.choice strong{font-size:11px;margin:11px 0 5px}
-.choice small{font-size:9px;color:var(--muted);line-height:1.6}
-.choice .arrow{margin-top:auto;padding-top:10px;color:var(--green)}
-.featuregrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
-.feature{min-height:278px;position:relative;isolation:isolate;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:#11180f}
-.feature:before{content:"";position:absolute;inset:0;z-index:-2;background-size:cover;background-position:center;opacity:.63}
-.feature:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#07090712 0%,#070907ef 82%)}
-.feature.personal:before{background-image:url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1000&q=85')}
-.feature.fleet:before{background-image:url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d8?auto=format&fit=crop&w=1000&q=85')}
-.feature.student:before{background-image:url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=85')}
-.featurecopy{position:absolute;inset:auto 0 0;padding:17px}
-.pill{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;border:1px solid #b8ff3b65;background:#071006b8;padding:6px 8px;border-radius:30px}
-.feature h3{font-size:17px;letter-spacing:-.5px;margin:12px 0 6px}
-.feature p{font-size:10px;line-height:1.7;color:#d1dbca;margin:0 0 13px}
-.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.step{display:flex;align-items:center;gap:11px;background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}
-.stepicon{width:36px;height:36px;display:grid;place-items:center;flex:none;border-radius:10px;background:#b8ff3b12;color:var(--green)}
-.step strong{display:block;font-size:10px}
-.step span{display:block;margin-top:4px;color:var(--muted);font-size:9px;line-height:1.55}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:17px}
-.activity{display:grid;gap:8px}
-.activityrow{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid #ffffff14;background:#131811;border-radius:12px}
-.activityicon{width:33px;height:33px;display:grid;place-items:center;border-radius:10px;background:#b8ff3b12;color:var(--green);flex:none}
-.activitycopy{min-width:0;flex:1}
-.activitycopy strong{font-size:10px;display:block}
-.activitycopy small{font-size:9px;line-height:1.5;color:var(--muted);display:block;margin-top:4px}
-.status{font-size:8px;font-weight:850;color:var(--green);background:#b8ff3b13;padding:5px 7px;border-radius:30px;white-space:nowrap}
-.empty{font-size:10px;line-height:1.7;color:var(--muted);padding:14px;text-align:center;border:1px dashed #ffffff22;border-radius:12px}
-.notice{display:flex;align-items:flex-start;gap:10px;border:1px solid #ffd16632;background:#ffd16609;border-radius:13px;padding:13px;color:#d7d2bd;font-size:9px;line-height:1.8}
-.notice svg{color:var(--gold);width:16px;height:16px;flex:none;margin-top:2px}
-.footer{text-align:center;color:#6f7968;font-size:9px;line-height:1.8;margin-top:29px}
-.mobilebar{display:none}
-.backdrop{position:fixed;inset:0;z-index:100;background:#000c;backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:13px}
-.backdrop.open{display:flex}
-.modal{width:min(590px,100%);max-height:95vh;overflow:auto;background:#0d110b;border:1px solid #b8ff3b45;border-radius:20px;box-shadow:0 25px 90px #000b}
-.modalhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2;background:#0d110bf5}
-.modalhead h2{font-size:16px;margin:0}
-.modalhead p{font-size:9px;line-height:1.6;color:var(--muted);margin:5px 0 0}
-.close{height:33px;width:33px;display:grid;place-items:center;border:1px solid var(--line);border-radius:10px;color:#fff;background:#151a13}
-.formbody{padding:19px}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.field{display:flex;flex-direction:column;gap:6px;min-width:0}
-.field.full{grid-column:1/-1}
-.field label{font-size:10px;color:#cbd4c5;font-weight:750}
-.field input,.field select,.field textarea{width:100%;min-width:0;background:#151a13;border:1px solid #ffffff22;border-radius:10px;padding:11px;color:#f7faf4;outline:0;font-size:10px}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:#b8ff3b7a}
-.field select option{background:#11160f}
-.field textarea{min-height:73px;resize:vertical;line-height:1.6}
-.errorbox{display:none;background:#ff77880c;border:1px solid #ff77884a;border-radius:10px;padding:11px;color:#ff9da9;font-size:10px;line-height:1.5;margin-bottom:13px}
-.consent{display:flex;align-items:flex-start;gap:9px;color:#b5c0ae;font-size:9px;line-height:1.7}
-.consent input{margin-top:2px;accent-color:var(--green);flex:none}
-.formactions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:17px}
-.successview{display:none;text-align:center;padding:32px 20px}
-.successicon{width:55px;height:55px;border-radius:50%;margin:0 auto 15px;background:#b8ff3b18;color:var(--green);display:grid;place-items:center}
-.successview h3{font-size:21px;margin:0 0 9px}
-.successview p{max-width:380px;margin:0 auto 16px;color:var(--muted);font-size:10px;line-height:1.8}
-.honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}
-.toast{position:fixed;z-index:150;top:14px;left:50%;transform:translate(-50%,-150%);max-width:calc(100% - 24px);background:#151b12;border:1px solid #b8ff3b5c;color:#fff;padding:12px 16px;border-radius:12px;font-size:10px;line-height:1.5;box-shadow:0 14px 35px #0008;transition:transform .25s}
-.toast.show{transform:translate(-50%,0)}
-.toast.error{border-color:#ff778875}
-.spinner{width:15px;height:15px;display:inline-block;border:2px solid #07100655;border-top-color:#071006;border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:1100px){.sidebar{width:205px}.main{margin-left:205px}.content{padding:18px 17px 75px}.choicegrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:820px){.sidebar{display:none}.main{margin-left:0}.topbar{padding:0 15px}.content{padding:16px 15px 103px}.mobilebar{position:fixed;bottom:9px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 18px));display:grid;grid-template-columns:repeat(5,1fr);z-index:50;padding:6px;border:1px solid #ffffff25;border-radius:22px;background:#080b08ee;backdrop-filter:blur(18px);box-shadow:0 14px 40px #0009}.mobilebar a,.mobilebar button{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;border:0;background:none;color:#a0aa98;font-size:8px;font-weight:800;padding:7px 2px}.mobilebar svg{width:19px;height:19px}.mobilebar .active{color:var(--green)}.mobilebar .add{width:41px;height:41px;border-radius:50%;margin-top:-19px;border:4px solid #080b08;background:var(--green);color:#071006}.featuregrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:620px){.topbar{height:60px;padding:0 10px}.search{width:min(65vw,410px);padding:8px 9px}.search input{font-size:10px}.welcometext{display:none}.iconbtn{width:34px;height:34px}.content{padding:12px 12px 100px}.hero{min-height:440px;border-radius:20px}.herocopy{padding:22px 17px}h1{font-size:43px;letter-spacing:-2px}.hero p{font-size:11px}.btn{min-height:41px;padding:0 11px;font-size:9px}.section{margin-top:23px}.sectionhead h2{font-size:15px}.sectionhead p{font-size:9px}.choicegrid{gap:8px}.choice{min-height:145px;padding:12px}.choice strong{font-size:10px}.choice small{font-size:8px}.featuregrid{display:flex;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.featuregrid::-webkit-scrollbar{display:none}.feature{min-width:245px;min-height:265px}.steps{grid-template-columns:1fr}.step{padding:12px}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.backdrop{padding:7px}.modal{max-height:96vh;border-radius:17px}.modalhead,.formbody{padding:15px}.formactions .btn{flex:1}.footer{font-size:8px}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070707">
+  <meta name="description" content="Discover vehicle tracking, security and fleet management solutions with Zep Swipe Mobility.">
+  <title>Zep Swipe Mobility | Move Smarter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070707;
+      --panel: #111111;
+      --panel2: #161616;
+      --border: #292929;
+      --text: #f5f5f5;
+      --muted: #9b9b9b;
+      --lime: #b8ff3b;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 90px;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Sans", sans-serif;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    button, input, select {
+      font: inherit;
+    }
+    button, a {
+      -webkit-tap-highlight-color: transparent;
+    }
+    button { cursor: pointer; }
+    .app {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px 65px;
+    }
+    /* HEADER */
+    .header {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+    .brand img {
+      display: block;
+      width: 176px;
+      max-width: 45vw;
+      max-height: 53px;
+      object-fit: contain;
+      object-position: left center;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 23px;
+    }
+    .nav a {
+      color: #c1c1c1;
+      font-size: 12px;
+    }
+    .nav a:hover { color: var(--lime); }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 17px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: #181818;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      transition: .2s ease;
+    }
+    .button:hover {
+      border-color: var(--lime);
+      transform: translateY(-1px);
+    }
+    .button.primary {
+      background: var(--lime);
+      color: #080808;
+      border-color: var(--lime);
+    }
+    .button.primary:hover { background: #ccff79; }
+    .button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      transform: none;
+    }
+    /* GENERAL */
+    .eyebrow {
+      color: var(--lime);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    h1, h2, h3 {
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -.8px;
+    }
+    .muted { color: var(--muted); }
+    .accent { color: var(--lime); }
+    .section {
+      padding: 76px 0;
+    }
+    .section-heading {
+      max-width: 690px;
+      margin-bottom: 28px;
+    }
+    .section-heading h2 {
+      font-size: clamp(26px, 4vw, 37px);
+      line-height: 1.2;
+      margin: 0 0 12px;
+    }
+    .section-heading p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+      margin: 0;
+    }
+    /* CINEMATIC HERO */
+    .hero {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      min-height: 570px;
+      display: flex;
+      align-items: center;
+      margin-top: 22px;
+      padding: 55px;
+      border: 1px solid #292929;
+      border-radius: 24px;
+      background:
+        radial-gradient(ellipse at 83% 24%, rgba(184,255,59,.15), transparent 32%),
+        radial-gradient(ellipse at 100% 100%, rgba(87,110,55,.12), transparent 35%),
+        linear-gradient(120deg, #111411 0%, #090909 60%, #101210 100%);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 480px;
+      height: 480px;
+      right: -90px;
+      bottom: -165px;
+      border: 1px solid rgba(184,255,59,.16);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 35px rgba(184,255,59,.025),
+        0 0 0 75px rgba(184,255,59,.02);
+      pointer-events: none;
+    }
+    .hero-content {
+      width: 100%;
+      max-width: 720px;
+    }
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: .99;
+      margin: 0 0 22px;
+      letter-spacing: -2.7px;
+    }
+    .hero-description {
+      max-width: 560px;
+      color: #c3c3c3;
+      font-size: 15px;
+      line-height: 1.85;
+      margin: 0 0 25px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 21px;
+      margin-top: 30px;
+      color: #b9b9b9;
+      font-size: 10px;
+    }
+    .hero-meta span::before {
+      content: "✓";
+      color: var(--lime);
+      margin-right: 7px;
+      font-weight: 700;
+    }
+    .member-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 11px;
+      margin-bottom: 18px;
+      border: 1px solid #394a27;
+      border-radius: 100px;
+      background: rgba(184,255,59,.06);
+      color: var(--lime);
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .member-label span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--lime);
+    }
+    /* AUTH STATUS */
+    .notice {
+      display: none;
+      padding: 14px 16px;
+      margin: 18px 0 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .notice.show { display: block; }
+    .notice.info { background: #151515; color: #ddd; }
+    .notice.success {
+      background: #141c0e;
+      color: var(--lime);
+      border-color: #3b4d27;
+    }
+    .notice.error {
+      background: #211212;
+      color: #ffb2b2;
+      border-color: #552929;
+    }
+    /* CATEGORIES */
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .category-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 205px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--panel);
+      transition: .2s ease;
+    }
+    .category-card:hover {
+      border-color: #627c3c;
+      background: #141811;
+      transform: translateY(-3px);
+    }
+    .category-icon {
+      width: 45px;
+      height: 45px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 22px;
+      border: 1px solid #343f2b;
+      border-radius: 13px;
+      background: #1a2114;
+      color: var(--lime);
+      font-size: 22px;
+    }
+    .category-card h3 {
+      font-size: 16px;
+      margin: 0 0 9px;
+    }
+    .category-card p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.75;
+      margin: 0 0 18px;
+    }
+    .category-link {
+      color: var(--lime);
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: auto;
+    }
+    /* FEATURED PROVIDER */
+    .featured-provider {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      overflow: hidden;
+      border: 1px solid #343d2b;
+      border-radius: 20px;
+      background: #111411;
+    }
+    .provider-visual {
+      min-height: 320px;
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+      background:
+        linear-gradient(0deg, rgba(0,0,0,.85), rgba(0,0,0,.03) 75%),
+        radial-gradient(ellipse at 50% 25%, rgba(184,255,59,.2), transparent 43%),
+        linear-gradient(135deg, #252a22, #101010 70%);
+    }
+    .provider-visual-label {
+      font: 700 25px "Space Grotesk", sans-serif;
+      line-height: 1.2;
+    }
+    .provider-visual-label span {
+      display: block;
+      color: var(--lime);
+      font-size: 10px;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+    .provider-content {
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .featured-badge {
+      padding: 6px 10px;
+      margin-bottom: 16px;
+      border: 1px solid #3b4d27;
+      border-radius: 100px;
+      color: var(--lime);
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .provider-content h3 {
+      font-size: 27px;
+      margin: 0 0 13px;
+    }
+    .provider-content p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.85;
+      margin: 0 0 20px;
+    }
+    .provider-points {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 22px;
+      color: #d4d4d4;
+      font-size: 11px;
+    }
+    .provider-points span::before {
+      content: "✓";
+      color: var(--lime);
+      margin-right: 8px;
+    }
+    /* LEAD FORM */
+    .lead-layout {
+      display: grid;
+      grid-template-columns: .85fr 1.15fr;
+      gap: 35px;
+      align-items: start;
+    }
+    .lead-intro {
+      position: sticky;
+      top: 25px;
+    }
+    .lead-intro h2 {
+      font-size: clamp(30px, 4vw, 42px);
+      line-height: 1.1;
+      margin: 0 0 17px;
+    }
+    .lead-intro > p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.85;
+      margin-bottom: 23px;
+    }
+    .lead-benefits {
+      display: grid;
+      gap: 15px;
+    }
+    .lead-benefit {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      color: #d3d3d3;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .lead-benefit span {
+      display: grid;
+      place-items: center;
+      flex: 0 0 28px;
+      height: 28px;
+      border-radius: 9px;
+      background: #1b2214;
+      color: var(--lime);
+    }
+    .form-card {
+      padding: 25px;
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      background: var(--panel);
+    }
+    .form-card h3 {
+      font-size: 21px;
+      margin: 0 0 7px;
+    }
+    .form-subtitle {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+      margin-bottom: 22px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+    .field { min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    .field label {
+      display: block;
+      color: #e1e1e1;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .field input, .field select {
+      width: 100%;
+      min-height: 46px;
+      padding: 12px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      outline: none;
+      background: #090909;
+      color: var(--text);
+      font-size: 12px;
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--lime);
+    }
+    .field input::placeholder { color: #777; }
+    .field select option {
+      background: #111;
+      color: white;
+    }
+    .field .help {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.6;
+      margin-top: 7px;
+    }
+    .consent-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: #0b0b0b;
+    }
+    .consent-box input {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
+      margin-top: 2px;
+      accent-color: var(--lime);
+    }
+    .consent-box label {
+      color: #c2c2c2;
+      font-size: 10px;
+      line-height: 1.8;
+      cursor: pointer;
+    }
+    .submit-button {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 16px;
+    }
+    .form-footnote {
+      color: #888;
+      font-size: 10px;
+      line-height: 1.7;
+      margin: 13px 0 0;
+    }
+    /* PARTNER NETWORK */
+    .partner-panel {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 25px;
+      padding: 30px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background:
+        radial-gradient(ellipse at 100% 0%, rgba(184,255,59,.08), transparent 40%),
+        #111111;
+    }
+    .partner-panel h2 {
+      font-size: 25px;
+      margin: 0 0 10px;
+    }
+    .partner-panel p {
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.85;
+      margin: 0;
+    }
+    .partner-tag {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 7px 10px;
+      border: 1px solid #353535;
+      border-radius: 100px;
+      color: #c8c8c8;
+      font-size: 10px;
+    }
+    /* FOOTER */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 18px;
+      padding: 28px 0 8px;
+      border-top: 1px solid var(--border);
+      color: #777;
+      font-size: 10px;
+      line-height: 1.9;
+    }
+    .footer img {
+      display: block;
+      width: 125px;
+      max-height: 40px;
+      object-fit: contain;
+      object-position: left center;
+      margin-bottom: 8px;
+    }
+    .footer a { color: #b8b8b8; }
+    .footer a:hover { color: var(--lime); }
+    .hidden { display: none !important; }
+    @media (max-width: 850px) {
+      .app { padding: 0 16px 45px; }
+      .nav { gap: 13px; }
+      .hero { min-height: 500px; padding: 35px; }
+      .categories { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .featured-provider { grid-template-columns: 1fr; }
+      .provider-visual { min-height: 220px; }
+      .lead-layout { grid-template-columns: 1fr; gap: 25px; }
+      .lead-intro { position: static; }
+      .partner-panel { grid-template-columns: 1fr; }
+      .partner-panel .button { justify-self: start; }
+      .section { padding: 55px 0; }
+    }
+    @media (max-width: 520px) {
+      .header { min-height: 68px; }
+      .brand img { width: 145px; }
+      .nav { gap: 10px; }
+      .nav a { font-size: 10px; }
+      .nav .button { padding: 10px; font-size: 10px; }
+      .nav .nav-desktop { display: none; }
+      .hero {
+        min-height: 490px;
+        padding: 24px;
+        margin-top: 14px;
+        border-radius: 17px;
+      }
+      .hero h1 {
+        font-size: clamp(40px, 11vw, 57px);
+        letter-spacing: -1.8px;
+      }
+      .hero-description { font-size: 13px; }
+      .hero-actions { flex-direction: column; }
+      .hero-actions .button { width: 100%; }
+      .categories { grid-template-columns: 1fr; }
+      .category-card { min-height: 170px; }
+      .provider-content { padding: 23px; }
+      .form-card { padding: 18px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .partner-panel { padding: 22px; }
+      .footer { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="layout">
-<aside class="sidebar">
-  <a class="brand" href="marketplace.html"><img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo"><span class="brand-name"><span>zep</span> swipe<small>THE STUDENT ECONOMY</small></span></a>
-  <div class="navlabel">Explore Zep Swipe</div>
-  <nav class="nav" aria-label="Main navigation">
-    <a href="marketplace.html"><i data-lucide="store"></i> Marketplace</a>
-    <a class="active" href="mobility.html"><i data-lucide="car-front"></i> Mobility</a>
-    <a href="#needs"><i data-lucide="compass"></i> Explore mobility</a>
-    <a href="auth.html?redirect=mobility.html"><i data-lucide="user-round"></i> Sign in / Account</a>
-  </nav>
-  <div class="sidebottom">
-    <div class="sidecard"><i data-lucide="shield-check" width="22"></i><strong>Need a vehicle solution?</strong><p>Tell us what you need and submit an enquiry. You can start without creating an account.</p><button type="button" data-open-enquiry>Request information ↗</button></div>
-    <div class="member"><div class="avatar" id="sideAvatar">ZS</div><div class="membertext"><strong id="sideName">Guest visitor</strong><small id="sideSub">Mobility discovery</small></div></div>
-  </div>
-</aside>
-
-<div class="main">
-<header class="topbar">
-  <div class="search"><i data-lucide="search" width="17"></i><input id="siteSearch" type="search" placeholder="Search vehicle, security or fleet solutions" aria-label="Search mobility solutions"><button id="searchButton" type="button" aria-label="Search"><i data-lucide="arrow-right" width="15"></i></button></div>
-  <div class="topactions"><button class="iconbtn" id="accountButton" type="button" aria-label="Account" title="Account"><i data-lucide="user-round" width="17"></i></button><a class="iconbtn" href="marketplace.html" aria-label="Marketplace" title="Marketplace"><i data-lucide="house" width="17"></i></a><div class="welcometext"><strong id="topName">Welcome</strong><small id="topSub">Zep Swipe Mobility</small></div></div>
-</header>
-
-<main class="content">
-<section class="hero" id="top"><div class="herocopy">
-  <div class="eyebrow"><span class="pulse"></span> ZEP SWIPE MOBILITY</div>
-  <h1>Protect what<br>moves <span>you.</span></h1>
-  <p>Explore vehicle tracking and fleet-management enquiry options for personal vehicles, students, drivers and businesses. Tell us what you need and request follow-up through the relevant provider process.</p>
-  <div class="buttons"><button class="btn primary" data-open-enquiry type="button"><i data-lucide="shield-check" width="16"></i> Request a Cartrack callback</button><a class="btn secondary" href="marketplace.html"><i data-lucide="store" width="16"></i> Explore marketplace</a></div>
-  <div class="subnote"><i data-lucide="check-circle-2" width="14"></i> You can enquire without creating a Zep Swipe account.</div>
-</div></section>
-
-<section class="section" id="needs"><div class="sectionhead"><div><h2>What mobility solution do you need?</h2><p>Choose a category to start a relevant enquiry.</p></div></div>
-  <div class="choicegrid">
-    <button class="choice" data-type="personal_vehicle" type="button"><span class="choiceicon"><i data-lucide="car-front"></i></span><strong>Protect my vehicle</strong><small>Request information about tracking and security for a personal vehicle.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
-    <button class="choice" data-type="business_fleet" type="button"><span class="choiceicon"><i data-lucide="truck"></i></span><strong>Manage my fleet</strong><small>Explore vehicle tracking and fleet needs for your business.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
-    <button class="choice" data-type="student_driver" type="button"><span class="choiceicon"><i data-lucide="graduation-cap"></i></span><strong>Student or young driver</strong><small>Find information relevant to your vehicle and driving situation.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
-    <button class="choice" data-type="delivery_gig_vehicle" type="button"><span class="choiceicon"><i data-lucide="package-check"></i></span><strong>Delivery or gig vehicle</strong><small>Explore options for a vehicle you rely on to earn income.</small><span class="arrow"><i data-lucide="arrow-up-right" width="16"></i></span></button>
-  </div>
-</section>
-
-<section class="section" id="pathways"><div class="sectionhead"><div><h2>Explore mobility pathways</h2><p>Start with the option that best fits your situation.</p></div></div>
-  <div class="featuregrid">
-    <article class="feature personal"><div class="featurecopy"><span class="pill"><i data-lucide="shield-check" width="12"></i> PERSONAL VEHICLES</span><h3>Protect your vehicle</h3><p>Request information about tracking and security options for your car.</p><button class="btn primary" data-type="personal_vehicle" type="button">Get information <i data-lucide="arrow-right" width="14"></i></button></div></article>
-    <article class="feature fleet"><div class="featurecopy"><span class="pill"><i data-lucide="truck" width="12"></i> BUSINESS & FLEET</span><h3>Make fleet enquiries</h3><p>Tell us how many vehicles your business operates and what you need.</p><button class="btn primary" data-type="business_fleet" type="button">Request consultation <i data-lucide="arrow-right" width="14"></i></button></div></article>
-    <article class="feature student"><div class="featurecopy"><span class="pill"><i data-lucide="graduation-cap" width="12"></i> STUDENT MOBILITY</span><h3>Keep moving forward</h3><p>Explore mobility information for students, drivers and delivery workers.</p><button class="btn primary" data-type="student_driver" type="button">Explore options <i data-lucide="arrow-right" width="14"></i></button></div></article>
-  </div>
-</section>
-
-<section class="section"><div class="sectionhead"><div><h2>A simple, transparent process</h2><p>Know what happens after you submit your enquiry.</p></div></div>
-  <div class="steps">
-    <div class="step"><span class="stepicon"><i data-lucide="clipboard-list"></i></span><div><strong>1. Tell us what you need</strong><span>Share your enquiry and preferred contact details.</span></div></div>
-    <div class="step"><span class="stepicon"><i data-lucide="shield-check"></i></span><div><strong>2. Confirm consent</strong><span>Your details are used for the enquiry you agreed to.</span></div></div>
-    <div class="step"><span class="stepicon"><i data-lucide="phone-call"></i></span><div><strong>3. Await follow-up</strong><span>Provider follow-up depends on the agreed process.</span></div></div>
-  </div>
-</section>
-
-<section class="section" id="activity"><div class="sectionhead"><div><h2>Your mobility enquiries</h2><p id="activitySubtitle">Sign in to see enquiry history associated with your account.</p></div><button class="linkbtn" id="refreshActivity" type="button">Refresh activity ↻</button></div>
-  <div class="panel"><div class="activity" id="activityList"><div class="empty">You can submit an enquiry above, even without signing in. Enquiry history is shown when it is linked to your account and database permissions allow access.</div></div></div>
-</section>
-
-<section class="section"><div class="notice"><i data-lucide="info"></i><div><strong>Privacy and partner handoff.</strong> When you submit this form, Zep Swipe uses the information to process your enquiry and share the necessary details with Cartrack for this request. This is not consent to unrelated marketing. Only submit your own details or details you are authorised to provide.</div></div></section>
-<footer class="footer">Zep Swipe Mobility · Discover · Connect · Move Forward<br>Product information, availability and any follow-up are subject to the provider's terms and the agreed enquiry process.</footer>
-</main>
-</div>
-</div>
-
-<nav class="mobilebar" aria-label="Mobile navigation"><a href="marketplace.html"><i data-lucide="house"></i><span>Marketplace</span></a><a class="active" href="#top"><i data-lucide="car-front"></i><span>Mobility</span></a><button class="add" type="button" data-open-enquiry aria-label="Request information"><i data-lucide="plus"></i></button><a href="#needs"><i data-lucide="compass"></i><span>Explore</span></a><a href="auth.html?redirect=mobility.html"><i data-lucide="user-round"></i><span>Account</span></a></nav>
-
-<div class="backdrop" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal">
-  <div class="modalhead"><div><h2 id="modalTitle">Request Cartrack information</h2><p>Tell us about your need so your enquiry can be handled appropriately.</p></div><button class="close" id="closeModal" type="button" aria-label="Close form"><i data-lucide="x" width="17"></i></button></div>
-  <form id="leadForm" novalidate>
-    <div class="formbody" id="leadFormView"><div class="errorbox" id="formError" role="alert"></div>
-      <div class="formgrid">
-        <div class="field"><label for="firstName">First name *</label><input id="firstName" name="firstName" autocomplete="given-name" maxlength="80" required></div>
-        <div class="field"><label for="lastName">Last name *</label><input id="lastName" name="lastName" autocomplete="family-name" maxlength="80" required></div>
-        <div class="field"><label for="phone">Mobile number *</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="e.g. 082 123 4567" required></div>
-        <div class="field"><label for="email">Email (optional)</label><input id="email" name="email" type="email" autocomplete="email" maxlength="160" placeholder="you@example.com"></div>
-        <div class="field"><label for="city">City or town *</label><input id="city" name="city" autocomplete="address-level2" maxlength="100" placeholder="e.g. Johannesburg" required></div>
-        <div class="field"><label for="leadType">Your situation *</label><select id="leadType" name="leadType" required><option value="personal_vehicle">Personal vehicle owner</option><option value="business_fleet">Business / fleet</option><option value="student_driver">Student / young driver</option><option value="delivery_gig_vehicle">Delivery / gig vehicle</option></select></div>
-        <div class="field"><label for="vehicleCount">Number of vehicles *</label><select id="vehicleCount" name="vehicleCount" required><option value="1">1 vehicle</option><option value="2-5">2–5 vehicles</option><option value="6-20">6–20 vehicles</option><option value="21-50">21–50 vehicles</option><option value="50+">More than 50 vehicles</option><option value="unsure">Not sure yet</option></select></div>
-        <div class="field"><label for="interest">What are you interested in? *</label><select id="interest" name="interest" required><option value="vehicle_tracking">Vehicle tracking</option><option value="vehicle_security">Vehicle security</option><option value="fleet_management">Fleet management</option><option value="driver_safety">Driver safety</option><option value="general_information">General information</option></select></div>
-        <div class="field full"><label for="vehicleInfo">Extra details (optional)</label><textarea id="vehicleInfo" name="vehicleInfo" maxlength="1200" placeholder="Vehicle type, fleet size, preferred contact time or questions..."></textarea></div>
-        <div class="honeypot" aria-hidden="true"><label for="website">Leave this field empty</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
-        <div class="field full"><label class="consent"><input id="consent" type="checkbox" required><span>I agree that Zep Swipe may use these details to process this specific enquiry and share the necessary information with Cartrack for follow-up. I understand that this does not sign me up for unrelated marketing.</span></label></div>
+  <div class="app">
+    <header class="header">
+      <a class="brand" href="marketplace.html" aria-label="Zep Swipe home">
+        <img
+          src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+          alt="Zep Swipe"
+          fetchpriority="high"
+        >
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a class="nav-desktop" href="marketplace.html">Marketplace</a>
+        <a class="nav-desktop" href="#solutions">Solutions</a>
+        <a class="nav-desktop" href="#partners">Partners</a>
+        <button class="button" id="signOutButton" type="button">Sign out</button>
+      </nav>
+    </header>
+    <main>
+      <!-- CINEMATIC HERO -->
+      <section class="hero">
+        <div class="hero-content">
+          <div class="member-label">
+            <span></span>
+            ZEP SWIPE MOBILITY
+          </div>
+          <div class="eyebrow">One platform. More ways to move.</div>
+          <h1>
+            MOVE SMARTER.<br>
+            <span class="accent">GO FURTHER.</span>
+          </h1>
+          <p class="hero-description">
+            Discover vehicle tracking, vehicle security and fleet management
+            solutions through one connected Mobility experience. Tell us what
+            you need and explore options from participating providers.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#enquiry">
+              Get My Mobility Options <span aria-hidden="true">→</span>
+            </a>
+            <a class="button" href="#solutions">Explore Solutions</a>
+          </div>
+          <div class="hero-meta">
+            <span>Vehicle tracking</span>
+            <span>Security solutions</span>
+            <span>Fleet management</span>
+          </div>
+        </div>
+      </section>
+      <div id="pageNotice" class="notice" role="status" aria-live="polite"></div>
+      <!-- SOLUTIONS -->
+      <section class="section" id="solutions">
+        <div class="section-heading">
+          <div class="eyebrow">Find your solution</div>
+          <h2>What do you need to <span class="accent">move forward?</span></h2>
+          <p>
+            Start with the outcome you want. Zep Swipe Mobility helps you
+            discover relevant services and request information from suitable,
+            participating providers.
+          </p>
+        </div>
+        <div class="categories">
+          <a class="category-card" href="#enquiry" data-service="Vehicle tracking">
+            <div class="category-icon" aria-hidden="true">⌖</div>
+            <h3>Vehicle tracking</h3>
+            <p>Explore tracking solutions for your personal vehicle or business fleet.</p>
+            <span class="category-link">Explore tracking →</span>
+          </a>
+          <a class="category-card" href="#enquiry" data-service="Vehicle security and theft recovery">
+            <div class="category-icon" aria-hidden="true">◇</div>
+            <h3>Vehicle security</h3>
+            <p>Explore available security and theft-recovery services for your vehicle.</p>
+            <span class="category-link">Explore security →</span>
+          </a>
+          <a class="category-card" href="#enquiry" data-service="Fleet management">
+            <div class="category-icon" aria-hidden="true">▤</div>
+            <h3>Fleet management</h3>
+            <p>Discover solutions for managing business vehicles and fleet operations.</p>
+            <span class="category-link">Explore fleet solutions →</span>
+          </a>
+          <a class="category-card" href="#enquiry" data-service="Driver and fleet safety">
+            <div class="category-icon" aria-hidden="true">✓</div>
+            <h3>Driver and fleet safety</h3>
+            <p>Tell us about your requirements so we can identify relevant services.</p>
+            <span class="category-link">Discuss your needs →</span>
+          </a>
+          <a class="category-card" href="#enquiry" data-service="Business vehicle solutions">
+            <div class="category-icon" aria-hidden="true">▦</div>
+            <h3>Business vehicles</h3>
+            <p>Explore mobility solutions for company vehicles and operational needs.</p>
+            <span class="category-link">Explore business options →</span>
+          </a>
+          <a class="category-card" href="#enquiry" data-service="Other mobility requirements">
+            <div class="category-icon" aria-hidden="true">↗</div>
+            <h3>Other mobility needs</h3>
+            <p>Describe what you need and we can review which participating providers may be suitable.</p>
+            <span class="category-link">Tell us what you need →</span>
+          </a>
+        </div>
+      </section>
+      <!-- CARTRACK FEATURED FIRST -->
+      <section class="section" id="featured">
+        <div class="section-heading">
+          <div class="eyebrow">Featured mobility provider</div>
+          <h2>Meet a provider for your <span class="accent">next move.</span></h2>
+          <p>
+            Cartrack is featured first in the Zep Swipe Mobility experience.
+            Explore its available services and submit an enquiry if its
+            offering matches your requirements.
+          </p>
+        </div>
+        <div class="featured-provider">
+          <div class="provider-visual">
+            <div class="provider-visual-label">
+              <span>FEATURED ON ZEP SWIPE MOBILITY</span>
+              Vehicle and fleet solutions
+            </div>
+          </div>
+          <div class="provider-content">
+            <div class="featured-badge">Featured provider · Cartrack</div>
+            <h3>Cartrack</h3>
+            <p>
+              Interested in vehicle tracking, security or fleet management?
+              Tell us about your needs and request information about suitable
+              Cartrack solutions. Availability, pricing and eligibility are
+              confirmed by the provider.
+            </p>
+            <div class="provider-points">
+              <span>Discuss your vehicle or fleet requirements</span>
+              <span>Request a callback or quotation</span>
+              <span>Submit your enquiry through Zep Swipe</span>
+            </div>
+            <a class="button primary" href="#enquiry" data-service="Vehicle tracking">
+              Enquire about Cartrack → 
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- LEAD CAPTURE -->
+      <section class="section" id="enquiry">
+        <div class="lead-layout">
+          <div class="lead-intro">
+            <div class="eyebrow">Start your enquiry</div>
+            <h2>Let's find the right <span class="accent">mobility solution.</span></h2>
+            <p>
+              Tell us a little about your requirements. Your enquiry will be
+              recorded against your signed-in Zep Swipe account, subject to
+              successful submission and the applicable access policies.
+            </p>
+            <div class="lead-benefits">
+              <div class="lead-benefit">
+                <span>✓</span>
+                <div><strong>Start with your needs</strong><br>Choose a service and tell us how many vehicles are involved.</div>
+              </div>
+              <div class="lead-benefit">
+                <span>✓</span>
+                <div><strong>Cartrack featured first</strong><br>Suitable enquiries can be directed to the featured provider.</div>
+              </div>
+              <div class="lead-benefit">
+                <span>✓</span>
+                <div><strong>More providers over time</strong><br>Zep Swipe can expand the experience as additional providers are approved.</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-card">
+            <h3>Request mobility information</h3>
+            <p class="form-subtitle">
+              Complete the form to register your interest. Fields marked * are required.
+            </p>
+            <div id="formNotice" class="notice" role="status" aria-live="polite"></div>
+            <form id="leadForm">
+              <div class="form-grid">
+                <div class="field">
+                  <label for="firstName">First name *</label>
+                  <input id="firstName" name="first_name" type="text"
+                    autocomplete="given-name" maxlength="80" required>
+                </div>
+                <div class="field">
+                  <label for="lastName">Last name *</label>
+                  <input id="lastName" name="last_name" type="text"
+                    autocomplete="family-name" maxlength="80" required>
+                </div>
+                <div class="field">
+                  <label for="leadEmail">Email address *</label>
+                  <input id="leadEmail" name="email" type="email"
+                    autocomplete="email" maxlength="254" required>
+                </div>
+                <div class="field">
+                  <label for="phone">Phone number *</label>
+                  <input id="phone" name="phone" type="tel"
+                    autocomplete="tel" maxlength="30"
+                    placeholder="e.g. +27 00 000 0000" required>
+                </div>
+                <div class="field">
+                  <label for="customerType">I am enquiring as *</label>
+                  <select id="customerType" name="customer_type" required>
+                    <option value="">Select an option</option>
+                    <option value="Individual vehicle owner">Individual vehicle owner</option>
+                    <option value="Business owner">Business owner</option>
+                    <option value="Fleet operator">Fleet operator</option>
+                    <option value="Company representative">Company representative</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="vehicleCount">Number of vehicles *</label>
+                  <select id="vehicleCount" name="vehicle_count" required>
+                    <option value="">Select vehicle count</option>
+                    <option value="1">1 vehicle</option>
+                    <option value="2-5">2–5 vehicles</option>
+                    <option value="6-20">6–20 vehicles</option>
+                    <option value="21-50">21–50 vehicles</option>
+                    <option value="51+">51 or more vehicles</option>
+                  </select>
+                </div>
+                <div class="field full">
+                  <label for="serviceType">What do you need? *</label>
+                  <select id="serviceType" name="lead_type" required>
+                    <option value="">Choose a mobility requirement</option>
+                    <option value="Vehicle tracking">Vehicle tracking</option>
+                    <option value="Vehicle security and theft recovery">Vehicle security and theft recovery</option>
+                    <option value="Fleet management">Fleet management</option>
+                    <option value="Driver and fleet safety">Driver and fleet safety</option>
+                    <option value="Business vehicle solutions">Business vehicle solutions</option>
+                    <option value="Other mobility requirements">Other mobility requirements</option>
+                  </select>
+                </div>
+                <div class="field full">
+                  <label for="location">City or service area</label>
+                  <input id="location" name="location" type="text"
+                    maxlength="120" autocomplete="address-level2"
+                    placeholder="e.g. Johannesburg, Gauteng">
+                  <div class="help">
+                    Enter the area where the vehicle or fleet is based. Do not enter a full private address.
+                  </div>
+                </div>
+                <div class="field full">
+                  <label for="providerPreference">Provider preference</label>
+                  <select id="providerPreference" name="provider_preference">
+                    <option value="Cartrack first">Cartrack first</option>
+                    <option value="Open to suitable participating providers">Open to suitable participating providers</option>
+                  </select>
+                  <div class="help">
+                    Cartrack is featured first. Other providers can only be offered when their participation and service availability are confirmed.
+                  </div>
+                </div>
+                <div class="field full">
+                  <label for="timeframe">When do you need a solution?</label>
+                  <select id="timeframe" name="timeframe">
+                    <option value="">Select a timeframe</option>
+                    <option value="As soon as possible">As soon as possible</option>
+                    <option value="Within 30 days">Within 30 days</option>
+                    <option value="Within 1-3 months">Within 1–3 months</option>
+                    <option value="Researching options">I am researching options</option>
+                  </select>
+                </div>
+                <div class="field full">
+                  <div class="consent-box">
+                    <input id="consent" name="consent" type="checkbox" required>
+                    <label for="consent">
+                      I consent to Zep Swipe using my details to process this
+                      mobility enquiry and contacting me about it. I understand
+                      that, where necessary to fulfil my request, my details may
+                      be shared with Cartrack or another specifically identified,
+                      participating provider, in accordance with the applicable
+                      privacy notice. I can request information about my data
+                      rights and withdraw consent where applicable.
+                    </label>
+                  </div>
+                </div>
+                <div class="field full">
+                  <button class="button primary submit-button" id="submitLead" type="submit">
+                    Submit Mobility Enquiry →
+                  </button>
+                  <p class="form-footnote">
+                    Submitting an enquiry does not guarantee a quote, service
+                    availability or installation. Your enquiry is not complete
+                    until Zep Swipe confirms that it has been recorded.
+                  </p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+      <!-- FUTURE PARTNER NETWORK -->
+      <section class="section" id="partners">
+        <div class="partner-panel">
+          <div>
+            <div class="eyebrow">For mobility companies</div>
+            <h2>Bring your mobility offering to <span class="accent">Zep Swipe.</span></h2>
+            <p>
+              Zep Swipe Mobility is being built to connect customers and
+              businesses with relevant mobility services. Approved providers
+              can explore participation as the partner network expands.
+              Provider inclusion, lead allocation and commercial terms are
+              subject to agreement.
+            </p>
+            <span class="partner-tag">Cartrack featured first · Network designed to expand</span>
+          </div>
+          <a class="button" href="mailto:partnerships@zepswipe.com?subject=Zep%20Swipe%20Mobility%20Partnership%20Enquiry">
+            Discuss a partnership →
+          </a>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div>
+        <img
+          src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png"
+          alt="Zep Swipe"
+          loading="lazy"
+        >
+        <div>Opportunity Moves.</div>
+        <div>DISCOVER → EARN → CONNECT → BUILD</div>
       </div>
-      <div class="formactions"><button class="btn outline" id="cancelModal" type="button">Cancel</button><button class="btn primary" id="submitLead" type="submit"><i data-lucide="send" width="15"></i> Submit enquiry</button></div>
-      <p style="font-size:9px;color:var(--muted);line-height:1.6;margin:12px 0 0">You may submit without registering. When signed in, your enquiry can be linked to your account.</p>
-    </div>
-    <div class="successview" id="successView"><div class="successicon"><i data-lucide="check" width="25"></i></div><h3>Enquiry received</h3><p id="successText">Thank you. Your enquiry has been recorded.</p><button class="btn primary" id="doneBtn" type="button">Done</button></div>
-  </form>
-</div></div>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-<script>
-(() => {
-"use strict";
-
-// Replace this placeholder with the PUBLIC anon/publishable key from the
-// Supabase project used by Zep Swipe. Never put a service-role key in HTML.
-const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
-const hasKey = SUPABASE_ANON_KEY !== "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo" && SUPABASE_ANON_KEY.trim().length > 20;
-const db = (hasKey && window.supabase?.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-const $ = id => document.getElementById(id);
-let currentUser = null;
-let currentProfile = {};
-let submitting = false;
-let toastTimer = null;
-const LEAD_TABLE = "cartrack_leads";
-
-function icons(){ window.lucide?.createIcons(); }
-function escapeHTML(value){return String(value ?? "").replace(/[&<>\"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function showToast(message, isError=false){const node=$("toast");node.textContent=message;node.classList.toggle("error",isError);node.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>node.classList.remove("show"),3600);}
-function openLeadModal(type){if(type)$("leadType").value=type;setFormError("");$("leadFormView").style.display="block";$("successView").style.display="none";$("leadModal").classList.add("open");document.body.style.overflow="hidden";icons();setTimeout(()=>$("firstName").focus(),80);}
-function closeLeadModal(){if(submitting)return;$("leadModal").classList.remove("open");document.body.style.overflow="";}
-function setFormError(message){$("formError").textContent=message;$("formError").style.display=message?"block":"none";}
-function validPhone(phone){const digits=String(phone||"").replace(/\D/g,"");return digits.length>=9&&digits.length<=15;}
-function queryParam(name){try{return new URL(window.location.href).searchParams.get(name)||"";}catch(_){return "";}}
-function campaignMeta(){return {source:queryParam("utm_source")||queryParam("source")||"zep-mobility",campaign:queryParam("utm_campaign")||queryParam("campaign")||"mobility-organic",page:window.location.pathname.split("/").pop()||"mobility.html"};}
-
-async function initialiseSession(){
-  if(!db){$("topName").textContent="Welcome";$("topSub").textContent="Mobility discovery";$("sideName").textContent="Guest visitor";$("sideSub").textContent="Enquiries available without signup";return;}
-  try{
-    const {data,error}=await db.auth.getSession();if(error)throw error;currentUser=data.session?.user||null;
-    if(!currentUser){$("topName").textContent="Welcome";$("topSub").textContent="Zep Swipe Mobility";$("sideName").textContent="Guest visitor";$("sideSub").textContent="Enquiries available without signup";return;}
-    const {data:profile,error:profileError}=await db.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();if(!profileError)currentProfile=profile||{};
-    const name=currentProfile.full_name?.split(" ")[0]||currentUser.user_metadata?.full_name?.split(" ")[0]||currentUser.email?.split("@")[0]||"Zep member";
-    const fullName=currentProfile.full_name||currentUser.user_metadata?.full_name||currentUser.user_metadata?.name||name;
-    $("topName").textContent="Welcome, "+name;$("topSub").textContent="Zep Swipe member";$("sideName").textContent=fullName;$("sideSub").textContent=currentProfile.university||currentProfile.institution||"Registered member";
-    const avatarUrl=currentProfile.avatar_url||currentProfile.profile_image||currentUser.user_metadata?.avatar_url||currentUser.user_metadata?.picture;
-    if(avatarUrl)$("sideAvatar").innerHTML='<img src="'+escapeHTML(avatarUrl)+'" alt="" referrerpolicy="no-referrer">';else $("sideAvatar").textContent=fullName.split(/\s+/).map(x=>x[0]||"").join("").slice(0,2).toUpperCase();
-    await loadMyEnquiries();
-  }catch(error){console.warn("Could not load session/profile:",error);}
-}
-function statusLabel(value){const s=String(value||"submitted").toLowerCase().replace(/[_-]+/g," ");return s.charAt(0).toUpperCase()+s.slice(1);}
-async function loadMyEnquiries(){
-  if(!db||!currentUser){$("activitySubtitle").textContent="Sign in to see enquiry history associated with your account.";$("activityList").innerHTML='<div class="empty">You can submit an enquiry without signing in. Sign in before submitting if you want your enquiry linked to your account.</div>';return;}
-  $("activitySubtitle").textContent="Recent enquiries submitted while signed in.";
-  try{
-    const {data,error}=await db.from(LEAD_TABLE).select("id,lead_type,status,created_at,interest").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(10);if(error)throw error;
-    if(!data?.length){$("activityList").innerHTML='<div class="empty">No enquiry history found for this account yet. Enquiries submitted while signed in can appear here.</div>';return;}
-    $("activityList").innerHTML=data.map(row=>{const type=statusLabel(row.lead_type||row.interest||"Mobility enquiry");const when=row.created_at?new Date(row.created_at).toLocaleDateString("en-ZA",{day:"numeric",month:"short",year:"numeric"}):"Date unavailable";return '<div class="activityrow"><span class="activityicon"><i data-lucide="car-front"></i></span><div class="activitycopy"><strong>'+escapeHTML(type)+'</strong><small>Submitted '+escapeHTML(when)+'</small></div><span class="status">'+escapeHTML(statusLabel(row.status||"submitted"))+'</span></div>';}).join("");icons();
-  }catch(error){console.info("Enquiry history not available:",error.message||error);$("activityList").innerHTML='<div class="empty">Enquiry history is unavailable in this view. You can still submit a new request.</div>';}
-}
-async function submitLead(event){
-  event.preventDefault();if(submitting)return;setFormError("");
-  if($("website").value.trim()){showToast("Thank you. Your request has been received.");closeLeadModal();return;}
-  if(!db||!hasKey){setFormError("The mobility form is not connected yet. Add your Supabase public anon/publishable key and confirm the cartrack_leads insert policy.");return;}
-  const firstName=$("firstName").value.trim(),lastName=$("lastName").value.trim(),phone=$("phone").value.trim(),email=$("email").value.trim(),city=$("city").value.trim(),leadType=$("leadType").value,vehicleCount=$("vehicleCount").value,interest=$("interest").value,vehicleInfo=$("vehicleInfo").value.trim();
-  if(!firstName||!lastName||!phone||!city||!leadType||!interest){setFormError("Please complete all required fields.");return;}
-  if(!validPhone(phone)){setFormError("Enter a valid mobile number, including your area or country code if applicable.");return;}
-  if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setFormError("Enter a valid email address or leave the email field blank.");return;}
-  if(!$("consent").checked){setFormError("Please confirm that you consent to Zep Swipe sharing this enquiry with Cartrack.");return;}
-  let sessionUser=currentUser;try{const {data}=await db.auth.getSession();sessionUser=data.session?.user||currentUser||null;}catch(_){}
-  const meta=campaignMeta(),now=new Date().toISOString();
-  const payload={user_id:sessionUser?.id||null,first_name:firstName,last_name:lastName,phone,email:email||null,city,lead_type:leadType,vehicle_count:vehicleCount,vehicle_info:vehicleInfo||null,interest,source:meta.source,campaign:meta.campaign,page:meta.page,consent:true,status:"submitted",submitted_at:now,created_at:now};
-  submitting=true;const button=$("submitLead");button.disabled=true;button.innerHTML='<span class="spinner"></span> Submitting…';
-  try{
-    const {error}=await db.from(LEAD_TABLE).insert(payload);if(error)throw error;
-    $("leadForm").reset();$("leadFormView").style.display="none";$("successView").style.display="block";$("successText").textContent="Thank you, "+firstName+". Your enquiry has been recorded. Any provider follow-up depends on the agreed process.";icons();if(sessionUser)await loadMyEnquiries();
-  }catch(error){
-    console.error("Mobility enquiry insert failed:",error);const message=String(error?.message||"");
-    if(error?.code==="42501"||/row-level security|permission denied|not allowed/i.test(message))setFormError("Supabase rejected the enquiry. Check the cartrack_leads insert grant and Row Level Security policy. Details: "+message);
-    else setFormError("We could not save this enquiry. Check the cartrack_leads columns and Supabase permissions. Details: "+(message||"Unknown error"));
-  }finally{submitting=false;button.disabled=false;button.innerHTML='<i data-lucide="send" width="15"></i> Submit enquiry';icons();}
-}
-function searchSolutions(){
-  const term=$("siteSearch").value.trim().toLowerCase();
-  if(!term){$("needs").scrollIntoView({behavior:"smooth"});return;}
-  const targets=[...document.querySelectorAll(".choice,.feature")];
-  const match=targets.find(el=>el.textContent.toLowerCase().includes(term));
-  if(match){match.scrollIntoView({behavior:"smooth",block:"center"});showToast("Showing a matching mobility option.");}
-  else{showToast("No exact match. Choose the closest option or request help.");$("needs").scrollIntoView({behavior:"smooth"});}
-}
-function openAccount(){if(currentUser){$("activity").scrollIntoView({behavior:"smooth",block:"start"});showToast("Your mobility enquiries are shown below.");}else location.href="auth.html?redirect="+encodeURIComponent("mobility.html");}
-function wire(){
-  document.querySelectorAll("[data-open-enquiry]").forEach(el=>el.addEventListener("click",event=>{event.preventDefault();openLeadModal();}));
-  document.querySelectorAll("[data-type]").forEach(el=>el.addEventListener("click",()=>openLeadModal(el.dataset.type)));
-  $("closeModal").addEventListener("click",closeLeadModal);$("cancelModal").addEventListener("click",closeLeadModal);$("doneBtn").addEventListener("click",()=>{closeLeadModal();showToast("Thank you for your enquiry.");});
-  $("leadModal").addEventListener("click",event=>{if(event.target===$("leadModal"))closeLeadModal();});
-  document.addEventListener("keydown",event=>{if(event.key==="Escape"&&$("leadModal").classList.contains("open"))closeLeadModal();});
-  $("leadForm").addEventListener("submit",submitLead);$("searchButton").addEventListener("click",searchSolutions);$("siteSearch").addEventListener("keydown",event=>{if(event.key==="Enter")searchSolutions();});$("accountButton").addEventListener("click",openAccount);$("refreshActivity").addEventListener("click",async()=>{await loadMyEnquiries();showToast("Activity refreshed where available.");});
-}
-async function init(){icons();wire();await initialiseSession();if(!hasKey)showToast("Add the Supabase public key before accepting live enquiries.",true);}
-document.addEventListener("DOMContentLoaded",init);
-})();
-</script>
+      <div>
+        <a href="marketplace.html">Marketplace</a> ·
+        <a href="account.html">My Account</a> ·
+        <a href="auth.html">Sign in</a>
+        <p>Mobility enquiries are subject to provider availability and applicable terms.</p>
+      </div>
+    </footer>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    /*
+      ZEP SWIPE MOBILITY
+      CONFIGURATION:
+      - Use the matching Supabase project URL and public anon/publishable key.
+      - Never put a service_role or secret key in frontend code.
+      - Existing known cartrack_leads fields:
+        user_id, first_name, last_name, phone, email,
+        lead_type, vehicle_count, source, consent, created_at.
+      IMPORTANT:
+      - This form inserts only into the existing cartrack_leads table.
+      - Confirm its actual schema and RLS policies before launch.
+      - Customer type, location, timeframe, and provider preference are
+        collected by the form but are NOT stored by this version because
+        their corresponding database columns have not been confirmed.
+      - Provider preference does not itself implement multi-provider routing.
+      - Do not report a lead as saved unless Supabase confirms the insert.
+    */
+    const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
+    const SUPABASE_PUBLIC_KEY =
+      "PASTE_YOUR_MATCHING_SUPABASE_PUBLIC_ANON_OR_PUBLISHABLE_KEY_HERE";
+    let supabaseClient = null;
+    let signedInUser = null;
+    let submitting = false;
+    const $ = (id) => document.getElementById(id);
+    function showNotice(element, message, type = "info") {
+      element.textContent = message;
+      element.className = "notice show " + type;
+    }
+    function hideNotice(element) {
+      element.textContent = "";
+      element.className = "notice";
+    }
+    function getSafeRedirect() {
+      const params = new URLSearchParams(window.location.search);
+      const requested = params.get("redirect");
+      if (!requested) return "mobility.html";
+      // Only allow a local HTML destination, never an external URL.
+      if (
+        requested === "mobility.html" ||
+        requested === "account.html" ||
+        requested === "marketplace.html"
+      ) {
+        return requested;
+      }
+      return "mobility.html";
+    }
+    function redirectToSignIn() {
+      const destination = encodeURIComponent(getSafeRedirect());
+      window.location.replace("auth.html?redirect=" + destination);
+    }
+    function readAttribution() {
+      const params = new URLSearchParams(window.location.search);
+      const allowedSources = [
+        "account",
+        "account-dashboard",
+        "provider-dashboard",
+        "customer-dashboard",
+        "business-dashboard",
+        "marketplace",
+        "campaign",
+        "direct"
+      ];
+      const rawSource = params.get("source") || "mobility-page";
+      const source = allowedSources.includes(rawSource) ? rawSource : "mobility-page";
+      const utmSource = params.get("utm_source") || "direct";
+      const utmMedium = params.get("utm_medium") || "website";
+      const utmCampaign = params.get("utm_campaign") || "mobility";
+      // The current database field is source. Store compact attribution there.
+      return [
+        "zep-swipe-mobility",
+        "source=" + source,
+        "utm_source=" + utmSource.slice(0, 60),
+        "utm_medium=" + utmMedium.slice(0, 60),
+        "utm_campaign=" + utmCampaign.slice(0, 60)
+      ].join("; ").slice(0, 250);
+    }
+    function fillUserDetails(user) {
+      const metadata = user.user_metadata || {};
+      const fullName = String(
+        metadata.full_name || metadata.name || ""
+      ).trim();
+      if (fullName) {
+        const parts = fullName.split(/\s+/);
+        $("firstName").value = parts.shift() || "";
+        $("lastName").value = parts.join(" ");
+      }
+      $("leadEmail").value = user.email || "";
+    }
+    async function checkSession() {
+      if (
+        !window.supabase ||
+        !SUPABASE_URL.startsWith("https://") ||
+        !SUPABASE_PUBLIC_KEY ||
+        SUPABASE_PUBLIC_KEY.includes("PASTE_YOUR_")
+      ) {
+        showNotice(
+          $("pageNotice"),
+          "Mobility is not connected yet. Add the matching Supabase public anon/publishable key in the script at the bottom of mobility.html. Do not use a service-role or secret key.",
+          "error"
+        );
+        $("submitLead").disabled = true;
+        return false;
+      }
+      try {
+        supabaseClient = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_PUBLIC_KEY,
+          {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true
+            }
+          }
+        );
+        const { data, error } = await supabaseClient.auth.getUser();
+        if (error || !data.user) {
+          redirectToSignIn();
+          return false;
+        }
+        signedInUser = data.user;
+        fillUserDetails(signedInUser);
+        hideNotice($("pageNotice"));
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+          if (event === "SIGNED_OUT" || !session) {
+            redirectToSignIn();
+          }
+        });
+        return true;
+      } catch (error) {
+        console.error("Mobility authentication error:", error);
+        showNotice(
+          $("pageNotice"),
+          "We could not verify your session. Check your connection and Supabase configuration, then sign in again.",
+          "error"
+        );
+        $("submitLead").disabled = true;
+        return false;
+      }
+    }
+    async function submitLead(event) {
+      event.preventDefault();
+      if (submitting) return;
+      hideNotice($("formNotice"));
+      if (!supabaseClient || !signedInUser) {
+        redirectToSignIn();
+        return;
+      }
+      const form = $("leadForm");
+      if (!form.reportValidity()) return;
+      if (!$("consent").checked) {
+        showNotice(
+          $("formNotice"),
+          "Please confirm your consent before submitting your enquiry.",
+          "error"
+        );
+        return;
+      }
+      const firstName = $("firstName").value.trim();
+      const lastName = $("lastName").value.trim();
+      const email = $("leadEmail").value.trim();
+      const phone = $("phone").value.trim();
+      const leadType = $("serviceType").value;
+      const vehicleCount = $("vehicleCount").value;
+      if (!firstName || !lastName || !email || !phone || !leadType || !vehicleCount) {
+        showNotice(
+          $("formNotice"),
+          "Please complete all required fields.",
+          "error"
+        );
+        return;
+      }
+      if (email.length > 254 || phone.length > 30) {
+        showNotice(
+          $("formNotice"),
+          "Please check the length of your contact details.",
+          "error"
+        );
+        return;
+      }
+      const button = $("submitLead");
+      submitting = true;
+      button.disabled = true;
+      button.textContent = "Submitting enquiry…";
+      /*
+        Match the existing known cartrack_leads fields only.
+        Additional form answers are not persisted until the schema is
+        verified and corresponding columns or a related table are added.
+      */
+      const lead = {
+        user_id: signedInUser.id,
+        first_name: firstName,
+        last_name: lastName,
+        phone: phone,
+        email: email,
+        lead_type: leadType,
+        vehicle_count: vehicleCount,
+        source: readAttribution(),
+        consent: true,
+        created_at: new Date().toISOString()
+      };
+      try {
+        const { error } = await supabaseClient
+          .from("cartrack_leads")
+          .insert([lead]);
+        if (error) {
+          console.error("Mobility lead insert failed:", error);
+          showNotice(
+            $("formNotice"),
+            "Your enquiry was not confirmed as saved. Please try again. If the problem continues, the Mobility team should check the cartrack_leads column types, required fields and authenticated INSERT row-level security policy.",
+            "error"
+          );
+          return;
+        }
+        showNotice(
+          $("formNotice"),
+          "Your mobility enquiry has been submitted successfully. Zep Swipe has recorded your request. Provider contact and service availability are subject to follow-up and confirmation.",
+          "success"
+        );
+        form.reset();
+        fillUserDetails(signedInUser);
+        // Return the form to its starting position after successful submission.
+        $("formNotice").scrollIntoView({ behavior: "smooth", block: "center" });
+      } catch (error) {
+        console.error("Unexpected lead submission error:", error);
+        showNotice(
+          $("formNotice"),
+          "We could not confirm your enquiry. Check your connection and try again.",
+          "error"
+        );
+      } finally {
+        submitting = false;
+        button.disabled = false;
+        button.textContent = "Submit Mobility Enquiry →";
+      }
+    }
+    async function signOut() {
+      if (!supabaseClient) {
+        window.location.href = "auth.html";
+        return;
+      }
+      const button = $("signOutButton");
+      button.disabled = true;
+      button.textContent = "Signing out…";
+      try {
+        const { error } = await supabaseClient.auth.signOut();
+        if (error) throw error;
+        window.location.replace("auth.html");
+      } catch (error) {
+        console.error("Sign-out error:", error);
+        button.disabled = false;
+        button.textContent = "Sign out";
+        showNotice(
+          $("pageNotice"),
+          "We could not complete sign-out. Please try again.",
+          "error"
+        );
+      }
+    }
+    // Selecting a category preselects the matching enquiry type.
+    document.querySelectorAll("[data-service]").forEach((element) => {
+      element.addEventListener("click", () => {
+        const service = element.getAttribute("data-service");
+        const selector = $("serviceType");
+        const matchingOption = Array.from(selector.options).find(
+          option => option.value === service
+        );
+        if (matchingOption) {
+          selector.value = service;
+        }
+      });
+    });
+    $("leadForm").addEventListener("submit", submitLead);
+    $("signOutButton").addEventListener("click", signOut);
+    checkSession();
+  </script>
 </body>
 </html>
