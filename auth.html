@@ -427,7 +427,7 @@
       Never use a Supabase service_role or secret key in browser code.
     */
     const SUPABASE_URL = "https://tieekcelcathtuluwcfc.supabase.co";
-    const SUPABASE_PUBLIC_KEY = "PASTE_YOUR_CORRECT_SUPABASE_ANON_OR_PUBLISHABLE_KEY_HERE";
+    const SUPABASE_PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
     const VERIFY_URL = new URL("verify.html", window.location.href).href;
     const RESET_CALLBACK_URL = new URL("auth.html?mode=recovery", window.location.href).href;
     const $ = (id) => document.getElementById(id);
@@ -655,7 +655,7 @@
       }
       if (
         !SUPABASE_PUBLIC_KEY ||
-        SUPABASE_PUBLIC_KEY.includes("PASTE_YOUR_CORRECT")
+        SUPABASE_PUBLIC_KEY.includes("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo")
       ) {
         showMessage("Setup required: insert your correct Supabase public anon/publishable key into auth.html.", "error");
         $("loginForm").classList.add("hidden");
