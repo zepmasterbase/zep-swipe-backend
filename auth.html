@@ -1,185 +1,176 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#070707">
-<meta name="description" content="Create your Zep Swipe account and discover student opportunities, services, deals and mobility solutions.">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#030403">
 <title>Zep Swipe | Sign In or Create Account</title>
+<meta name="description" content="Join Zep Swipe to discover student opportunities, services, deals and mobility solutions.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#070707;--panel:#111310;--line:#292d26;--accent:#b8ff3b;--accent2:#dcff8c;--text:#f7f9f4;--muted:#969d90;--danger:#ff7777;--success:#c8ff73}
-*{box-sizing:border-box}
-html{min-height:100%;background:var(--bg)}
-body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 50% -15%,rgba(184,255,59,.11),transparent 42%),var(--bg);display:flex;align-items:center;justify-content:center;padding:24px 16px}
-button,input{font:inherit}
-button{cursor:pointer}
-.shell{width:100%;max-width:470px;position:relative}
-.topbar{display:flex;justify-content:center;margin-bottom:18px}
-.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
-.brand img{width:48px;height:48px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 13px rgba(184,255,59,.22))}
-.brand-name{font-size:24px;font-weight:900;letter-spacing:-1.3px;line-height:1}
-.brand-name span{color:var(--accent)}
-.brand-tag{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#818a79;margin-top:6px}
-.card{background:linear-gradient(155deg,rgba(20,23,18,.98),rgba(10,11,9,.99));border:1px solid var(--line);border-radius:26px;padding:25px;box-shadow:0 28px 90px rgba(0,0,0,.45),inset 0 1px rgba(255,255,255,.025)}
-.eyebrow{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(184,255,59,.19);background:rgba(184,255,59,.055);border-radius:999px;padding:7px 10px;color:var(--accent2);font-size:9px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase}
-.pip{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent)}
-h1{font-size:30px;line-height:1.12;letter-spacing:-1.4px;margin:15px 0 9px;font-weight:900}
-.lede{color:var(--muted);font-size:12px;line-height:1.7;margin:0 0 20px}
-.mode-tabs{display:grid;grid-template-columns:1fr 1fr;padding:4px;gap:4px;background:#080908;border:1px solid #23261f;border-radius:14px;margin-bottom:20px}
-.mode-tabs button{border:0;border-radius:10px;padding:11px 8px;color:#8f9689;background:transparent;font-size:11px;font-weight:800}
-.mode-tabs button.active{background:var(--accent);color:#080a05}
-.field-label{display:block;color:#d5dacd;font-size:10px;font-weight:700;margin:14px 0 7px}
-.field{width:100%;border:1px solid #30352c;border-radius:12px;background:#090a08;color:#fff;padding:13px 14px;outline:none;font-size:13px;min-height:46px}
-.field::placeholder{color:#62695d}
-.field:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(184,255,59,.08)}
-.password-wrap{position:relative}
-.password-wrap .field{padding-right:76px}
-.show-password{position:absolute;right:8px;top:7px;border:0;background:transparent;color:var(--accent);font-size:10px;font-weight:800;padding:8px}
-.roles{display:grid;gap:8px}
-.role-option{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid #292d25;border-radius:13px;background:#0b0c0a;cursor:pointer;transition:border-color .15s,background .15s}
-.role-option.selected{border-color:rgba(184,255,59,.8);background:rgba(184,255,59,.055)}
-.role-option input{accent-color:var(--accent);width:15px;height:15px;margin:0;flex:0 0 auto}
-.role-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#171b13;font-size:16px;flex:0 0 auto}
-.role-copy{flex:1;min-width:0}
-.role-title{font-size:11px;font-weight:800}
-.role-desc{font-size:9px;color:var(--muted);line-height:1.5;margin-top:3px}
-.primary{width:100%;min-height:48px;border:0;border-radius:13px;margin-top:20px;padding:13px;background:linear-gradient(135deg,var(--accent2),var(--accent) 60%,#96ed2d);color:#080a05;font-size:12px;font-weight:900;box-shadow:0 9px 26px rgba(184,255,59,.11);transition:transform .15s,opacity .15s}
-.primary:hover{transform:translateY(-1px)}
-.primary:disabled{cursor:wait;opacity:.6;transform:none}
-.forgot{display:block;text-align:right;color:var(--accent);font-size:10px;text-decoration:none;margin-top:10px}
-.forgot:hover{text-decoration:underline}
-.message{display:none;margin-top:15px;padding:12px 13px;border:1px solid #34392e;border-radius:12px;background:#0a0b09;color:#dbe2d2;font-size:11px;line-height:1.65;overflow-wrap:anywhere}
-.message.show{display:block}
-.message.success{border-color:rgba(184,255,59,.25);color:var(--success)}
-.message.error{border-color:rgba(255,119,119,.3);color:var(--danger)}
-.trust{display:flex;justify-content:center;gap:13px;flex-wrap:wrap;margin-top:17px;color:#727a6b;font-size:9px}
-.trust span{display:flex;align-items:center;gap:5px}
-.foot{color:#61685b;font-size:9px;line-height:1.7;text-align:center;margin:18px 8px 0}
-#signupFields{display:none}
-#signupFields.show{display:block}
-#loginFields.hide{display:none}
-.back-home{display:block;text-align:center;margin-top:15px;color:#899181;text-decoration:none;font-size:10px}
-.back-home:hover{color:var(--accent)}
-@media(max-width:420px){body{padding:18px 12px}.card{padding:21px 17px;border-radius:22px}h1{font-size:27px}.brand-name{font-size:22px}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+:root{--bg:#030403;--panel:#0d100c;--panel2:#11150f;--line:#252a23;--accent:#b8ff3b;--accent2:#d9ff79;--muted:#92998d;--danger:#ff7a7a}
+*{box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+html,body{margin:0;min-height:100%;background:var(--bg);color:#fff}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:22px;position:relative;isolation:isolate}
+body:before{content:"";position:fixed;z-index:-1;pointer-events:none;width:620px;height:620px;top:-310px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(184,255,59,.17),transparent 68%)}
+body:after{content:"";position:fixed;z-index:-1;pointer-events:none;width:460px;height:460px;right:-250px;bottom:-290px;background:radial-gradient(circle,rgba(184,255,59,.07),transparent 70%)}
+.shell{width:100%;max-width:490px}
+.brand{text-align:center;margin-bottom:24px}
+.logo-orbit{width:96px;height:96px;margin:0 auto 13px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#253a16,#10170c 45%,#050705 78%);border:1px solid rgba(184,255,59,.65);box-shadow:0 0 0 5px rgba(184,255,59,.035),0 0 30px rgba(184,255,59,.23),inset 0 0 24px rgba(184,255,59,.1)}
+.logo-orbit img{width:68px;height:68px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 9px rgba(184,255,59,.4))}
+.wordmark{font-size:28px;font-weight:900;letter-spacing:-1.5px}.wordmark span{color:var(--accent)}
+.tagline{margin-top:5px;color:#70796b;font-size:9px;letter-spacing:2.5px;text-transform:uppercase}
+.card{background:linear-gradient(145deg,rgba(18,22,17,.98),rgba(7,9,7,.99));border:1px solid var(--line);border-radius:26px;padding:25px;box-shadow:0 28px 90px rgba(0,0,0,.55),inset 0 1px rgba(255,255,255,.035)}
+.eyebrow{color:var(--accent);font-size:10px;font-weight:800;letter-spacing:1.7px;text-transform:uppercase;margin-bottom:9px}
+h1{font-size:28px;line-height:1.15;letter-spacing:-1.2px;margin:0 0 9px}
+.intro{margin:0 0 20px;color:var(--muted);font-size:12px;line-height:1.65}
+.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:#080a08;border:1px solid var(--line);padding:4px;border-radius:13px;margin-bottom:19px}
+.mode-switch button{border:0;border-radius:9px;background:transparent;color:#9aa193;padding:11px 8px;font-size:11px;font-weight:800;cursor:pointer}
+.mode-switch button.active{background:var(--accent);color:#090b07}
+.field{margin:13px 0}
+label{display:block;color:#d9ded4;font-size:10px;font-weight:700;margin:0 0 7px}
+input{width:100%;border:1px solid #2a3026;background:#080a08;color:#fff;border-radius:12px;padding:13px 14px;font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s}
+input:focus{border-color:rgba(184,255,59,.7);box-shadow:0 0 0 3px rgba(184,255,59,.07)}
+input::placeholder{color:#596153}
+.role-title{font-size:10px;color:#d9ded4;font-weight:800;margin:19px 0 8px}
+.roles{display:grid;grid-template-columns:1fr;gap:8px}
+.role{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);background:#090b09;border-radius:13px;cursor:pointer;transition:.15s}
+.role:hover{border-color:#465039}
+.role.active{border-color:var(--accent);background:rgba(184,255,59,.065)}
+.role input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.role-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:#171d13;font-size:17px;flex-shrink:0}
+.role-text{flex:1;min-width:0}
+.role-name{font-weight:800;font-size:11px;margin-bottom:3px}
+.role-desc{font-size:10px;color:var(--muted);line-height:1.4}
+.role-check{width:17px;height:17px;border-radius:50%;border:1px solid #4b5545;display:grid;place-items:center;font-size:10px;color:#0b0d08;flex-shrink:0}
+.role.active .role-check{background:var(--accent);border-color:var(--accent)}
+.primary{width:100%;border:0;border-radius:13px;padding:15px 14px;margin-top:19px;background:linear-gradient(135deg,var(--accent2),var(--accent) 55%,#8dff27);color:#080a06;font-size:11px;font-weight:900;letter-spacing:.35px;cursor:pointer;box-shadow:0 10px 28px rgba(184,255,59,.12)}
+.primary:hover{box-shadow:0 14px 36px rgba(184,255,59,.22);transform:translateY(-1px)}
+button:disabled{opacity:.58;cursor:wait;transform:none}
+.message{display:none;padding:12px 13px;border-radius:12px;margin-top:15px;font-size:11px;line-height:1.6;background:rgba(184,255,59,.06);border:1px solid rgba(184,255,59,.22);color:#dce8ce;overflow-wrap:anywhere}
+.message.show{display:block}.message.error{color:#ffaaaa;background:rgba(255,80,80,.06);border-color:rgba(255,100,100,.27)}
+.message.success{color:#d7f5b2}
+.resend{display:none;width:100%;background:transparent;border:1px solid #30372b;color:var(--accent);border-radius:12px;padding:12px;margin-top:9px;font-weight:800;font-size:10px;cursor:pointer}
+.resend.show{display:block}
+.foot{margin-top:17px;text-align:center;font-size:10px;color:#697163;line-height:1.65}
+.foot a{color:var(--accent);text-decoration:none}
+.security-note{display:flex;align-items:flex-start;gap:8px;margin-top:17px;padding-top:15px;border-top:1px solid #20251e;color:#75806d;font-size:9px;line-height:1.6}
+.security-note span:first-child{color:var(--accent)}
+[hidden]{display:none!important}
+@media(max-width:420px){body{padding:14px}.card{padding:20px;border-radius:22px}h1{font-size:25px}.logo-orbit{width:86px;height:86px}.logo-orbit img{width:61px;height:61px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <main class="shell">
-  <div class="topbar">
-    <a class="brand" href="marketplace.html" aria-label="Zep Swipe home">
+  <header class="brand">
+    <div class="logo-orbit">
       <img src="https://payhip.com/cdn-cgi/image/format=auto,width=1500/https://pe56d.s3.amazonaws.com/o_1jrl9bj473pej4dqgtbqh12315.png" alt="Zep Swipe logo">
-      <div>
-        <div class="brand-name">ZEP <span>SWIPE</span></div>
-        <div class="brand-tag">The Student Economy</div>
-      </div>
-    </a>
-  </div>
+    </div>
+    <div class="wordmark">ZEP <span>SWIPE</span></div>
+    <div class="tagline">The Student Economy</div>
+  </header>
 
-  <section class="card" aria-labelledby="pageTitle">
-    <div class="eyebrow"><span class="pip"></span> Discover · Earn · Connect · Build</div>
-    <h1 id="pageTitle">Your next opportunity starts here.</h1>
-    <p class="lede" id="pageDescription">Sign in to explore student services, exclusive deals, opportunities and mobility solutions.</p>
+  <section class="card" aria-labelledby="heading">
+    <div class="eyebrow">Discover · Earn · Connect · Build</div>
+    <h1 id="heading">Your next opportunity starts here.</h1>
+    <p class="intro" id="intro">Sign in to explore student opportunities, local services, deals and mobility solutions.</p>
 
-    <div class="mode-tabs" role="tablist" aria-label="Account action">
-      <button id="loginTab" class="active" type="button" role="tab" aria-selected="true">Sign in</button>
-      <button id="signupTab" type="button" role="tab" aria-selected="false">Create account</button>
+    <div class="mode-switch" role="tablist" aria-label="Choose sign-in or account creation">
+      <button type="button" id="loginTab" class="active" role="tab" aria-selected="true">Sign in</button>
+      <button type="button" id="signupTab" role="tab" aria-selected="false">Create account</button>
     </div>
 
     <form id="authForm" novalidate>
-      <div id="signupFields">
-        <label class="field-label" for="fullName">Full name</label>
-        <input class="field" id="fullName" name="fullName" type="text" autocomplete="name" maxlength="100" placeholder="Your first and last name">
+      <div class="field" id="nameField" hidden>
+        <label for="fullName">Full name</label>
+        <input id="fullName" name="fullName" type="text" autocomplete="name" maxlength="100" placeholder="Enter your full name">
+      </div>
 
-        <div class="field-label">Choose your account type</div>
+      <div class="field">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters" required>
+      </div>
+
+      <div class="field" id="confirmField" hidden>
+        <label for="confirmPassword">Confirm password</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8" placeholder="Enter the password again">
+      </div>
+
+      <div id="roleBlock" hidden>
+        <div class="role-title">Choose your account type</div>
         <div class="roles">
-          <label class="role-option selected">
-            <input type="radio" name="role" value="customer" checked>
-            <span class="role-icon" aria-hidden="true">👤</span>
-            <span class="role-copy"><span class="role-title">Customer / Student</span><span class="role-desc">Discover deals, services and opportunities.</span></span>
+          <label class="role active" data-role="customer">
+            <input type="radio" name="accountRole" value="customer" checked>
+            <span class="role-icon">👤</span>
+            <span class="role-text"><span class="role-name">Customer</span><br><span class="role-desc">Discover services, student deals and opportunities.</span></span>
+            <span class="role-check">✓</span>
           </label>
-          <label class="role-option">
-            <input type="radio" name="role" value="provider">
-            <span class="role-icon" aria-hidden="true">🛠️</span>
-            <span class="role-copy"><span class="role-title">Student Provider</span><span class="role-desc">Showcase your skills and offer services.</span></span>
+          <label class="role" data-role="provider">
+            <input type="radio" name="accountRole" value="provider">
+            <span class="role-icon">✦</span>
+            <span class="role-text"><span class="role-name">Student Provider</span><br><span class="role-desc">List your skills and offer services to customers.</span></span>
+            <span class="role-check"></span>
           </label>
-          <label class="role-option">
-            <input type="radio" name="role" value="business">
-            <span class="role-icon" aria-hidden="true">🏪</span>
-            <span class="role-copy"><span class="role-title">Business</span><span class="role-desc">Connect with students and promote your offers.</span></span>
+          <label class="role" data-role="business">
+            <input type="radio" name="accountRole" value="business">
+            <span class="role-icon">▦</span>
+            <span class="role-text"><span class="role-name">Business</span><br><span class="role-desc">Promote your business and create student deals.</span></span>
+            <span class="role-check"></span>
           </label>
         </div>
       </div>
 
-      <label class="field-label" for="email">Email address</label>
-      <input class="field" id="email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com">
-
-      <label class="field-label" for="password">Password</label>
-      <div class="password-wrap">
-        <input class="field" id="password" name="password" type="password" autocomplete="current-password" required minlength="8" placeholder="At least 8 characters">
-        <button class="show-password" id="togglePassword" type="button">Show</button>
-      </div>
-
-      <div id="loginFields">
-        <a class="forgot" href="#" id="forgotLink">Forgot password?</a>
-      </div>
-
-      <button class="primary" id="submitBtn" type="submit">SIGN IN →</button>
+      <button class="primary" id="submitBtn" type="submit">SIGN IN TO ZEP SWIPE →</button>
     </form>
 
-    <div id="message" class="message" role="status" aria-live="polite"></div>
+    <button class="resend" id="resendBtn" type="button">RESEND VERIFICATION EMAIL</button>
+    <div class="message" id="message" role="status" aria-live="polite"></div>
 
-    <div class="trust">
-      <span>🔒 Secure sign-in</span>
-      <span>⚡ Africa-first opportunities</span>
-    </div>
+    <div class="security-note"><span>●</span><span>Your account information is used to sign you in and connect you with Zep Swipe opportunities.</span></div>
   </section>
 
-  <a class="back-home" href="marketplace.html">← Back to Zep Swipe</a>
-  <div class="foot">By creating an account, you agree to use Zep Swipe responsibly. Your account type helps us personalise your experience. Keep your password private.</div>
+  <footer class="foot">
+    By continuing, you agree to use Zep Swipe respectfully and provide accurate account details.<br>
+    Need to explore first? <a href="marketplace.html">Explore the marketplace</a> · <a href="mobility.html">Explore mobility</a>
+  </footer>
 </main>
 
 <script>
-// Use your Supabase project's PUBLIC anon/publishable key only.
-// Never put a service-role key in a browser file.
+// Matches the Supabase project/key in the supplied verify.html.
+// All pages sharing a login must use the same Supabase project.
 const SUPABASE_URL = "https://qhwjtdsbkjfdgwevemiv.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFod2p0ZHNia2pmZGd3ZXZlbWl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1MTM2ODQsImV4cCI6MjEwNDA4OTY4NH0.BauF1Ef7dDUu3JRFSwl4WX3-8AYnIAcEC0nk58ryJTo";
+const VERIFY_URL = new URL("verify.html", window.location.href).href;
 
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
-  }
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
 });
 
 const $ = id => document.getElementById(id);
 let mode = "login";
 let busy = false;
+let lastSignupEmail = "";
 
-function getReturnPage() {
-  const params = new URLSearchParams(window.location.search);
-  const requested = params.get("redirect") || "";
-  if (requested === "mobility.html" || requested.endsWith("/mobility.html")) return "mobility.html";
-  if (requested === "marketplace.html" || requested.endsWith("/marketplace.html")) return "marketplace.html";
-  return "marketplace.html";
-}
-
-function setMessage(text, type = "") {
+function showMessage(text, type="success") {
   const el = $("message");
   el.textContent = text;
-  el.className = "message show" + (type ? " " + type : "");
+  el.className = "message show" + (type === "error" ? " error" : type === "success" ? " success" : "");
 }
-
 function clearMessage() {
   $("message").textContent = "";
   $("message").className = "message";
+  $("resendBtn").classList.remove("show");
 }
-
 function setMode(nextMode) {
   mode = nextMode;
   const signup = mode === "signup";
@@ -187,231 +178,174 @@ function setMode(nextMode) {
   $("signupTab").classList.toggle("active", signup);
   $("loginTab").setAttribute("aria-selected", String(!signup));
   $("signupTab").setAttribute("aria-selected", String(signup));
-  $("signupFields").classList.toggle("show", signup);
-  $("loginFields").classList.toggle("hide", signup);
-  $("pageTitle").textContent = signup ? "Join the student economy." : "Your next opportunity starts here.";
-  $("pageDescription").textContent = signup
-    ? "Create your free account and start discovering services, deals, opportunities and mobility solutions."
-    : "Sign in to explore student services, exclusive deals, opportunities and mobility solutions.";
-  $("submitBtn").textContent = signup ? "CREATE MY ACCOUNT →" : "SIGN IN →";
+  $("nameField").hidden = !signup;
+  $("confirmField").hidden = !signup;
+  $("roleBlock").hidden = !signup;
+  $("heading").textContent = signup ? "Create your Zep Swipe account." : "Your next opportunity starts here.";
+  $("intro").textContent = signup
+    ? "Choose how you want to participate in the student economy."
+    : "Sign in to explore student opportunities, local services, deals and mobility solutions.";
+  $("submitBtn").textContent = signup ? "CREATE MY ACCOUNT →" : "SIGN IN TO ZEP SWIPE →";
   $("password").setAttribute("autocomplete", signup ? "new-password" : "current-password");
   clearMessage();
 }
 
-function updateRoleStyles() {
-  document.querySelectorAll(".role-option").forEach(label => {
-    const radio = label.querySelector('input[name="role"]');
-    label.classList.toggle("selected", radio.checked);
-  });
+function safeReturnPath() {
+  const params = new URLSearchParams(window.location.search);
+  const candidate = params.get("redirect") || params.get("next") || "";
+  const allowed = new Set(["account.html", "marketplace.html", "mobility.html"]);
+  return allowed.has(candidate) ? candidate : "account.html";
 }
 
-document.querySelectorAll('input[name="role"]').forEach(radio => radio.addEventListener("change", updateRoleStyles));
-$("loginTab").addEventListener("click", () => setMode("login"));
-$("signupTab").addEventListener("click", () => setMode("signup"));
-$("togglePassword").addEventListener("click", () => {
-  const input = $("password");
-  const visible = input.type === "password";
-  input.type = visible ? "text" : "password";
-  $("togglePassword").textContent = visible ? "Hide" : "Show";
-});
-
-function setBusy(value, label) {
-  busy = value;
-  $("submitBtn").disabled = value;
-  $("submitBtn").textContent = label || (mode === "signup" ? "CREATE MY ACCOUNT →" : "SIGN IN →");
+function normalizedRole(value) {
+  const role = String(value || "").toLowerCase();
+  if (["provider", "student_provider"].includes(role)) return "provider";
+  if (["business", "merchant", "business_owner"].includes(role)) return "business";
+  return "customer";
 }
 
-async function roleForUser(user) {
+async function loadRole(user) {
   try {
-    const { data, error } = await db.from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
-    if (!error && data && ["customer", "provider", "business"].includes(data.role)) {
-      return data.role;
-    }
-  } catch (e) {
-    console.warn("Profile role lookup failed:", e);
+    const { data, error } = await db.from("profiles").select("role").eq("id", user.id).maybeSingle();
+    if (!error && data && data.role) return normalizedRole(data.role);
+    if (error) console.warn("Profile role lookup:", error.message);
+  } catch (err) {
+    console.warn("Profile role lookup failed:", err);
   }
-  const metaRole = user.user_metadata?.role;
-  return ["customer", "provider", "business"].includes(metaRole) ? metaRole : "customer";
+  return normalizedRole(user?.user_metadata?.role || "customer");
 }
 
-async function goToApp(user) {
-  // Retrieve the saved role for future role-aware functionality.
-  const role = await roleForUser(user);
-  console.info("Signed-in account role:", role);
-
-  // Only marketplace.html and mobility.html currently exist as destinations.
-  // Dedicated customer/provider/business dashboard files are not configured.
-  if (getReturnPage() === "mobility.html") {
-    window.location.replace("mobility.html");
-  } else {
-    window.location.replace("marketplace.html");
-  }
+async function routeAfterLogin(user) {
+  const role = await loadRole(user);
+  // account.html is the shared account landing page in the current site.
+  const destination = safeReturnPath();
+  showMessage("Signed in successfully. Opening your account...", "success");
+  window.location.replace(destination + (destination.includes("?") ? "&" : "?") + "role=" + encodeURIComponent(role));
 }
 
-async function signup() {
-  const fullName = $("fullName").value.trim();
-  const email = $("email").value.trim().toLowerCase();
-  const password = $("password").value;
-  const selectedRole = document.querySelector('input[name="role"]:checked')?.value || "customer";
-
-  if (fullName.length < 2) {
-    setMessage("Please enter your full name.", "error");
-    $("fullName").focus();
-    return;
-  }
-  if (!email || !$("email").checkValidity()) {
-    setMessage("Please enter a valid email address.", "error");
-    $("email").focus();
-    return;
-  }
-  if (password.length < 8) {
-    setMessage("Your password must contain at least 8 characters.", "error");
-    $("password").focus();
-    return;
-  }
-
-  setBusy(true, "CREATING ACCOUNT...");
-  try {
-    const currentUrl = new URL(window.location.href);
-    const callback = new URL(currentUrl.pathname, window.location.origin);
-    callback.searchParams.set("verified", "1");
-    callback.searchParams.set("redirect", getReturnPage());
-
-    const { data, error } = await db.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: callback.toString(),
-        data: {
-          full_name: fullName,
-          name: fullName,
-          role: selectedRole
-        }
-      }
-    });
-
-    if (error) throw error;
-
-    if (data.session && data.user) {
-      setMessage("Account created. Opening Zep Swipe...", "success");
-      await goToApp(data.user);
-      return;
-    }
-
-    setMessage(
-      "Your account has been created. Check your inbox for the Zep Swipe verification email, then open the verification link. After verification, sign in if prompted. We saved your selected account type as " + selectedRole + ".",
-      "success"
-    );
-  } catch (error) {
-    console.error("Sign-up error:", error);
-    setMessage(error.message || "We couldn't create your account. Please try again.", "error");
-  } finally {
-    setBusy(false);
-  }
-}
-
-async function login() {
-  const email = $("email").value.trim().toLowerCase();
-  const password = $("password").value;
-
-  if (!email || !$("email").checkValidity()) {
-    setMessage("Please enter a valid email address.", "error");
-    $("email").focus();
-    return;
-  }
-  if (!password) {
-    setMessage("Enter your password to sign in.", "error");
-    $("password").focus();
-    return;
-  }
-
-  setBusy(true, "SIGNING IN...");
-  try {
-    const { data, error } = await db.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    if (!data.user) throw new Error("Sign-in succeeded, but the user session was not returned. Please try again.");
-    setMessage("Signed in successfully. Opening Zep Swipe...", "success");
-    await goToApp(data.user);
-  } catch (error) {
-    console.error("Sign-in error:", error);
-    setMessage(error.message || "Unable to sign in. Check your details and try again.", "error");
-  } finally {
-    setBusy(false);
-  }
-}
-
-async function resetPassword() {
-  const email = $("email").value.trim().toLowerCase();
-  if (!email || !$("email").checkValidity()) {
-    setMessage("Enter your email address first, then select Forgot password again.", "error");
-    $("email").focus();
-    return;
-  }
-  try {
-    setBusy(true, "SENDING RESET EMAIL...");
-    const resetUrl = new URL("auth.html", window.location.origin).toString();
-    const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: resetUrl });
-    if (error) throw error;
-    setMessage("If an account exists for that email, a password reset link has been sent. Check your inbox.", "success");
-  } catch (error) {
-    console.error("Password reset error:", error);
-    setMessage(error.message || "Couldn't send the reset email. Please try again.", "error");
-  } finally {
-    setBusy(false);
-  }
-}
-
-$("forgotLink").addEventListener("click", event => {
-  event.preventDefault();
-  resetPassword();
-});
-
-$("authForm").addEventListener("submit", event => {
+async function submitAuth(event) {
   event.preventDefault();
   if (busy) return;
-  if (mode === "signup") signup();
-  else login();
-});
+  clearMessage();
 
-async function init() {
-  updateRoleStyles();
-  const params = new URLSearchParams(window.location.search);
-  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
-  const urlError = params.get("error_description") || hash.get("error_description") || params.get("error");
+  const email = $("email").value.trim().toLowerCase();
+  const password = $("password").value;
+  const fullName = $("fullName").value.trim();
+  const confirmPassword = $("confirmPassword").value;
+  const selectedRole = document.querySelector('input[name="accountRole"]:checked')?.value || "customer";
 
-  if (urlError) {
-    setMessage("Verification link issue: " + urlError.replace(/\+/g, " ") + ". You can try signing in or request another verification email.", "error");
-    setMode("login");
+  if (!email || !password) {
+    showMessage("Enter your email address and password.", "error");
     return;
   }
-
-  try {
-    const { data, error } = await db.auth.getSession();
-    if (error) throw error;
-
-    const session = data.session;
-    const isCallback = params.has("code") || params.get("verified") === "1" || hash.has("access_token") || hash.has("type");
-
-    if (session && isCallback) {
-      setMessage("Email verified. Preparing your Zep Swipe experience...", "success");
-      await goToApp(session.user);
+  if (mode === "signup") {
+    if (!fullName) {
+      showMessage("Enter your full name to create an account.", "error");
+      $("fullName").focus();
       return;
     }
+    if (password.length < 8) {
+      showMessage("Use a password with at least 8 characters.", "error");
+      return;
+    }
+    if (password !== confirmPassword) {
+      showMessage("Your passwords do not match.", "error");
+      $("confirmPassword").focus();
+      return;
+    }
+  }
 
-    if (params.get("verified") === "1" && !session) {
-      setMessage("Your email link has opened. If verification is complete, sign in below to continue to your account.", "success");
-      setMode("login");
+  busy = true;
+  $("submitBtn").disabled = true;
+  $("submitBtn").textContent = mode === "signup" ? "CREATING ACCOUNT..." : "SIGNING IN...";
+
+  try {
+    if (mode === "signup") {
+      const { data, error } = await db.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: VERIFY_URL,
+          data: { role: selectedRole, full_name: fullName }
+        }
+      });
+      if (error) throw error;
+
+      lastSignupEmail = email;
+      if (data.session && data.user) {
+        showMessage("Your account is created. Opening your Zep Swipe account...", "success");
+        await routeAfterLogin(data.user);
+        return;
+      }
+
+      showMessage("Account created. Check your inbox for the verification email, then open its link to finish setting up your account.", "success");
+      $("resendBtn").classList.add("show");
+    } else {
+      const { data, error } = await db.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      if (!data.user) throw new Error("Sign-in did not return a user. Please try again.");
+      await routeAfterLogin(data.user);
+      return;
     }
   } catch (error) {
-    console.error("Auth initialization error:", error);
-    setMessage("We couldn't check your current session. Please sign in below.", "error");
+    console.error("Zep Swipe authentication error:", error);
+    let message = error?.message || "Something went wrong. Please try again.";
+    if (/email not confirmed/i.test(message)) {
+      message = "Please verify your email using the link we sent you before signing in.";
+      lastSignupEmail = email;
+      $("resendBtn").classList.add("show");
+    } else if (/redirect|url configuration|not allowed/i.test(message)) {
+      message = "Supabase rejected the verification URL. Add this exact URL to Authentication → URL Configuration → Redirect URLs: " + VERIFY_URL;
+    }
+    showMessage(message, "error");
+  } finally {
+    busy = false;
+    $("submitBtn").disabled = false;
+    $("submitBtn").textContent = mode === "signup" ? "CREATE MY ACCOUNT →" : "SIGN IN TO ZEP SWIPE →";
   }
 }
 
-init();
+async function resendVerification() {
+  if (!lastSignupEmail) lastSignupEmail = $("email").value.trim().toLowerCase();
+  if (!lastSignupEmail) {
+    showMessage("Enter the email address you used to register first.", "error");
+    return;
+  }
+  $("resendBtn").disabled = true;
+  $("resendBtn").textContent = "SENDING...";
+  try {
+    const { error } = await db.auth.resend({
+      type: "signup",
+      email: lastSignupEmail,
+      options: { emailRedirectTo: VERIFY_URL }
+    });
+    if (error) throw error;
+    showMessage("A new verification email has been requested. Check your inbox and spam folder.", "success");
+  } catch (error) {
+    console.error("Resend verification failed:", error);
+    showMessage(error?.message || "Could not resend the email. Wait a moment and try again.", "error");
+  } finally {
+    $("resendBtn").disabled = false;
+    $("resendBtn").textContent = "RESEND VERIFICATION EMAIL";
+  }
+}
+
+$("loginTab").addEventListener("click", () => setMode("login"));
+$("signupTab").addEventListener("click", () => setMode("signup"));
+$("authForm").addEventListener("submit", submitAuth);
+$("resendBtn").addEventListener("click", resendVerification);
+
+document.querySelectorAll(".role").forEach(label => {
+  label.addEventListener("click", () => {
+    document.querySelectorAll(".role").forEach(item => {
+      item.classList.toggle("active", item === label);
+      const check = item.querySelector(".role-check");
+      if (check) check.textContent = item === label ? "✓" : "";
+    });
+    const radio = label.querySelector('input[name="accountRole"]');
+    if (radio) radio.checked = true;
+  });
+});
 </script>
 </body>
 </html>
